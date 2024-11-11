@@ -10,8 +10,4 @@ cd out
 
 ./main
 
-#convert output to usable wav
-sox -t raw -r 8k -e signed -b 16 -c 1 output.pcm output.wav
-rm output.pcm
-
 cd ..

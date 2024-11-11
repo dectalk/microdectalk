@@ -50,6 +50,7 @@
 // help #include "AudioMapping.h"
 
 extern void read_speaker_definition(void);
+extern void write_wav(short *iwave, int length);
 
 short inc=0;
 
@@ -154,12 +155,14 @@ void output_data(void)
 			
 			if(ciwave == (IWSIZE))
 			{
-			fwrite(iwavefull,2,IWSIZE,outfile);
+			//fwrite(iwavefull,2,IWSIZE,outfile);
+			write_wav(iwavefull, IWSIZE);
 			ciwave=0;
 			}
 		}
 #else
-	fwrite(iwave,2,51,outfile);
+	//fwrite(iwave,2,51,outfile);
+	write_wav(iwave, 51);
 #endif
 }
 #endif
