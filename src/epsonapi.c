@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+//#include "wav.c"
 #include "kernel.h"
 #include "epsonapi.h"
 
@@ -34,6 +36,8 @@ extern int cmdmain();
 extern	int dtpc_cmd(unsigned char inchar);
 
 int TextToSpeechStart(char *input) {
+        //init_wav("output.wav");
+
 	int i=0;
 	KS.halting=0;	//had to reset the halting flag - since if you halt you want to halt only the one TTS you are on
 	while (input[i]) {
@@ -65,6 +69,7 @@ int TextToSpeechInit() {
 }
 
 int TextToSpeechReset() {
+        //close_wav();
 	KS.halting=1;
 	return 0;
 }

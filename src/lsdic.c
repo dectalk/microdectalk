@@ -576,7 +576,8 @@ int index;
 	dict_index=((int *)(main_dict))[index+2];
 	dict_offset=(*(int *)(main_dict))*4;
 //	ent = (struct dic_entry *)(((int)(((int *)(main_dict))[index+2]))+(int)(main_dict+8))+(*(int *)(main_dict))*4;
-	ent=(struct dic_entry *)(dict_base+dict_index+dict_offset);
+	//ent=(struct dic_entry *)(dict_base+dict_index+dict_offset);
+        ent = (struct dic_entry *) main_dict;
 	hit_type = HIT;                                                   
 	
 #ifdef DICDEBUG

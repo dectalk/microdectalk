@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MicroDectalk</string>
+    <string name="tts_settings_label">tts_settings</string>
+</resources>

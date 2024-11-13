@@ -1,4 +1,5 @@
 #include "port.h"
+
 extern	S16 d2pole_cf45(S16 *bcoef,S16 *ccoef,S16 frequency,S16 bandwidth,S16 gain);
 extern	S16 d2pole_cf123(S16 *bcoef,S16 *ccoef,S16 frequency,S16 bandwidth,S16 gain);
 extern	S16 d2pole_pf(S16 *bcoef,S16 *ccoef,S16 frequency,S16 bandwidth,S16 gain);

@@ -93,48 +93,6 @@
 
 #define _TTSAPI_H_
 
-#ifdef ARM7
-#define  OWN_AUDIO_DEVICE         0x00000001
-#define  REPORT_OPEN_ERROR        0x00000002
-#define  USE_SAPI5_AUDIO_DEVICE   0x40000000
-#define  DO_NOT_USE_AUDIO_DEVICE  0x80000000
-
-#define MMSYSERR_BASE         0
-#define MMSYSERR_NOERROR      0                    /* no error */
-#define MMSYSERR_ERROR        (MMSYSERR_BASE + 1)  /* unspecified error */
-#define MMSYSERR_BADDEVICEID  (MMSYSERR_BASE + 2)  /* device ID out of range */
-#define MMSYSERR_NOTENABLED   (MMSYSERR_BASE + 3)  /* driver failed enable */
-#define MMSYSERR_ALLOCATED    (MMSYSERR_BASE + 4)  /* device already allocated */
-#define MMSYSERR_INVALHANDLE  (MMSYSERR_BASE + 5)  /* device handle is invalid */
-#define MMSYSERR_NODRIVER     (MMSYSERR_BASE + 6)  /* no device driver present */
-#define MMSYSERR_NOMEM        (MMSYSERR_BASE + 7)  /* memory allocation error */
-#define MMSYSERR_NOTSUPPORTED (MMSYSERR_BASE + 8)  /* function isn't supported */
-#define MMSYSERR_BADERRNUM    (MMSYSERR_BASE + 9)  /* error value out of range */
-#define MMSYSERR_INVALFLAG    (MMSYSERR_BASE + 10) /* invalid flag passed */
-#define MMSYSERR_INVALPARAM   (MMSYSERR_BASE + 11) /* invalid parameter passed */
-#define MMSYSERR_HANDLEBUSY   (MMSYSERR_BASE + 12) /* handle being used */
-                                                   /* simultaneously on another */
-                                                   /* thread (eg callback) */
-#define MMSYSERR_INVALIDALIAS (MMSYSERR_BASE + 13) /* "Specified alias not found in WIN.INI */
-#define MMSYSERR_LASTERROR    (MMSYSERR_BASE + 13) /* last error in range */
-
-
-#if defined __EMSCRIPTEN__
-#include "emscripten.h"
-#endif
-
-#include "tts.h"
-
-#if defined (BLD_DECTALK_DLL) || defined (LDS_BUILD)
-typedef struct TTS_HANDLE_TAG TTS_HANDLE_T;
-
-typedef TTS_HANDLE_T * LPTTS_HANDLE_T;
-#else
-typedef void * LPTTS_HANDLE_T;
-#endif
-
-#else // ARM7
-
 #if defined __sun && defined __sparc
 #ifndef _SPARC_SOLARIS_
 #define _SPARC_SOLARIS_
