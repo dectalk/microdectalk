@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -80,6 +80,8 @@
 #define   issmark(ph)   ((ph)>=WBOUND  && (ph)<=EXCLAIM)
 #define   isdelim(ph)   ((ph)>=COMMA   && (ph)<=EXCLAIM)
 
+extern int default_lang(unsigned int lang_code, unsigned int ready_code);
+
 /*
  *  asperation is used to dynamically adapt the period and comma pauses ...
  */
@@ -111,26 +113,23 @@ extern   short   *user_durs;               /* Where user durations go.	*/
 extern   short   *user_f0;               /* Where user f0 commands go.	*/
 #endif
 extern   FLAG   loadspdef;               /* Flag: need to load TMS320.	*/
+extern   short   last_voice;               /* Voice for tone reloads */
 extern   short curspdef[];     /* current speaker definition */
 
 int   bound;
 extern char   nphone;
 int   lastoffs;
 
-// extern functions
-extern int default_lang(unsigned int lang_code, unsigned int ready_code);
-
 /*
  *  process creation main ... this entry is called by the loader to
  *  create any static processes that are needed for this task ...
  */
 #ifndef NOTNOW
-int ph_main(data_seg,stack_start)
-unsigned int    data_seg;
-unsigned int   stack_start;
-{
+int ph_main(unsigned int data_seg, unsigned int stack_start) {
    extern int kltask();
+
 //help   kinp = KS.lang_ph[LANG_english];
+
  //  create_process(kltask,4,data_seg,stack_start,0);
 }
 #endif
@@ -175,7 +174,7 @@ int kltask_init() {
 
    init_phclause();
 
-   usevoice();
+   usevoice(last_voice);
 #ifndef MINIMAL_SYNTH
    saveval();
 #endif
@@ -192,8 +191,7 @@ int kltask_init() {
 
 }
 
-int ph_loop(short *input_phone)
-{
+int ph_loop(short *input_phone) {
 //	register int   nextra;
 //	register short   *workp;
 	int   nextra;
@@ -202,7 +200,7 @@ int ph_loop(short *input_phone)
 	register int   value;
 #endif
 	short buf[4];
-
+	
 #ifdef NO_CMD
 	buf[0]=input_phone[0];
 	nextra=0;
@@ -211,7 +209,7 @@ int ph_loop(short *input_phone)
 #ifndef NO_CMD
 	nextra = readphone(buf,input_phone);
 #endif
-
+	
 	if(KS.halting)
 	{
 		speak_now();
@@ -276,12 +274,12 @@ int ph_loop(short *input_phone)
 	{
 		docitation=1;
 	}
-
+	
 	/*		debug eab*/
-
+	
 	if(buf[0] == INDEX || buf[0] == INDEX_REPLY)
 	{
-
+		
 #ifndef NO_INDEXES
 		save_index(nsymbtot,buf[0],buf[1],buf[2]);
 #endif
@@ -322,7 +320,7 @@ int ph_loop(short *input_phone)
 		}
 #ifndef MINIMAL_SYNTH
 		switch (buf[0])
-		{
+		{	
 		/* check for special words*
 		* that wants to be handled*
 			*	special if a single word clause like "to" */
@@ -339,7 +337,7 @@ int ph_loop(short *input_phone)
 			perpause = mstofr(deadstop(buf[1], -380, 30000));
 			break;
 		case NEW_SPEAKER:
-			if(buf[1] <= 2)   /* new code, was  < 7, but that cut out some voices */
+			if(buf[1] <= 9)   /* new code, was  < 7, but that cut out some voices */
 			{
 				usevoice(buf[1]);
 			}
@@ -393,14 +391,14 @@ int ph_loop(short *input_phone)
 #endif
 		speak_now();
 	}
-
-
+	
+	
 	/*
 	* Kill font bits. Delete blocks of silence (I don't think this is
 	* needed anymore).  Map WBOUND to COMMA if we are getting near the
 	* end of the buffer.
 	*/
-
+	
 	buf[0] &= ~PFONT;
 	if (nsymbtot>=NPHON_MAX-GUARD && buf[0]==WBOUND)
 		buf[0] = COMMA;
@@ -413,7 +411,7 @@ int ph_loop(short *input_phone)
 		symbols[nsymbtot]   = buf[0];
 #ifndef MINIMAL_SYNTH
 		user_durs[nsymbtot] = buf[1];
-
+		
 		if (nextra == 1)
 			user_f0[nsymbtot] = 0;
 		else
@@ -449,20 +447,17 @@ int ph_loop(short *input_phone)
 			/* adjust_index(lastoffs+1,-1); out eab */
 		}
 	}
-
-
-
 	nphone+=1;
 	if(ispause(buf[0]) == FALSE)
 		nphone = 0;
 	if(isbound(buf[0]))
 		bound = buf[0];
 	lastoffs = nsymbtot;
-
+	
 	/*
 	*  finally, buffer the phone in the array and speak if it is a delimiter ...
 	*/
-
+	
 	symbols[nsymbtot] = buf[0];
 #ifndef MINIMAL_SYNTH
 	user_durs[nsymbtot] = 0;
@@ -483,7 +478,7 @@ void speak_now()
 #ifdef DTEX
     if (KS.spc_sleeping)
 	{
-	/* we've put the DSP to sleep; have to wake it up before
+	/* we've put the DSP to sleep; have to wake it up before 
 	 * we try to do anything else. Make sure there is a speakerdef
 	 * packet in there to reinit the DSP before anything else
 	 * gets to it..
@@ -555,8 +550,7 @@ void speak_now()
  * Check that a "value" is between the "low" and "high" limits.
  */
 
-int deadstop(int value, int low, int high)
-{
+int deadstop(int value, int low, int high) {
    if (value < low)
       return (low);
    if (value > high)
@@ -631,8 +625,7 @@ printf("\n(*%d)",buf[i]&0xff);
 <<< Big trouble. In "PH" code too! >>>
 #endif
 
-int mstofr(int nms)
-{
+int mstofr(int nms) {
    long   temp;
 
    temp = (long)nms;

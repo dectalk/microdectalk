@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -63,6 +63,7 @@ short   f0basefall=0;            /* Baseline fall in Hz times ten, used in PHDRA
 short   spdeflaxprcnt=0;         /* 4096 is max lax breathiness added at voiceless bound */
 short   spdeftltoff=0;         /* Tilt offset in dB */
 short   spdefb1off=0;            /* First formant bandwidth offset when breathy */
+short   last_voice=0;            /*	Voice to use on reloads */
 
 /*		1. Arrays						*/
 //#ifndef EPSONC33

@@ -1,5 +1,9 @@
 package com.bytesizedfox.microdectalk;
 
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechInit;
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechReset;
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechStart;
+
 import android.annotation.SuppressLint;
 import android.media.AudioFormat;
 import android.speech.tts.SynthesisCallback;
@@ -34,6 +38,7 @@ public class TtsService extends TextToSpeechService {
         Set<String> features = new HashSet<>();
 
         mDefaultVoice = new Voice("default", DEFAULT_LOCALE, Voice.QUALITY_NORMAL, Voice.LATENCY_NORMAL, false, features);
+        TextToSpeechInit();
     }
 
     @Override
@@ -57,11 +62,6 @@ public class TtsService extends TextToSpeechService {
         // Load the requested language
         Log.w("onLoadLanguage", lang);
         return TextToSpeech.LANG_AVAILABLE;
-    }
-
-    @Override
-    protected Set<String> onGetFeaturesForLanguage(String lang, String country, String variant) {
-        return new HashSet<String>();
     }
 
     @Override
@@ -93,19 +93,26 @@ public class TtsService extends TextToSpeechService {
     protected void onStop() {
         // Clean up resources when TTS is stopped
         Log.d(TAG, "TTS service stopped");
+        TextToSpeechReset();
     }
 
     @Override
     protected synchronized void onSynthesizeText(SynthesisRequest request, SynthesisCallback callback) {
         // Get the text to synthesize
-        String text = request.getCharSequenceText().toString();
+        String text = "[:phoneme on] " + request.getCharSequenceText().toString();
+
+        int pitch = request.getPitch();
+        int speech_rate = request.getSpeechRate();
+
+        Log.w("pitch", String.valueOf(pitch));
+        Log.w("speech_rate", String.valueOf(speech_rate));
 
         try {
             // Set the audio format properties
             callback.start(SAMPLE_RATE, AudioFormat.ENCODING_PCM_16BIT, 1);
 
             // Get audio samples using native method
-            short[] samples = MainActivity.stringFromJNI(text);
+            short[] samples = TextToSpeechStart(text);
 
             // Convert samples to bytes
             byte[] audioData = new byte[samples.length * 2];
@@ -117,14 +124,13 @@ public class TtsService extends TextToSpeechService {
 
             final int maxBytesToCopy = callback.getMaxBufferSize();
 
-            int offset = 0;
 
+            int offset = 0;
             while (offset < audioData.length) {
                 final int bytesToWrite = Math.min(maxBytesToCopy, (audioData.length - offset));
                 callback.audioAvailable(audioData, offset, bytesToWrite);
                 offset += bytesToWrite;
             }
-
 
             // Signal completion
             callback.done();

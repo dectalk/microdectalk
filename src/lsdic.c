@@ -82,6 +82,8 @@ extern unsigned char ls_char_feat[];
 /* Use for English, the default */
 #include "lsdef.h"
 #include "lsconst.h"
+#include <stddef.h>
+#include <string.h>
 
 //#define	DICT_HEAD	((struct dic_entry far * far *)KS.fdic)
 #define	UDICT_HEAD	((char far * far *)KS.udic)
@@ -521,7 +523,6 @@ int	type;
 
 #endif
 
- 
 
 int dlook(index)
 int index;
@@ -571,13 +572,14 @@ int index;
 		return(LOOK_LOWER);
 		}
 
-//	ent = DICT_HEAD[index] + (int)DICT_HEAD;	
+	//ent = UDICT_HEAD[index] + (int)UDICT_HEAD;	
 	dict_base=(int)(main_dict+8);
 	dict_index=((int *)(main_dict))[index+2];
 	dict_offset=(*(int *)(main_dict))*4;
 //	ent = (struct dic_entry *)(((int)(((int *)(main_dict))[index+2]))+(int)(main_dict+8))+(*(int *)(main_dict))*4;
 	//ent=(struct dic_entry *)(dict_base+dict_index+dict_offset);
         ent = (struct dic_entry *) main_dict;
+
 	hit_type = HIT;                                                   
 	
 #ifdef DICDEBUG

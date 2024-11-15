@@ -22,6 +22,7 @@ import java.util.List;
         ArrayList<String> available = new ArrayList<String>();
         available.add("en-US");
 
+
         Intent returnData = new Intent();
         returnData.putStringArrayListExtra(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES, available);
         returnData.putStringArrayListExtra(TextToSpeech.Engine.EXTRA_UNAVAILABLE_VOICES, new ArrayList<>());

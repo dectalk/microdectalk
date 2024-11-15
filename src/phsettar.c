@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  * Copyright	1984				by Dennis H. Klatt
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -147,7 +147,6 @@ static short temp6;
 // function prototypes
 int shrdur(short durin);
 int get_phone(short pointer);
-
 
 int phsettar()
 {
@@ -364,7 +363,15 @@ short getbegtar(short nfone)
    temp = gettar(nfone);
    if (temp < -1)
    {         /* If next seg diphthong, */
+#ifdef NO_FEMALE
+      temp = maldip[-temp];      /* use diph first value  */
+#else
+
+	 if (malfem == MALE)
 		temp = maldip[-temp];
+	else	   
+		temp = femdip[-temp];
+#endif
 
       /* Special coarticulation rules to change (vowel) target */
       if (par_type IS_FORM_FREQ)
@@ -390,14 +397,34 @@ short getendtar(short nfone)
    if (temp < -1)
    {
       temp = -temp;       /* Vowel tar is diphth */
-
+#ifdef NO_FEMALE
+      while (maldip[temp] != -1)
+#else
+	if (malfem == MALE)
       while (maldip[temp] != -1)
       {
          temp++;
       }
 
-      temp = maldip[temp-1];  /* Last val of diph */
+	else	   
+      while (femdip[temp] != -1)
+      {
+         temp++;
+      }
+#endif
 
+
+
+#ifdef NO_FEMALE
+      temp = maldip[temp-1];    /* Last val of diph */
+#else
+    if (malfem == MALE)
+      temp = maldip[temp-1];  /* Last val of diph */
+	else
+      temp = femdip[temp-1];  /* Last val of diph */
+
+
+#endif
       /* Special coarticulation rules to change (vowel) target */
       if (par_type IS_FORM_FREQ)
       {
@@ -430,6 +457,9 @@ short gettar(short nphone_temp)
 
 /////////////////////
 if ((par_type=partyp[npar]) IS_FORM_FREQ_OR_BW)
+{
+
+if (malfem == MALE)
 {
     
 	  if ((tartemp = maltar[phone_temp + pphotr]) < -1)
@@ -472,14 +502,63 @@ if ((par_type=partyp[npar]) IS_FORM_FREQ_OR_BW)
 			}
 		 } 
 	  }
+	
+}else /*malfem == FEMALE*/
 
+{   
+	  if ((tartemp = femtar[phone_temp + pphotr]) < -1)
+      {
+		//printf("tartem1 %d of %d \n",*tartemp,phone_temp);
+         return(tartemp);   /* Pointer to diph info in p_diph[] */
+      }
+
+      else if (tartemp == -1)
+      {
+
+         /* Tar undefined, use tarval of next segment */
+
+         if ((tartemp = femtar[phnex_temp + pphotr]) == -1)
+         {
+
+            /* Tar still undefined, use tarval of second-next segment */
+            if ((tartemp=femtar[get_phone(nphone_temp+2)+pphotr])==-1)
+            {
+
+               /* Tar still undefined, use previous phone */
+               if ((tartemp = femtar[phlas_temp + pphotr]) < -1)
+               {
+				
+                  /* Diphthonized seg, use last target value */
+                  while (femdip[-tartemp] != -1)
+                  {
+                     tartemp--;
+                  }
+                  tartemp = femdip[-tartemp-1];
+
+
+				  /* If this doesn't work, use default value */
+				  if (tartemp == -1)
+				  {
+				  tartemp = parini[npar];
+				  }
+
+			   }
+			}
+		 } 
+	  }
+
+
+} /*malfem == FEMALE*/
 
 
 
 
       if (tartemp < -1)
       {
+		if (malfem == MALE)
          tartemp = maldip[-tartemp];
+		else
+         tartemp = femdip[-tartemp];		
       }
       /* Fricatives have higher F1 if preceeded by a vowel */
       if ( (npar == F1-1)
@@ -536,9 +615,18 @@ if ((par_type=partyp[npar]) IS_FORM_FREQ_OR_BW)
 		  /* Ellen we breakpoint on this if and it is getting the proper
 		  values with the different syntax, the wrong values with the original*/
    
+	if (malfem == MALE)
+	{
 		 tartemp = maltar[phone_temp + pphotr];
 		 if(tartemp != maltar[phone_temp + pphotr])
 			tartemp = maltar[phone_temp + pphotr];
+	}
+	else
+	{
+		 tartemp = femtar[phone_temp + pphotr];
+		 if(tartemp != femtar[phone_temp + pphotr])
+			tartemp = femtar[phone_temp + pphotr];
+	}
          /* Dummy vowel has less intensity */
          if ((allofeats[nphone_temp] & FDUMMY_VOWEL) IS_PLUS)
          {
@@ -595,7 +683,10 @@ if ((par_type=partyp[npar]) IS_FORM_FREQ_OR_BW)
 
          tartemp += (npar - A2 + 1 + (6 * begtypnex));
    
+		 if (malfem == MALE)
          tartemp = malamp[tartemp];
+		 else
+         tartemp = femamp[tartemp];
 			 
 		/* Burst has less intensity if dummy vowel next */
          if ((allofeats[nphone_temp+1] & FDUMMY_VOWEL) IS_PLUS)
@@ -670,7 +761,12 @@ void make_dip(short pdip)
    short checkdip;
 
    np->ndip = ndips;   /* Start of diph info for this par in dipspec[] */
-	oldvalue = maldip[pdip];    /*cccc Initial value of first straight line */
+		
+	if (malfem == MALE)
+		oldvalue = maldip[pdip];    /*cccc Initial value of first straight line */
+	else
+		oldvalue = femdip[pdip];    /*cccc Initial value of first straight line */
+		
 
    /* Formant frequency coarticulation rules */
    if (par_type IS_FORM_FREQ)
@@ -719,7 +815,10 @@ void make_dip(short pdip)
       }
       else
       {
+	if (malfem == MALE)	  
          newvalue = maldip[pdip++];
+	else
+         newvalue = femdip[pdip++];
 
 
          /* Formant frequency coarticulation rules */
@@ -744,10 +843,16 @@ void make_dip(short pdip)
       }
 
 if (NSAMP_FRAME == 128)
+	if (malfem == MALE)	  
       newtime = maldip[pdip]>>1;/*eab ccc for 1/2 samp*/
+	else
+	  newtime = femdip[pdip]>>1;/*eab ccc for 1/2 samp*/
 
 else
+	if (malfem == MALE)	  
       newtime = maldip[pdip];
+	else
+	  newtime = femdip[pdip];
 
       if (newtime != -1)
       {
@@ -787,7 +892,10 @@ else
       ndips+=1;
 
 
+	if (malfem == MALE)	  
          checkdip = maldip[pdip++];
+	else
+         checkdip = femdip[pdip++];
 
    } while ( checkdip != -1);
 
@@ -966,11 +1074,18 @@ short setloc(short nfonobst, short nfonsonor, char initfinso, short nfonvowel)
       return(0);           /* no locus, use default calc  */
    ploc = ploc + (3 * (np - &PF1));  /* Table has 3 entries/formant  */
  
-
+   if (malfem==MALE)
+   {
 	locus = maleloc[ploc];        /* First entry is locus freq   */
      prcnt = maleloc[ ploc + 1];     /* Second entry is % toward V	 */
     durtran = mstofr(maleloc[ploc+2]);/* 3rd is tran dur in msec	 */
-
+   }
+   else
+   {
+	locus = femloc[ploc];        /* First entry is locus freq   */
+     prcnt = femloc[ ploc + 1];     /* Second entry is % toward V	 */
+    durtran = mstofr(femloc[ploc+2]);/* 3rd is tran dur in msec	 */
+   }
  
 
 /*printf("locus %d prcnt %d \n",locus,prcnt);*/
@@ -1954,8 +2069,7 @@ int get_phone(pointer) short pointer;
 /*  TENDENCY TOWARD CONSTANT DURATION OF TRANSITION PORTION */
 /*  WITH CHANGES IN VOWEL DURATION */
 
-int shrdur(durin) short durin;
-{
+int shrdur(short durin) {
    short halfinhdr,halfmaxdur,foldswitch,localinhdr;
 
    /* Convert from ms to number of frames * 64 */
@@ -2157,7 +2271,8 @@ int init_variables()
    PA6.tspesh = 0;      /* in JPHDRAW.C			     */
    PAB.tspesh = 0;
 }
-int debug1() {
+int debug1()
+{
  //	printf("pholas=%d  phcur=%d  phonex=%d \n",pholas, phcur, phonex); /*debug eab*/
 
 

@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,36 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity {
-    public void playWavFile(short[] samples) {
-        int bufferSize = AudioTrack.getMinBufferSize(
-                8000,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
-        );
-        AudioTrack audioTrack = new AudioTrack. Builder()
-                .setAudioAttributes(new AudioAttributes. Builder()
-                        .setUsage(AudioAttributes. USAGE_MEDIA)
-                        .setContentType(AudioAttributes. CONTENT_TYPE_MUSIC)
-                        .build())
-                .setAudioFormat(new AudioFormat. Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(8000)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build())
-                .setBufferSizeInBytes(bufferSize)
-                .build();
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-        audioTrack.play();
-
-        byte[] bytes = new byte[samples.length * 2];
-        ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(samples);
-
-        // Write audio data to track
-        audioTrack.write(bytes, 0, bytes.length);
-    }
+    private TextToSpeech tts;
+    Button speakButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +30,52 @@ public class MainActivity extends AppCompatActivity {
 
         System.loadLibrary("epsonapi");
 
+        TextToSpeechInit();
+
+        // Initialize TTS engine
+        tts = new TextToSpeech(this, this);
+
         EditText inputText = findViewById(R.id.inputText);
-        Button speakButton = findViewById(R.id.speakButton);
+        speakButton = findViewById(R.id.speakButton);
 
         speakButton.setOnClickListener(v -> {
-            short[] samples = stringFromJNI(inputText.getText().toString());
-            Log.w("SAMPLES ", String.valueOf(samples.length));
-            playWavFile(samples);
+            //short[] samples = TextToSpeechStart(inputText.getText().toString());
+            //Log.w("SAMPLES ", String.valueOf(samples.length));
+            //playWavFile(samples);
+            tts.speak(inputText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null, null);
         });
 
     }
 
     @Override
     protected void onDestroy() {
+        TextToSpeechReset();
+
+        // Release TTS resources
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
         super.onDestroy();
     }
 
-    public static native short[] stringFromJNI(String text);
+    public static native void TextToSpeechInit();
+    public static native short[] TextToSpeechStart(String text);
+    public static native void TextToSpeechReset();
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            // Set language to US English
+            int result = tts.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                    result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                speakButton.setEnabled(false);
+            }
+        } else {
+            speakButton.setEnabled(false);
+        }
+    }
+
 }
