@@ -29,6 +29,10 @@ extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivit
     total_size = 0; // reset for new prompts
     TextToSpeechReset();
 }
+extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechChangeVoice(JNIEnv* env, jobject obj, jstring name) {
+    char *name_str = (char *)env->GetStringUTFChars(name, 0);
+    TextToSpeechChangeVoice(name_str);
+}
 
 extern "C" JNIEXPORT jshortArray JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechStart(JNIEnv* env, jobject obj, jstring text) {
     const char *text_str = env->GetStringUTFChars(text, 0);
