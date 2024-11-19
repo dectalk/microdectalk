@@ -850,6 +850,7 @@ int init_timing()
       /* Linearize (calibrate) high speaking rates by a fudge */
       /* Tuned to perform on 300 word standard passage published on p. 114
        of G. Fairbanks ^^Voice and Articulation Drill Book^^ */
+
       if (sprate > 250)
          sprat0 = 250 + ((sprate - 250)>>1);
       else

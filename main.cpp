@@ -33,6 +33,17 @@ extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivit
     char *name_str = (char *)env->GetStringUTFChars(name, 0);
     TextToSpeechChangeVoice(name_str);
 }
+extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechSetRate(JNIEnv* env, jobject obj, jint rate) {
+    TextToSpeechSetRate(rate);
+}
+extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechSetVoiceParam(JNIEnv* env, jobject obj, jstring cmd, jint value) {
+    char *cmd_str = (char *)env->GetStringUTFChars(cmd, 0);
+    TextToSpeechSetVoiceParam(cmd_str, value);
+}
+
+extern "C" JNIEXPORT jshort JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechGetSpdefValue(JNIEnv* env, jobject obj,  jint index) {
+    return TextToSpeechGetSpdefValue(index);
+}
 
 extern "C" JNIEXPORT jshortArray JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechStart(JNIEnv* env, jobject obj, jstring text) {
     const char *text_str = env->GetStringUTFChars(text, 0);

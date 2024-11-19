@@ -34,22 +34,44 @@ typedef unsigned int U32;
                         (((U8 *)(ptr))[0])))
 
 extern const unsigned char main_dict[];
+extern const unsigned char *define_options[];
+extern   short   curspdef[];
 
 //extern functions
 extern int cmdmain();
 extern	int dtpc_cmd(unsigned char inchar);
 
-int TextToSpeechStart(char *input) {
-        //init_wav("output.wav");
+short TextToSpeechGetSpdefValue(int index) {
+    return curspdef[index];
+}
 
-	int i=0;
-	KS.halting=0;	//had to reset the halting flag - since if you halt you want to halt only the one TTS you are on
-	while (input[i]) {
-		dtpc_cmd(input[i]);
-		i++;
-	}
-	dtpc_cmd(0x0b);  // force it out.
-	return 0;
+int TextToSpeechSetVoiceParam(char *cmd, int value) {
+    unsigned short pipe_value[3];
+    pipe_value[1] = string_match((unsigned char **)define_options,cmd);
+    pipe_value[0] = (2<<PSNEXTRA)+NEW_PARAM;
+    pipe_value[1] -= 1;
+    pipe_value[2] = value;
+    lts_loop(pipe_value);
+}
+
+void TextToSpeechSetRate(int rate) {
+    unsigned short  pipe_value[2];
+    pipe_value[0] = (1<<PSNEXTRA) + RATE;
+    pipe_value[1] = rate;
+    lts_loop(pipe_value);
+}
+
+int TextToSpeechStart(char *input) {
+    int i=0;
+    KS.halting=0;	//had to reset the halting flag - since if you halt you want to halt only the one TTS you are on
+
+    while (input[i]) {
+        dtpc_cmd(input[i]);
+        i++;
+    }
+    dtpc_cmd(0x0b);  // force it out.
+
+    return 0;
 }
 
 
@@ -111,17 +133,8 @@ int TextToSpeechChangeVoice(char *cvoice) {
         last_voice = new_voice;
     }
 
-    // temp, remove later
-    const char *cmd = "sx";
-    short val = 1;
-    unsigned short pipe_value[3];
-    pipe_value[1] = string_match((unsigned char **)define_options,cmd);
-    pipe_value[0] = (2<<PSNEXTRA)+NEW_PARAM;
-    pipe_value[1] -= 1;
-    pipe_value[2] = val;
-    lts_loop(pipe_value);
-
     kltask_init();
+
     KS.halting=0;
 
     return 0;

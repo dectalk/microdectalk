@@ -1,4 +1,4 @@
-package com.bytesizedfox.microdectalk;
+package com.bytesizedfox.microdectalk.tts;
 
 import android.os.Bundle;
 import android.widget.TextView;

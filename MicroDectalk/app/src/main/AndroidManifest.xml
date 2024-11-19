@@ -2,21 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <application
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <application android:name="com.bytesizedfox.microdectalk.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="false"
         android:theme="@style/Theme.MicroDectalk"
         tools:targetApi="31">
 
-        <service android:name=".TtsService"
+        <service android:name=".tts.TtsService"
             android:exported="true"
             android:permission="android.permission.BIND_TTS_ENGINE"
             android:label="@string/app_name"
+            android:foregroundServiceType="mediaPlayback"
             android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.TTS_SERVICE" />
@@ -29,12 +35,12 @@
         </service>
 
         <activity
-            android:name=".TTSSettingsActivity"
+            android:name=".tts.TTSSettingsActivity"
             android:label="TTS Settings"
             android:exported="true">
         </activity>
         <activity
-            android:name=".GetSampleText"
+            android:name=".tts.GetSampleText"
             android:exported="true"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
@@ -44,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CheckVoiceData"
+            android:name=".tts.CheckVoiceData"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true">
             <intent-filter>
@@ -57,6 +63,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

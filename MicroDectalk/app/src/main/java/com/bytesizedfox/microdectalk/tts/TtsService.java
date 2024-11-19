@@ -1,17 +1,23 @@
-package com.bytesizedfox.microdectalk;
+package com.bytesizedfox.microdectalk.tts;
 
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechGetSpdefValue;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechInit;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechReset;
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechSetRate;
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechSetVoiceParam;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechStart;
 
 import android.annotation.SuppressLint;
 import android.media.AudioFormat;
+import android.provider.Settings;
 import android.speech.tts.SynthesisCallback;
 import android.speech.tts.SynthesisRequest;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeechService;
 import android.speech.tts.Voice;
 import android.util.Log;
+
+import com.bytesizedfox.microdectalk.App;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -28,22 +34,18 @@ public class TtsService extends TextToSpeechService {
     private static final Locale DEFAULT_LOCALE = Locale.US;
     public static Voice mDefaultVoice;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "CustomTTSService created");
-
-        // Initialize default voice
         Set<String> features = new HashSet<>();
-
-        mDefaultVoice = new Voice("default", DEFAULT_LOCALE, Voice.QUALITY_NORMAL, Voice.LATENCY_NORMAL, false, features);
+        mDefaultVoice = new Voice("default", DEFAULT_LOCALE, Voice.QUALITY_VERY_HIGH, Voice.LATENCY_NORMAL, false, features);
         TextToSpeechInit();
     }
 
+
     @Override
     protected String[] onGetLanguage() {
-        Log.w("DEFAULT", DEFAULT_LOCALE.getLanguage());
         // Return default language, country, and variant
         return new String[] {
                 DEFAULT_LOCALE.getLanguage(),
@@ -59,14 +61,11 @@ public class TtsService extends TextToSpeechService {
 
     @Override
     protected int onLoadLanguage(String lang, String country, String variant) {
-        // Load the requested language
-        Log.w("onLoadLanguage", lang);
         return TextToSpeech.LANG_AVAILABLE;
     }
 
     @Override
     public String onGetDefaultVoiceNameFor(String language, String country, String variant) {
-        Log.w("onGetDefaultVoiceNameFor", language);
         return mDefaultVoice.getName();
     }
 
@@ -111,8 +110,21 @@ public class TtsService extends TextToSpeechService {
             // Set the audio format properties
             callback.start(SAMPLE_RATE, AudioFormat.ENCODING_PCM_16BIT, 1);
 
+            // reset TTS to avoid bugginess
+            TextToSpeechReset();
+            TextToSpeechInit();
+
             // Get audio samples using native method
+            TextToSpeechSetRate( TextToSpeechGetSpdefValue(3 /* SP_AP */) + ((speech_rate-200)/2 ));
+            TextToSpeechSetVoiceParam("ap", pitch);
             short[] samples = TextToSpeechStart(text);
+
+            for (int i = 0; i < samples.length; i++) {
+                if (App.current_volume < 0) {
+                    App.current_volume = 0;
+                }
+                samples[i] = (short) ( (float)samples[i] * (( (App.current_volume*2) + 50) / 100.0f) - 0.5f);
+            }
 
             // Convert samples to bytes
             byte[] audioData = new byte[samples.length * 2];
@@ -121,9 +133,7 @@ public class TtsService extends TextToSpeechService {
                     .asShortBuffer()
                     .put(samples);
 
-
             final int maxBytesToCopy = callback.getMaxBufferSize();
-
 
             int offset = 0;
             while (offset < audioData.length) {

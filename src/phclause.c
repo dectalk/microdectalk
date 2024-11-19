@@ -212,11 +212,11 @@ int init_clause() {
 int i;
 
 // does this need to be removed? seems to break f0 timing commands
-for (i = 0;i<(NPHON_MAX+SAFETY+2); i++) {
-	allophons[i] = 0;   /* Allophones, in integer	*/
-	allofeats[i] = 0;   /* Feats of allophones		*/
+//for (i = 0;i<(NPHON_MAX+SAFETY+2); i++) {
+//	allophons[i] = 0;   /* Allophones, in integer	*/
+//	allofeats[i] = 0;   /* Feats of allophones		*/
 //	allodurs[i]  = 0;   /* Dur in frames of each phone	*/
-}
+//}
 
 
 #ifdef   vax

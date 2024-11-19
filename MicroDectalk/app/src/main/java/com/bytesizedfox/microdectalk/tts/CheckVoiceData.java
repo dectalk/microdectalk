@@ -1,12 +1,10 @@
-package com.bytesizedfox.microdectalk;
+package com.bytesizedfox.microdectalk.tts;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Respond to android.speech.tts.engine.CHECK_TTS_DATA
@@ -20,7 +18,7 @@ import java.util.List;
         super.onCreate(savedInstanceState);
 
         ArrayList<String> available = new ArrayList<String>();
-        available.add("en-US");
+        available.add("eng-USA");
 
 
         Intent returnData = new Intent();

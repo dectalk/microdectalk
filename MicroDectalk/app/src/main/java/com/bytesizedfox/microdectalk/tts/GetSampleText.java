@@ -1,4 +1,4 @@
-package com.bytesizedfox.microdectalk;
+package com.bytesizedfox.microdectalk.tts;
 
 import android.app.Activity;
 import android.content.Intent;

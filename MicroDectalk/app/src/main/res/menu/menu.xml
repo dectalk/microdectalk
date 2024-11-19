@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- action button for copy -->
+    <item
+        android:title="Voice"
+        app:showAsAction="ifRoom"
+        android:id="@+id/voiceSettings">
+
+        <menu>
+            <item
+                android:id="@+id/setVoicePaul"
+                android:title="Paul" />
+            <item
+                android:id="@+id/setVoiceBetty"
+                android:title="Betty" />
+            <item
+                android:id="@+id/setVoiceHarry"
+                android:title="Harry" />
+            <item
+                android:id="@+id/setVoiceFrank"
+                android:title="Frank" />
+            <item
+                android:id="@+id/setVoiceDennis"
+                android:title="Dennis" />
+            <item
+                android:id="@+id/setVoicekit"
+                android:title="Kit" />
+            <item
+                android:id="@+id/setVoiceUrsula"
+                android:title="Ursula" />
+            <item
+                android:id="@+id/setVoiceRita"
+                android:title="Rita" />
+            <item
+                android:id="@+id/setVoiceWendy"
+                android:title="Wendy" />
+        </menu>
+
+    </item>
+
+    <item android:title=""
+        android:id="@+id/activity_settings"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_settings_24"/>
+</menu>
