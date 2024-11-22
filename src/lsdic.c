@@ -785,7 +785,7 @@ int ufind_word()
 */
 
 	int	first,last,base,stat;
-	last  =	(int)UDICT_ENTRY;		 	/* max number of entries */
+	last =	(int)UDICT_ENTRY;		 	/* max number of entries */
 	first = 0;										/* 0 is the bottom */
 
 	while (first <= last)						/* search until list is empty */
@@ -842,8 +842,7 @@ int udlook(int uindex)
 		return(where_to_ulook(ent));
 		}
 
-	if(comp_str[i] == '\0')
-		{
+	if(comp_str[i] == '\0') {
 		for(i += 1;ent[i] != 0x00;i++)
 /* Use the correct sendphone routine based on language being compiled */
 #ifdef GERMAN_DIC
@@ -864,9 +863,7 @@ int udlook(int uindex)
  *  the current entry
  */
 
-int where_to_ulook(char far *ent)
-{	
-
+int where_to_ulook(char far *ent) {
 	int	i;
 	unsigned char	pivot_char;
 

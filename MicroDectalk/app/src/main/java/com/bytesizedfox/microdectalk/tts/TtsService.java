@@ -1,14 +1,19 @@
 package com.bytesizedfox.microdectalk.tts;
 
+import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechChangeVoice;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechGetSpdefValue;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechInit;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechReset;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechSetRate;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechSetVoiceParam;
 import static com.bytesizedfox.microdectalk.MainActivity.TextToSpeechStart;
+import static com.bytesizedfox.microdectalk.tts.TTSUtil.nameToNameCode;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.speech.tts.SynthesisCallback;
 import android.speech.tts.SynthesisRequest;
@@ -16,6 +21,8 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeechService;
 import android.speech.tts.Voice;
 import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bytesizedfox.microdectalk.App;
 
@@ -30,7 +37,7 @@ import java.util.Set;
 @SuppressLint("NewApi")
 public class TtsService extends TextToSpeechService {
     private static final String TAG = "CustomTTSService";
-    private static final int SAMPLE_RATE = 8000; // Adjust based on your audio sample rate
+    private static final int SAMPLE_RATE = 11025; // Adjust based on your audio sample rate
     private static final Locale DEFAULT_LOCALE = Locale.US;
     public static Voice mDefaultVoice;
 
@@ -42,7 +49,6 @@ public class TtsService extends TextToSpeechService {
         mDefaultVoice = new Voice("default", DEFAULT_LOCALE, Voice.QUALITY_VERY_HIGH, Voice.LATENCY_NORMAL, false, features);
         TextToSpeechInit();
     }
-
 
     @Override
     protected String[] onGetLanguage() {
@@ -98,13 +104,10 @@ public class TtsService extends TextToSpeechService {
     @Override
     protected synchronized void onSynthesizeText(SynthesisRequest request, SynthesisCallback callback) {
         // Get the text to synthesize
-        String text = "[:phoneme on] " + request.getCharSequenceText().toString();
+        String text = "[:phoneme on] " + request.getCharSequenceText().toString().replaceAll("\\P{ASCII}", "");
 
-        int pitch = request.getPitch();
-        int speech_rate = request.getSpeechRate();
-
-        Log.w("pitch", String.valueOf(pitch));
-        Log.w("speech_rate", String.valueOf(speech_rate));
+        Log.w("pitch", String.valueOf(request.getPitch()));
+        Log.w("speech_rate", String.valueOf(request.getSpeechRate()));
 
         try {
             // Set the audio format properties
@@ -112,11 +115,17 @@ public class TtsService extends TextToSpeechService {
 
             // reset TTS to avoid bugginess
             TextToSpeechReset();
+            TextToSpeechChangeVoice(nameToNameCode(App.current_voice));
             TextToSpeechInit();
 
             // Get audio samples using native method
-            TextToSpeechSetRate( TextToSpeechGetSpdefValue(3 /* SP_AP */) + ((speech_rate-200)/2 ));
-            TextToSpeechSetVoiceParam("ap", pitch);
+            TextToSpeechSetRate( 180 + ((App.rate-50)*2) );
+
+            Log.w("voice AP", String.valueOf(TextToSpeechGetSpdefValue(3 /* SP_AP */) ));
+            TextToSpeechSetVoiceParam("ap", TextToSpeechGetSpdefValue(3 /* SP_AP */) + ((App.pitch-50)*2) );
+            Log.w("voice AP 1", String.valueOf(TextToSpeechGetSpdefValue(3 /* SP_AP */) ));
+            Log.w("Pitch", String.valueOf( App.pitch ));
+
             short[] samples = TextToSpeechStart(text);
 
             for (int i = 0; i < samples.length; i++) {
@@ -132,6 +141,8 @@ public class TtsService extends TextToSpeechService {
                     .order(ByteOrder.LITTLE_ENDIAN)
                     .asShortBuffer()
                     .put(samples);
+
+            Log.w("debug audio", String.valueOf(samples.length));
 
             final int maxBytesToCopy = callback.getMaxBufferSize();
 
@@ -150,4 +161,5 @@ public class TtsService extends TextToSpeechService {
             callback.error();
         }
     }
+
 }

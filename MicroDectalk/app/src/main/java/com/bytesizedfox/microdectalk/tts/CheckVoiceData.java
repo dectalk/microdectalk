@@ -6,20 +6,12 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import java.util.ArrayList;
 
-/**
- * Respond to android.speech.tts.engine.CHECK_TTS_DATA
- */
- public class CheckVoiceData extends Activity {
-
-
-
+public class CheckVoiceData extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ArrayList<String> available = new ArrayList<String>();
         available.add("eng-USA");
-
 
         Intent returnData = new Intent();
         returnData.putStringArrayListExtra(TextToSpeech.Engine.EXTRA_AVAILABLE_VOICES, available);

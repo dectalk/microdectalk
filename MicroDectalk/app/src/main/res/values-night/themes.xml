@@ -8,4 +8,12 @@
         <item name="colorSecondary">@color/secondary</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+
 </resources>
