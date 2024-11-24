@@ -6,18 +6,18 @@ CFLAGS=(-static -fPIC -I include -g -Wunused-function -w)
 
 # delete previous outputs
 rm -rf out/
-mkdir -p out/arm64-v8a
-mkdir -p out/armeabi-v7a
-mkdir -p toolchain
 
 # download toolchain
-if [ ! -d "toolchain/aarch64-linux-musl-cross" ] || [ ! -d "toolchain/armel-linux-musleabi-cross" ]; then
+if [ ! -d "toolchain/aarch64-linux-musl-cross" ] || [ ! -d "toolchain/armel-linux-musleabi-cross" ] || [ ! -d "toolchain/x86_64-linux-musl-cross" ]; then
     rm -rf toolchain/*
     echo "[i] Downloading aarch64 Toolchain.."
     curl https://musl.cc/aarch64-linux-musl-cross.tgz | tar zxf - -C toolchain
 
     echo "[i] Downloading armv8 Toolchain..."
-    curl https://musl.cc/armel-linux-musleabi-cross.tgz | tar -zxf - -C toolchain
+    curl https://musl.cc/armel-linux-musleabi-cross.tgz | tar zxf - -C toolchain
+
+    echo "[i] Downloading x86_64 Toolchain..."
+    curl https://musl.cc/x86_64-linux-musl-cross.tgz | tar zxf - -C toolchain
 else
     echo "[i] Toolchain found, proceeding..."
 fi
@@ -38,6 +38,7 @@ compile_arch() {
     rm -rf *.o
     # copy binaries to destination
     DEST=$2
+    mkdir -p $DEST
     mv libepsonapi.so $2
     cp -r $2 App/app/src/main/jniLibs/
 }
@@ -45,9 +46,10 @@ compile_arch() {
 # build the ndk libraries for each platform (arch, output_dir)
 compile_arch "aarch64" "out/arm64-v8a/"
 compile_arch "armel" "out/armeabi-v7a/"
+compile_arch "x86_64" "out/x86_64/"
 
 # compile the android app itself
 cd App
-./gradlew build
+./gradlew ./app/build/outputs/apk/debug/app-universal-debug.apk
 cd ..
-cp App/app/build/outputs/apk/release/app-release-unsigned.apk out/ # final resulting apk
+cp App/app/build/outputs/apk/debug/app-universal-debug.apk out/ # final resulting apk
