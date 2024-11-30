@@ -1,6 +1,6 @@
 #ifndef LTSP_H
 #define LTSP_H
-extern	int main(unsigned int data_seg,unsigned int stack_start);
+// extern	int main(unsigned int data_seg,unsigned int stack_start);
 extern	int do_lts(struct LETTER_struct *lp2,struct LETTER_struct *lp1);
 extern	int is_name(struct LETTER_struct *lp2,struct LETTER_struct *lp1);
 extern	int __far lstask(void);

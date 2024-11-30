@@ -2367,7 +2367,7 @@ void sendphone(short ph)
 		buf[0]=ph;
 	}
 #if defined PRINT_OUTPUT || defined SIMULATOR
-	printf("lts output 0x%04X %d\n",buf[0],ph);
+	// printf("lts output 0x%04X %d\n",buf[0],ph);
 #endif
 	ph_loop(buf);
 

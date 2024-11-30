@@ -9,7 +9,7 @@
 
 extern void lsmain(void);
 extern void usa_main(void);
-extern void kltask_init(void);
+extern int kltask_init(void);
 extern void InitializeVTM(void);
 extern void lts_loop(unsigned short *input);
 
