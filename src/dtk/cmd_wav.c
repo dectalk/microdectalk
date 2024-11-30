@@ -33,8 +33,7 @@
 #include	"cmd_def.h"
 
 #ifdef FILE_SYSTEM
-cmd_digitized()
-{
+cmd_digitized() {
 #if	!defined(DTEX) && !defined(SIMULATOR)
 
 	unsigned int pipe_value;

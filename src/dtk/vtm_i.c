@@ -65,7 +65,7 @@ short ampsum;
 
 //#define USEBUF
 
-#define IWSIZE 51
+#define IWSIZE 71
 short iwavefull[IWSIZE];
 short togglebuff = 0;
 
@@ -124,7 +124,7 @@ void output_data(void)
 {
 
 #ifdef USEBUF
-		for (samples=0;samples<51;samples++)
+		for (samples=0;samples<71;samples++)
 		{
 			iwavefull[ciwave] = iwave[samples];
 			ciwave++;
@@ -137,18 +137,17 @@ void output_data(void)
 		}
 	
 #else
-	AUDIO_OUT_PLAY( iwave, 51); // play the audio data
+	AUDIO_OUT_PLAY( iwave, 71); // play the audio data
 #endif
 }
 
 
 #else
 
-void output_data(void)
-{
+void output_data(void) {
 #ifdef USEBUF
 
-		for (samples=0;samples<51;samples++)
+		for (samples=0;samples<71;samples++)
 		{
 			iwavefull[ciwave] = iwave[samples];
 			ciwave++;
@@ -161,8 +160,8 @@ void output_data(void)
 			}
 		}
 #else
-	//fwrite(iwave,2,51,outfile);
-	write_wav(iwave, 51);
+	//fwrite(iwave,2,71,outfile);
+	write_wav(iwave, 71);
 #endif
 }
 #endif

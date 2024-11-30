@@ -8,7 +8,7 @@ uint32_t header_raw[11] = {
     0x20746d66, // fmt
     0x00000010, // fmt chunk size
     0x00010001, // Audio format 1=PCM & Number of channels 1=Mono
-    0x00001F40, // Sampling Frequency in Hz
+    0x00002B11, // Sampling Frequency in Hz
     0x00003E80, // bytes per second
     0x00100002, // 2=16-bit mono & Number of bits per sample
     0x61746164, // data

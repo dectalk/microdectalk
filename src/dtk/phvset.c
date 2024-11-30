@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  *	Copyright 1984				 by Dennis H. Klatt
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -65,9 +65,7 @@ extern   short   var_val[];      /* Current ":nv" values.	*/
 #endif
 
 extern   FLAG   loadspdef;      /* Flag: need to load TMS320.	*/
-
-extern short paul[];
-
+extern   const short   *voidef_8[];      /* Speaker definition directory	*/
 extern   short   f0_dep_tilt;      /* How much f0 changes tilt.	*/
 extern   short   malfem;         /* MALE or FEMALE.		*/
 extern   short   assertiveness;      /* How much f0 falls at end.	*/
@@ -80,6 +78,7 @@ extern   short   spdeftltoff;
 extern   short   spdefb1off;
 extern   short   f0minimum;
 extern   short   f0scalefac;
+extern   short   last_voice;         /* reload voice */
 
 extern   short   *p_locus;      /* Locus table.			*/
 extern   short   *p_diph;      /* Dipthong table.		*/
@@ -136,6 +135,7 @@ int value;
    curspdef[which] = value;      /* Zap the value and	*/
    loadspdef = TRUE;               /* ask for reload.	*/
 }
+
 /*
  * Select a new voice. The
  * "voice" is a voice number, like
@@ -144,26 +144,126 @@ int value;
  * only ":n?", and you cannot get a bad
  * voice, unless there is a bad bug.
  */
-int usevoice() {
+int usevoice(int voice) {
+   register short   *newspdef;
    register int   i;
-   for (i=0; i < SPDEF; ++i) { // make a copy of paul
-      curspdef[i] = (short)paul[i];
-   }
+
+   newspdef = (short *)voidef_8[voice];      /* Copy into place.	*/
+   for (i=0; i<SPDEF; ++i)
+   curspdef[i] = newspdef[i];
    loadspdef = TRUE;         /* Ask for reload.	*/
+   last_voice = voice;
 }
 
+#ifdef vax
+/* Print all pars for all voices */
+
+static short voice_order[] = {
+      PERFECT_PAUL,
+      HUGE_HARRY,
+      FRAIL_FRANK,
+      DOCTOR_DENNIS,
+      BEAUTIFUL_BETTY,
+      UPPITY_URSULA,
+      WHISPERY_WILLY,      /* Actually Wendy */
+      ROUGH_RITA,
+      KIT_THE_KID
+      };
+
+static short param_order[] = {
+      SP_SEX,
+      SP_HS,
+      SP_F4,
+      SP_F5,
+      SP_B4,
+      SP_B5,
+      SP_BR,
+      SP_LX,
+      SP_SM,
+      SP_RI,
+      SP_NF,
+      SP_LA,
+      SP_BF,
+      SP_HR,
+      SP_SR,
+      SP_AS,
+      SP_QU,
+      SP_AP,
+      SP_PR,
+      SP_LO,
+      SP_GV,
+      SP_GH,
+      SP_GF,
+      SP_G1,
+      SP_G2,
+      SP_G3,
+      SP_G4
+      };
+
+static short *param_name[] = {
+      "SX", "HS", "F4", "F5", "B4", "B5",
+      "BR", "LX", "SM", "RI", "NF", "LA",
+      "BF", "HR", "SR", "AS", "QU", "AP", "PR",
+      "LO", "GV", "GH", "GF", "G1", "G2", "G3", "G4"
+      };
+
+printvoice()
+{
+   register short   *newspdef;
+   LIMIT *lp;
+   extern LIMIT limitTable[];
+   register int   i,j;
+   short voice,temp;
+   odev = fopen("manual.table", "w");
+   fprintf(odev, "\nTable 5-3. Limits for spdef pars.\n\n");
+   fprintf(odev,
+   "   SYM   MIN   MAX\n");
+   for (i=0; i<27; ++i)
+      {      /* Limit should be SPDEF */
+      fprintf(odev, "\n    %s", param_name[i]);
+      lp = &limitTable[param_order[i]];
+      fprintf(odev, "%6d%6d", lp->l_min, lp->l_max);
+      if ((i == 5) || (i == 11) || (i == 18))
+         {
+         fprintf(odev, "\n");
+         }
+      }
+   fprintf(odev, "\n\n\nTable 4-4. Speaker defs for all voices.\n");
+   fprintf(odev,
+   "\n    Paul Harry Frank Denis Betty Ursul Wendy  Rita   Kit\n");
+   for (i=0; i<27; ++i)
+      {      /* Limit should be SPDEF */
+      fprintf(odev, "\n%s", param_name[i]);
+      for (j=0; j<9; j++)
+         {
+         voice = voice_order[j];
+         newspdef = voidef_8[voice];
+         temp = newspdef[param_order[i]];
+         fprintf(odev, "%6d", temp);
+         }
+      if ((i == 5) || (i == 11) || (i == 18))
+         {
+         fprintf(odev, "\n");
+         }
+      }
+   printf("\n\nSave table of sp defs for manual in file 'manual.table'\n");
+   exit(1);
+}
+#endif
+#ifndef MINIMAL_SYNTH
 /*
  * Make "var_val" the same as
  * the current speaker. Called from the
  * main loop in "phmain" on a SAVE.
  */
-int saveval() {
+int saveval()
+{
    register int   i;
 
    for (i=0; i<SPDEF; ++i)
    var_val[i] = curspdef[i];
 }
-
+#endif
 /*
  * This routine is called by
  * "phclause" to recompute and reload a speaker
@@ -188,11 +288,27 @@ int setspdef()
    spdef = (SP_CHIP far *)spcget(SPC_type_speaker);
    malfem = (*curspdef+SP_SEX);      /* Determine SEX	*/
 
-   p_locus = (short *)maleloc;         /* Use MALE tables	 */
-   p_diph = (short *)maldip;
-   p_tar = (short *)maltar;
-   p_amp = (short *)malamp;
-
+#ifndef NO_FEMALE
+   if (malfem == MALE)
+      {
+      p_locus = (short *)maleloc;         /* Use MALE tables	 */
+    p_diph = (short *)maldip;
+      p_tar = (short *)maltar;
+      p_amp = (short *)malamp;
+      }
+   else
+      {
+      p_locus = femloc;        /* Use FEMALE tables	 */
+      p_diph = femdip;
+      p_tar = femtar;
+      p_amp = femamp;
+      }
+#else
+	 p_locus = (short *)maleloc;         /* Use MALE tables	 */
+// p_diph = (short *)maldip;
+      p_tar = (short *)maltar;
+      p_amp = (short *)malamp;
+#endif
    /* The following are not sent to chip, just used by higher level routines */
 
    f0_dep_tilt = curspdef[SP_FT];                  /* FT -> FT		*/

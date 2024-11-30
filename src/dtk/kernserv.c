@@ -310,8 +310,7 @@ short value;
  */
 
 #ifndef NO_CMD
-int start_flush(short serial_mode)
-{
+int start_flush(short serial_mode) {
 
 	unsigned short		temp;//,flags;
 	short					old_volume,old_log;
@@ -330,42 +329,17 @@ int start_flush(short serial_mode)
 	if(serial_mode == false)
 		{
 		KS.cmd_flush = CMD_flush_toss;
-#ifndef SINGLE_THREADED
-		flush_ring(KS.in_ring);
-#endif
 		status_set(STAT_rr_char);
 		}
 
-#ifndef SINGLE_THREADED
-	flush_ring(KS.out_ring);
-#endif
 	KS.spc_flush_type = SPC_flush_all;
 	KS.spc_flush = true;
 	KS.halting = true;
-
-#ifndef SINGLE_THREADED
-	flush_pipe(KS.lts_pipe);
-	flush_pipe(KS.ph_pipe);
-#endif
-
-
-#ifndef	SIMULATOR
-	if(KS.spc_sync.queue)
-		signal_semaphore(&KS.spc_sync);
-	if(KS.spc_resume.queue)
-		signal_semaphore(&KS.spc_resume);
-#endif
-
 /*
  *  hack time ... now the pipes may be waiting for some data (psnextra is
  *  was set, so push some data through the pipe to insure we see the sync
  *  pop out ...
  */
-
-#ifndef	SIMULATOR
-	set_gpio(GPIO_STOP);
-#endif
-
 	KS.spc_sync.value = 0;
 	temp = ((PFASCII<<PSFONT)+0xb);
 #ifdef SINGLE_THREADED
@@ -560,40 +534,13 @@ int status_toggle_update(unsigned short bits)
 //	kernel_enable(flags);
 }
 
-void serial_update()
-{
-//	unsigned int flags;
-
-//	flags=kernel_disable();
-	KS.isa_status &= ~(STAT_tr_char|STAT_rr_char);
-	if(IN_RING.count < IN_RING_MAX)
-		KS.isa_status |= STAT_rr_char;
-	if(OUT_RING.count)
-		KS.isa_status |= STAT_tr_char;
-	KS.isa_status |= STAT_new_status;
-	port_out_186(ISA_STATUS,KS.isa_status);
-//	kernel_enable(flags);
-
-}
-
-
 #ifdef DECTALK_KERNEL
 unsigned short kernel_disable()
 {
-#ifndef	SIMULATOR
-	_asm	pushf
-	_asm	cli
-	_asm	pop	ax
-#endif
 }
 
 void kernel_enable(flags)
 unsigned short flags;
 {
-#ifndef	SIMULATOR
-	_asm	mov	ax,flags
-	_asm	push	ax
-	_asm	popf
-#endif
 }
 #endif

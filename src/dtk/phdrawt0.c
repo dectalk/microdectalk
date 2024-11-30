@@ -110,8 +110,8 @@ static short initcosine;
 static short f0las1=0, f0las2=0, tarhat=0, tarimp=0, f0a2=0, f0b=0, f0a1=0;
 static short dtimf0, phonex, f0seg, tarseg, tarseg1, beginfall, f0in;
 static short /*firsttime,*/lastone,np, npg, nimp, tarbas, endfall, phocur, f0command;
-static short timecos6,timecos10,timecos15,timecosvib;
-static short f0beginfall,f0endfall;
+static short timecos6,timecos10,timecos15,timecos3,timecos5,timecosvib;
+static short f0beginfall,f0endfall, addjit;
 /*    For user-specified targets/singing notes */
 static short vibsw,newnote,delnote,delcum,f0start;
 
@@ -144,7 +144,7 @@ int pht0draw()
       f0b = FRAC_ONE - f0_lp_filter;
       f0a1 = f0a2 << F0SHFT;
       /* Variables relevent only if f0mode=SINGING */
-      newnote = f0beginfall;
+      newnote = 1000;//f0beginfall;
       delnote = 0;
       delcum = 0;
       f0start = f0;
@@ -210,6 +210,7 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
 		keepdur=0;
       /* Must be at bottom of hat */
       tarhat = 0;       /* should be anyway, except for emergency halt */
+      addjit = 305;
    }
    /* End of initialization */
 
@@ -228,24 +229,14 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
       {   /* Reset baseline */
          nframb = 0;      /* Time from last reset in frames */
          tarhat = 0;      /* And go to bottom of hat pattern */
-      }
-#ifndef MINIMAL_SYNTH
-      else if (f0command >= 2000)
-      {
-
+      }  else if (f0command >= 2000) {
          set_user_target();     /* Must be f0mode < SINGING */
-      }
-#endif
-      else if ((f0command & 01) == 0)
-      {   /* If f0command is even */
+      } else if ((f0command & 01) == 0) {   /* If f0command is even */
          tarhat += f0command;   /* Command is a step, reset tarhat */
-         if (f0command < 0)
-         {   /* Cancel previous impulse if step */
+         if (f0command < 0) {   /* Cancel previous impulse if step */
            tarimp = 0;
          }
-      }
-      else
-      {            /* Odd, command is impulse  */
+      } else { /* Odd, command is impulse  */
          /* Impulse realized as 16-frame step of doubled amp */
          tarimp = f0command + f0command;
          nimp = 16 - ((f0_lp_filter-1300)>>8);
@@ -331,6 +322,7 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
       dtglst = (-dtglst);
    if (dtglst <= 7)
       f0prime += ((dtglst * 70) - 550);
+   
    /* And reduce AV somewhat (ugly code, but F0 computed before AV) */
    if (dtglst <= 5)
    {
@@ -341,14 +333,12 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
    /* Introduce variability to period at startup from a voiceless interval */
 
    /* See if f0 exceeds legal bounds, truncate  */
-   if (f0prime > HIGHEST_F0)
-   {
+   if (f0prime > HIGHEST_F0) {
       f0prime = HIGHEST_F0;
-   }
-   else if (f0prime < LOWEST_F0)
-   {
+   } else if (f0prime < LOWEST_F0) {
       f0prime = LOWEST_F0;
    }
+
    /* Scale f0 according to current speaker definition, the number 120 is
     *    the nominal average pitch of Paul's voice (AP in spdef)  */
    if (f0mode < SINGING)
@@ -396,8 +386,6 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
    arg3 = f0prime;
    parstochip[OUT_T0] = muldv();
 /*	printf("%d %d\n",f0prime,parstochip[OUT_T0]);*/
-
-
 	if(KS.logflag&LOG_OUTPHON)
 		{
 /*		 if (np == 0 && allophons[np] == SIL)
@@ -430,54 +418,47 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
 /*			S E T - U S E R - T A R G E T							 					 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #ifndef MINIMAL_SYNTH
-int set_user_target()
-{
+int set_user_target() {
    short trandur;
+   int tmp;
 
-   f0command -= 2000;
+   //f0command -= 2000;
+   f0command = f0command % 1000; /* 2000 is offset flag */
 
-#ifdef DEBUG_USER_PROSODICS
-   printf("\tFound user f0command[] = %d in PHDRAWT0, f0mode = %d\n", f0command, f0mode);
-#endif
-
-   if (f0command <= 37)
-   {   /* Pointer to C5, highest possible sung note */
+   if (f0command <= 37) { /* Pointer to C5, highest possible sung note */
       newnote = notetab[f0command-1];
       vibsw = 1;
       /* Set delnote*4 so transition happens over 16 frames (100 ms) */
       delnote = ((newnote - f0) >> 2);
-   }
-   else
-   {                  /* Straight-lines */
+   } else { /* Straight-lines */
       f0command *= 10;
-      if (f0command < LOWEST_F0)
-      {
+      if (f0command < LOWEST_F0) {
          f0command = LOWEST_F0;
-      }
-      else if (f0command > HIGHEST_F0)
-      {
+      } else if (f0command > HIGHEST_F0) {
          f0command = HIGHEST_F0;
       }
       newnote = f0command;
       vibsw = 0;
+
+      if (f0mode== TIME_VALUE_SPECIFIED) {
+          trandur = dtimf0;
+          if (trandur == 0) {
+              f0 = newnote;
+          }
+      } else {
+          trandur = allodurs[npg+1];
+      }
+
       /* Compute incremental change to f0*10 every frame */
       delnote = (newnote - f0) << 2;   /* f0 change times 40 */
-      trandur = allodurs[npg+1];   /* Change to occur over next phone */
-      if (delnote > 0)
-      {
+      if (delnote > 0) {
          delnote += (trandur - 1);   /* Round upward */
       }
-      if (delnote < 0)
-      {
+      if (delnote < 0) {
          delnote -= (trandur - 1);   /* Round downward */
       }
-      if (trandur != 0)
-      {
+      if (trandur != 0) {
          delnote /= trandur;
-      }
-      else
-      {
-         delnote = delnote >> 3;   /* 8-frame (50 ms) transition */
       }
    }
    delcum = 0;
@@ -549,9 +530,7 @@ int set_tglst()
 /*			F I L T E R - C O M M A N D S			 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int filter_commands()
-{      /* Convert 'f0in' command to smoothed 'f0' */
-
+int filter_commands() {      /* Convert 'f0in' command to smoothed 'f0' */
 	extern short f0outa;
 	extern short f0outb;
 	extern short f0outc;
@@ -559,7 +538,7 @@ int filter_commands()
 	extern short f0out1;
 	extern short f0out2;
 
-   /* First pole (separate into 2 poles to min truncation errors) */
+   // First pole (separate into 2 poles to min truncation errors)
    arg1 = f0a1;
    arg2 = f0in;
    f0outa = mlsh1();
@@ -568,33 +547,19 @@ int filter_commands()
    f0outb = mlsh1();
    f0out1 = f0outa + f0outb;
    f0las1 = f0out1;
-   /* Second pole */
+   // Second pole
    arg1 = f0a2;
-   arg2 = f0out1 + (tarseg1 << F0SHFT);   /* Use only one pole */
+   arg2 = f0out1 + (tarseg1 << F0SHFT);   // Use only one pole
    f0outc = mlsh1();
    arg1 = f0b;
    arg2 = f0las2;
    f0outd = mlsh1();
    f0out2 = f0outc + f0outd;
    f0las2 = f0out2;
-   f0 = f0out2 >> F0SHFT;   /* Unscaled fundamental frequency	   */
-   f0prime = f0;      /* This is going to be scaled output value */
-
-
-   /*#define NOTHING*/
-#ifdef NOTHING
-   printf(
-   "[%s] tarbas=%4d tarhat=%3d tarseg=%3d tarseg1=%3d tarimp=%3d tarsum=%4d\n",
-   phprint(allophons[npg]), tarbas, tarhat, tarseg, tarseg1,
-   tarimp, f0in);
-#endif
-
-   /* (Check for overloads if change filter tc or size of impulses) */
-
-#if '\0'
-   printf("f0in=%6d   a=%6d b=%6d 1=%6d c=%6d d=%6d 2=%6d\n",
-   f0in, f0outa, f0outb, f0out1, f0outc, f0outd, f0out2);
-#endif
+   f0 = f0out2 >> F0SHFT;   // Unscaled fundamental frequency
+   f0prime = f0;      // This is going to be scaled output value
+   // (Check for overloads if change filter tc or size of impulses)
+   //f0 += (f0in - f0 )>>2;
 }
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*		S I N G - O R - L I N E A R - I N T E R P		 */
@@ -614,9 +579,7 @@ int linear_interp()
          delcum = 0;
          delnote = 0;
       }
-   }
-   else
-   {
+   } else {
       if (f0 < newnote)
       {
          f0 = newnote;
@@ -627,11 +590,12 @@ int linear_interp()
    }
    f0prime = f0;            /* To be scaled by spdef */
 
-   if (vibsw == 1)
-   {         /* Singing */
+   if (vibsw == 1) {         /* Singing */
       /* Add vibratto of 6.2 Hz (25 frames/cycle), +/- 2.05 Hz ampl. */
       timecosvib += 165;
-      if (timecosvib > TWOPI)    timecosvib -= TWOPI;
+      if (timecosvib > TWOPI) {
+          timecosvib -= TWOPI;
+      }
       f0prime += getcosine[timecosvib>>6] >> 3;
    }
 }
