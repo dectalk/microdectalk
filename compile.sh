@@ -50,6 +50,6 @@ compile_arch "x86_64" "out/x86_64/"
 
 # compile the android app itself
 cd App
-./gradlew ./app/build/outputs/apk/debug/app-universal-debug.apk
+./gradlew assembleDebug
 cd ..
 cp App/app/build/outputs/apk/debug/app-universal-debug.apk out/ # final resulting apk
