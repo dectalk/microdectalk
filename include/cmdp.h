@@ -1,4 +1,4 @@
-extern	int main(unsigned int data_seg,unsigned int stack_start);
+// extern	int main(unsigned int data_seg,unsigned int stack_start);
 extern	int icommand(void );
 #ifdef SINGLE_THREADED
 extern	int __far dtpc_cmd(unsigned char inchar);
@@ -69,7 +69,7 @@ extern	void insertchar(int posx,char addchar);
 extern	void deletechar(int posx,char addchar);
 extern	void changchar(int posx,char newchar);
 extern	void checkrule(void );
-extern	int adjustindex(int rcntr);
+extern	int adjustIndex(int rcntr);
 extern	int doaction(int rcntr);
 extern	void getclause(void );
 extern	int ablook(unsigned char *end,unsigned char *start);
