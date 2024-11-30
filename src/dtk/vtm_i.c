@@ -3,7 +3,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    � Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  * Copyright (c)        1984                    by Dennis H. Klatt
  * Copyright (c) 1984 Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1993 Digital Equipment Corporation, Maynard, Mass.

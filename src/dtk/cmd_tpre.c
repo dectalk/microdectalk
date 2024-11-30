@@ -3,7 +3,7 @@
 /************************************************************
  *
  *                           Coryright (c)
- *    � Digital Equipment Corporation 1996. All rights reserved.
+ *    © Digital Equipment Corporation 1996. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
