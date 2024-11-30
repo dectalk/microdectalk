@@ -3,7 +3,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    © Digital Equipment Corporation 1995. All rights reserved.
+ *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
  * Copyright (c)        1984                    by Dennis H. Klatt
  * Copyright (c) 1984 Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1993 Digital Equipment Corporation, Maynard, Mass.
@@ -50,6 +50,10 @@
 // help #include "AudioMapping.h"
 
 extern void read_speaker_definition(void);
+
+#ifdef __wasm__
+__attribute__((import_name("write_wav")))
+#endif
 extern void write_wav(short *iwave, int length);
 
 short inc=0;
