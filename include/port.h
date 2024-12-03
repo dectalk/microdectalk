@@ -1,8 +1,8 @@
 /************************************************************************
  *
- *                           Copyright ï¿½
- *	  Copyright ï¿½ 2000-2001 Force Computers Inc., a Solectron company. All rights reserved.
- *    ï¿½ Digital Equipment Corporation 1995. All rights reserved.
+ *                           Copyright ©
+ *	  Copyright © 2000-2001 Force Computers Inc., a Solectron company. All rights reserved.
+ *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -40,12 +40,13 @@
  *  008	MGS		05/09/2001	Some VxWorks porting BATS#972
  *  009	MGS		05/18/2001	More VxWorks porting
  *  010	MGS		06/19/2001	Solaris Port BATS#972
+ *  011	MGS		04/11/2002	ARM7 port
  *************************************************************************/
 
 #ifndef _PORT_H
 #define _PORT_H
 
-//#include "dectalkf.h"
+#include "dectalkf.h"
 
 /*************************************************************************
  *  WINDIC
@@ -102,14 +103,14 @@ typedef unsigned char U8;
  ************************************************************************
  * defines for DEC OSF/1 AXP & UNIXs
  */
-#if defined (__osf__) || defined (__linux__)
+#if defined (__osf__) || defined (__linux__) || defined (__EMSCRIPTEN__) || defined (__APPLE__)
 
 /*#define ENGLISH_US 1*/
 
 /* GL 04/21/1997  add this for OSF build */
-//#include "opthread.h"
+#include "opthread.h"
 
-//#include <unistd.h>
+#include <unistd.h>
 #include <stdio.h>
 
 /*
@@ -120,7 +121,7 @@ typedef unsigned char U8;
 #define far
 #define huge
 #define _huge
-#ifndef __linux__
+#if !(defined __linux__ || defined __EMSCRIPTEN__ || defined (__APPLE__))
 #define volatile
 #endif
 
@@ -135,7 +136,7 @@ typedef unsigned char U8;
 #ifdef __osf__
 typedef unsigned long QWORD;
 #endif
-#ifdef __linux__
+#if defined __linux__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 typedef unsigned long long QWORD;
 #endif
 
@@ -206,7 +207,7 @@ typedef unsigned char U8;
 #endif
 
 typedef unsigned short DT_PIPE_T;
-typedef long S32;
+typedef int S32;
 typedef unsigned int U32;
 typedef short S16;
 typedef unsigned short U16;
@@ -221,8 +222,8 @@ typedef  CRITICAL_SECTION  MUTEX_T;
 typedef  MUTEX_T *  HMUTEX_T;
 
 #if !(defined OLEDECTALK) && !(defined SAPI5DECTALK)
-//#include "playaudd.h"
-//typedef PLAY_AUDIO_T * 	LPAUDIO_HANDLE_T;
+#include "playaudd.h"
+typedef PLAY_AUDIO_T * 	LPAUDIO_HANDLE_T;
 #endif //OLEDECTALK
 
 #endif //WIN32
@@ -367,7 +368,32 @@ typedef U32 UINT;
 #define SUN_LIN_16      3
 #endif
 
-#ifdef MICRO_DECTALK
+/*
+ ************************************************************************
+ *  ARM7TDMI
+ */
+#ifdef ARM7
+
+#ifndef ARM7_NOSWI
+#include <stdio.h>
+#endif
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * fake out some MSDOS stuff
+ */
+
+#define __far
+#define _far
+#define far
+#define huge
+#define volatile
+
+#ifdef SEPARATE_PROCESSES
+#undef SEPARATE_PROCESSES
+#endif
+
 typedef unsigned short DT_PIPE_T;
 typedef long S32;
 typedef unsigned long U32;
@@ -375,8 +401,36 @@ typedef short S16;
 typedef unsigned short U16;
 typedef signed char S8;
 typedef unsigned char U8;
+typedef unsigned long DWORD;
+//typedef unsigned _int64 QWORD, * PQWORD; //tek 04aug97 sapi fixes
+
+typedef void * DT_HANDLE;
+typedef void * LPVOID;
+typedef void * PVOID;
+typedef long MMRESULT;
+
+//typedef  DT_HANDLE  HTHREAD_T;
+//typedef  DT_HANDLE  HEVENT_T;
+//typedef  CRITICAL_SECTION  MUTEX_T;
+//typedef  MUTEX_T *  HMUTEX_T;
+
+#ifdef EPSON_ARM7
+#include "ltsnames.h"
 #endif
 
+
+#endif //ARM7
+
+/**
+ * Emscripten Support!
+ */
+#ifdef __EMSCRIPTEN__
+
+// Remove all __inline commands.
+#define _inline
+#define __inline
+
+#endif
+
+
 #endif /* _PORT_H */
-
-

@@ -1,5 +1,6 @@
 /* **********************************************************************
  *    						Copyright ©
+ *    Copyright © 2002 Fonix Corporation. All rights reserved.
  *    Copyright © Force Computers Incorporated 2000. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -8,9 +9,9 @@
  *    52.227-14 Alt. III, as applicable.
  *
  *    This software is proprietary to and embodies the confidential
- *    technology of Force Computers Incorporated and other parties.
+ *    technology of Fonix Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Force or an
+ *    only pursuant to a valid written license from Fonix or an
  *    authorized sublicensor.
  * **********************************************************************/
 
@@ -26,8 +27,8 @@
  * Rev  Who     Date            Description
  * ---  -----   -----------     --------------------------------------------  
  * 001	MGS		08/22/2000		BATS #935, fixed 2 concurrency problems
- * 002 	CAB		10/16/00		Changed copyright info
- *
+ * 002 	CAB		10/16/2000		Changed copyright info
+ * 003	CAB		07/10/2002		Updated copyright info
  **********************************************************************/
 
 #ifndef _PIPE_H_
@@ -55,9 +56,6 @@ typedef  unsigned short  WORD_T;
 typedef  unsigned int    DWORD_T;
 typedef  unsigned long   QWORD_T;
 
-typedef  unsigned int	UINT;
-typedef  unsigned short	USHORT;
-
 /**********************************************************************/
 /*  Opaque pipe structure definition.                                 */
 /**********************************************************************/
@@ -72,9 +70,11 @@ typedef PIPE_T * LPPIPE_T;
 
 LPPIPE_T create_pipe( UINT, UINT );
 
-void write_pipe( LPPIPE_T, void *, UINT );
+void write_pipe( LPPIPE_T, unsigned char *, UINT );
 
-void read_pipe( LPPIPE_T, void *, UINT );
+void read_pipe( LPPIPE_T, unsigned char *, UINT );
+
+void read_pipeEx( LPPIPE_T *pPipe, unsigned char * pItems, UINT uiNumberToRead );
 
 void pause_pipe( LPPIPE_T );
 
@@ -96,4 +96,4 @@ void SWFlushPipe( LPPIPE_T pPipe );
 
 #define READ_WORD_PIPE_PACKET 0xFEEDC0DE
 
-#endif
+#endif	//_PIPE_H_

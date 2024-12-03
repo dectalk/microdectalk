@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    © Digital Equipment Corporation 1995. All rights reserved.
+ *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -21,15 +21,28 @@
  *    Creation Date:
  *
  *    Functionality:
- *  General defines ...
+ *    General defines ...
  *
  ***********************************************************************
  *    Revision History:
- * 15 jul 95	...tek		added uppercase BITn defs..
+ *
+ * Rev  Who     Date            Description
+ * ---  -----   -----------     -------------------------------------------- 
+ * 001  TEK		07/15/1995		added uppercase BITn defs..
  */
 
 #ifndef	DEFSH
 #define	DEFSH	1
+
+#ifndef MSDOS
+#define far
+#define _far
+#define _huge
+#define _halloc malloc
+//#define FAR
+#define volatile
+#define register	/* this should really be cased on a per machine basis - tfm */
+#endif
 
 #define	HUNGARY	1
 #define	true	1

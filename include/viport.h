@@ -49,7 +49,7 @@
  * OS independent defines for VTM
  */
  
-#define  MAXIMUM_FRAME_SIZE  71
+#define  MAXIMUM_FRAME_SIZE  100
 #define  SAMPLE_RATE_INCREASE   0
 #define  SAMPLE_RATE_DECREASE   1
 #define  NO_SAMPLE_RATE_CHANGE  2

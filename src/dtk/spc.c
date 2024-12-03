@@ -2,8 +2,9 @@
  ***********************************************************************
  *
  *                           Copyright (c)
- *    Copyright ï¿½ 2000-2001 Force computers Inc., a Solectron company. All rights reserved.
- *    ï¿½ Digital Equipment Corporation 1996, 1997. All rights reserved.
+ *    Copyright © 2002 Fonix Corporation. All rights reserved.
+ *    Copyright © 2000-2001 Force computers Inc., a Solectron company. All rights reserved.
+ *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -11,9 +12,9 @@
  *    52.227-14 Alt. III, as applicable.
  *
  *    This software is proprietary to and embodies the confidential
- *    technology of Force Computers Incorporated and other parties.
+ *    technology of Fonix Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Force or an
+ *    only pursuant to a valid written license from Fonix or an
  *    authorized sublicensor.
  *
  ***********************************************************************
@@ -37,52 +38,96 @@
  * 006	MGS		05/09/2001		Some VxWorks porting BATS#972
  * 007	MFG		05/29/2001		Included dectalkf.h
  * 008	MGS		06/19/2001		Solaris Port BATS#972
- *                              
+ * 009	MGS		03/20/2002		Single threaded vtm
+ * 010	MGS		04/11/2002		ARM7 port
+ * 011	CAB		05/21/2002		Updated copyright info
  */
 
-//#include "dectalkf.h"
+#include "dectalkf.h"
 #ifdef WIN32
 #include <windows.h>
-#include <malloc.h>
+  #if !defined (__APPLE__)
+    #include <malloc.h>
+  #endif
 #include <stdio.h>
-//#include "port.h"
-//#include "kernel.h"
+#include "port.h"
+#include "kernel.h"
+#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
 #endif
-#include <stdio.h>
-#include "phdefs.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
 
-#define SPC_TYPE_MASK			(0x00ff) 
+#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#include <stdlib.h>
+#include "opthread.h"
+#include "port.h"
+#include "kernel.h"
+#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
+#endif
 
+#ifdef ARM7
+#include <stdlib.h>
+#include <string.h>
+#include "port.h"
+#include "kernel.h"
+#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
 
-//#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
-//#include <stdlib.h>
-//#include "opthread.h"
-//#include "port.h"
-//#include "kernel.h"
-//#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
-//#endif
-extern void vtmmain(void);
+short global_spc_v_buf[VOICE_PARS+2];
+short global_spc_s_buf[SPDEF_PARS+2];
+#endif
 
-/*
- * spcget
+/* ******************************************************************
+ *      Function Name: spc_size()
  *
- * allocate a SPC buffer of a given type
- * return generic data handle which must be cast
- */
-int	spc_dma_lengths[] = { 18, 22, 11, 0, 1, 0, 0, 0, 0 };
+ *      Description:
+ *
+ *      Arguments: unsigned short spc_type
+ *
+ *      Return Value: static int
+ *
+ *      Comments:
+ *
+ * *****************************************************************/
+static int spc_size( unsigned short spc_type )
+{
+	//tek 01aug97 bats 404 support for packet subtypes
+//#ifdef _WIN32
+	spc_type &= SPC_TYPE_MASK;
+//#endif //_WIN32
+    switch( spc_type )
+    {
+		case SPC_type_voice:
+			return( VOICE_PARS + 1 );
+		case SPC_type_speaker:
+			return( SPDEF_PARS + 1 );
+		case SPC_type_sync:
+			return( SYNC_PARS + 1 );
+		case SPC_type_index:
+			return( INDEX_PARS + 1 );
+		default:
+			return( 0 );
+    }
+}
 
-extern short *global_spc_buf;
-
-extern short global_spc_v_buf[VOICE_PARS+2];
-extern short global_spc_s_buf[SPDEF_PARS+2];
-
+/* ******************************************************************
+ *      Function Name: spcget()
+ *
+ *      Description: allocate a SPC buffer of a given type
+ *					 return generic data handle which must be cast
+ *
+ *      Arguments: unsigned short spc_type
+ *
+ *      Return Value: void
+ *
+ *      Comments:
+ *
+ * *****************************************************************/
 void * spcget( unsigned short spc_type )
 {
     unsigned short * spc_buffer = (unsigned short *)NULL;
-    int nwords = spc_dma_lengths[spc_type];
+    int nwords = spc_size( spc_type );
 
     if ( nwords > 0 )
     {
+#ifdef ARM7
 		if (spc_type==1)
 		{
 			spc_buffer = global_spc_s_buf;
@@ -91,45 +136,92 @@ void * spcget( unsigned short spc_type )
 		{
 			spc_buffer = global_spc_v_buf;
 		}
-
-		if ( spc_buffer != (unsigned short *)NULL )
-			spc_buffer[0] = spc_type;
+#else
+	spc_buffer = (unsigned short *)malloc( nwords * sizeof( unsigned short ) );
+#endif
+	if ( spc_buffer != (unsigned short *)NULL )
+	    spc_buffer[0] = spc_type;
     }
-	
+#ifdef ARM7
+	else
+	{
+	    return( (void *)(spc_buffer+1) );
+	}
+#endif
+
+#ifdef ARM7
+    return( (void *)&(spc_buffer[1]) );
+#else
     return( (void *)(spc_buffer+1) );
+#endif
 }
 
-/*
- * spcwrite
+/* ******************************************************************
+ *      Function Name: spcwrite()
  *
- * write a SPC buffer to the SPC pipe
- * free up the buffer
- */
-int spcwrite( unsigned short * spc_buffer ) {
+ *      Description: write a SPC buffer to the SPC pipe
+ *					 free up the buffer
+ *
+ *      Arguments:	PKSD_T pKsd_t
+ *					unsigned short *spc_buffer
+ *
+ *      Return Value: int
+ *
+ *      Comments:
+ *
+ * *****************************************************************/
+int spcwrite( PKSD_T pKsd_t, unsigned short *spc_buffer )
+{
     int nwords;
-	int i;
 
   /* index back to spc_type word */
-    spc_buffer-=1;
-
-	global_spc_buf=spc_buffer;
+    spc_buffer--;
 
     /* check for valid pointer */
     if ( spc_buffer == (unsigned short *)NULL ) return( 0 );
-
+    
     /* find size of SPC packet */
-    nwords = spc_dma_lengths[ spc_buffer[0] ];
-  
-	vtmmain();
+#ifdef ARM7
+    nwords = spc_size( spc_buffer[0] );
+#else
+    nwords = spc_size( spc_buffer[0] );
+#endif
 
 
+    if ( nwords > 0 )
+#ifndef SINGLE_THREADED
+		write_pipe( pKsd_t->vtm_pipe, spc_buffer, (UINT)nwords );
+#else
+#ifdef ARM7
+		vtm_loop(pKsd_t->phTTS,spc_buffer);
+#else
+		vtm_loop(pKsd_t->phTTS,spc_buffer);
+#endif
+#endif // SINGLE_THREADED
+
+#ifndef ARM7
     /* free buffer */
-    //free( spc_buffer );
+    free( spc_buffer );
+#endif
 
     return(nwords);
 }
 
-/* free a packet without sending it. */
-void spcfree(unsigned short * spc_buffer) {
-	//free(--spc_buffer);
+/* ******************************************************************
+ *      Function Name: spcwrite()
+ *
+ *      Description: free a packet without sending it.
+ *
+ *      Arguments: unsigned short spc_buffer
+ *
+ *      Return Value: void
+ *
+ *      Comments:
+ *
+ * *****************************************************************/
+void spcfree(unsigned short *spc_buffer)
+{
+#ifndef ARM7
+	free(--spc_buffer);
+#endif
 }

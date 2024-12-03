@@ -37,16 +37,13 @@
 /**********************************************************************/
 /*  Declare and initialize the sample rate scaling parameters.        */
 /**********************************************************************/
-#ifndef MINIMAL_SYNTH
 extern UINT uiSampleRate;
 extern UINT uiSampleRateChange;
-#endif
 extern S16 rate_scale;
 extern S16 inv_rate_scale;
-#ifndef MINIMAL_SYNTH
+extern UINT uiNumberOfSamplesPerFrame;
 extern double SampleRate;
 extern double SamplePeriod;
-#endif
 
 /**********************************************************************/
 /*  Flag to test for sample rate conversion. (Not currently used)     */
@@ -58,33 +55,29 @@ extern unsigned int uiCurrentSpeaker;
 /*  Constant B0 controls shape of glottal pulse as a function         */
 /*  of desired duration of open phase N0.                             */
 /**********************************************************************/
-#ifdef VARIABLE_OPEN_PERIOD
-extern const S16 B0[224];
-#else
-extern const S16 voices[14];
-#endif
+extern S16 B0[224];
 
 /**********************************************************************/
 /*  Data arrays for conversion of nasal antiresonator FZinHZ & BW to  */
 /*  difference equation coeficients azero, bzero, and czero           */
 /**********************************************************************/
-extern const S16 azero_tab[35];
-extern const S16 bzero_tab[35];
-extern const S16 czero_tab[35];
+extern S16 azero_tab[35];
+extern S16 bzero_tab[35];
+extern S16 czero_tab[35];
 
 /**********************************************************************/
 /*  Convertion table, db to linear,                                   */
 /**********************************************************************/
-extern const S16 amptable[88];
+extern S16 amptable[88];
 
 /**********************************************************************/
 /*  Cosine table used by function setb()                              */
 /**********************************************************************/
-extern const S16 cosine_table[];
+extern S16 cosine_table[];
 
 /**********************************************************************/
 /*  Radius table used by function setc()                              */
 /**********************************************************************/
-extern const S16 radius_table[];
+extern S16 radius_table[];
 
 #endif

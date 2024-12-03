@@ -33,8 +33,6 @@
 #ifndef VTMFUNCI_H
 #define VTMFUNCI_H
 
-#ifndef USE_FILTER_FUNCTIONS
-
 /**********************************************************************/
 /*  Function two_zero_filter.                                         */
 /**********************************************************************/
@@ -46,12 +44,12 @@
                           tz_a, \
                           tz_b, \
                           tz_c ) \
-  temp1 = tz_c * tz_delay_2; \
-  temp1 += tz_b * tz_delay_1; \
-  temp1 += tz_a * tz_input; \
+  temp1 = tz_c * (S32)tz_delay_2; \
+  temp1 += tz_b * (S32)tz_delay_1; \
+  temp1 += tz_a * (S32)tz_input; \
   tz_delay_2 = tz_delay_1; \
   tz_delay_1 = tz_input; \
-  tz_output = ( temp1 >> 12 );
+  tz_output = (S16)( temp1 >> 12 );
 
 /**********************************************************************/
 /*  Function two_zero_filter_2.                                       */
@@ -65,11 +63,11 @@
                             tz_delay_2, \
                             tz_b, \
                             tz_c ) \
-  temp0 = tz_c * tz_delay_2; \
-  temp0 += tz_b * tz_delay_1; \
+  temp0 = tz_c * (S32)tz_delay_2; \
+  temp0 += tz_b * (S32)tz_delay_1; \
   tz_delay_2 = tz_delay_1; \
   tz_delay_1 = tz_input; \
-  tz_input += ( temp0 >> 12 );
+  tz_input += (S16)( temp0 >> 12 );
 
 /**********************************************************************/
 /*  Function two_pole_filter                                          */
@@ -81,18 +79,13 @@
                           tp_a, \
                           tp_b, \
                           tp_c ) \
-  temp1 = tp_c * tp_delay_2; \
+  temp1 = tp_c * (S32)tp_delay_2; \
   tp_delay_2 = tp_delay_1; \
-  temp0 = tp_b * tp_delay_1; \
+  temp0 = tp_b * (S32)tp_delay_1; \
   temp1 += temp0; \
-  temp0 = tp_a * tp_input; \
+  temp0 = tp_a * (S32)tp_input; \
   temp1 += temp0; \
-  tp_delay_1 = ( temp1 >> 12 );
+  tp_delay_1 = (S16)( temp1 >> 12 );
 
 /* 23-MAR-95 CJL Add to exclude multiple includes.*/
-#else
-void two_pole_filter( short tp_input, short *tp_delay_1, short *tp_delay_2, short tp_a, short tp_b, short tp_c );
-void two_zero_filter( short tz_input, short *tz_output, short *tz_delay_1, short *tz_delay_2, short tz_a, short tz_b, short tz_c );
-void two_zero_filter_2( short *tz_input, short *tz_delay_1, short *tz_delay_2, short tz_b, short tz_c );
-#endif
 #endif

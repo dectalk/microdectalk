@@ -1,7 +1,9 @@
 /*
  ***********************************************************************
  *
- *                           Coryright (c)
+ *                           Copyright ©
+ *	  Copyright © 2002 Fonix Corporation. All rights reserved.
+ *	  Copyright © 2000 Force Computers, Inc., a Solectron Company. All rights reserved.
  *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -10,9 +12,9 @@
  *    52.227-14 Alt. III, as applicable.
  *
  *    This software is proprietary to and embodies the confidential
- *    technology of Digital Equipment Corporation and other parties.
+ *    technology of Fonix Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Digital or an
+ *    only pursuant to a valid written license from Fonix or an
  *    authorized sublicensor.
  *
  ***********************************************************************
@@ -31,11 +33,15 @@
  * 0005 28-Feb-85 DK    Define a few more constants, new place[] features
  * 0006 06-Mar-85 DGC   Added system call PUTSEQ.
  * 0007 24-Jul-85 DK    Remove tltoff from set of spdefs sent to chip
- *                       rename OUTPAR structure to be parstochip[] array
+ *                      rename OUTPAR structure to be parstochip[] array
  * 0008 23-Mar-95 CJL   Rename this file from PHDEFS.H to VIPHDEFS.H,
- *                       add comments, add #define to exclude multiple includes.
- * 0009 16-JAN-96 SIK Removed white space inbetween # and include in places
- * 					  where #include is commented out.
+ *                      add comments, add #define to exclude multiple includes.
+ * 0009 16-JAN-96 SIK 	Removed white space inbetween # and include in places
+ * 					  	where #include is commented out.
+ * 0010 10/05/98  ETT   Added Linux code.
+ * 0011 9/26/00	  EAB	Remove SIZTARTAB it's a dangerous redundant definition
+ * 0012 10/16/00  CAB	Changed copyright info
+ * 0013	08/08/02  CAB	Updated copyright info
  *
  */
 
@@ -51,7 +57,7 @@
 /*#include "dectalk.h"*/
 /*#include "esc.h"*/
 #include "cmd.h"
-/*#include "eng_phon.h"*/
+/*#include "l_us_ph.h"*/
 
 /* The following stuff is all unique to modules named ph*.c */
 
@@ -137,15 +143,13 @@
 /*              6. Various constants                                    */
 
 
-#ifdef RATE_11_KHZ_DEFAULT
-#if defined(__osf__)
+
+#if defined (__osf__) || defined (__linux__) || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #define NSAMP_FRAME     51              /* # of samples per output frame 8 KHz. */
 #else
 #define NSAMP_FRAME     64              /* # of samples per output frame 10 KHz. */
 #endif
-#else 
-		NSAMP_FRAME    51
-#endif
+
 #ifdef MSDOS
 
 #define VOICE_PARS      18              /* # of words in a voice block.         */
@@ -161,8 +165,7 @@
 
 #endif
 
-//#define NPHON_MAX       300     /* Size of phone[] and struc[] arrays.  */
-#define SIZTARTAB       57      /*      # eab-fix this with sizeof later entries/param in maltar[], phrom.c    */
+#define NPHON_MAX       300     /* Size of phone[] and struc[] arrays.  */
 #define MALLINE 9               /* # of parameters in a line of locus code(phrom.c)     */
 
 #define DIV_BY8         >> 3
@@ -211,11 +214,7 @@
 #define NF480MS 75
 #define NF640MS 100
 
-/* Pause at comma and period (actual pause is NF64MS longer)               */
-/* (see also compause and perpause variables settable by user)             */
 
-#define NF_COMMA        16
-#define NF_PERIOD       75
 
 /* Fraction corresponding to xx percent of (1.0 = 16384) */
 
@@ -236,59 +235,7 @@
 #define N150PRCNT       24576           /* 1.0 * 1.50                   */
 #define N160PRCNT       26215           /* 1.0 * 1.60                   */
 
-/*
- * These definitions describe the offsets
- * for the parameters in the "param" array. Code
- * in "kl4", "kl5", and "kl6" knows the order of these
- * entries, for performance. Don't move any of these
- * or you will be sorry.
- */
-#define F0      0
-#define F1      1
-#define F2      2
-#define F3      3
-#define FZ      4
-#define B1      5
-#define B2      6
-#define B3      7
-#define AV      8
-#define AP      9
-#define A2      10
-#define A3      11
-#define A4      12
-#define A5      13
-#define A6      14
-#define AB      15
-#define TILT    16
 
-/*
- * These definitions describe the
- * order of the frame data parameters in the
- * actual data block sent to the SPC. They may be
- * edited independently of the above def'ns.
- * Ed can rearrange the block all he wants and
- * it's no problem.
- */
-
-#define OUT_AP  0
-#define OUT_F1  1
-#define OUT_A2  2
-#define OUT_A3  3
-#define OUT_A4  4
-#define OUT_A5  5
-#define OUT_A6  6
-#define OUT_AB  7
-#define OUT_TLT 8
-#define OUT_T0  9
-#define OUT_AV  10
-#define OUT_F2  11
-#define OUT_F3  12
-#define OUT_FZ  13
-#define OUT_B1  14
-#define OUT_B2  15
-#define OUT_B3  16
-#define OUT_PH  17
-#define OUT_DU  18
 
 /*
  * The parameter structure contains all information needed to compute
@@ -380,7 +327,8 @@ typedef struct  {
 	short   notused;                /* was tltoff, Tilt offset      */
 	short   osgain;
 	short   speaker;
-}       SP_CHIP;
+	short	sex;
+}       SPD_CHIP;
 
 #ifdef MSDOS
 #define ZAPF    2500    /* Magic f value to zap b constant of diff eqn  */
@@ -421,6 +369,8 @@ typedef struct  {
 }       IQUEUE;
 
 #define NIQUEUE 250                     /* # of index events            */
+#define GUARD   25                                      /* WBOUND => COMMA guardband    */
+
 
 
 /*

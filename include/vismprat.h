@@ -38,35 +38,21 @@
 #define VISMPRAT_H
 
 
-#ifdef Multiple_Sample_Rates
-#define  PC_SAMPLE_RATE    11025
+
+#define  PC_SAMPLE_RATE     11025
 #define  MULAW_SAMPLE_RATE   8000
 
 /**********************************************************************/
 /*  Declare and initialize the sample rate scaling parameters.        */
 /**********************************************************************/
-
 UINT uiSampleRate = 11025;
 UINT uiSampleRateChange = SAMPLE_RATE_INCREASE;
 S16 rate_scale = 18063;
 S16 inv_rate_scale = 29722;
-UINT uiNumberOfSamplesPerFrame = 51;
+UINT uiNumberOfSamplesPerFrame = 71;
 double SampleRate = 11025.0;
 double SamplePeriod = 9.07029478458E-5;
 
-#else
-//#define  PC_SAMPLE_RATE    8000
-//#define  MULAW_SAMPLE_RATE   8000
-//UINT uiSampleRate = 8000;
-//UINT uiSampleRateChange = SAMPLE_RATE_DECREASE;
-//S16 rate_scale = 18063;
-//S16 inv_rate_scale = 29722;
-//UINT uiNumberOfSamplesPerFrame = 51;
-//double SampleRate = 8000.0;
-//double SamplePeriod = 9.07029478458E-5;
-#endif
-
-extern short arg1,arg2,arg3;
 /**********************************************************************/
 /*  Flag to test for sample rate conversion. (Not currently used)     */
 /**********************************************************************/
@@ -88,7 +74,7 @@ unsigned int uiCurrentSpeaker = 0;
 
 S16 radius;    /*  Radius of pole locations                           */
 /* 24-mar-95 cjl missing declaration.*/
-S16 temp5;
+S16 temp;
 
 S16 d2pole_cf45( S16 * bcoef,
                  S16 * ccoef,
@@ -102,32 +88,20 @@ S16 d2pole_cf45( S16 * bcoef,
   /*  Scale the frequency and bandwidth if the sample rate is not     */
   /*  10 KHz.                                                         */
   /********************************************************************/
-#ifdef Multiple_Sample_Rates
+
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-	  frequency = frac1mul( ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-	  bandwidth = frac1mul( ) << 1;
+    frequency = frac1mul( inv_rate_scale, frequency ) << 1;
+    bandwidth = frac1mul( inv_rate_scale, bandwidth ) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
-	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul( );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul( );
+      frequency = frac1mul( inv_rate_scale, frequency );
+      bandwidth = frac1mul( inv_rate_scale, bandwidth );
     }
   }
-#else
-
-		arg1=20480;
-		arg2=frequency;
-	  frequency = frac1mul( ) << 1;
-	   arg2=bandwidth;
-	  bandwidth = frac1mul( ) << 1;
-#endif
 
   /********************************************************************/
   /*  Zap resonator if center frequency above maximum frequency.      */ 
@@ -163,14 +137,14 @@ S16 d2pole_cf45( S16 * bcoef,
   /*  Let acoef = 1.0 - bcoef - ccoef                                 */
   /********************************************************************/
 
-  temp5 = 4096 - *bcoef - *ccoef;
+  temp = 4096 - *bcoef - *ccoef;
   
   /********************************************************************/
   /*  Adjust "acoef" by the gain term to keep output signal of the    */
   /*  resonator in the high-order bits.                               */
   /********************************************************************/
 
-  acoef = frac4mul( gain, temp5 ) << 1;
+  acoef = frac4mul( gain, temp ) << 1;
 
   return( acoef );
 }
@@ -203,40 +177,31 @@ S16 d2pole_cf123( S16 * bcoef,
   /*  Scale the frequency and bandwidth if the sample rate is not     */
   /*  10 KHz.                                                         */
   /********************************************************************/
-#ifdef Multiple_Sample_Rates
+
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul( inv_rate_scale, frequency ) << 1;
+    bandwidth = frac1mul( inv_rate_scale, bandwidth ) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
-	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul(  );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul(  );
+      frequency = frac1mul( inv_rate_scale, frequency );
+      bandwidth = frac1mul( inv_rate_scale, bandwidth );
     }
   }
-#else
-  arg1=20480; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
-#endif
+
   /********************************************************************/
   /*  Zap resonator if center frequency above maximum frequency.      */ 
   /********************************************************************/
-#ifdef Multiple_Sample_Rates
+
   if ( frequency >= 4500 )
   {
     frequency = uiSampleRate >> 1;
     bandwidth = uiSampleRate >> 2;
   }
-#endif
+
   /********************************************************************/
   /*  calculate radius = exp( -pi * T * bandwidth ).                  */
   /********************************************************************/
@@ -259,14 +224,14 @@ S16 d2pole_cf123( S16 * bcoef,
   /*  Let acoef = 1.0 - bcoef - ccoef                                 */
   /********************************************************************/
 
-  temp5 = 4096 - *bcoef - *ccoef;
+  temp = 4096 - *bcoef - *ccoef;
   
   /********************************************************************/
   /*  Adjust "acoef" by the gain term to keep output signal of the    */
   /*  resonator in the high-order bits.                               */
   /********************************************************************/
 
-  acoef = frac4mul( gain, temp5 ) << 1;
+  acoef = frac4mul( gain, temp ) ;
 
   return( acoef );
 }
@@ -297,32 +262,21 @@ S16 d2pole_pf( S16 * bcoef,
   /*  Scale the frequency and bandwidth if the sample rate is not     */
   /*  10 KHz.                                                         */
   /********************************************************************/
-#ifdef Multiple_Sample_Rates
+
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul( inv_rate_scale, frequency ) << 1;
+    bandwidth = frac1mul( inv_rate_scale, bandwidth ) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
-	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul(  );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul(  );
+      frequency = frac1mul( inv_rate_scale, frequency );
+      bandwidth = frac1mul( inv_rate_scale, bandwidth );
     }
   }
-#else
- arg1=20480; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
 
-
-#endif
   /********************************************************************/
   /*  Zap resonator if center frequency above maximum frequency.      */ 
   /********************************************************************/
@@ -357,14 +311,14 @@ S16 d2pole_pf( S16 * bcoef,
     /*  Let acoef = 1.0 - bcoef - ccoef                               */
     /******************************************************************/
 
-    temp5 = 4096 - *bcoef - *ccoef;
+    temp = 4096 - *bcoef - *ccoef;
   
     /******************************************************************/
     /*  Adjust "acoef" by the gain term to keep output signal of the  */
     /*  resonator in the high-order bits.                             */
     /******************************************************************/
 
-    acoef = frac4mul( gain, temp5 ) << 1;
+    acoef = frac4mul( gain, temp ) << 1;
   }
   return( acoef );
 }
