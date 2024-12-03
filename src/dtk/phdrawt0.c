@@ -144,7 +144,7 @@ int pht0draw()
       f0b = FRAC_ONE - f0_lp_filter;
       f0a1 = f0a2 << F0SHFT;
       /* Variables relevent only if f0mode=SINGING */
-      newnote = 1000;//f0beginfall;
+      newnote = f0beginfall; // 1000
       delnote = 0;
       delcum = 0;
       f0start = f0;
@@ -426,7 +426,7 @@ int set_user_target() {
    f0command = f0command % 1000; /* 2000 is offset flag */
 
    if (f0command <= 37) { /* Pointer to C5, highest possible sung note */
-      newnote = notetab[f0command-1];
+      newnote = (int) ((float)notetab[ f0command - 1] / 1.5); // HACK: devide pitch to temporairly fix pitch offset issues -bytesizedfox
       vibsw = 1;
       /* Set delnote*4 so transition happens over 16 frames (100 ms) */
       delnote = ((newnote - f0) >> 2);
