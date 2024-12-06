@@ -45,17 +45,17 @@ extern unsigned char suffix_table[];
 extern unsigned short suffix_index[];
 extern unsigned char dic_last_feat;
 extern short lphone;
-extern unsigned char comp_str[];
-extern unsigned char upper_comp_str[];
+//extern unsigned char comp_str[];
+//extern unsigned char upper_comp_str[];
 extern unsigned char *str_vowel;
 extern P_PIPE	kinp;
 
 extern unsigned long fc_struct[];
 extern int fc_index;
 
-#define	US	upper_comp_str
-#define	CS	comp_str
-#define	SS	save_str
+//#define	US	upper_comp_str
+//#define	CS	comp_str
+//#define	SS	save_str
 
 
 #define get_short(ptr) ((unsigned short)\
@@ -98,12 +98,15 @@ struct	suff_rule	{
 
 
 #ifndef CALLER_ID
+
+/*
+
 int suffix_find(unsigned char	__far *str_end,short which_dic)
 {
-	unsigned char	*bp;				/* base text string seach */
-	unsigned char	*sp;				/* suffix string seach */
-	unsigned char	*np;				/* replacement string save */
-	unsigned char	*sbp;				/* saved base pointer to recurse */
+	unsigned char	*bp;				// base text string seach
+	unsigned char	*sp;				// suffix string seach
+	unsigned char	*np;				// replacement string save
+	unsigned char	*sbp;				// saved base pointer to recurse
 
 	short	i,si,stat;
 
@@ -131,9 +134,9 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 	      sp += 1;
 			}
 
-/*
- *  for form class hits, just set the fc field ...
- */			
+
+//  for form class hits, just set the fc field ...
+ 			
 
 
 #ifdef FULL_LTS		
@@ -143,10 +146,10 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 			return(MISS);
 			}
 #endif
-/*
- *  if the suffix can be stripped, look for a striping rule starting
- *  with / and see if it can be applied ...
- */
+
+//   if the suffix can be stripped, look for a striping rule starting
+//   with / and see if it can be applied ...
+ 
 		if(*sp++ == SF_STRIP)
 			{
 			for(i=0;SS[i] = CS[i];i++);
@@ -213,6 +216,7 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 		}	
 	return(MISS);
 }
+*/
 #endif
 
 int append_pron(unsigned char *pb)

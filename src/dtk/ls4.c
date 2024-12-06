@@ -23,7 +23,7 @@
  *
  *    Functionality:
  * The functions in this file
- * make up the heart of the letter to
+ * make up the heart of the short to
  * sound system. They handle all of
  * the rule matching.
  *
@@ -133,7 +133,7 @@ int addgraph(GRAPH *gp, int g);
 
 /*
  * This is the main driving routine
- * for Tony's letter to sound. It is called
+ * for Tony's short to sound. It is called
  * by "ls1d.c" with two pointers; these bracket the
  * text to be spoken. This routine makes a private copy
  * of the text, with the ASCII characters converted to
@@ -144,8 +144,8 @@ int addgraph(GRAPH *gp, int g);
  * over the right punctuation.
  */
 int lts(llp, rlp, def_lang, sel_lang)
-LETTER	*llp;
-LETTER	*rlp;
+short	*llp;
+short	*rlp;
 int def_lang;
 int sel_lang;
 {
@@ -174,7 +174,7 @@ int sel_lang;
 		   character
 		 */
 		/*lch = llp->l_ch;*/		/* Convert to G-code	*/
-		lch = ls_fold[llp->l_ch];
+		lch = ls_fold[*llp];
 				
 #ifdef WATCH
 		wputc(lch);
@@ -382,7 +382,7 @@ int sel_lang;
 #ifndef	vms
 /*
  * This is the output routine for the
- * letter to sound process. It is called after letter to
+ * short to sound process. It is called after short to
  * sound has processed its word, to write the generated phonemes
  * out to the synthesizer task. After a phoneme is written out,
  * any index marks in the index chain are written out. It is not
@@ -537,7 +537,7 @@ char		*title;
 
 #if	WATCH
 /*
- * Debug routines for letter-to-sound on
+ * Debug routines for short-to-sound on
  * the module. Used to find "assume" => [x'Sum].
  * Hope they fit, and don't make the bug
  * hide.

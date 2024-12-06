@@ -57,9 +57,7 @@ P_PIPE	linp;
 P_PIPE	kinp;
 #endif
 
-int lsmain(data_seg,stack_start)
-unsigned int data_seg;
-unsigned int stack_start;
+int lsmain()
 {
 	init_lang();
 	default_lang(LANG_english,LANG_lts_ready);

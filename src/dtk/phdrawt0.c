@@ -115,15 +115,13 @@ static short f0beginfall,f0endfall, addjit;
 /*    For user-specified targets/singing notes */
 static short vibsw,newnote,delnote,delcum,f0start;
 
-int pht0draw()
-{
+int pht0draw() {
    /* Automatic variables */
    short dtglst;
    int pseudojitter;
 
    /* Initialize */
-   if (nf0ev <= -2)
-   {         /* Hard initialization */
+   if (nf0ev <= -2) {         /* Hard initialization */
       /* Set Beginning and final frequency of baseline fall */
       f0beginfall = 1070 + (f0basefall>>1);   /* 107 Hz plus */
       f0endfall = 1070 - (f0basefall>>1);
@@ -426,7 +424,7 @@ int set_user_target() {
    f0command = f0command % 1000; /* 2000 is offset flag */
 
    if (f0command <= 37) { /* Pointer to C5, highest possible sung note */
-      newnote = (int) ((float)notetab[ f0command - 1] / 1.5); // HACK: devide pitch to temporairly fix pitch offset issues -bytesizedfox
+      newnote = (int) ((float)notetab[ f0command - 1] / 1.5 ); // HACK: devide pitch to temporairly fix pitch offset issues -bytesizedfox
       vibsw = 1;
       /* Set delnote*4 so transition happens over 16 frames (100 ms) */
       delnote = ((newnote - f0) >> 2);

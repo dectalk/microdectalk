@@ -7,10 +7,10 @@
 #include "epsonapi.h"
 #include "cmd.h"
 
-extern void lsmain(void);
-extern void usa_main(void);
-extern void kltask_init(void);
-extern void InitializeVTM(void);
+extern int lsmain();
+extern void usa_main();
+extern int kltask_init();
+extern void InitializeVTM();
 extern void lts_loop(unsigned short *input);
 
 extern	int string_match(unsigned char **sa ,unsigned char *s);
@@ -33,7 +33,6 @@ typedef unsigned int U32;
                         (((U8 *)(ptr))[1] << 8)  | \
                         (((U8 *)(ptr))[0])))
 
-extern const unsigned char main_dict[];
 extern const unsigned char *define_options[];
 extern   short   curspdef[];
 
@@ -78,10 +77,10 @@ int TextToSpeechStart(char *input) {
 int TextToSpeechInit() {
 	memset(kernel_share,0,sizeof(struct share_data));
 
-	if (main_dict) { //load main dictionary
+	//if (main_dict) { //load main dictionary
 		//KS.fdic = ((int)(main_dict))+8;
-		KS.fdic_entries= get_long_int(main_dict);
-	}
+		//KS.fdic_entries= get_long_int(main_dict);
+	//}
 
 	usa_main();
 	InitializeVTM();

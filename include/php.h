@@ -34,7 +34,7 @@ extern	int linear_interp(void);
 extern	int phinton(void);
 extern	int firstfeature(short FEA1,short FEA2,short nseg);
 static	int make_f0_command(short rulenumber,short tar,short delay);
-extern	int main(unsigned int data_seg,unsigned int stack_start);
+//extern	int main(unsigned int data_seg,unsigned int stack_start);
 extern	int kltask(void);
 extern	void speak_now(void);
 extern	int deadstop(int value,int low,int high);

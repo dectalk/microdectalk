@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call TTSinit from Emscripten</title>
+</head>
+<body>
+    <textarea id="textInput" name="Text1" cols="40" rows="5" placeholder="Enter text to synthesize"></textarea>
+    <button onclick="synth_tts()">Synthesize</button>
+    <audio id="audioPlayer" controls></audio>
+
+    <script src="epsonapi.js"></script>
+    <script>
+        async function synth_tts() {
+            const textInput = document.getElementById('textInput');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            console.log("Begin TTS");
+
+            var ptr = Module.ccall('TTSstart', 'number', ['string'], [textInput.value]);
+            var arraySize = Module.ccall('get_total_size', 'number', [], []);
+            const shortArray = new Int16Array(
+                Module.HEAPU8.buffer,
+                ptr,
+                arraySize
+            );
+            const arrayCopy = new Int16Array(shortArray);
+            //console.log(arrayCopy);
+            audioPlayer.src = URL.createObjectURL( new Blob([arrayCopy], { type: 'audio/wav' }) );
+            audioPlayer.play();
+        };
+
+        function callback(ptr, length) { // TODO implement js side audio callback
+            
+            const shortArray = new Int16Array(
+                Module.HEAPU8.buffer,
+                ptr,
+                length
+            );
+            console.log("Callback:", shortArray);
+        }
+
+        // Wait until the Emscripten runtime is initialized
+        Module.onRuntimeInitialized = function() {
+            console.log("Emscripten runtime initialized!");
+            var pointer = Module.addFunction(callback, "vii"); // prepare user callback
+            Module.ccall('TTSinit', 'void', ['pointer'], [pointer]);
+            //var tts_init = Module.cwrap('TTSinit', 'void', ['pointer']);
+            //tts_init(pointer);
+        };
+    </script>
+</body>
+</html>

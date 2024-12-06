@@ -1,4 +1,4 @@
-extern	int main(unsigned int data_seg,unsigned int stack_start);
+//extern	int main(unsigned int data_seg,unsigned int stack_start);
 extern	int icommand(void );
 #ifdef SINGLE_THREADED
 extern	int __far dtpc_cmd(unsigned char inchar);

@@ -1,6 +1,9 @@
+#include <jni.h>
 //#include <vector>
 
 //static std::vector<short> samples;
+
+
 #define MAX_BUFFER (10 * 60) * 11025
 short samples[MAX_BUFFER]; // store 60 seconds of speech
 
@@ -20,7 +23,7 @@ extern "C" {
 
 }
 
-#include <jni.h>
+
 extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechInit(JNIEnv* env, jobject obj) {
     total_size = 0; // reset for new prompts
     TextToSpeechInit();
@@ -44,7 +47,6 @@ extern "C" JNIEXPORT void JNICALL Java_com_bytesizedfox_microdectalk_MainActivit
 extern "C" JNIEXPORT jshort JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechGetSpdefValue(JNIEnv* env, jobject obj,  jint index) {
     return TextToSpeechGetSpdefValue(index);
 }
-
 extern "C" JNIEXPORT jshortArray JNICALL Java_com_bytesizedfox_microdectalk_MainActivity_TextToSpeechStart(JNIEnv* env, jobject obj, jstring text) {
     const char *text_str = env->GetStringUTFChars(text, 0);
     //total_size = 0; // reset for new prompts (this may cause audio buffer issues)

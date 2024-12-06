@@ -49,7 +49,7 @@
 int	tmp,tmpcntr,incntr=1;
 int rulsuc[MAXRULES];
 unsigned char clausebuf[150];
-int index=0;
+int indexA=0;
 int rcntr=0; /* rulecounter*/
 int	outcntr=0;
 char *prevwbound;
@@ -146,20 +146,20 @@ void	checkrule(void)
 
 				case 'N': /*position relative to current pos n*/
 
-					index=adjustindex(rcntr);
+					indexA=adjustindex(rcntr);
 					rcntr++;
-					if(index>incntr)
+					if(indexA>incntr)
 						{
 						failed=1;
 						}
-					if(index< 0 )
+					if(indexA< 0 )
 						{
 						failed=1;
 
 						}
 
 #ifdef DEBUGRULS
-					printf("found index offset %d \n",index);
+					printf("found indexA offset %d \n",indexA);
 #endif
 					break;
 				case 'R': /*Specific the number of this rule*/
@@ -172,7 +172,7 @@ void	checkrule(void)
 
 				case 'C': /* count the number of occurance of a char 
 					repeated in sequence and store the result in charseqcnt */
-					while(clausebuf[index+charseqcnt]==ruleset[rcntr])
+					while(clausebuf[indexA+charseqcnt]==ruleset[rcntr])
 						{
 						charseqcnt++;
 						}
@@ -197,19 +197,19 @@ void	checkrule(void)
 				case '[': /*check for a type */
 #ifdef DEBUGRULS
 
-					printf("%x chkrul  %x %x %c char %c index %d rc %d\n",nchar_types[0x2e],nchar_types[clausebuf[index]],ruleset[rcntr+2],
-					ruleset[rcntr+2],clausebuf[index],index,rcntr);
+					printf("%x chkrul  %x %x %c char %c indexA %d rc %d\n",nchar_types[0x2e],nchar_types[clausebuf[indexA]],ruleset[rcntr+2],
+					ruleset[rcntr+2],clausebuf[indexA],indexA,rcntr);
 #endif					
 
 
 
 					if(ruleset[rcntr+1]=='!')
 						{
-						if(!(nchar_types[clausebuf[index]] & ruleset[rcntr+2]))
+						if(!(nchar_types[clausebuf[indexA]] & ruleset[rcntr+2]))
 							{
-/*							printf("%c hit on pos rule pos %d \n",clausebuf[index],rcntr);
-							printf("%c -1",clausebuf[index-1]);
-							printf("%c +1\n",clausebuf[index+1]);*/
+/*							printf("%c hit on pos rule pos %d \n",clausebuf[indexA],rcntr);
+							printf("%c -1",clausebuf[indexA-1]);
+							printf("%c +1\n",clausebuf[indexA+1]);*/
 							sucses=1;
 							}
 					  
@@ -226,10 +226,10 @@ void	checkrule(void)
 						{
 #ifdef DEBUGRULS
 
-						printf("chk rul%x %x \n",nchar_types[clausebuf[+index]],ruleset[rcntr+2]);
+						printf("chk rul%x %x \n",nchar_types[clausebuf[+indexA]],ruleset[rcntr+2]);
 #endif
 
-						if(nchar_types[clausebuf[index]] & ruleset[rcntr+2]) 
+						if(nchar_types[clausebuf[indexA]] & ruleset[rcntr+2]) 
 							{
 #ifdef DEBUGRULS
 
@@ -257,12 +257,12 @@ void	checkrule(void)
 				case '(': /*check for a exact character*/
 
 #ifdef DEBUGRULS
-						printf("comparing %c against %c \n",clausebuf[index],ruleset[rcntr+2]);
+						printf("comparing %c against %c \n",clausebuf[indexA],ruleset[rcntr+2]);
 #endif
 
 					if(ruleset[rcntr+1]=='!')
 						{
-						if(clausebuf[index] != ruleset[rcntr+2])
+						if(clausebuf[indexA] != ruleset[rcntr+2])
 							{
 							sucses=1;
 							}
@@ -278,7 +278,7 @@ void	checkrule(void)
 
 					if(ruleset[rcntr+1]==' ')
 						{
-						if(clausebuf[index] == ruleset[rcntr+2])
+						if(clausebuf[indexA] == ruleset[rcntr+2])
 							{
 #ifdef DEBUGRULS
 
@@ -307,7 +307,7 @@ void	checkrule(void)
 
 					if(ruleset[rcntr+1]=='!')
 						{
-						if(clausebuf[index] != ruleset[rcntr+2])
+						if(clausebuf[indexA] != ruleset[rcntr+2])
 							{
 							sucses=1;
 							}
@@ -325,7 +325,7 @@ void	checkrule(void)
 
 					if(ruleset[rcntr+1]==' ')
 						{
-						if(clausebuf[index] == ruleset[rcntr+2])
+						if(clausebuf[indexA] == ruleset[rcntr+2])
 							{
 #ifdef DEBUGRULS
 
@@ -461,9 +461,9 @@ int doaction(int rcntr)
 						/*initalize charcnt with previnserts this rule*/
 						charcnt=previnserts;
 #ifdef DEBUGACT
-						printf("index %d charcnt  %d previnset %d \n",index,charcnt,previnserts);
+						printf("indexA %d charcnt  %d previnset %d \n",indexA,charcnt,previnserts);
 #endif
-						insertchar((index+charcnt),(char)ruleset[rcntr]);
+						insertchar((indexA+charcnt),(char)ruleset[rcntr]);
 						previnserts++;
 						charcnt++;
 				  		}while (ruleset[rcntr+1] != 0xff);
@@ -480,7 +480,7 @@ int doaction(int rcntr)
 							tcntr=ruleset[rcntr];
 						while(tcntr > 0)
 							{
-							deletechar(index+previnserts,(char)ruleset[rcntr]);
+							deletechar(indexA+previnserts,(char)ruleset[rcntr]);
 							tcntr--;
 							}
 						break;
@@ -491,9 +491,9 @@ int doaction(int rcntr)
 						{
 						rcntr++;
 #ifdef DEBUGACT
-						printf("changing pos%d to %c \n",(index+charcnt+previnserts),ruleset[rcntr]);
+						printf("changing pos%d to %c \n",(indexA+charcnt+previnserts),ruleset[rcntr]);
 #endif
-						changchar((index+charcnt+previnserts),(char)ruleset[rcntr]);
+						changchar((indexA+charcnt+previnserts),(char)ruleset[rcntr]);
 						charcnt++;
 				  		}while (ruleset[rcntr+1] != 0xff);
 						charcnt=0;
@@ -511,9 +511,9 @@ int doaction(int rcntr)
 
 				case 'N':
 					
-					index=adjustindex(rcntr);
+					indexA=adjustindex(rcntr);
 #ifdef DEBUGACT
-					printf("found action index offset %d \n",index);
+					printf("found action indexA offset %d \n",indexA);
 #endif
 					break;
 				case 0xff :

@@ -134,7 +134,7 @@ void init_lang(void)
 	lp[7].name_type = NAME_ITALIAN;
 }
 
-int id_name(LETTER *llp, LETTER *rlp)
+int id_name(short *llp, short *rlp)
 {
 	char	tri[64];
 	unsigned char tri_prob,tri_mask;
@@ -144,7 +144,7 @@ int id_name(LETTER *llp, LETTER *rlp)
 
 	for(i=0;llp < rlp;i++)
 		{
-		name[i] = (*llp).l_ch;
+		name[i] = (*llp);
 		if((ls_char_feat[name[i]] & (CFEAT_vowel|CFEAT_cons)) == 0)
 			 return(NAME_ENGLISH);
 		llp++;

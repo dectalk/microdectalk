@@ -85,7 +85,7 @@ unsigned int prcnt=0;
 int donit=0; */ /*flag to indicate that - has been processed so don't do it again.*/
 
 
-int isdigit=1;
+int isadigit=1;
 int sndtel=0;
 int digcnt=0;
 int postel=0;
@@ -349,7 +349,7 @@ void process_char(unsigned int c)
 	unsigned short pipe_value;
 	if(KS.text_flush || (KS.cmd_flush == CMD_flush_toss))
 		{
-		isdigit=1; /*flushing so reiinit everything*/
+		isadigit=1; /*flushing so reiinit everything*/
 		sndtel=0;
 		digcnt=0;
 		postel=0;
@@ -639,7 +639,7 @@ void process_char(unsigned int c)
 						goto skipit; /*Don't process periods etc if not normal*/
 						}
 
-					if( last_char == '-' && last_punct == '-' && isdigit == 2 && (KS.modeflag & MODE_MATH) == 0 )
+					if( last_char == '-' && last_punct == '-' && isadigit == 2 && (KS.modeflag & MODE_MATH) == 0 )
 						{
 #ifdef DEBUGPARS
 		printf("CMD_PARS: process_char STATE_NORMAL: in dash code\n");
@@ -681,12 +681,12 @@ void process_char(unsigned int c)
 				/* EAB handle word.txt */
 #ifdef DEBUGPARS
 		printf("CMD_PARS: process_char: lpchar at point = %c %d \n",lpchar,lpchar);
-		printf("                        c= %c last_char = %c %d isdi= %d\n",c,last_char,last_char,isdigit);
+		printf("                        c= %c last_char = %c %d isdi= %d\n",c,last_char,last_char,isadigit);
 #endif
 				
 				if( !(KS.sayflag & SAY_LETTER) )
 					{
-					if(cbufcnt != 0 && isdigit == 1)
+					if(cbufcnt != 0 && isadigit == 1)
 						{
 						if((KS.modeflag & MODE_EUROPE) && (last_char == '.' || last_char == ',' ))
 							{
@@ -723,13 +723,13 @@ void process_char(unsigned int c)
 
 
 /* If anything shows up that makes it not a digit then clear flag.*/                                    
-					if(( isdigit == 1 && ((char_types[last_char] & (MARK_digit | MARK_space | MARK_clause)) == 0) ||
+					if(( isadigit == 1 && ((char_types[last_char] & (MARK_digit | MARK_space | MARK_clause)) == 0) ||
 						(char_types[c] & (MARK_digit | MARK_space | MARK_clause) ) == 0 ) || (posord == 1 ) )
 						{
 
 						/*if chars has been proc they need to be sent*/                                         
 						/* but we may need to wait if os ordinal */
-						if(cbufcnt !=0 &&  isdigit == 1)
+						if(cbufcnt !=0 &&  isadigit == 1)
 							{                                                                          
 							if (posord == 1 )
 								{
@@ -793,7 +793,7 @@ void process_char(unsigned int c)
 								}
 							else
 								{
-								isdigit=0;
+								isadigit=0;
 								}
 
 
@@ -806,7 +806,7 @@ void process_char(unsigned int c)
 						/* if not a forcing set it to non-digit*/
 						if(c!=(0xb || 0x11))
 							{
-							isdigit=2;
+							isadigit=2;
 							}
 						postel=0;
 						sndtel=0;
@@ -815,14 +815,14 @@ void process_char(unsigned int c)
 					}
 			/* If we get a digit in a text string break it out with a space*/
 
-				if( isdigit == 2 && (nchar_types[c] & MARK_digit)
+				if( isadigit == 2 && (nchar_types[c] & MARK_digit)
 					&& (c != ')'&& c !='(' ) > 0
 					&& (KS.modeflag & MODE_MATH) == 0)
 					{
 /* New code to process dash numbers 09/13/95 gl*/
 					  if (laschar != '-')
 					  {
-					    isdigit=1;
+					    isadigit=1;
 					    pipe_value = (PFASCII<<PSFONT)+' ';
 #ifdef SINGLE_THREADED
 						lts_loop(&pipe_value);
@@ -834,13 +834,13 @@ void process_char(unsigned int c)
 #endif
 					  }
 					  else
-					    isdigit=3;
+					    isadigit=3;
 					}
 /**/
 
 				if(!(KS.sayflag & SAY_LETTER))
 					{
-					if (lpchar == '.' || cbufcnt >= 115 || isdigit == 1 ||
+					if (lpchar == '.' || cbufcnt >= 115 || isadigit == 1 ||
                                            ((KS.sayflag == SAY_LINE) && c != CR && c != LF))
 						{
 						if (cbufcnt >=115)
@@ -852,14 +852,14 @@ void process_char(unsigned int c)
 		printf("CMD_PARS: process_char: INTO period and number processin\n");
 		printf("CMD_PARS: process_char: cbufcnt= %d cbuf[cnt-1]=%c %d \n",cbufcnt,cbuf[cbufcnt-1],cbuf[cbufcnt-1]);
 		printf("CMD_PARS: process_char: cbufcnt= %d cbuf[0]=%c %d \n",cbufcnt,cbuf[0],cbuf[0]);
-		printf("CMD_PARS: process_char: isdig %d  char-t %d\n",isdigit,char_types[c]);
+		printf("CMD_PARS: process_char: isdig %d  char-t %d\n",isadigit,char_types[c]);
 #endif  
 					
 						if (char_types[c] & MARK_clause  && postel == 1 && digcnt == 4)
 								{       
 								sndtel=1;
 								}
-						if( ( ( (char_types[c] & MARK_clause) == 0) || c=='-') && !(isdigit == 1 && last_char == ',' && c == ' ') &&  lpchar != '.' )
+						if( ( ( (char_types[c] & MARK_clause) == 0) || c=='-') && !(isadigit == 1 && last_char == ',' && c == ' ') &&  lpchar != '.' )
 							{
 							if(c==' ' || c=='-')
 								{
@@ -906,7 +906,7 @@ void process_char(unsigned int c)
 							goto ndone; /*keep processkng tkl we get a space. char*/
 							}
 						sendat();
-						isdigit=1; /*assume it's a digi unless we find otherwise*/
+						isadigit=1; /*assume it's a digi unless we find otherwise*/
 						sndtel=0;
 						digcnt=0;
 						postel=0;
@@ -934,7 +934,7 @@ skipit:         sendat();
 				cbufcnt=0;
 				if(char_types[c] & MARK_space)
 					{
-					isdigit=1;
+					isadigit=1;
 					}
 				modechng=0;
 				pcnt=0;
@@ -1768,8 +1768,8 @@ int offset,k;
 			return(0);
 		if( ( (char_types[c] & MARK_space) >= 0) &&
 			((char_types[cbuf[1]] & MARK_space) == 0)
-			&& ( (pcnt==1 && isdigit != 1 && last_char !=')')/* ||
-			(pcnt >1 && isdigit == 1 && (last_char != '.' && pcnt ==2 ) )*/ )
+			&& ( (pcnt==1 && isadigit != 1 && last_char !=')')/* ||
+			(pcnt >1 && isadigit == 1 && (last_char != '.' && pcnt ==2 ) )*/ )
 			&& modechng == 0  )
 		{
 			pipe_value = (PFASCII << PSFONT) + ' ';
@@ -1912,7 +1912,7 @@ int offset,k;
 			}
 		}
 		
-		else if(isdigit == 1)
+		else if(isadigit == 1)
 		{
 			sendit();
 		}

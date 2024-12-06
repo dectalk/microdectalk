@@ -103,7 +103,7 @@ int dosign(sign)
 #ifndef NO_INDEXES
 		lbuf[1].l_ip = NULL;
 #endif
-		if (blook(&lbuf[0], &lbuf[2], FIRST) == MISS)
+//		if (blook(&lbuf[0], &lbuf[2], FIRST) == MISS)
 			sendphone(EY);
 		sendphone(WBOUND);
 	}
@@ -170,15 +170,15 @@ LETTER	*rlp;
 		} else {
 			while (llp!=rlp && isapart(llp->l_ch)!=FALSE)
 				++llp;
-			if (llp-blp<3 || lookup(blp, llp, FALSE)==MISS) {
+//			if (llp-blp<3 || lookup(blp, llp, FALSE)==MISS) {
 				speed = spellspeed(blp, llp);
 				spell(blp, llp);
 				if (speed == FAST)
 					sendphone(WBOUND);
 				else
 					sendphone(COMMA);
-			} else if (llp != rlp)
-				sendphone(WBOUND);
+//			} else if (llp != rlp)
+//				sendphone(WBOUND);
 		}
 	}
 return (0);
