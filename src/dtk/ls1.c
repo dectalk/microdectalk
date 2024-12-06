@@ -484,40 +484,20 @@ loop:
     goto out;
   }
 
-
-  if (end_index >= 2 && (cword[end_index - 1]).l_ch == '.') {
-    printf("FABBREV, end_index: %i, cword[end_index - 1]: %c\n", end_index, cword[end_index - 1].l_ch);
-    if ((flag = lookup(&cword[0], &cword[str_eos-1], FABBREV)) != MISS) {
-      dorpunct(flag);
-      readword(&cword[0]);
-      goto loop;
+  context = FIRST;
+  if (isdot() != FALSE) {
+    context = FABBREV;
+  }
+  if (isnumabr && context == FABBREV && (cp = (char *)wlookup(&cword[0], &nabtab[0])) != NULL) {
+    printf("(isnumabr && context == FABBREV && (cp = (char *)wlookup(&cword[0], &nabtab[0])) != NULL\n) == true");
+    if (pflag != FALSE) {
+      while (*cp++ != SIL); // TODO: replace with array indexing
     }
-  } else {
-    printf("not FABBREV!\n");
-    context = FIRST;
-    if (isdot() != FALSE) {
-      context = FABBREV;
-    }
-    if (isnumabr && context == FABBREV && (cp = (char *)wlookup(&cword[0], &nabtab[0])) != NULL) {
-      printf("(isnumabr && context == FABBREV && (cp = (char *)wlookup(&cword[0], &nabtab[0])) != NULL\n) == true");
-      if (pflag != FALSE) {
-        while (*cp++ != SIL); // TODO: replace with array indexing
-      }
-      sendlist(cp); /* Send abbreviation.    */
-      readitem();   /* Eat up the ".".      */
-      dorpunct(MISS);
-      readword(&cword[0]); /* Advance, continue.   */
-      goto loop;
-    }
-
-    if ((flag = lookup(&cword[0], &cword[str_eos], context)) != MISS) {
-      printf("(isnumabr && context == FABBREV && (cp = (char *)wlookup(&cword[0], &nabtab[0])) != NULL\n) == false");
-      if (flag == ABBREV) /* Need to gobble up    */
-        readitem();       /* the "." here.        */
-      dorpunct(flag);
-      readword(&cword[0]);
-      goto loop;
-    }
+    sendlist(cp); /* Send abbreviation.    */
+    readitem();   /* Eat up the ".".      */
+    dorpunct(MISS);
+    readword(&cword[0]); /* Advance, continue.   */
+    goto loop;
   }
 
 skipdic:
@@ -605,31 +585,17 @@ skipdic:
    * by right end strippable punctuation.
    */
 
-  printf("07\n");
-
   context = FIRST;
 
   if ((lflag&RSTRIP) != 0) {
     lp1 = rlp-1;
     if (llp!=lp1 && lp1->l_ch=='.') {
-      if ((flag=lookup(llp, lp1, FABBREV)) != MISS) {
-        if (flag != ABBREV)
-          rbphone = PERIOD;
-        goto out;
-      }
       rbphone = PERIOD;	/* Very strong.         */
       --rlp;
     }
   } else if (isdot() != FALSE)            /* "(Gov. Smith)"       */
     context = FABBREV;
 
-  if ((lflag&(LSTRIP|RSTRIP)) != 0 && (flag=lookup(llp, rlp, context)) != MISS) {
-    if (flag == ABBREV)             /* Eat the "."          */
-      readitem();
-    goto out;
-  }
-
-  printf("08\n");
 /*
  *  run through the new speak/spell rule tables ...
  */
@@ -779,8 +745,6 @@ skipdic:
     }
   }
 #endif
-
-  printf("09\n");
 
   /*
    * We are getting ready to feed this
@@ -1338,48 +1302,19 @@ skipdic:
       ++lp1; // for later code compatability
     }
 
-//    while (lp1 != rlp && (c = lp1->l_ch) != '-') {
-//      type = lsctype[c];
-//      if ((type & C) != 0)
-//        lflag |= HNONY | HCONS;
-//      else if ((type & O) != 0)
-//        lflag |= HNONY | HVOWEL;
-//      else if (c == 'y') {
-//        if (lp1 == lp2)
-//          lflag |= HCONS;
-//        else
-//          lflag |= HVOWEL;
-//      }
-//      ++lp1;
-//    }
-
     tlflag = lflag;
     ttlp1 = lp1;
 
-    if (lookup(lp2, ttlp1, FIRST) != MISS) {
-      if (firsttim == 1) {
-        lp1++;
-        sendphone(HYPHEN);
-        lp2 = lp1;
-        lp2 = lp1;
-        llp = lp1;
-        firsttim = 0;
-        goto tryagn;
-      }
-      lp2 = lp1;
+    do_lts(lp2, lp1);
+  finish:
+    if (lp1 != rlp) { /* Inter-chunk gap.     */
+       lp2 = lp1;
+      while (lp2 != rlp && lp1->l_ch == '-')
+        ++lp1;
       llp = lp1;
-    } else if ((tlflag & HVOWEL) != 0) {
-      do_lts(lp2, lp1);
-    finish:
-      if (lp1 != rlp) { /* Inter-chunk gap.     */
-        lp2 = lp1;
-        while (lp2 != rlp && lp1->l_ch == '-')
-          ++lp1;
-        llp = lp1;
-        sendphone(lp2 + 1 == lp1 ? HYPHEN : COMMA);
-      } else {
-        llp = lp1;
-      }
+      sendphone(lp2 + 1 == lp1 ? HYPHEN : COMMA);
+    } else {
+      llp = lp1;
     }
 
     /*     }*/
@@ -1437,14 +1372,7 @@ skipdic:
     lp2 = lp1;
     while (lp1 != rlp && lp1->l_ch != '-')
       lp1 += 1;
-#ifdef CALLER_ID
-    if (lookup(lp2, lp1, FIRST) == MISS)
-#else
-    if ((lflag & HHYPHEN) == 0 || lookup(lp2, lp1, FIRST) == MISS)
-#endif
-    {
       do_lts(lp2, lp1);
-    }
     if (lp1 != rlp) { /* Inter-chunk gap.     */
       lp2 = lp1;
       while (lp2 != rlp && lp1->l_ch == '-')
@@ -1700,10 +1628,7 @@ int isordinal(NUM *np) {
  * with an EOS on the end, and a bunch of bytes
  * that are usually phonemes.
  */
-char *wlookup(LETTER word[], char table[])
-/*LETTER  word[];*/
-/*char    table[];*/
-{
+char *wlookup(LETTER word[], char table[]) {
   LETTER *lp;
   char *cp;
   int c;

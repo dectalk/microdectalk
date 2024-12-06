@@ -84,27 +84,7 @@ extern	short	lphone;			/* Last phoneme put out.	*/
 extern	LETTER	*backpair();		/* Random forward reference.	*/
 extern	LETTER	*backscan();		/* Random forward reference.	*/
 
-/*
- * Look up a word. The word is stored
- * in an array of LETTER structures, bracketed by
- * the "llp" and "rlp" pointers. The "context" is drawn
- * from the set in "lsdef.h". Return a standard lookup
- * status code. Output index marks on success.
- */
-
-int lookup(LETTER *llp, LETTER *rlp, int context)
-{
-
-	 int	flag;
-
-	 	
-	if((flag=blook(llp,rlp,context)) != MISS)
-	  /*	sendindex(llp,rlp);*/
-	return(flag);
-}
-
-/*
- * Put out the phonemes necessary to pluralize
+/* Put out the phonemes necessary to pluralize
  * the last word. Based on the last phoneme, it puts out
  * [s], [z], [|s], or [|z]. The last phoneme put out by
  * anyone is in the external "lphone". This is used here,

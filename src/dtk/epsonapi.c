@@ -33,7 +33,7 @@ typedef unsigned int U32;
                         (((U8 *)(ptr))[1] << 8)  | \
                         (((U8 *)(ptr))[0])))
 
-extern const unsigned char main_dict[];
+//extern const unsigned char main_dict[];
 extern const unsigned char *define_options[];
 extern   short   curspdef[];
 
@@ -78,10 +78,10 @@ int TextToSpeechStart(char *input) {
 int TextToSpeechInit() {
 	memset(kernel_share,0,sizeof(struct share_data));
 
-	if (main_dict) { //load main dictionary
+//	if (main_dict) { //load main dictionary
 		//KS.fdic = ((int)(main_dict))+8;
-		KS.fdic_entries= get_long_int(main_dict);
-	}
+//		KS.fdic_entries= get_long_int(main_dict);
+//	}
 
 	usa_main();
 	InitializeVTM();

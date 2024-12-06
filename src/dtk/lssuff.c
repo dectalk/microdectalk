@@ -98,8 +98,7 @@ struct	suff_rule	{
 
 
 #ifndef CALLER_ID
-int suffix_find(unsigned char	__far *str_end,short which_dic)
-{
+int suffix_find(unsigned char	__far *str_end,short which_dic) {
 	unsigned char	*bp;				/* base text string seach */
 	unsigned char	*sp;				/* suffix string seach */
 	unsigned char	*np;				/* replacement string save */
@@ -120,16 +119,17 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 		stp = (struct suff_rule *)&suffix_table[si];
 		bp = str_end; 
 		sp =((unsigned char *)(stp)+6); //test mfg
+
 		//If my memeory is right matt changed this to  
 		// (unsigned int) (stp + 6) to fix some other problem but it broke suffix stripping
 		// HELP
-		while(*sp != SF_STRIP && *sp != SF_FC)
-			{
-			if(ls_lower[*bp] != *sp || bp == str_vowel)
-				break;
-			bp -= 1;
-	      sp += 1;
-			}
+//		while(*sp != SF_STRIP && *sp != SF_FC)
+//			{
+//			if(ls_lower[*bp] != *sp || bp == str_vowel)
+//				break;
+//			bp -= 1;
+//	      sp += 1;
+//			}
 
 /*
  *  for form class hits, just set the fc field ...
@@ -149,7 +149,7 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
  */
 		if(*sp++ == SF_STRIP)
 			{
-			for(i=0;SS[i] = CS[i];i++);
+//			for(i=0;SS[i] = CS[i];i++);
 			sbp = bp;
 			while(*sp != SF_END)
 				{
@@ -183,14 +183,14 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 #ifdef FULL_LTS
 							fc_struct[fc_index] = get_long(((unsigned char *)stp)+2);
 #endif
-							if(KS.udic_entries != 0)
-								{
-								stat=ufind_word();
-								}
-							if(KS.fdic_entries !=0 && stat != HIT)
-								{
-								stat = find_word();
-								}
+//							if(KS.udic_entries != 0)
+//								{
+//								stat=ufind_word();
+//								}
+//							if(KS.fdic_entries !=0 && stat != HIT)
+//								{
+//								stat = find_word();
+//								}
 							}
 						if(stat == HIT)
 							{
@@ -201,7 +201,7 @@ int suffix_find(unsigned char	__far *str_end,short which_dic)
 #ifdef FULL_LTS
 							fc_struct[fc_index] = 0;
 #endif
-						for(i=0;CS[i] = SS[i];i++);
+						//for(i=0;CS[i] = SS[i];i++);
 						}
 
 					bp = sbp;
