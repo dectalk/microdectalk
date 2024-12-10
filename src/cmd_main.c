@@ -67,8 +67,10 @@ int     cmd_punct();                            /* set punctuation interpretatio
 int     cmd_sync();                                     /* sync cmd/lts/ph */
 int     cmd_flush();                            /* flush all bufered text and commands */
 int     cmd_enable();                           /* selective enable of the flush */
+
 int     cmd_dial();                                     /* generate dial tones */
-//int     cmd_tone();                                     /* generate user tone */
+int     cmd_tone();                                     /* generate user tone */
+
 int     cmd_define();                           /* define custom voices */
 int     cmd_say();                                      /* how to break up text */
 int     cmd_timeout();                          /* when to flush text */
@@ -107,11 +109,161 @@ int cmd_tone() {
     pipe[5] = 0;
 
     vtm_loop(pipe);
-    // TODO: implement tone command
-    printf("WARNING: tone unimplemented\n");
 
     return( CMD_success );
 }
+
+#define  DTMF_PAUSE_TIME_IN_MSEC            100
+#define  DTMF_DIGIT_TIME_IN_MSEC            100
+#define  DTMF_HIGH_TONE_AMPLITUDE         20090
+#define  DTMF_LOW_TONE_AMPLITUDE          12676
+#define  DTMF_INTER_DIGITAL_TIME_IN_MSEC    100
+
+short   tlitone0[] = 
+{                       /* DTMF frequency 2             */
+        1336,   /* 0 */
+        1209,   /* 1 */
+        1336,   /* 2 */
+        1477,   /* 3 */
+        1209,   /* 4 */
+        1336,   /* 5 */
+        1477,   /* 6 */
+        1209,   /* 7 */
+        1336,   /* 8 */
+        1477,   /* 9 */
+        1209,   /* * */
+        1477,   /* # */
+        1633,   /* A */
+        1633,   /* B */
+        1633,   /* C */
+        1633    /* D */
+};
+
+short   tlitone1[] = 
+{                       /* DTMF frequency 1             */
+        941,    /* 0 */
+        697,    /* 1 */
+        697,    /* 2 */
+        697,    /* 3 */
+        770,    /* 4 */
+        770,    /* 5 */
+        770,    /* 6 */
+        852,    /* 7 */
+        852,    /* 8 */
+        852,    /* 9 */
+        941,    /* * */
+        941,    /* A */
+        770,    /* B */
+        852,    /* C */
+        941             /* D */
+};
+
+int cmd_dial() {
+  int iIndex;
+  unsigned char *pChar;
+  unsigned char szSingleDigit[2];
+  unsigned short pipe[6];
+
+  //if ( cm_cmd_sync(phTTS) == CMD_flushing )
+  //      return( CMD_flushing );
+  pChar = pString[0];
+  while ( *pChar != '\0' ) {
+        szSingleDigit[0] = *pChar;
+        szSingleDigit[1] = '\0';
+        switch ( szSingleDigit[0] ) {
+                case '0':
+                        iIndex = 0;
+                        break;
+                case '1':
+                        iIndex = 1;
+                        break;
+                case '2':
+                        iIndex = 2;
+                        break;
+                case '3':
+                        iIndex = 3;
+                        break;
+                case '4':
+                        iIndex = 4;
+                        break;
+                case '5':
+                        iIndex = 5;
+                        break;
+                case '6':
+                        iIndex = 6;
+                        break;
+                case '7':
+                        iIndex = 7;
+                        break;
+                case '8':
+                        iIndex = 8;
+                        break;
+                case '9':
+                        iIndex = 9;
+                        break;
+                case '*':
+                        iIndex = 10;
+                        break;
+                case '#':
+                        iIndex = 11;
+                        break;
+                case 'a':
+                case 'A':
+                        iIndex = 12;
+                        break;
+                case 'b':
+                case 'B':
+                        iIndex = 13;
+                case 'c':
+                case 'C':
+                        iIndex = 14;
+                        break;
+                case 'd':
+                case 'D':
+                        iIndex = 15;
+                        break;
+                default:
+                        if  (( szSingleDigit[0] == '-' ) || ( szSingleDigit[0] == ',' ) || ( szSingleDigit[0] == ' ' )) {
+                                iIndex = 16;
+                        } else {
+                                return( CMD_bad_string );
+                        }
+
+                        break;
+        } /* switch ( szSingleDigit[0] ) */
+        if ( iIndex == 16 ) {
+          pipe[0] = SPC_type_tone;
+          pipe[1] = DTMF_PAUSE_TIME_IN_MSEC;
+          pipe[2] = 1000;
+          pipe[3] = 0;
+          pipe[4] = 1000;
+          pipe[5] = 0;
+
+          vtm_loop(pipe);
+        } else {
+          pipe[0] = SPC_type_tone;
+          pipe[1] = DTMF_DIGIT_TIME_IN_MSEC;
+          pipe[2] = tlitone0[iIndex];
+          pipe[3] = DTMF_HIGH_TONE_AMPLITUDE;
+          pipe[4] = tlitone1[iIndex];
+          pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
+          vtm_loop(pipe);
+
+          pipe[0] = SPC_type_tone;
+          pipe[1] = DTMF_INTER_DIGITAL_TIME_IN_MSEC;
+          pipe[2] = 1000;
+          pipe[3] = 0;
+          pipe[4] = 1000;
+          pipe[5] = 0;
+
+          vtm_loop(pipe);
+        }
+        pChar++;
+  }
+
+  return( CMD_success );
+}
+
 
 struct  icomm setv[10] =
 {
@@ -129,7 +281,6 @@ struct  icomm setv[10] =
 
 
 struct  dtpc_command command_table[] = {
-
 	{"rate","d",1,DCS_RATE,cmd_rate},
 	{"latin","d",1,DCS_LATIN,cmd_name},
 	{"name","a",1,DCS_NAME,cmd_name},
@@ -148,14 +299,7 @@ struct  dtpc_command command_table[] = {
 	{"period","d",1,DCS_PERIOD,cmd_period},
 	{"pp","d",1,DCS_PERIOD,cmd_period},
 //	{"volume","ad",2,DCS_VOLUME_SET,cmd_volume},
-//		{NULL_COMMAND,0,0,DCS_VOLUME_UP,cmd_volume},
-//		{NULL_COMMAND,0,0,DCS_VOLUME_DOWN,cmd_volume},
 //	{"vs","d",1,DCS_VOLUME_SET,cmd_vs},
-#ifndef NO_INDEXES
-	{"index","ad",2,DCS_INDEX,cmd_mark},
-		{NULL_COMMAND,0,0,DCS_INDEX_REPLY,cmd_mark},
-		{NULL_COMMAND,0,0,DCS_INDEX_QUERY,cmd_mark},
-#endif
 	{"error","a",1,DCS_ERROR,cmd_error},
 	{"phoneme","aaa",3,DCS_PHONEME,cmd_phoneme},
 //	{"log","aa",2,DCS_LOG,cmd_log},
@@ -168,16 +312,13 @@ struct  dtpc_command command_table[] = {
 	{"flush","ad",2,DCS_FLUSH,cmd_flush},
 	{"enable","",1,DCS_ENABLE,cmd_enable},
 //#ifndef	SIMULATOR
-//	{"dial","a",1,DCS_DIAL,cmd_dial},
+	{"dial","a",1,DCS_DIAL,cmd_dial},
 	{"tone","dd",1,DCS_TONE,cmd_tone},
 //#endif
 //	{"timeout","d",1,DCS_TIMEOUT,cmd_timeout},
 	{"pronounce","aa",2,DCS_PRONOUNCE,cmd_pronounce},
 //	{"digitized",0,0,DCS_DIGITIZED,cmd_digitized},
 //	{"language","a",1,DCS_LANGUAGE,cmd_language},
-#ifndef SINGLE_THREADED
-//	{"remove","",1,DCS_REMOVE,cmd_remove},
-#endif
 	{"pitch","d",1,DCS_STRESS,cmd_stress},
 	{"define_voice","ad*",2,DCS_DEFINE,cmd_define},
 	{"dv","ad*",2,DCS_DEFINE,cmd_define},
@@ -187,11 +328,6 @@ struct  dtpc_command command_table[] = {
 //	{"break","a",1,DCS_BREAK,cmd_break}//,
 //	{"setv","d",1,0,cmd_setv},
 //	{"loadv","d",1,0,cmd_loadv}
-#ifdef DTEX
-	,{"power","ad",2,0,cmd_power},
-	{"version","a",1,0,cmd_version}	,
-	{"tsr","a",1,0,cmd_tsr}
-#endif /*DTEX*/
 };
 
 #define         TOTAL_COMMANDS (sizeof(command_table)/sizeof(struct dtpc_command))
