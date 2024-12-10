@@ -1,8 +1,4 @@
 #include <jni.h>
-//#include <vector>
-
-//static std::vector<short> samples;
-
 
 #define MAX_BUFFER (10 * 60) * 11025
 short samples[MAX_BUFFER]; // store 60 seconds of speech

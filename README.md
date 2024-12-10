@@ -1,7 +1,7 @@
 # MicroDectalk Android
 
 ## Overview
-MicroDectalk Android port
+MicroDectalk Android and Emscripten port
 
 ## Prerequisites
 
@@ -21,6 +21,7 @@ cd microdectalk
 The project uses an automated build script that:
 - Automatically downloads the required toolchain
 - Compiles the project
+- generates wasm files and index.html
 - Generates an Android APK
 
 To build the project, simply run:
@@ -29,7 +30,7 @@ To build the project, simply run:
 ```
 
 ### Build Output
-After compilation, you'll find the generated APK in the `out/` directory.
+After compilation, you'll find the generated files in the `out/[platform]` directory.
 
 ## Contributing
 if you make any progress towards a specific goal,

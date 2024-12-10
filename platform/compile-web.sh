@@ -4,7 +4,7 @@ mkdir -p out/web/
 rm -rf out/web/*
 cp platform/index.html out/web
 
-emcc src/dtk/*.c src/tts_bindings.cpp \
+emcc src/*.c platform/web_bindings.cpp \
      -lembind \
      -s WASM=1 \
      -s DEMANGLE_SUPPORT=1 \

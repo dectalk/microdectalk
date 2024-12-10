@@ -30,8 +30,8 @@ compile_arch() {
     [[ $ARCH = "armel" ]] && MUSL="musleabi" || MUSL="musl"
 
     # build objects
-    toolchain/${ARCH}-linux-$MUSL-cross/bin/${ARCH}-linux-$MUSL-gcc ${DEFINES[@]} ${CFLAGS[@]} -c src/dtk/*.c
-    toolchain/${ARCH}-linux-$MUSL-cross/bin/${ARCH}-linux-$MUSL-g++ ${DEFINES[@]} ${CFLAGS[@]} -c src/main.cpp -I /usr/lib/jvm/jre-21-openjdk/include/ -I/usr/lib/jvm/jre-21-openjdk/include/linux/
+    toolchain/${ARCH}-linux-$MUSL-cross/bin/${ARCH}-linux-$MUSL-gcc ${DEFINES[@]} ${CFLAGS[@]} -c src/*.c
+    toolchain/${ARCH}-linux-$MUSL-cross/bin/${ARCH}-linux-$MUSL-g++ ${DEFINES[@]} ${CFLAGS[@]} -c platform/android_bindings.cpp -I /usr/lib/jvm/jre-21-openjdk/include/ -I/usr/lib/jvm/jre-21-openjdk/include/linux/
     # link c and c++ together
     toolchain/${ARCH}-linux-$MUSL-cross/bin/${ARCH}-linux-$MUSL-gcc -fPIC -static -shared -static-libgcc *.o -o libepsonapi.so
 
