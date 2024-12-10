@@ -5,6 +5,8 @@
 #include "vtm_idef.h"
 #include "viport.h"
 #include "phdefs.h"
+#include "dtk/dtmmedefs.h"
+#include "vtm_idef.h"
 //#include "viphdefs.h"
 //#include "vismprat.h"   /*  Constants used by the vocal tract model   */
 //#include "vtm_i.h"      /*  Variables used by the vocal tract model   */
@@ -18,6 +20,8 @@
 extern short *global_spc_buf;
 short noiseb;
 
+#define SPC_TYPE_MASK			(0x00ff)
+#define TONE_PARS        5
 
 extern S16 R4ca;      /*  "b" coefficient                                    */
 extern S16 R4cb;      /*  "b" coefficient                                    */
@@ -36,6 +40,72 @@ extern S16 avgain;    /*  Gain factor for voicing source                     */
 extern S16 APgain;    /*  Gain factor for aspiration source                  */
 extern S16 AFgain;    /*  Gain factor for frication source                   */
 extern S16 rnpa;      /*  "a" coef for nasal pole                            */
+
+unsigned short control;
+
+extern BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate );
+
+int vtm_loop(unsigned short *input) {
+    int i,tmp;
+    S16 temp2;
+    S16 temp3;
+    S16 temp4;
+    S16 temp5;
+    S16 temp6;
+    S16 tempAB;
+    control=input[0];
+
+    switch ( control & SPC_TYPE_MASK) {
+        case SPC_type_voice:
+            for (i = 1; i <= (VOICE_PARS); i++) {
+              global_spc_buf[i] = input[i];
+            }
+            if ( !KS.halting ) {
+                speech_waveform_generator();
+                //OutputData(phTTS, pVtm_t->iwave, pVtm_t->uiNumberOfSamplesPerFrame,
+                //    (DWORD)global_spc_buf[OUT_PH + 1],
+                //    (DWORD)global_spc_buf[OUT_DU + 1],
+                //    (DWORD)global_spc_buf[OUT_PH2 + 1]);
+                printf("OutputData!\n");
+            }
+            break;
+        case SPC_type_tone:
+            for (i = 1; i <= (TONE_PARS); i++) {
+                global_spc_buf[i] = input[i];
+            }
+            //  If not halting then generate tone samples.
+            if (!KS.halting) {
+                printf("PlayTones!\n");
+                /* The elements of pVtm_t are used ,not been modified in PlayTones() function MVP MI */
+                if (PlayTones((double)(global_spc_buf[1]),
+                      (double)global_spc_buf[2],
+                      (double)global_spc_buf[3],
+                      (double)global_spc_buf[4],
+                      (double)global_spc_buf[5], /*pVtm_t->SampleRate*/ 11025 )) {
+                    printf("Failed!\n");
+                }
+            }
+            break;
+        case SPC_type_speaker:
+            // always init the VTM when we see a speakerdef!
+            InitializeVTM();
+            for (i = 1; i <= (SPDEF_PARS); i++) {
+                global_spc_buf[i] = input[i];
+            }
+            read_speaker_definition();
+            break;
+        //  Process a Sync. packet.
+        case SPC_type_sync:
+            break;
+        // TODO: SPC_type_index & SPC_type_force & SPC_type_samples_per_frame
+        default:
+            break;
+    }
+}
+
+
+
+
 void read_speaker_definition() 
 {
 

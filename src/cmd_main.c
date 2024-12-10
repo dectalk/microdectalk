@@ -68,7 +68,7 @@ int     cmd_sync();                                     /* sync cmd/lts/ph */
 int     cmd_flush();                            /* flush all bufered text and commands */
 int     cmd_enable();                           /* selective enable of the flush */
 int     cmd_dial();                                     /* generate dial tones */
-int     cmd_tone();                                     /* generate user tone */
+//int     cmd_tone();                                     /* generate user tone */
 int     cmd_define();                           /* define custom voices */
 int     cmd_say();                                      /* how to break up text */
 int     cmd_timeout();                          /* when to flush text */
@@ -90,6 +90,28 @@ int	cmd_version();				/* say/return version.*/
 int	cmd_tsr();			/* [:tsr modes.. */
 #endif /*DTEX*/
 
+extern int vtm_loop(unsigned short *);
+
+int cmd_tone() {
+    printf("Tone Command\n");
+
+    unsigned short pipe[6];
+    //if ( cm_cmd_sync(phTTS) == CMD_flushing )
+    //    return( CMD_flushing );
+    pipe[0] = SPC_type_tone;
+    pipe[1] = params[1];
+    pipe[2] = params[0];
+
+    pipe[3] = 32767; //TONE_AMPLITUDE;
+    pipe[4] = 1000;
+    pipe[5] = 0;
+
+    vtm_loop(pipe);
+    // TODO: implement tone command
+    printf("WARNING: tone unimplemented\n");
+
+    return( CMD_success );
+}
 
 struct  icomm setv[10] =
 {
@@ -145,10 +167,10 @@ struct  dtpc_command command_table[] = {
 	{"sync","",0,DCS_SYNC,cmd_sync},
 	{"flush","ad",2,DCS_FLUSH,cmd_flush},
 	{"enable","",1,DCS_ENABLE,cmd_enable},
-#ifndef	SIMULATOR
-	{"dial","a",1,DCS_DIAL,cmd_dial},
+//#ifndef	SIMULATOR
+//	{"dial","a",1,DCS_DIAL,cmd_dial},
 	{"tone","dd",1,DCS_TONE,cmd_tone},
-#endif
+//#endif
 //	{"timeout","d",1,DCS_TIMEOUT,cmd_timeout},
 	{"pronounce","aa",2,DCS_PRONOUNCE,cmd_pronounce},
 //	{"digitized",0,0,DCS_DIGITIZED,cmd_digitized},

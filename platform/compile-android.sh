@@ -5,7 +5,7 @@ DEFINES=(-DSIMULATOR -DSINGLE_THREADED -DHACK_ALERT -DFULL_LANGUAGE_SUPPORT -DFU
 CFLAGS=(-static -fPIC -I include -g -Wunused-function -w)
 
 # delete previous outputs
-rm -rf out/
+rm -rf out/android
 
 # download toolchain
 if [ ! -d "toolchain/aarch64-linux-musl-cross" ] || [ ! -d "toolchain/armel-linux-musleabi-cross" ] || [ ! -d "toolchain/x86_64-linux-musl-cross" ]; then
