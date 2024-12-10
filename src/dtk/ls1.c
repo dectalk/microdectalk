@@ -112,32 +112,16 @@
 #define far
 #endif
 
-#ifdef SIMULATOR
 #include <stdio.h>
-#endif
 
 #include "lsdef.h"
 #include "lsconst.h"
-
 #include "epsonapi.h"
-#if CALLER_ID
-char cinput_array[20]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-#else
-//char cinput_array[64]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
 char cinput_array[128]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-#endif
-
-#ifndef NO_CMD
 int input_array_pos=0;
-#endif
 
-#ifdef SINGLE_THREADED
 int ph_loop(short *input_phone);
-#endif
-
-
-//#define ARRAY_INPUT
-/*#define LS1DEBUG 1 define for debug printout */
 
 /*
  * Flags (lflag).
@@ -150,11 +134,9 @@ int ph_loop(short *input_phone);
 #define HCONS   0x0020                  /* Has a consonant.             */
 #define HHYPHEN 0x0040                  /* Has a hyphen; compound.      */
 #define HNONY   0x0080                  /* Has a non-y.                 */
-#ifndef CALLER_ID
+
 int lflag;
 int tlflag;
-#endif
-
 int incommand=0;
 int cmdcount=0;
 
@@ -180,36 +162,20 @@ ITEM    citem;                          /* Current item.                */
 ITEM    nitem;                          /* Next item, for lookahead.    */
 short   wstate;                         /* "Which" state.               */
 short   lphone;                         /* Last phoneme (from anybody). */
-#ifndef CALLER_ID
 short   fchar;                          /* Delimiter in fractions.      */
 short   schar;
-#else
-short   schar;                          /* Delimiter between groups.    */
-#endif
 short lp1temp[40];
 int lp1count;
-#ifdef DIRECT_LTS_INPUT
 int last_was_ctrlk;
-#endif
 extern PHONE	*pflp;
+
 /*
  *  form classes are set by the dictionary manager and suffix stripper
  *  and are used by name, homograph, and stress routines ...
- */ 
+ */
 
-
-#ifdef FULL_LTS
-// unsigned long   fc_struct[4]; /*xxx eab needs to be bigger to prevent
-//		a disaster*/
 unsigned long   fc_struct[256]; /*xxx eab needs to be bigger to prevent*/
 int     fc_index;
-
-#endif
-
-
-
-
-
 
 // extern functions
 extern int pfree(PHONE  *pp);
@@ -359,48 +325,40 @@ void lts_loop(unsigned short *input)
 
 #endif
 
+int   lbphone=0;
+int   rbphone=0;
 
-int lstask()
-{
+int lstask() {
+    int isnumabr=0;
+    volatile int firsttim;
+    LETTER        *llp;
+    LETTER        *rlp;
+    LETTER        *elp;
+    LETTER        *lp1;
+    LETTER        *templp1;
+    LETTER        *ttlp1;
+    LETTER        *tlp1;
+    LETTER        *lp2;
+    PHONE *pp;
+    char  *cp;
+    int   flag;
+    int   context;
+    int   type;
+    int   c;
+    int   lbphone=0;
+    int   rbphone=0;
+    int   lflag=0;
+    int   sign;
+    int   pflag;
+    int   speed;
+    int   c1;
+    int     c2,d;
+    int count;
+    NUM             num;
 
-	int isnumabr=0;
-volatile        int firsttim;
-	  LETTER        *llp;
-	  LETTER        *rlp;
-	  LETTER        *elp;
-	  LETTER        *lp1;
-#ifndef CALLER_ID
-	  LETTER        *templp1;
-	  LETTER        *ttlp1;
-	  LETTER        *tlp1;
-#endif
-	  LETTER        *lp2;
-	  PHONE *pp;
-#ifndef CALLER_ID
-	  char  *cp;
-#endif
-	  int   flag;
-	  int   context;
-#ifndef CALLER_ID
-	  int   type;
-	  int   c;
-#endif
-
-	  int   lbphone=0;
-	  int   rbphone=0;
-	  int   lflag=0;
-
-#ifndef CALLER_ID
-	  int   sign;
-
-	  int   pflag;
-	  int   speed;
-	  int   c1;
-	int     c2,d;
-	int count;
-
-#endif
-	NUM             num;
+    // these are defined globally for access from the dictionary lookup function
+    lbphone=0;
+    rbphone=0;
 
 
 #ifdef DIRECT_LTS_INPUT
@@ -429,16 +387,9 @@ volatile        int firsttim;
 	 * strippable punctuation.
 	 */
 
-loop:     
-	
+loop:
 	if(checkloop == false)
 		return 0;
-
-/* ...tek block here to make sure PH has something to do and that
-		we don't hog the CPU.. */
-#ifdef OS_IN_SYSTEM
-	block(NULL_FP);
-#endif
 
 	/* xxxx eab WE added code to allow for double abreviations such as
 		4 sq. ft. but we need to block these abbreviations in normal
@@ -2801,162 +2752,44 @@ int nextitem_new(short *local_buf)
 
 }
 #endif
-void nextitem(void)
-{
-	int     nextra,i;
-	unsigned int lts_sync[2];
-	//eab for debug only
-//int in_array[20]={'W','A','L','L','A','W','A','L','L','A','.','.',' ','#','n'};
-//int in_array[30]={'S','E','E',' ','T','H','A','T',' ','B','R','O','W','N ',' ',' ','B','E','A','R','.','#','\n',0};
-//int in_array[6]={'A','.',' ','#','\n',0};
-//int in_array[6]={'H','I',' ','#','\n',0};
-//int in_array[15]={'J','O','H','N',' ','E','D','W','A','R','D','S','#','\n',0};
 
-	static int countc=0;
-	static int loopflag=0;
-	
-/*
- *  peek at the pipe words, handle ...
- */
+void nextitem(void) {
+    int     nextra,i;
+    unsigned int lts_sync[2];
+    static int countc=0;
+    static int loopflag=0;
+    /*
+     *  peek at the pipe words, handle ...
+     */
+    while(checkloop == true) {
+        if(cinput_array[countc] == 0) {
+            checkloop = false;
+            countc=0;
+        } else {
+            i = cinput_array[countc];
+            countc++;
+            nitem.i_nword=1;
+        }
 
+        if(checkloop != true) {
+            continue; // skip below code
+        }
 
-	while(checkloop == true)
-		{
-#ifdef DIRECT_LTS_INPUT
-#ifdef ARRAY_INPUT
-			if(cinput_array[countc] != 0)
-			{
-				i = cinput_array[countc];
-				countc++;
-				nitem.i_nword=1;
-			}
-			else
-			{
-			checkloop = false;
-			countc=0;
-			}
-#else
-			i=getc(stdin);
-#endif
+        i&=0x00ff;
+        nitem.i_word[0]=i + (PFASCII<<PSFONT);
+        nitem.i_nword = 1;
+        if (i==0x0b) {
+            last_was_ctrlk=1;
+        }
+        nextra=0;
+        nitem.i_word[0] &= ~PNEXTRA;
+        if(KS.halting == false || nitem.i_word[0] == SYNC || nitem.i_word[0] == ((PFASCII<<PSFONT)+0xb)) {
+            break;
+        }
 
-
-	if(checkloop == true)
-	{
-#ifdef DIRECT_LTS_INPUT
-#ifdef NO_CMD
-			if (i==35)
-				i=11;
-			if (i==10)
-				continue;
-#endif
-			i&=0x00ff;
-
-#endif
-			nitem.i_word[0]=i + (PFASCII<<PSFONT);
-			nitem.i_nword = 1;
-#ifdef DIRECT_LTS_INPUT
-
-			if (i==0x0b)
-			{
-				//sendphone(SIL);
-				last_was_ctrlk=1;
-			}
-#endif
-		nextra=0;
-		nitem.i_word[0] &= ~PNEXTRA;
-#else
-		read_pipe(linp,&nitem.i_word[0], 1);
-		nextra = (nitem.i_word[0]&PNEXTRA) >> PSNEXTRA;
-#endif
-/*      printf("^^ %c %d \n",(nitem.i_word[0] & 0xff),(nitem.i_word[0] & 0xff));*/
-
-/*
- *  commands synchronous to lts ...
- */
-#ifndef DIRECT_LTS_INPUT
-
-		if((nitem.i_word[0] & (PFONT|PVALUE)) == LTS_SYNC)
-			{
-			for(i=0;i<nextra;i++)
-				{
-				read_pipe(linp,&lts_sync[i],1);
-				if(KS.halting)
-					{
-					if(lts_sync[i] == SYNC)
-						{
-						nitem.i_nword = 1;
-						nitem.i_word[0] = SYNC;
-						return;
-						}
-					else if(lts_sync[i] == ((PFASCII<<PSFONT)+0xb))
-						{
-						nitem.i_nword = 1;
-						nitem.i_word[0] = (PFASCII<<PSFONT)+0xb;
-						return;
-						} 
-					break;
-					}
-				}
-			if(KS.halting == false)
-				{
-				switch(lts_sync[0])
-					{
-					case    LTS_MODE_SET    :
-						KS.modeflag |= lts_sync[1];
-						break;
-					case    LTS_MODE_CLEAR  :
-						KS.modeflag &= (~lts_sync[1]);
-						break;
-					case    LTS_MODE_ABS    :
-						KS.modeflag = lts_sync[1];
-						break;
-					case    LTS_DIC_ALTERNATE       :
-						KS.pronflag |= PRON_DIC_ALTERNATE;
-						break;
-					case    LTS_DIC_PRIMARY :
-						KS.pronflag |= PRON_DIC_PRIMARY;
-						break;
-					case    LTS_ACNA_NAME   :
-						KS.pronflag |=  PRON_ACNA_NAME;
-						break;
-					};
-				}
-			continue;
-			}
-		nitem.i_nword = nextra+1;
-		nitem.i_word[0] &= ~PNEXTRA;
-		for(i=1;i<=nextra;i++)
-			{
-			read_pipe(linp,&nitem.i_word[i], 1);
-			if(KS.halting)
-				{
-				if(nitem.i_word[i] == SYNC)
-					{
-					nitem.i_word[0] = SYNC;
-					nitem.i_nword = 1;
-					return;
-					}
-				else if(nitem.i_word[i] == ((PFASCII<<PSFONT)+0xb))
-					{
-					nitem.i_nword = 1;
-					nitem.i_word[0] = (PFASCII<<PSFONT)+0xb;
-					return;
-					} 
-				}
-			}
-#endif
-		if(KS.halting == false ||
-			  nitem.i_word[0] == SYNC ||
-			    nitem.i_word[0] == ((PFASCII<<PSFONT)+0xb))
-				{
-
-			break;
-						}
-
-		} 
-	}//while
-
+    }
 }
+
 /*
  * Write the item in the "citem"
  * external out to the synthesizer. This is
@@ -2964,55 +2797,8 @@ void nextitem(void)
  * to simply copy an item through to the
  * output.
  */
-int writeitem()
-{
-	int tmp;
-	//tmp = (citem.i_nword-1);
-	//tmp = tmp<< PSNEXTRA;
-	//citem.i_word[0] |= tmp;
-	citem.i_word[0] |= ((citem.i_nword-1) << PSNEXTRA);
-	ph_loop(citem.i_word);
-	//write_pipe(kinp,&citem.i_word[0],citem.i_nword);
+int writeitem() {
+    int tmp;
+    citem.i_word[0] |= ((citem.i_nword-1) << PSNEXTRA);
+    ph_loop(citem.i_word);
 }
-#ifdef PRINT_OUTPUT
-void dump_list(char *message, LETTER  *llp,LETTER  *rlp)
-{
-LETTER *lp1;
-LETTER *lp2;
-
-        lp1=llp;
-        lp2=rlp;
-
-        printf("%s : ",message);
-        while (lp1 != lp2)
-        {
-           printf("%c(%x)",lp1->l_ch,lp1->l_ch);
-           ++lp1;
-        }
-        putc('\n',stdout);
-        return;
-}
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

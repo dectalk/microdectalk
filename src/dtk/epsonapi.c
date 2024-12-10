@@ -19,31 +19,18 @@ extern struct share_data *kernel_share;
 extern int TextToSpeechStart(char *input);
 extern int TextToSpeechInit();
 extern int TextToSpeechQuit();
-
 extern int TextToSpeechChangeVoice(char *cvoice);
-
-extern char cinput_array[];	//limited TTS length
-int *samplesEachPlay;
-
-typedef unsigned char U8;
-typedef unsigned int U32;
-#define get_long_int(ptr) ((U32)\
-                       ((((U8 *)(ptr))[3] << 24)  | \
-                        (((U8 *)(ptr))[2] << 16)  | \
-                        (((U8 *)(ptr))[1] << 8)  | \
-                        (((U8 *)(ptr))[0])))
-
-extern const unsigned char *define_options[];
-extern   short   curspdef[];
 
 //extern functions
 extern int cmdmain();
-extern	int dtpc_cmd(unsigned char inchar);
+extern int dtpc_cmd(unsigned char inchar);
 
 short TextToSpeechGetSpdefValue(int index) {
+    extern short curspdef[];
     return curspdef[index];
 }
 
+extern const unsigned char *define_options[];
 int TextToSpeechSetVoiceParam(char *cmd, int value) {
     unsigned short pipe_value[3];
     pipe_value[1] = string_match((unsigned char **)define_options,cmd);
@@ -73,31 +60,36 @@ int TextToSpeechStart(char *input) {
     return 0;
 }
 
+// dictionary externs
+extern unsigned char *mdict;
+extern unsigned char *udict;
+extern const unsigned char main_dict[];
 
-int TextToSpeechInit() {
-	memset(kernel_share,0,sizeof(struct share_data));
-
-	//if (main_dict) { //load main dictionary
-		//KS.fdic = ((int)(main_dict))+8;
-		//KS.fdic_entries= get_long_int(main_dict);
-	//}
-
-	usa_main();
-	InitializeVTM();
-	kltask_init();
-	lsmain();
-	cmdmain();
-
-	KS.halting = 0;
-
-	return 0;
+// unused for now
+int TextToSpeechLoadUserDictionary(const unsigned char *user_dict) {
+    if (user_dict) {
+        udict = user_dict;
+    }
 }
 
+int TextToSpeechInit() {
+    memset(kernel_share,0,sizeof(struct share_data));
 
+    if (main_dict) { //load main dictionary
+        mdict = main_dict;
+    }
 
+    usa_main();
+    InitializeVTM();
+    kltask_init();
+    lsmain();
+    cmdmain();
 
+    KS.halting = 0;
 
-extern const unsigned char *define_options[];
+    return 0;
+}
+
 int TextToSpeechChangeVoice(char *cvoice) {
     extern short last_voice;
 
@@ -140,7 +132,6 @@ int TextToSpeechChangeVoice(char *cvoice) {
 }
 
 int TextToSpeechReset() {
-        //close_wav();
-	KS.halting=1;
-	return 0;
+    KS.halting=1;
+    return 0;
 }

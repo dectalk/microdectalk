@@ -72,7 +72,7 @@ typedef PIPE_T * LPPIPE_T;
 
 LPPIPE_T create_pipe( UINT, UINT );
 
-void write_pipe( LPPIPE_T, void *, UINT );
+//void write_pipe( LPPIPE_T, void *, UINT );
 
 void read_pipe( LPPIPE_T, void *, UINT );
 

@@ -1,5 +1,7 @@
 #include "lsdef.h"
-const unsigned char user_dict[] = {
+
+/* clang-format off */
+const unsigned char main_dict[] = {
     21,    'A', 'A', 'R', 'P',  EOS,SPECIALWORD,PPSTART,    S1,EY,MBOUND,S1,EY,MBOUND,S2,AA,R ,MBOUND,P ,S1,IY,    SIL,
     17,    'A', 'B', 'C',  EOS,SPECIALWORD,PPSTART,    S1,EY,MBOUND,B ,S2,IY,MBOUND,S ,S1,IY,    SIL,
     17,    'A', 'D', 'P',  EOS,SPECIALWORD,PPSTART,    S1,EY,WBOUND,S2,D ,IY,WBOUND,P ,S1,IY,    SIL,

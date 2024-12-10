@@ -2,23 +2,32 @@
 #include "lsconst.h"
 #include "kernel.h"
 
-extern const unsigned char user_dict[];
+// defines for main and user dictionary pointers
+unsigned char *mdict;
+unsigned char *udict;
 
-/*
- * Look up a word. The word is stored
- * in an array of LETTER structures, bracketed by
- * the "llp" and "rlp" pointers. The "context" is drawn
- * from the set in "lsdef.h". Return a standard lookup
- * status code. Output index marks on success.
- */
+// ls1 externs
+extern int   lbphone;
+extern int   rbphone;
 
+// check wlookup for the desired word in both the user and main dictionary
 int lookup(LETTER *llp, LETTER *rlp, int context) {
     char *cp;
-    if ( (cp = (char *)wlookup(llp,&user_dict[0])) != NULL) {       /*eab mini dictionary lookup */
+
+    // check if main dictionary is valid, then perform lookup
+    if (mdict && (cp = (char *)wlookup(llp,&mdict[0])) != NULL) {
         sendlist(cp);
-//        lbphone=WBOUND;
-//        rbphone=WBOUND;
+        lbphone=WBOUND;
+        rbphone=WBOUND;
         return (HIT);
     }
+    // check if user dictionary is valid, then perform lookup
+    if (udict && (cp = (char *)wlookup(llp,&udict[0])) != NULL) {
+        sendlist(cp);
+        lbphone=WBOUND;
+        rbphone=WBOUND;
+        return (HIT);
+    }
+
     return(MISS);
 }

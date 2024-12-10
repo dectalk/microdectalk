@@ -218,7 +218,6 @@ int cmd_mark()
  */
 
 const unsigned char *define_options[] = {
-
 	"save", /* make the changes permanent */
 	"sx",   /* SEX = m */
 	"sm",   /* SM (smoothness in %, actually spectral tilt offset) */
@@ -284,11 +283,7 @@ int cmd_define()
 		else
 			{
 			pipe_value[0] = SAVE;
-#ifdef SINGLE_THREADED
 			lts_loop(pipe_value);
-#else
-			write_pipe(KS.lts_pipe,pipe_value,1);
-#endif
 			}
 		}
 	else
@@ -300,11 +295,7 @@ int cmd_define()
 			pipe_value[0] = (2<<PSNEXTRA)+NEW_PARAM;
 			pipe_value[1] -= 1;
 			pipe_value[2] = params[1];
-#ifdef SINGLE_THREADED
 			lts_loop(pipe_value);
-#else
-			write_pipe(KS.lts_pipe,pipe_value,3);
-#endif
 			}
 		}
 	return(CMD_success);
