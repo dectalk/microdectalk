@@ -5,7 +5,6 @@
 #include "kernel.h"
 #include "dtk/dtmmedefs.h"
 #include "vtm_idef.h"
-// WIP
 
 static double Tone( double, double * );
 
@@ -19,16 +18,14 @@ static double Tone( double, double * );
 extern void write_wav(short *iwave, int length);
 
 BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate ) {
-    printf("PlayTones is not implemented\n");
     int i;
     int iRiseSamples;
     int iCenterSamples;
     int iCenterCount;
     int iSynthCount;
     int iTotalSamples;
-    double * pRiseBuffer;
     double * pRise;
-    short * pToneBuffer;
+    short pToneBuffer[MAX_TONE_BLOCK];
     short * pBuffer;
     double Sample;
     double PhaseIncrement_0;
@@ -43,35 +40,35 @@ BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1
     iRiseSamples = (int)((double)RISE_TIME * SampleRate );
     iCenterSamples = iTotalSamples - ( iRiseSamples << 1 );
 
-    if ( iCenterSamples < 0 )
-    {
+    if ( iCenterSamples < 0 ) {
       iRiseSamples = iCenterSamples >> 1;
       iCenterSamples = 0;
     }
 
+    double pRiseBuffer[iRiseSamples];
+
     /********************************************************************/
     /*  Allocate the tone audio buffer.                                 */
     /********************************************************************/
-    pToneBuffer = (short *)malloc( MAX_TONE_BLOCK * sizeof(short));
-    if ( pToneBuffer == NULL )
-    {
-      return( TRUE );
-    }
+    //pToneBuffer = (short *) calloc( MAX_TONE_BLOCK, sizeof(short));
+    //if ( pToneBuffer == NULL )
+    //{
+    //  return( TRUE );
+    //}
 
-    pRiseBuffer = (double *)malloc( iRiseSamples * sizeof(double));
+    //pRiseBuffer = (double *) calloc( iRiseSamples, sizeof(double));
 
-    if ( pRiseBuffer == NULL )
-    {
-      return( TRUE );
-    }
+    //if ( pRiseBuffer == NULL )
+    //{
+    //  return( TRUE );
+    //}
 
     PhaseIncrement_0 = 0.25 * TWO_PI_EQUIVALENT / (double)iRiseSamples;
     Phase_0 = 0.0;
 
     pRise = pRiseBuffer;
 
-    for ( i = 0; i < iRiseSamples; i++ )
-    {
+    for ( i = 0; i < iRiseSamples; i++ ) {
       Sample = sin(Phase_0);
       *pRise++ = Sample * Sample;
       Phase_0 += PhaseIncrement_0;
@@ -128,8 +125,8 @@ BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1
     }
     //OutputData( phTTS, pToneBuffer, iRiseSamples, TONE_SYMBOL, 0,0 );
     write_wav(pToneBuffer, iRiseSamples);
-    free( pRiseBuffer );
-    free( pToneBuffer );
+    //free( pRiseBuffer );
+    //free( pToneBuffer );
     return( FALSE );
 }
 

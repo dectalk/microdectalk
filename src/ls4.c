@@ -1113,13 +1113,11 @@ int addphone(int sph, int uph)
  * or NULL if there are no nodes
  * left in the free list.
  */ 
-PHONE *palloc(void)
-{
-	 PHONE	*pp;
-
-	if ((pp=pflp) != NULL)
-		pflp = pp->p_fp;
-	return (pp);
+PHONE *palloc(void) {
+     PHONE *pp;
+     if ((pp=pflp) != NULL)
+         pflp = pp->p_fp;
+     return (pp);
 }
 
 /*

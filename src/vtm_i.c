@@ -233,14 +233,15 @@ void speech_waveform_generator()
   A6inDB = variabpars[OUT_A6];
   ABinDB = variabpars[OUT_AB];
   TILTDB = variabpars[OUT_TLT] - 12;  /*  Tilt in dB at 3 kHz         */
-  
-  APlin = amptable[APinDB + 10];      /*  Convert dB to linear        */
-  r2pg = amptable[A2inDB + 13];       /*  Convert dB to linear        */
-  r3pg = amptable[A3inDB + 10];       /*  Convert dB to linear        */
-  r4pa = amptable[A4inDB + 7];        /*  Convert dB to linear        */
-  r5pa = amptable[A5inDB + 6];        /*  Convert dB to linear        */
-  r6pa = amptable[A6inDB + 5];        /*  Convert dB to linear        */
-  ABlin = amptable[ABinDB + 5];       /*  Convert dB to linear        */
+
+  // FIXME: these %88 prevent a crash but dont solve the reason that the indices are out of bounds
+  APlin = amptable[(APinDB + 10) % 88];      /*  Convert dB to linear        */
+  r2pg = amptable[(A2inDB + 13)%88];       /*  Convert dB to linear        */
+  r3pg = amptable[(A3inDB + 10)%88];       /*  Convert dB to linear        */
+  r4pa = amptable[(A4inDB + 7)%88];        /*  Convert dB to linear        */
+  r5pa = amptable[(A5inDB + 6)%88];        /*  Convert dB to linear        */
+  r6pa = amptable[(A6inDB + 5)%88];        /*  Convert dB to linear        */
+  ABlin = amptable[(ABinDB + 5)%88];       /*  Convert dB to linear        */
   
   ampsum = A2inDB + A3inDB + A4inDB + A5inDB + A6inDB + ABinDB;
   if(ampsum)
