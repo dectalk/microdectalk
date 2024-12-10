@@ -34,6 +34,10 @@ BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1
     double Phase_1;
     DWORD dwDurationInFrames;
 
+    // adjust volume to avoid clipping
+    Amp_0 *= 0.5;
+    Amp_1 *= 0.5;
+
     dwDurationInFrames = (int)( 0.15625 * DurationInMsec );
 
     iTotalSamples = (int)( 0.001 * DurationInMsec * SampleRate );
