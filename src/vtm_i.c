@@ -270,8 +270,9 @@ void speech_waveform_generator() {
   r5pa = frac1mul(r5pa, AFgain);    /*  Scale A5 by spdef GF        */
   r6pa = frac1mul(r6pa, AFgain);    /*  Scale A6 by spdef GF        */
   ABlin = frac4mul( ABlin, AFgain );  /*  Scale AB by spdef GF        */
-  d2pole_pf( &rnpb, &rnpc, 290, 70, 0 );
-  rlpa = d2pole_pf( &rlpb, &rlpc, 698, 453, 2400 );
+
+//  d2pole_pf( &rnpb, &rnpc, 290, 70, 0 );
+//  rlpa = d2pole_pf( &rlpb, &rlpc, 698, 453, 2400 );
 
   /********************************************************************/
   /*  Set coeficients of variable parallel resonator R2.              */
@@ -312,62 +313,57 @@ void speech_waveform_generator() {
 /*                                                                    */
 /**********************************************************************/
 /**********************************************************************/
-
-void InitializeVTM()
-{
-  static S16 *variabpars;
+void InitializeVTM() {
 
   /********************************************************************/
-  /*  Set up parameters for frame of speech. The parameters will      */
-  /*  flush the VTM.                                                  */
+  /*  Zero Vocal-Tract-Model parameters.                              */
   /********************************************************************/
 
-  global_spc_buf=global_spc_v_buf;
+        r2pd1 = 0;    /*  Last output sample from parallel 2nd formant        */
+        r2pd2 = 0;    /*  Second-previous output sample                       */
 
-  variabpars = &global_spc_buf[1];
+        r3pd1 = 0;    /*  Last output sample from parallel 3rd formant        */
+        r3pd2 = 0;    /*  Second-previous output sample                       */
 
-  variabpars[OUT_T0] = 100;
-  variabpars[OUT_F1] = 2000;
-  variabpars[OUT_F2] = 2000;
-  variabpars[OUT_F3] = 2000;
-  variabpars[OUT_FZ] = 290;
-  variabpars[OUT_B1] = 2000;
-  variabpars[OUT_B2] = 2000;
-  variabpars[OUT_B3] = 2000;
-  variabpars[OUT_AV] = 0;
-  variabpars[OUT_AP] = 0;
-  variabpars[OUT_A2] = 0;
-  variabpars[OUT_A3] = 0;
-  variabpars[OUT_A4] = 0;
-  variabpars[OUT_A5] = 0;
-  variabpars[OUT_A6] = 0;
-  variabpars[OUT_AB] = 0;
-  variabpars[OUT_TLT] = 18;
-	nper=0;
-	 ns=0;  /*  Number of samples into current frame            */
-/* eab was this U32 ns;*/  /*  Number of samples into current frame   */
- nper=0;      /*  Current loc in voicing period   40000 samp/s       */
- nsr4=0;      /*  Counter of 4 samples in glottal source loop        */
+        r4pd1 = 0;    /*  Last output sample from parallel 4th formant        */
+        r4pd2 = 0;    /*  Second-previous output sample                       */
 
-/**********************************************************************/
-/*  COUNTER LIMITS                                                    */
-/**********************************************************************/
+        r5pd1 = 0;    /*  Last output sample from parallel 5th formant        */
+        r5pd2 = 0;    /*  Second-previous output sample                       */
 
- T0=0;        /*  Fundamental period in output samples times 4       */
- nopen=0;  
-  /********************************************************************/
-  /*  Call multiple times till the filter delays decay enough.        */
-  /********************************************************************/
+        r6pd1 = 0;    /*  Last output sample from parallel 6th formant        */
+        r6pd2 = 0;    /*  Second-previous output sample                       */
 
- /* speech_waveform_generator();
-  speech_waveform_generator();
-  speech_waveform_generator();
-   speech_waveform_generator();
-*/
-  return;
+        r1cd1 = 0;    /*  Last output sample from cascade 1st formant         */
+        r1cd2 = 0;    /*  Second-previous output sample                       */
+
+        r2cd1 = 0;    /*  Last output sample from cascade 2nd formant         */
+        r2cd2 = 0;    /*  Second-previous output sample                       */
+
+        r3cd1 = 0;    /*  Last output sample from cascade 3rd formant         */
+        r3cd2 = 0;    /*  Second-previous output sample                       */
+
+        r4cd1 = 0;    /*  Last output sample from cascade 4th formant         */
+        r4cd2 = 0;    /*  Second-previous output sample                       */
+
+        r5cd1 = 0;    /*  Last output sample from cascade 5th formant         */
+        r5cd2 = 0;    /*  Second-previous output sample                       */
+
+        rnpd1 = 0;    /*  Last output sample from cascade nasal pole          */
+        rnpd2 = 0;    /*  Second-previous output sample                       */
+
+        rnzd1 = 0;    /*  Last output sample from cascade nasal zero          */
+        rnzd2 = 0;    /*  Second-previous output sample                       */
+
+        rlpd1 = 0;    /*  Last output sample from low-pass filter             */
+        rlpd2 = 0;    /*  Second-previous output sample                       */
+
+        ablas1 = 0;   /*  Last output sample from nasal anti-resonator        */
+        ablas2 = 0;   /*  Second-previous output sample                       */
+
+        vlast = 0;    /*  Last output sample of the tilt filter.              */
+
+        one_minus_decay = 0;    /* Second sample of the tilt filter.          */
+
+//        SpeakerGain = 0;        /* Overall speaker gain */
 }
-
-
-
-
-

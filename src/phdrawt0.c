@@ -48,12 +48,22 @@
 #include <stdio.h>
 
 #include   "phdefs.h"
-/*#define DEBUGF0	 */
-#define TWOPI   4096         /* For getcosine() function below */
-#define PI   2048
-#define PIOVER2   1024
-#define ONE   (PIOVER2*PIOVER2)
+#define ENDDROP
+#define TWOPI   4096                    /* For getcosine() function below */
+#define PI	2048
+#define PIOVER2 1024
+#define ONE     (PIOVER2*PIOVER2)
+/* #define GRAPHF0*/
+/*#define DEBUGF0*/
+/* #define DEBUG_USER_PROSODICS */
 
+#define HIGHEST_F0        5121  /*  Maximum F0 in Hz*10 */
+#define LOWEST_F0          500  /*  Minimum F0 in Hz*10 */
+#define NEWBASELINE 
+#define F_SEG_LOWPASS     3000  /* Nominal cutoff freq of 1-pole low-pass    */
+#define DELAY_SEG_LOWPASS    4  /* Delay in frames to half-way of step resp. */
+#define F0SHFT               3  /* Shift to avoid roundoff errors in         */
+                                /*   filtering f0 commands                   */
 /*    Input variables */
 extern   short   *user_durs;               /* Where user durations go.	*/
 extern   short   *user_f0;               /* Where user f0 commands go.	*/
@@ -79,12 +89,6 @@ extern short   f0minimum,f0scalefac,f0basefall;
 extern short parstochip[];   /* we modify T0 of output array	    */
 extern short   f0;      /* Unscaled fund frequency times 10 */
 extern short   f0prime;   /* Scaled output f0 (actual out is T0) */
-
-#define HIGHEST_F0     5121   /* Maximum F0 in Hz*10			*/
-#define LOWEST_F0      500   /* Minimum F0 in Hz*10			*/
-
-#define F0SHFT           3   /* Shift to avoid roundoff errors in	*/
-/*   filtering f0 commands		*/
 
 /*    External constants from PHROM.C */
 extern short f0glstp[];      /* F0 dip for a glottal stop */

@@ -199,8 +199,8 @@ extern S16 R5pb;      /*  "b" coefficient                                    */
 extern S16 r5pc;      /*  "c" coefficient                                    */
 
 extern S16 r6pa;      /*  "a" coef for parallel 6th formant                  */
-// S16 r6pb;      /*  "b" coefficient                                    */
-// S16 r6pc;      /*  "c" coefficient                                    */
+S16 r6pb;      /*  "b" coefficient                                    */
+S16 r6pc;      /*  "c" coefficient                                    */
 
 extern S16 R1ca;      /*  "a" coefficient for cascade 1st formant            */
 extern S16 r1cb;      /*  "b" coefficient                                    */
@@ -676,7 +676,7 @@ void VocalTract() {
             out = 16383;
         else if ( out < -16384 )
             out = -16384;
-        iwave[ns] = out; // << 1; //HELP: left shifting causes clipping despite matching original code, likely missing something
+        iwave[ns] = out << 1; //HELP: left shifting causes clipping despite matching original code, likely missing something
   }
   return;
 }

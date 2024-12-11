@@ -40,6 +40,7 @@ extern "C" {
         }
 	total_size += length;
         //printf("Total Size: %i\n", total_size);
+        //printf("Current Duration: %i\n", total_size / 11025);
     }
 
     // Existing function declarations (you'll replace these with your actual implementations)
@@ -49,6 +50,7 @@ extern "C" {
     // Initialize TTS system and set user callback
     EMSCRIPTEN_KEEPALIVE
     void TTSinit(void (*callback)(long, int) ) {
+        total_size = 0;
         // Your TTS initialization code here
         printf("TextToSpeechInit\n");
         TextToSpeechInit();

@@ -20,10 +20,10 @@
         async function synth_tts() {
             const textInput = document.getElementById('textInput');
             const audioPlayer = document.getElementById('audioPlayer');
-
             console.log("Begin TTS");
 
-            var ptr = Module.ccall('TTSstart', 'number', ['string'], [textInput.value]);
+            // split up text
+            ptr = Module.ccall('TTSstart', 'number', ['string'], [textInput.value]);
             var arraySize = Module.ccall('get_total_size', 'number', [], []);
             const shortArray = new Int16Array(
                 Module.HEAPU8.buffer,
@@ -36,8 +36,7 @@
             audioPlayer.play();
         };
 
-        function callback(ptr, length) { // TODO implement js side audio callback
-            
+        function callback(ptr, length) { // TODO implement js side audio callback            
             const shortArray = new Int16Array(
                 Module.HEAPU8.buffer,
                 ptr,
