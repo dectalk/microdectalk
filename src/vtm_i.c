@@ -167,6 +167,8 @@ void output_data(void)
 }
 #endif
 
+S16 ldspdef;
+
 void speech_waveform_generator()
 {
   S16 *variabpars;
@@ -178,6 +180,22 @@ void speech_waveform_generator()
   /********************************************************************/
 
   variabpars = &global_spc_buf[1];
+
+  if (ldspdef >= 1) {
+    ldspdef++;
+    variabpars[OUT_AV] = 0;
+    variabpars[OUT_AP] = 0;
+    variabpars[OUT_A2] = 0;
+    variabpars[OUT_A3] = 0;
+    variabpars[OUT_A4] = 0;
+    variabpars[OUT_A5] = 0;
+    variabpars[OUT_A6] = 0;
+    variabpars[OUT_AB] = 0;
+    avlin = 0;
+  }
+
+  if (ldspdef >= 3)
+    ldspdef = -1;
 
   /********************************************************************/
   /********************************************************************/
