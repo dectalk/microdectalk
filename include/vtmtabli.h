@@ -46,7 +46,8 @@
 
 #ifndef VTMTABLI_H
 #define VTMTABLI_H
-#ifdef VARIABLE_OPEN_PERIOD
+
+//#ifdef VARIABLE_OPEN_PERIOD
 /**********************************************************************/
 /*                                                                    */
 /*  Constant B0 controls shape of glottal pulse as a function         */
@@ -129,13 +130,13 @@ const S16 B0[224] = {
         29,     29,     29,     28,     28,
         28,     28,     27,     27
 };
-#else
+//#else
 const S16 voices[14]= {
 		752,	3280,	5040,	6032,	6256,
 		5712,	4400,	2320,	-528,	-3168,
 		-4144,	-8528,	-13680,	-19600
 };
-#endif
+//#endif
 
 
 /**********************************************************************/

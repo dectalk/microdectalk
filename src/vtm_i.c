@@ -198,12 +198,8 @@ void speech_waveform_generator()
   /********************************************************************/
   
   T0inS4 = variabpars[OUT_T0];
-  //arg1=26214;
-  //arg2=T0inS4;
-  //T0inS4 = frac1mul( );
-  
-  
-  
+  T0inS4 = frac1mul(18063, T0inS4 ) << 1;
+
   F1inHZ = variabpars[OUT_F1];
   F1inHZ = frac4mul( F1inHZ, fnscal ) +(S16) ((4096 - (S32)fnscal ) >> 4);
   F2inHZ = variabpars[OUT_F2];
@@ -216,9 +212,7 @@ void speech_waveform_generator()
   /********************************************************************/
   
   FZinHZ = variabpars[OUT_FZ];
-  arg1= 20480;    /*  Equals 1.25 in Q14 format.     */
-  arg2=FZinHZ;
-  FZinHZ = frac1mul( ) << 1;
+  FZinHZ = frac1mul(29714, FZinHZ ) << 1;
   
   
   B1inHZ = variabpars[OUT_B1];
@@ -250,49 +244,35 @@ void speech_waveform_generator()
 	  if(par_count)
 		  par_count--;
 
-	  APlin = frac4mul( APlin, APgain );  /*  Scale asp by spdef GV       */
-	  arg1=r2pg;
-	  arg2=AFgain;
-	  r2pg = frac1mul(  );    /*  Scale A2 by spdef GF        */
-	  arg1=r3pg;
-	  arg2=AFgain;
-	  r3pg = frac1mul( );    /*  Scale A3 by spdef GF        */
-	  arg1=r4pa;
-	  arg2=AFgain;
-	  r4pa = frac1mul(  );    /*  Scale A4 by spdef GF        */
-	  arg1=r5pa;
-	  arg2=AFgain;
-	  r5pa = frac1mul(  );    /*  Scale A5 by spdef GF        */
-	  arg1=r6pa;
-	  arg2=AFgain;
-	  r6pa = frac1mul( );    /*  Scale A6 by spdef GF        */
-	  ABlin = frac4mul( ABlin, AFgain );  /*  Scale AB by spdef GF        */
-		
-	  d2pole_pf( &rnpb, &rnpc, 290, 70, 0 );
-	  rlpa = d2pole_pf( &rlpb, &rlpc, 698, 453, 2400 );
-	  
+  APlin = frac4mul( APlin, APgain );  /*  Scale asp by spdef GV       */
+  r2pg = frac1mul(r2pg, AFgain  );    /*  Scale A2 by spdef GF        */
+  r3pg = frac1mul(r3pg, AFgain );    /*  Scale A3 by spdef GF        */
+  r4pa = frac1mul(r4pa, AFgain  );    /*  Scale A4 by spdef GF        */
+  r5pa = frac1mul(r5pa, AFgain);    /*  Scale A5 by spdef GF        */
+  r6pa = frac1mul(r6pa, AFgain);    /*  Scale A6 by spdef GF        */
+  ABlin = frac4mul( ABlin, AFgain );  /*  Scale AB by spdef GF        */
+  d2pole_pf( &rnpb, &rnpc, 290, 70, 0 );
+  rlpa = d2pole_pf( &rlpb, &rlpc, 698, 453, 2400 );
 
-	  /********************************************************************/
-	  /*  Set coeficients of variable parallel resonator R2.              */
-	  /********************************************************************/
-	  
-	  b2p = 210;
-	  r2pa = d2pole_pf( &r2pb, &r2pc, F2inHZ, b2p, r2pg );
-	  
-	  /********************************************************************/
-	  /*  Set coeficients of variable parallel resonator R3.              */
-	  /********************************************************************/
-	  
-	  b3p = 280;
-	  r3pa = d2pole_pf( &r3pb, &r3pc, F3inHZ, b3p, r3pg );
-	  
-	  /********************************************************************/
-	  /********************************************************************/
-	  /*  MAIN LOOP. Calculate each sample of the current frame.          */
-	  /********************************************************************/
-	  /********************************************************************/
+  /********************************************************************/
+  /*  Set coeficients of variable parallel resonator R2.              */
+  /********************************************************************/
+  b2p = 210;
+  r2pa = d2pole_pf( &r2pb, &r2pc, F2inHZ, b2p, r2pg );
 
-VocalTract();
+  /********************************************************************/
+  /*  Set coeficients of variable parallel resonator R3.              */
+  /********************************************************************/
+  b3p = 280;
+  r3pa = d2pole_pf( &r3pb, &r3pc, F3inHZ, b3p, r3pg );
+
+  /********************************************************************/
+  /********************************************************************/
+  /*  MAIN LOOP. Calculate each sample of the current frame.          */
+  /********************************************************************/
+  /********************************************************************/
+
+  VocalTract();
 }
 
 /**********************************************************************/

@@ -105,28 +105,22 @@ S16 d2pole_cf45( S16 * bcoef,
 #ifdef Multiple_Sample_Rates
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-	  frequency = frac1mul( ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-	  bandwidth = frac1mul( ) << 1;
+	  frequency = frac1mul(inv_rate_scale, frequency) << 1;
+	  bandwidth = frac1mul(inv_rate_scale, bandwidth) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
 	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul( );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul( );
+      frequency = frac1mul(inv_rate_scale, frequency);
+      bandwidth = frac1mul(inv_rate_scale, bandwidth);
     }
   }
 #else
 
-		arg1=20480;
-		arg2=frequency;
-	  frequency = frac1mul( ) << 1;
-	   arg2=bandwidth;
-	  bandwidth = frac1mul( ) << 1;
+	  frequency = frac1mul(20480, frequency) << 1;
+	  bandwidth = frac1mul(20480, bandwidth) << 1;
 #endif
 
   /********************************************************************/
@@ -206,26 +200,20 @@ S16 d2pole_cf123( S16 * bcoef,
 #ifdef Multiple_Sample_Rates
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul(inv_rate_scale, frequency) << 1;
+    bandwidth = frac1mul(inv_rate_scale, bandwidth) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
-	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul(  );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul(  );
+      frequency = frac1mul(inv_rate_scale, frequency);
+      bandwidth = frac1mul(inv_rate_scale, bandwidth);
     }
   }
 #else
-  arg1=20480; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul(20480, frequency) << 1;
+    bandwidth = frac1mul(20480, bandwidth) << 1;
 #endif
   /********************************************************************/
   /*  Zap resonator if center frequency above maximum frequency.      */ 
@@ -300,26 +288,20 @@ S16 d2pole_pf( S16 * bcoef,
 #ifdef Multiple_Sample_Rates
   if ( uiSampleRateChange == SAMPLE_RATE_DECREASE )
   {
-	  arg1=inv_rate_scale; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg1=inv_rate_scale; arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul(inv_rate_scale, frequency) << 1;
+    bandwidth = frac1mul(inv_rate_scale, bandwidth) << 1;
   }
   else
   {
     if ( uiSampleRateChange == SAMPLE_RATE_INCREASE )
     {
-	  arg1=inv_rate_scale; arg2=frequency;
-      frequency = frac1mul(  );
-	  arg1=inv_rate_scale; arg2=bandwidth;
-      bandwidth = frac1mul(  );
+      frequency = frac1mul(inv_rate_scale, frequency );
+      bandwidth = frac1mul(inv_rate_scale, bandwidth );
     }
   }
 #else
- arg1=20480; arg2=frequency;
-    frequency = frac1mul(  ) << 1;
-	  arg2=bandwidth;
-    bandwidth = frac1mul(  ) << 1;
+    frequency = frac1mul(20480, frequency) << 1;
+    bandwidth = frac1mul(20480, bandwidth) << 1;
 
 
 #endif

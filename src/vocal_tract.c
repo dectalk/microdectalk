@@ -54,6 +54,8 @@
 extern S32 temp0;
 extern S32 temp1;
 
+extern const S16 B0[224];
+
 /**********************************************************************/
 /*  VARIABLES TO HOLD SPEAKER DEFINITION FROM HOST:                   */
 /**********************************************************************/
@@ -212,7 +214,7 @@ extern S16 R4ca;      /*  "a" coefficient for cascade 4th formant            */
 extern S16 R4cb;      /*  "b" coefficient                                    */
 extern S16 R4cc;      /*  "c" coefficient                                    */
 
-// S16 R5ca;      /*  "a" coefficient for cascade 5th formant            */
+S16 R5ca;      /*  "a" coefficient for cascade 5th formant            */
 extern S16 R5cb;      /*  "b" coefficient                                    */
 extern S16 R5cc;      /*  "c" coefficient                                    */
 
@@ -228,8 +230,8 @@ extern S16 rlpa;      /*  "a" coefficient for low-pass filter                */
 extern S16 rlpb;      /*  "b" coefficient                                    */
 extern S16 rlpc;      /*  "c" coefficient                                    */
 
-// S16 noiseb;    /*  "b" coefficient                                    */
-// S16 noisec;    /*  "c" coefficient                                    */
+extern S16 noiseb;    /*  "b" coefficient                                    */
+S16 noisec;    /*  "c" coefficient                                    */
 
 extern S16 decay;     /*  decay coefficient for tilt low-pass filter         */
 extern S16 one_minus_decay;  /*  tilt filter first order iir filter.         */
@@ -329,505 +331,317 @@ extern short par_count;
 
 
 extern short arg1,arg2; /*eab 3/18/95 for math functions*/	
-void VocalTract()
-{
+void VocalTract() {
+    for ( ns = 0; ns < 71; ns++ ) {
+        /******************************************************************/
+        /*  NOISE GENERATOR                                               */
+        /******************************************************************/
+        randomx = (randomx * 2007) + 12345;
+        noise = randomx >> 2;
 
+        /******************************************************************/
+        /*  RANDOM NUMBER FOR FRICATION AND ASPIRATION                    */
+        /*  Tilt down aspiration noise spectrum at high freqs by low-pass */
+        /*  filtering. noise = noise + 0.75 * last noise                  */
+        /******************************************************************/
 
+        noise += frac1mul( 24574, nolast );
+        nolast = noise;
 
-	  for ( ns = 0; ns < 71; ns++ )
-	  {
-		  /******************************************************************/
-		  /******************************************************************/
-		  /*  NOISE GENERATOR                                               */
-		  /******************************************************************/
-		  
-		  /******************************************************************/
-		  /*  NOISE GENERATOR                                               */
-		  /******************************************************************/
-		  /******************************************************************/
-		  
-		  randomx = (randomx * 2007) + 12345;
-		  noise = randomx >> 2;
-		  
-		  /******************************************************************/
-		  /*  RANDOM NUMBER FOR FRICATION AND ASPIRATION                    */
-		  /*  Tilt down aspiration noise spectrum at high freqs by low-pass */
-		  /*  filtering. noise = noise + 0.75 * last noise                  */
-		  /******************************************************************/
-		  
-		  arg1=24574;
-		  arg2=nolast;
-		  noise += frac1mul(  );
-		  nolast = noise;
-		  
-		  /******************************************************************/
-		  /*                                                                */
-		  /*  Filter with Pi-rotated antiresonator. (This is the same as an */
-		  /*  ordinary antiresonator except for the b-coef has it's sign    */
-		  /*  flipped). Frequency = 3500, Bandwidth = 1600.                 */
-		  /*                                                                */
-		  /*  This is a three zero filter, but is implemented as a special  */
-		  /*  case because one of the multipliers is 1.0. The input and     */
-		  /*  output variable is "noise".                                   */
-		  /*                                                                */
-		  /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-		  two_zero_filter_2( noise, ablas1, ablas2, -1873, 1499 );
-#else
-		  two_zero_filter_2( &noise, &ablas1, &ablas2, -1873, 1499 );
-#endif		  
-		  /******************************************************************/
-		  /*  Amplitude modulate noise. Reduce noise amplitude during the   */
-		  /*  second half of the glottal period if "avlin" > 0. "nmod" is   */
-		  /*  set to 0 if "avlin" is zero, i.e. the glottal source is off.  */
-		  /******************************************************************/
-		  
-		  if ( nper < nmod )
-			  noise >>= 1;
-		  
-		  
-		  /******************************************************************/
-		  /*  PERIODIC VOICING WAVEFORM                                     */
-		  /*  A period has duration of T0 samples, nper is the counter of   */
-		  /*  current time. During the first nper = 0 to ( T0 - nopen )     */
-		  /*  samples, the glottis is closed. The glottis opens at time     */
-		  /*  ( T0 - nopen ), and closes at time T0.                        */
-		  /******************************************************************/
-		  
-		  /****************************************************************/
-		  /*  Compute next value of voicing wave. Calculate glottal pulse */
-		  /*  at 4 times normal sample rate to minimize the quantization  */
-		  /*  of the glottal period.                                      */
-		  /****************************************************************/
-		  
-		  /****************************************************************/
-		  /*  Future upgrade ?                                            */
-		  /*  When glottis closes, reduce F1 and B1.                      */
-		  /****************************************************************/
-		  
-		  
-		  
-		  /****************************************************************/
-		  /*  voicing has fixed waveshape, at**2 - bt**3                  */
-		  /****************************************************************/
-		  
+        /******************************************************************/
+        /*                                                                */
+        /*  Filter with Pi-rotated antiresonator. (This is the same as an */
+        /*  ordinary antiresonator except for the b-coef has it's sign    */
+        /*  flipped). Frequency = 3500, Bandwidth = 1600.                 */
+        /*                                                                */
+        /*  This is a three zero filter, but is implemented as a special  */
+        /*  case because one of the multipliers is 1.0. The input and     */
+        /*  output variable is "noise".                                   */
+        /*                                                                */
+        /******************************************************************/
+        two_zero_filter_2( noise, ablas1, ablas2, -1873, 1499 );//noiseb, noisec );
 
-#ifndef VARIABLE_OPEN_PERIOD 
-		  if ( nper > ( T0 - 14 ) && (( T0 - 14 ) >0) )
-		  {
-			   voice0 = voices[vcount++];
-#else
-		  if ( nper > ( T0 - nopen ))
-		   {
+        /******************************************************************/
+        /*  Amplitude modulate noise. Reduce noise amplitude during the   */
+        /*  second half of the glottal period if "avlin" > 0. "nmod" is   */
+        /*  set to 0 if "avlin" is zero, i.e. the glottal source is off.  */
+        /******************************************************************/
 
-			a -= b;             /*  Fixed waveshape at**2 - bt**3         */
-			  voice0 += a >> 4;   /*  Differentiated glottal flow.          */
-#endif       
+        if ( nper < nmod )
+            noise >>= 1;
+        /******************************************************************/
+        /*  PERIODIC VOICING WAVEFORM                                     */
+        /*  A period has duration of T0 samples, nper is the counter of   */
+        /*  current time. During the first nper = 0 to ( T0 - nopen )     */
+        /*  samples, the glottis is closed. The glottis opens at time     */
+        /*  ( T0 - nopen ), and closes at time T0.                        */
+        /******************************************************************/
+        for ( nsr4 = 0; nsr4 < 4; nsr4++ ) {
+            /****************************************************************/
+            /*  Compute next value of voicing wave. Calculate glottal pulse */
+            /*  at 4 times normal sample rate to minimize the quantization  */
+            /*  of the glottal period.                                      */
+            /****************************************************************/
+            /****************************************************************/
+            /*  voicing has fixed waveshape, at**2 - bt**3                  */
+            /****************************************************************/
+            if ( nper > ( T0 - nopen )) {
+                a -= b;             /*  Fixed waveshape at**2 - bt**3         */
+                voice0 += a >> 4;	/*  Differentiated glottal flow.          */
+                avlind = avlin;     /*  Delay action of "avlin" change.       */
+            } else {
+                voice0  = 0;
+            }
+            /****************************************************************/
+            /*  Scale the glottal waveform using the speaker dependant      */
+            /*  parameter "avgain".                                         */
+            /****************************************************************/
+            voice = frac4mul( voice0, avgain );
+            /****************************************************************/
+            /*  SOME PARAMETERS ARE UPDATED PITCH SYNCHRONOUSLY             */
+            /*  (at sample before glottal close time)                       */
+            /****************************************************************/
+            if ( nper == T0 ) {
+                /**************************************************************/
+                /*  Reset period when 'nper' reaches T0, glottis about to     */
+                /*  open.                                                     */
+                /**************************************************************/
+                nper = 0;
+                /**************************************************************/
+                /*  'avlin' moved to 'avlind' after half period.              */
+                /**************************************************************/
+                avlin = amptable[AVinDB + 4];  /*  Convert from dB to linear. */
+                T0 = T0inS4;
+                T0 += frac4mul( t0jitr, T0 ); /*  Add jitter, if any.        */
+                t0jitr = -t0jitr;     /*  Change sign for alternating jitter. */
+                /**************************************************************/
+                /*  aturb1 is the Speaker definition breathiness coeficient   */
+                /**************************************************************/
+                aturb1 = Aturb << 2;
+                if ( F1inHZ < 250 )
+                    F1inHZ = 250;
 
-			 
-			  
-			  avlind = avlin;     /*  Delay action of "avlin" change.       */
-		  }
-		  else
-		  {
-			  vcount = 0;
-			  voice0 = 0;
-		  
-		  }
-		  /****************************************************************/
-		  /*  Scale the glottal waveform using the speaker dependant      */
-		  /*  parameter "avgain".                                         */
-		  /****************************************************************/
-		  
-		  
-		  
-		  voice = frac4mul( voice0, avgain );
-		  
-		  /****************************************************************/
-		  /*  SOME PARAMETERS ARE UPDATED PITCH SYNCHRONOUSLY             */
-		  /*  (at sample before glottal close time)                       */
-		  /****************************************************************/
-		  
-		  if ( nper == T0 )
-		  {
-			  /**************************************************************/
-			  /*  Reset period when 'nper' reaches T0, glottis about to     */
-			  /*  open.                                                     */
-			  /**************************************************************/
-			  
-			  nper = 0;
-			  
-			  /**************************************************************/
-			  /*  'avlin' moved to 'avlind' after half period.              */
-			  /**************************************************************/
-			  
-			  avlin = amptable[AVinDB + 4];  /*  Convert from dB to linear. */
-			  
-			  T0 = (T0inS4>>2)-10;          /*  T0inS4 remembers period in case     */	
-			  
-		  }
+                /**************************************************************/
+                /*  Use a one pole iir filter to tilt the glottal source.     */
+                /**************************************************************/
+                // SAMPLE_RATE_INCREASE
+                decay = 1094 * (S32)TILTDB;
 
-#ifndef MINIMAL_SYNTH
-        temp = frac4mul( t0jitr, T0 ); /*  Add jitter, if any.        */
-        T0 +=  temp;
-        t0jitr = -t0jitr;     /*  Change sign for alternating jitter. */
-#endif
-        /**************************************************************/
-        /*  aturb1 is the Speaker definition breathiness coeficient   */
-        /**************************************************************/
+                if ( decay >= 0 )
+                    one_minus_decay = 32767 - decay;
+                else
+                    one_minus_decay = 32767;
+                /**************************************************************/
+                /*  Set to "nmod" during the first half of the period.        */
+                /*  Modulate the amplitude of the noise if "avlin" > 0, i.e.  */
+                /*  the glottal source is enabled.                            */
+                /**************************************************************/
 
-//        aturb1 = Aturb << 2;
+                nmod = 0;
 
-//        if ( F1inHZ < 250 )
-//          F1inHZ = 250;
+                if ( avlin > 0 )
+                    nmod = T0 >> 1;
+                nopen = frac1mul( k1, T0 ) + k2;
+                nopen += ( TILTDB<<2  );
 
-        /**************************************************************/
-        /*  Use a one pole iir filter to tilt the glottal source.     */
-        /**************************************************************/
+                nopen += ( TILTDB<<2  );      /*  Longer if TILTDB increases */
+                if ( nopen < 40 )
+                    nopen = 40;        /*  Min is 40                            */
+                else
+                    if ( nopen > 263 )
+                        nopen = 263;     /*  Max is 263                           */
 
-        if ( decay >= 0 )
-         one_minus_decay = 32767 - decay;
-      else
-        one_minus_decay = 32767;
-        /**************************************************************/
-        /*  Set to "nmod" during the first half of the period.        */
-        /*  Modulate the amplitude of the noise if "avlin" > 0, i.e.  */
-        /*  the glottal source is enabled.                            */
-        /**************************************************************/
+                if ( nopen >= (( T0 * 3 ) >> 2 ))
+                    nopen = (( T0 * 3 ) >> 2 );    /*  or 3/4 T0                */
 
-        nmod = 0;
+                /**************************************************************/
+                /*  Reset a & b, which determine shape of glottal waveform.   */
+                /*  Let a = (b * nopen) / 3 without doing the divide.         */
+                /**************************************************************/
+                b = B0[nopen-40];
+                temp = b + 1;
 
-        if ( avlin > 0 )
-          nmod = T0 >> 1;
-#ifdef VARIABLE_OPEN_PERIOD  
-		arg1=k1;
-		arg2=T0;
-        //nopen = frac1mul( ) + k2;   /*  in open part of period */
+                if ( nopen > 95 ) {
+                    temp = (S32)temp * nopen;
+                    a = frac1mul(10923, temp ); /* Q1.15 -> 0.333 */
+                } else {
+                    temp = frac1mul(10923, temp ); /* Q1.15 -> 0.333 */
+                    a = (S32)temp * nopen;
+                }
+                /**************************************************************/
+                /*  Set coeficients of variable cascade resonators.           */
+                /**************************************************************/
 
-        nopen += ( TILTDB << 2 );      /*  Longer if TILTDB increases */
+                R3ca = d2pole_cf123( &r3cb, &r3cc, F3inHZ, B3inHZ, r3cg );
+                R2ca = d2pole_cf123( &r2cb, &r2cc, F2inHZ, B2inHZ, r2cg );
+                R1ca = d2pole_cf123( &r1cb, &r1cc, F1inHZ, B1inHZ, r1cg );
 
-        if ( nopen < 40 )
-          nopen = 80;        /*  Min is 40                            */
-        else
-          if ( nopen > 263 )
-            nopen = 263;     /*  Max is 263                           */
+                /**************************************************************/
+                /*  Scale up R1 gain here.                                    */
+                /**************************************************************/
 
-        if ( nopen >= (( T0 * 3 ) >> 2 ))
-          nopen = (( T0 * 3 ) >> 2 );    /*  or 3/4 T0                */
+                if ( R1ca > 16383 )
+                    R1ca = 16383;
 
-        /**************************************************************/
-        /*  Reset a & b, which determine shape of glottal waveform.   */
-        /*  Let a = (b * nopen) / 3 without doing the divide.         */
-        /**************************************************************/
-      
-        b = B0[nopen-40];
+                R1ca = R1ca << 1;
 
+                /**************************************************************/
+                /*  Set coeficients of nasal zero antiresonator by table      */
+                /*  lookup.                                                   */
+                /**************************************************************/
 
-     
+                temp = ( FZinHZ >> 3 ) - 31;
 
-        if ( nopen > 95 )
-        {
-		  arg1=10923;
-          arg2 = (S32)b * nopen;
+                if ( temp > 34 )
+                    temp = 34;
 
-          a = frac1mul( );
+                rnza = azero_tab[temp];
+                rnzb = bzero_tab[temp];
+                rnzc = czero_tab[temp];
+            }
+
+            /****************************************************************/
+            /*  Downsampling low-pass filter.                               */
+            /*  Decimate the glottal pulse from a 40 KHz rate to 10 KHz.    */
+            /*  The variable 'rlpd1' is the output of downsampling low-pass */
+            /*  filter and is copied back to the variable 'voice'. 'nper'   */
+            /*  is the 40 KHz sample counter.                               */
+            /****************************************************************/
+
+            two_pole_filter( voice, rlpd1, rlpd2, rlpa, rlpb, rlpc );
+
+            voice = rlpd1;
+            nper++;
         }
-        else
-        {
-			arg1=10923;
-			arg2=b;
-          temp = frac1mul( );
-          a = (S32)temp * nopen;
-        }
-#endif
-        /**************************************************************/
-        /*  Set coeficients of variable cascade resonators.           */
-        /**************************************************************/
+        /******************************************************************/
+        /*  Tilt spectrum down by TILTDB dB at 3 kHz,                     */
+        /*  use 1-pole iir filter.                                        */
+        /******************************************************************/
+        decay = 1073 * TILTDB; /* fixed decay ebruckert 9-04-2002*/
+        voice = frac1mul(one_minus_decay,voice) + frac1mul(decay,vlast);
+        vlast = voice;
+        /******************************************************************/
+        /*  Add breathiness to voicing. Increase noise if Aspiration.     */
+        /******************************************************************/
+        voice += frac1mul(aturb1, noise);
+        /******************************************************************/
+        /*  Set variable gain of voicing.                                 */
+        /*  24-Jul-85  "avlin" moved to "avlind" after half a period.     */
+        /******************************************************************/
+        voice = frac4mul( avlind, voice );
+        /******************************************************************/
+        /*  Add aspiration to voicing.                                    */
+        /******************************************************************/
+        voice += frac1mul(APlin, noise);
 
-        R3ca = d2pole_cf123( &r3cb, &r3cc, F3inHZ, B3inHZ, r3cg );
-        R2ca = d2pole_cf123( &r2cb, &r2cc, F2inHZ, B2inHZ, r2cg );
-        R1ca = d2pole_cf123( &r1cb, &r1cc, F1inHZ, B1inHZ, r1cg );
+        /******************************************************************/
+        /******************************************************************/
+        /*                                                                */
+        /*  CASCADE VOCAL TRACT, EXCITED BY LARYNGEAL SOURCES             */
+        /*                                                                */
+        /*  Nasal antiresonator, then formants fnp, f5c, f4c, F3inHZ      */
+        /*  F2inHZ, and F1inHZ                                            */
+        /*                                                                */
+        /******************************************************************/
+        /******************************************************************/
 
-        /**************************************************************/
-        /*  Scale up R1 gain here.                                    */
-        /**************************************************************/
+        /******************************************************************/
+        /*  Nasal Antiresonator of Cascade Vocal Tract:                   */
+        /*  rnzout = (rnza * voice) + (rnzb * rnzd1) + (rnzc * rnzd2)     */
+        /******************************************************************/
+        two_zero_filter( voice, rnzout, rnzd1, rnzd2, rnza, rnzb, rnzc );
+        /******************************************************************/
+        /*  Nasal Resonator of Cascade Vocal Tract                        */
+        /*  output is rnpd1.                                              */
+        /******************************************************************/
+        two_pole_filter( rnzout, rnpd1, rnpd2, rnpa, rnpb, rnpc );
+        /******************************************************************/
+        /*  Fifth Formant                                                 */
+        /*  output is r5cd1.                                              */
+        /******************************************************************/
+        // sample rate > 9500
+        two_pole_filter( rnpd1, r5cd1, r5cd2, R5ca, R5cb, R5cc );
+        /******************************************************************/
+        /*  Fourth Formant                                                */
+        /*  output is r4cd1.                                              */
+        /******************************************************************/
+        two_pole_filter( rnpd1, r4cd1, r4cd2, R4ca, R4cb, R4cc );
+        /******************************************************************/
+        /*  Third Formant                                                 */
+        /*  output is r3cd1.                                              */
+        /******************************************************************/
+        two_pole_filter( r4cd1, r3cd1, r3cd2, R3ca, r3cb, r3cc );
+        /******************************************************************/
+        /*  Second Formant                                                */
+        /*  output is r2cd1.                                              */
+        /******************************************************************/
+        two_pole_filter( r3cd1, r2cd1, r2cd2, R2ca, r2cb, r2cc );
+        /******************************************************************/
+        /*  First Formant of Cascade Vocal Tract                          */
+        /*  output is r1cd1.                                              */
+        /******************************************************************/
+        two_pole_filter( r2cd1, r1cd1, r1cd2, R1ca, r1cb, r1cc );
+        out = r1cd1;
+        /******************************************************************/
+        /******************************************************************/
+        /*                                                                */
+        /*  PARALLEL VOCAL TRACT                                          */
+        /*                                                                */
+        /*  Excited by frication noise source. Uses formant frequencies   */
+        /*  f6p, f5p, f4p, F3inHz, F2inHz and bypass path, outputs added  */
+        /*  with alternating sign to prevent overflow.                    */
+        /*                                                                */
+        /******************************************************************/
+        /******************************************************************/
 
-        if ( R1ca > 16383 )
-          R1ca = 16383;
+        /******************************************************************/
+        /*  Sixth Formant of Parallel Vocal Tract                         */
+        /******************************************************************/
+        two_pole_filter( noise, r6pd1, r6pd2, r6pa, -5702, -1995 );
+        out = r6pd1 - out;
 
-        R1ca = R1ca << 1;
+        /******************************************************************/
+        /*  Fifth Formant of Parallel Vocal Tract                         */
+        /*  Fifth parallel formant effectively out of circuit if the      */
+        /*  sample rate is low enough.                                    */
+        /******************************************************************/
 
-        /**************************************************************/
-        /*  Future upgrade ?                                          */
-        /*  Set pitch-synchronous changes to F1.                      */
-        /**************************************************************/
+        // uiSampleRate > 9600
+        two_pole_filter( noise, r5pd1, r5pd2, r5pa, R5pb, r5pc );
+        out = r5pd1 - out;
+        /******************************************************************/
+        /*  Fourth Formant of Parallel Vocal Tract                        */
+        /******************************************************************/
+        two_pole_filter( noise, r4pd1, r4pd2, r4pa, R4pb, r4pc );
+        out = r4pd1 - out;
+        /******************************************************************/
+        /*  Third Formant of Parallel Vocal Tract                         */
+        /******************************************************************/
+        two_pole_filter( noise, r3pd1, r3pd2, r3pa, r3pb, r3pc );
+        out = r3pd1 - out;
+        /******************************************************************/
+        /*  Second Formant of Parallel Vocal Tract                        */
+        /******************************************************************/
+        two_pole_filter( noise, r2pd1, r2pd2, r2pa, r2pb, r2pc );
+        out = r2pd1 - out;
 
+        about = frac1mul(ABlin, noise);  /*  Output of bypass path      */
+        out = about - out;
 
-        /**************************************************************/
-        /*  Set coeficients of nasal zero antiresonator by table      */
-        /*  lookup.                                                   */
-        /**************************************************************/
-
-        temp = ( FZinHZ >> 3 ) - 31;
-
-        if ( temp > 34 )
-          temp = 34;
-
-        rnza = azero_tab[temp];
-        rnzb = bzero_tab[temp];
-        rnzc = czero_tab[temp];
-      
-
-      /****************************************************************/
-      /*  Downsampling low-pass filter.                               */
-      /*  Decimate the glottal pulse from a 40 KHz rate to 10 KHz.    */
-      /*  The variable 'rlpd1' is the output of downsampling low-pass */
-      /*  filter and is copied back to the variable 'voice'. 'nper'   */
-      /*  is the 40 KHz sample counter.                               */
-      /****************************************************************/
-
-//      two_pole_filter( voice, &rlpd1, &rlpd2, rlpa, rlpb, rlpc );
-
-  //    voice = rlpd1;
-      
-	  
-	  
-    
-
-
-
-
-//	 iwave[ns] = voice;
-  if ( (avlind + avlin + APlin ))
-	  cas_count = 20;
-  else
-	  if(cas_count)
-		  cas_count--;
-
-if(cas_count == 0)
-{
-	
-	//eab 3/7/01 Compute save has a bug if somehitng nees to be initalized probably in the filters
-	//as a voiced cons such as [g] comes on wrong probably get "the dog" clean before re-implementaiton
-	  
-	   out=0;
-	 goto skip_cascade;
-	  	
-}
-	
-
-
-       /******************************************************************/
-    /*  Tilt spectrum down by TILTDB dB at 3 kHz,                     */
-    /*  use 1-pole iir filter.                                        */
-    /******************************************************************/
-	decay = 1073 * TILTDB; /* fixed decay ebruckert 9-04-2002*/
-	  arg1=one_minus_decay;
-	  arg2=voice;
-   voice = frac1mul(  );
-	arg1=decay;
-	arg2=vlast;
-	voice += frac1mul(  );
-  vlast = voice;
-
-    /******************************************************************/
-    /*  Add breathiness to voicing. Increase noise if Aspiration.     */
-    /******************************************************************/
-
-	arg1=aturb1;
-	arg2=noise;
-    voice += frac1mul(  );
-
-    /******************************************************************/
-    /*  Set variable gain of voicing.                                 */
-    /*  24-Jul-85  "avlin" moved to "avlind" after half a period.     */
-    /******************************************************************/
-
-    voice = frac4mul( avlind, voice );
-
-    /******************************************************************/
-    /*  Add aspiration to voicing.                                    */
-    /******************************************************************/
-	arg1=APlin;
-	arg2=noise;
-    voice += frac1mul(  );
-
-	//iwave[ns]=voice;
-
-//	continue;
-
-    /******************************************************************/
-    /******************************************************************/
-    /*                                                                */
-    /*  CASCADE VOCAL TRACT, EXCITED BY LARYNGEAL SOURCES             */
-    /*                                                                */
-    /*  Nasal antiresonator, then formants fnp, f5c, f4c, F3inHZ      */
-    /*  F2inHZ, and F1inHZ                                            */
-    /*                                                                */
-    /******************************************************************/
-    /******************************************************************/
-
-    /******************************************************************/
-    /*  Nasal Antiresonator of Cascade Vocal Tract:                   */
-    /*  rnzout = (rnza * voice) + (rnzb * rnzd1) + (rnzc * rnzd2)     */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_zero_filter( voice, rnzout, rnzd1, rnzd2, rnza, rnzb, rnzc );
-#else
-    two_zero_filter( voice, &rnzout, &rnzd1, &rnzd2, rnza, rnzb, rnzc );
-#endif
-    /******************************************************************/
-    /*  Nasal Resonator of Cascade Vocal Tract                        */
-    /*  output is rnpd1.                                              */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( rnzout, rnpd1, rnpd2, rnpa, rnpb, rnpc );
-#else
-    two_pole_filter( rnzout, &rnpd1, &rnpd2, rnpa, rnpb, rnpc );
-#endif
-	//iwave[ns] = rnpd1;
-
-    /******************************************************************/
-    /*  Fifth Formant                                                 */
-    /*  output is r5cd1.                                              */
-    /******************************************************************/
-
-	
-
-    /******************************************************************/
-    /*  Fourth Formant                                                */
-    /*  output is r4cd1.                                              */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( rnpd1, r4cd1, r4cd2, R4ca, R4cb, R4cc );
-#else
-    two_pole_filter( rnpd1, &r4cd1, &r4cd2, R4ca, R4cb, R4cc );	
-#endif
-    /******************************************************************/
-    /*  Third Formant                                                 */
-    /*  output is r3cd1.                                              */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( r4cd1, r3cd1, r3cd2, R3ca, r3cb, r3cc );
-#else
-    two_pole_filter( r4cd1, &r3cd1, &r3cd2, R3ca, r3cb, r3cc );	
-#endif
-
-    /******************************************************************/
-    /*  Second Formant                                                */
-    /*  output is r2cd1.                                              */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( r3cd1, r2cd1, r2cd2, R2ca, r2cb, r2cc );
-#else
-    two_pole_filter( r3cd1, &r2cd1, &r2cd2, R2ca, r2cb, r2cc );	
-#endif
-
-    /******************************************************************/
-    /*  First Formant of Cascade Vocal Tract                          */
-    /*  output is r1cd1.                                              */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( r2cd1, r1cd1, r1cd2, R1ca, r1cb, r1cc );
-#else
-    two_pole_filter( r2cd1, &r1cd1, &r1cd2, R1ca, r1cb, r1cc );	
-#endif
-
-    out = r1cd1;
-
-skip_cascade:
-
-    /******************************************************************/
-    /******************************************************************/
-    /*                                                                */
-    /*  PARALLEL VOCAL TRACT                                          */
-    /*                                                                */
-    /*  Excited by frication noise source. Uses formant frequencies   */
-    /*  f6p, f5p, f4p, F3inHz, F2inHz and bypass path, outputs added  */
-    /*  with alternating sign to prevent overflow.                    */
-    /*                                                                */
-    /******************************************************************/
-    /******************************************************************/
-
-    /******************************************************************/
-    /*  Sixth Formant of Parallel Vocal Tract                         */
-    /******************************************************************/
-
-	if(par_count==0)
-		goto skip_parallel;
-
-#ifndef USE_FILTER_FUNCTIONS
-    two_pole_filter( noise, r6pd1, r6pd2, r6pa, -5702, -1995 );
-#else
-    two_pole_filter( noise, &r6pd1, &r6pd2, r6pa, -5702, -1995 );
-#endif
-
-    out = r6pd1 - out;
-
-	if(par_count==0)
-		goto skip_parallel;
-
-#ifndef USE_FILTER_FUNCTIONS    
-      two_pole_filter( noise, r5pd1, r5pd2, r5pa, R5pb, r5pc );
-#else
-      two_pole_filter( noise, &r5pd1, &r5pd2, r5pa, R5pb, r5pc );	  
-#endif
-    out = r5pd1 - out;
-
-    /******************************************************************/
-    /*  Fourth Formant of Parallel Vocal Tract                        */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS 
-    two_pole_filter( noise, r4pd1, r4pd2, r4pa, R4pb, r4pc );
-#else
-    two_pole_filter( noise, &r4pd1, &r4pd2, r4pa, R4pb, r4pc );
-#endif
-    out = r4pd1 - out;
-
-    /******************************************************************/
-    /*  Third Formant of Parallel Vocal Tract                         */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS 
-    two_pole_filter( noise, r3pd1, r3pd2, r3pa, r3pb, r3pc );
-#else
-    two_pole_filter( noise, &r3pd1, &r3pd2, r3pa, r3pb, r3pc );
-#endif
-
-    out = r3pd1 - out;
-
-    /******************************************************************/
-    /*  Second Formant of Parallel Vocal Tract                        */
-    /******************************************************************/
-#ifndef USE_FILTER_FUNCTIONS 
-    two_pole_filter( noise, r2pd1, r2pd2, r2pa, r2pb, r2pc );
-#else
-    two_pole_filter( noise, &r2pd1, &r2pd2, r2pa, r2pb, r2pc );
-#endif
-
-    out = r2pd1 - out;
-
-	arg1=ABlin;
-	arg2=noise;
-    about = frac1mul(  );  /*  Output of bypass path      */
-
-    out = about - out;
-
-
-    /******************************************************************/
-    /*  Bring the signal level up near +/-32767.                      */
-    /*  If the sample rate is 8000 Hz. then the peak signal level is  */
-    /*  approximately 8000. This is because of the parameters in file */
-    /*  phvdef.c for a sample rate of 8000 Hz.                        */
-    /*                                                                */
-    /*  Very occasionaly a large impulse will be generated. Clip it.  */
-    /*  This allows running the volume level much higher.             */
-    /******************************************************************/
-
-skip_parallel:
-
-    iwave[ns] = out;
-	nper++;
-		
+        /******************************************************************/
+        /*  Bring the signal level up near +/-32767.                      */
+        /*  If the sample rate is 8000 Hz. then the peak signal level is  */
+        /*  approximately 8000. This is because of the parameters in file */
+        /*  phvdef.c for a sample rate of 8000 Hz.                        */
+        /*                                                                */
+        /*  Very occasionaly a large impulse will be generated. Clip it.  */
+        /*  This allows running the volume level much higher.             */
+        /******************************************************************/
+        if ( out > 16383 )
+            out = 16383;
+        else if ( out < -16384 )
+            out = -16384;
+        iwave[ns] = out << 1;
   }
   return;
 }

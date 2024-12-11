@@ -446,8 +446,8 @@ short frac4mul();
  * #define mlsh2()         ((arg1*arg2) << 3) #define mlsh3() ((arg1*arg2) << 4) */
 
 #define  frac4mul(x,y)  (((x)*(y))>>12)
+#define  frac1mul(x,y)  (((x)*(y))>>15)
 
-#define  frac1mul()  (((arg1)*(arg2))>>15)
 #endif
 
 #endif
