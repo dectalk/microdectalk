@@ -22,7 +22,20 @@
             const audioPlayer = document.getElementById('audioPlayer');
             console.log("Begin TTS");
 
+            // reset to clear buffer length
+            Module.ccall('TTSreset', 'void', [], []);
+
             // split up text
+            var ptr = undefined;
+
+            // microdectalk is not stable enough yet to play via multiple lines
+            //var lines = [];
+            //textInput.value.split(/(?=\[)/g).forEach((line) => { line.split(/(?<=\])/).forEach((line1) => {lines.push(line1)}) });
+            //console.log("Lines",lines);
+            //lines.forEach( (line) => {
+            //    ptr = Module.ccall('TTSstart', 'number', ['string'], [line]);
+            //});
+
             ptr = Module.ccall('TTSstart', 'number', ['string'], [textInput.value]);
             var arraySize = Module.ccall('get_total_size', 'number', [], []);
             const shortArray = new Int16Array(

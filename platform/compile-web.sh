@@ -14,7 +14,7 @@ emcc src/*.c platform/web_bindings.cpp \
      -gsource-map \
      -I include \
      -o out/web/epsonapi.js \
-     -s EXPORTED_FUNCTIONS='["_TTSinit","_TTSstart","_get_total_size"]' \
+     -s EXPORTED_FUNCTIONS='["_TTSinit","_TTSstart","_get_total_size","_TTSreset"]' \
      -s "EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap', 'addFunction']" \
      -s ALLOW_TABLE_GROWTH=1 \
      -fsanitize=undefined \

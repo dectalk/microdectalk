@@ -46,22 +46,27 @@ extern "C" {
     // Existing function declarations (you'll replace these with your actual implementations)
     extern int TextToSpeechStart(char *input);
     extern int TextToSpeechInit();
+    extern int TextToSpeechReset();
 
     // Initialize TTS system and set user callback
     EMSCRIPTEN_KEEPALIVE
     void TTSinit(void (*callback)(long, int) ) {
-        total_size = 0;
         // Your TTS initialization code here
         printf("TextToSpeechInit\n");
         TextToSpeechInit();
 
         user_callback = callback;
     }
+    EMSCRIPTEN_KEEPALIVE
+    void TTSreset() {
+        total_size = 0;
+        TextToSpeechReset();
+    }
 
     // Start TTS and return buffer
     EMSCRIPTEN_KEEPALIVE
     long TTSstart(std::string input) {
-        total_size = 0; // TTSstart implies a new TTS session, resetting audio buffer
+        //total_size = 0; // TTSstart implies a new TTS session, resetting audio buffer
 
         printf("input length: %i\n", (int) strlen(input.c_str()) );
         TextToSpeechStart( (char *) input.c_str() );
