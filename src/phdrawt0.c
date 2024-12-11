@@ -424,7 +424,7 @@ int set_user_target() {
    f0command = f0command % 1000; /* 2000 is offset flag */
 
    if (f0command <= 37) { /* Pointer to C5, highest possible sung note */
-      newnote = (int) ((float)notetab[ f0command - 1] / 1.5 ); // HACK: devide pitch to temporairly fix pitch offset issues -bytesizedfox
+      newnote = (int) ((float)notetab[ f0command - 1] /* / 1.5 */ ); // HACK: devide pitch to temporairly fix pitch offset issues -bytesizedfox
       vibsw = 1;
       /* Set delnote*4 so transition happens over 16 frames (100 ms) */
       delnote = ((newnote - f0) >> 2);
