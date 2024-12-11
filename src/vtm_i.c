@@ -93,94 +93,88 @@ void VocalTract();
 
 void output_data(void);
 
-void vtmmain(void)
-{
-	switch(global_spc_buf[0])
-	{
-		case SPC_type_voice :
-			if(!KS.halting)
-			{
-				speech_waveform_generator();
-			}
-			if(!KS.halting)
-			{
-				output_data();
-			}
-		break;
+S16 ranmul;
+S16 ranadd;
+extern S16 noisec;
+
+void SetSampleRate( U16 uiSampRate ) {
+  U32 qval;
+
+  uiSampleRate = uiSampRate;
+  SampleRate = (double)uiSampleRate;
+  SamplePeriod = 1.0 / SampleRate;
+  if ( uiSampleRate == PC_SAMPLE_RATE ) {
+    bEightKHz = FALSE;
+
+    uiSampleRateChange = SAMPLE_RATE_INCREASE; // 11025
+
+    qval = ((((1<<14)*(U32)uiSampleRate)+5000)/10000);
+    rate_scale = qval;   /*  Equals 1.1025 in Q14 format for 11 KHz.    */
+    qval = (((((1<<15)*(U32)10000))+(uiSampleRate/2))/uiSampleRate);
+    inv_rate_scale = qval;    /*  Equals 0.909 in Q15 format.        */
+    uiNumberOfSamplesPerFrame = ((uiSampleRate*64)+5000)/10000;
+  } else {
+    if ( uiSampleRate == MULAW_SAMPLE_RATE ) {
+      bEightKHz = TRUE;
+      uiSampleRateChange = SAMPLE_RATE_DECREASE;
+      rate_scale = 26214;    /*  Equals 0.8 in Q15 format for 8 KHz */
+      inv_rate_scale = 20480;    /*  Equals 1.25 in Q14 format.     */
+      uiNumberOfSamplesPerFrame = 51;
+    } else {
+      uiSampleRateChange = NO_SAMPLE_RATE_CHANGE;
+    }
+  }
+  //async_voice = last_voice ;
+  //async_change |= ASYNC_voice;
+
+  return;
+}
+
+void vtmmain(void) {
+    noisec = 1499;  /*  "c" coefficient                                    */
+    ranmul = 20077; /*  Magic constant to make next random number          */
+    ranadd = 12345; /*  Magic constant to make next random number          */
+
+    t0jitr = 7;
+    uiSampleRateChange = SAMPLE_RATE_INCREASE;
+    rate_scale = 18063;
+    inv_rate_scale = 29722;
+    bEightKHz = FALSE;
+    SampleRate = 11025;
+    uiNumberOfSamplesPerFrame = 71;
+    uiSampleRate = 11025;
+    SamplePeriod = 9.07029478458E-5;
+    SetSampleRate(PC_SAMPLE_RATE);
+
+    switch(global_spc_buf[0]) {
+        case SPC_type_voice :
+            if(!KS.halting) {
+                speech_waveform_generator();
+                output_data();
+            }
+            break;
 	case SPC_type_speaker :
-		read_speaker_definition();
-		break;
-	default:;
-	}
+            read_speaker_definition();
+            break;
+	default:
+            break;
+    }
 }
 extern FILE *outfile;
 
-
-
-
-#ifndef OUTPUT_FILE
-
-void output_data(void)
-{
-
-#ifdef USEBUF
-		for (samples=0;samples<71;samples++)
-		{
-			iwavefull[ciwave] = iwave[samples];
-			ciwave++;
-			
-			if(ciwave == (IWSIZE))
-			{
-			AUDIO_OUT_PLAY( iwavefull,  IWSIZE); // play the audio data
-				ciwave=0;
-			}
-		}
-	
-#else
-	AUDIO_OUT_PLAY( iwave, 71); // play the audio data
-#endif
+void output_data(void) {
+    write_wav(iwave, 71);
 }
-
-
-#else
-
-void output_data(void)
-{
-#ifdef USEBUF
-
-		for (samples=0;samples<71;samples++)
-		{
-			iwavefull[ciwave] = iwave[samples];
-			ciwave++;
-			
-			if(ciwave == (IWSIZE))
-			{
-			//fwrite(iwavefull,2,IWSIZE,outfile);
-			write_wav(iwavefull, IWSIZE);
-			ciwave=0;
-			}
-		}
-#else
-	//fwrite(iwave,2,71,outfile);
-	write_wav(iwave, 71);
-#endif
-}
-#endif
 
 S16 ldspdef;
 
-void speech_waveform_generator()
-{
-  S16 *variabpars;
+void speech_waveform_generator() {
+  // READ VARIABLE PARAMETERS FOR ONE FRAME (64 SAMPLES) OF SPEECH
+  S16 *variabpars = &global_spc_buf[1];
 
-  /********************************************************************/
-  /********************************************************************/
-  /*  READ VARIABLE PARAMETERS FOR ONE FRAME (64 SAMPLES) OF SPEECH   */
-  /********************************************************************/
-  /********************************************************************/
-
-  variabpars = &global_spc_buf[1];
-
+  /* EAB If we just loaded a speaker def zero all vocal tract gains
+     so that this looks like a silence packet (last packet of previous frame
+     stuck here*/
   if (ldspdef >= 1) {
     ldspdef++;
     variabpars[OUT_AV] = 0;
@@ -214,9 +208,19 @@ void speech_waveform_generator()
   /********************************************************************/
   /* T0inS4 is a time, so it should be scaled if fs != 10K.           */
   /********************************************************************/
-  
+
   T0inS4 = variabpars[OUT_T0];
-  T0inS4 = frac1mul(18063, T0inS4 ) << 1;
+  switch( uiSampleRateChange ) {
+  case SAMPLE_RATE_INCREASE:
+    T0inS4 = frac1mul( rate_scale, T0inS4 ) << 1;
+    break;
+  case SAMPLE_RATE_DECREASE:
+    T0inS4 = frac1mul( rate_scale, T0inS4 );
+    break;
+  default:
+    break;
+  }
+
 
   F1inHZ = variabpars[OUT_F1];
   F1inHZ = frac4mul( F1inHZ, fnscal ) +(S16) ((4096 - (S32)fnscal ) >> 4);
@@ -224,18 +228,27 @@ void speech_waveform_generator()
   F2inHZ = frac4mul( F2inHZ, fnscal ) + (S16) ((4096 - (S32)fnscal ) >> 3);
   F3inHZ = variabpars[OUT_F3];
   F3inHZ = frac4mul( F3inHZ, fnscal );
-  
+
   /********************************************************************/
   /*  Scale the nasal anti-resonator frequency for the sample rate.   */
   /********************************************************************/
-  
+
   FZinHZ = variabpars[OUT_FZ];
-  FZinHZ = frac1mul(29714, FZinHZ ) << 1;
-  
-  
+  switch( uiSampleRateChange ) {
+  case SAMPLE_RATE_INCREASE:
+    FZinHZ = frac1mul( inv_rate_scale, FZinHZ );
+    break;
+  case SAMPLE_RATE_DECREASE:
+    FZinHZ = frac1mul( inv_rate_scale, FZinHZ ) << 1;
+    break;
+  default:
+    break;
+  }
+
+
   B1inHZ = variabpars[OUT_B1];
   B2inHZ = variabpars[OUT_B2];
-  B3inHZ = 250; // per ED variabpars[OUT_B3];
+  B3inHZ = variabpars[OUT_B3];
   AVinDB = variabpars[OUT_AV];
   APinDB = variabpars[OUT_AP];
   A2inDB = variabpars[OUT_A2];
@@ -254,13 +267,15 @@ void speech_waveform_generator()
   r5pa = amptable[(A5inDB + 6)%88];        /*  Convert dB to linear        */
   r6pa = amptable[(A6inDB + 5)%88];        /*  Convert dB to linear        */
   ABlin = amptable[(ABinDB + 5)%88];       /*  Convert dB to linear        */
-  
+
+/*
   ampsum = A2inDB + A3inDB + A4inDB + A5inDB + A6inDB + ABinDB;
   if(ampsum)
 	  par_count=5;
   else
 	  if(par_count)
 		  par_count--;
+*/
 
   APlin = frac4mul( APlin, APgain );  /*  Scale asp by spdef GV       */
   r2pg = frac1mul(r2pg, AFgain  );    /*  Scale A2 by spdef GF        */

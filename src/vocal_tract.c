@@ -46,6 +46,10 @@
 //#include "vtmtabli.h"   /*  Tables used by the vocal tract model      */
 #include "vtmfunci.h"   /*  Functions used by the vocal tract model   */
 #include <stdio.h>
+
+#include "vtm_idef.h"
+
+#define OUT_PH  17
 /**********************************************************************/
 /*  Temporary variables used by in-line functions and by the vocal    */
 /*  tract model.                                                      */
@@ -329,9 +333,16 @@ extern short cas_count;
 extern short par_count;
 
 
-
+S16 rampdown;
+extern short *global_spc_buf;
+extern short global_spc_v_buf[VOICE_PARS+2];
 extern short arg1,arg2; /*eab 3/18/95 for math functions*/	
+
+
 void VocalTract() {
+    S16 *variabpars;
+    variabpars = &global_spc_buf[1];
+
     for ( ns = 0; ns < 71; ns++ ) {
         /******************************************************************/
         /*  NOISE GENERATOR                                               */
@@ -424,8 +435,19 @@ void VocalTract() {
                 /**************************************************************/
                 /*  Use a one pole iir filter to tilt the glottal source.     */
                 /**************************************************************/
-                // SAMPLE_RATE_INCREASE
-                decay = 1094 * (S32)TILTDB;
+                switch( uiSampleRateChange ) {
+                    case SAMPLE_RATE_INCREASE:
+                        decay = 1094 * (S32)TILTDB;
+                        break;
+                    case SAMPLE_RATE_DECREASE:
+                        decay = 1073 * (S32)TILTDB;
+                        break;
+                    case NO_SAMPLE_RATE_CHANGE:
+                        decay = 1094 * (S32)TILTDB;
+                        break;
+                    default:
+                        break;
+                }
 
                 if ( decay >= 0 )
                     one_minus_decay = 32767 - decay;
@@ -517,7 +539,7 @@ void VocalTract() {
         /*  Tilt spectrum down by TILTDB dB at 3 kHz,                     */
         /*  use 1-pole iir filter.                                        */
         /******************************************************************/
-        decay = 1073 * TILTDB; /* fixed decay ebruckert 9-04-2002*/
+        // decay = 1073 * TILTDB; /* fixed decay ebruckert 9-04-2002*/
         voice = frac1mul(one_minus_decay,voice) + frac1mul(decay,vlast);
         vlast = voice;
         /******************************************************************/
@@ -641,7 +663,7 @@ void VocalTract() {
             out = 16383;
         else if ( out < -16384 )
             out = -16384;
-        iwave[ns] = out << 1;
+        iwave[ns] = out; // << 1; //HELP: left shifting causes clipping despite matching original code, likely missing something
   }
   return;
 }
