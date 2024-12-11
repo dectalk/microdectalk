@@ -130,7 +130,7 @@ void SetSampleRate( U16 uiSampRate ) {
   return;
 }
 
-void vtmmain(void) {
+void vtm_main() {
     noisec = 1499;  /*  "c" coefficient                                    */
     ranmul = 20077; /*  Magic constant to make next random number          */
     ranadd = 12345; /*  Magic constant to make next random number          */
@@ -145,20 +145,6 @@ void vtmmain(void) {
     uiSampleRate = 11025;
     SamplePeriod = 9.07029478458E-5;
     SetSampleRate(PC_SAMPLE_RATE);
-
-    switch(global_spc_buf[0]) {
-        case SPC_type_voice :
-            if(!KS.halting) {
-                speech_waveform_generator();
-                output_data();
-            }
-            break;
-	case SPC_type_speaker :
-            read_speaker_definition();
-            break;
-	default:
-            break;
-    }
 }
 extern FILE *outfile;
 

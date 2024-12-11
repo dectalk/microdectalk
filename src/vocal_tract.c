@@ -338,16 +338,19 @@ extern short *global_spc_buf;
 extern short global_spc_v_buf[VOICE_PARS+2];
 extern short arg1,arg2; /*eab 3/18/95 for math functions*/	
 
+extern S16 ranmul;
+extern S16 ranadd;
+extern UINT uiNumberOfSamplesPerFrame;
 
 void VocalTract() {
     S16 *variabpars;
     variabpars = &global_spc_buf[1];
 
-    for ( ns = 0; ns < 71; ns++ ) {
+    for ( ns = 0; ns < uiNumberOfSamplesPerFrame; ns++ ) {
         /******************************************************************/
         /*  NOISE GENERATOR                                               */
         /******************************************************************/
-        randomx = (randomx * 2007) + 12345;
+        randomx = (randomx * ranmul) + ranadd;
         noise = randomx >> 2;
 
         /******************************************************************/
@@ -649,6 +652,16 @@ void VocalTract() {
 
         about = frac1mul(ABlin, noise);  /*  Output of bypass path      */
         out = about - out;
+
+        if (avlind == 0 && (variabpars[OUT_PH] & PVALUE) == 0 ) {
+            rampdown += 4;
+            if (rampdown >= 4096)
+                rampdown = 4096;
+            if (rampdown >= 0)
+                out = frac4mul( out,(4096 - rampdown));
+        } else
+            rampdown=0;
+
 
         /******************************************************************/
         /*  Bring the signal level up near +/-32767.                      */

@@ -23,6 +23,7 @@ extern int TextToSpeechChangeVoice(char *cvoice);
 
 //extern functions
 extern int cmdmain();
+extern void vtm_main();
 extern int dtpc_cmd(unsigned char inchar);
 
 short TextToSpeechGetSpdefValue(int index) {
@@ -79,6 +80,7 @@ int TextToSpeechInit() {
         mdict = main_dict;
     }
 
+    vtm_main();
     usa_main();
     InitializeVTM();
     kltask_init();

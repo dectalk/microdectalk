@@ -1,21 +1,10 @@
-
-
-
 #include "vtm_ip.h"
 #include "vtm_idef.h"
 #include "viport.h"
 #include "phdefs.h"
 #include "dtk/dtmmedefs.h"
 #include "vtm_idef.h"
-//#include "viphdefs.h"
-//#include "vismprat.h"   /*  Constants used by the vocal tract model   */
-//#include "vtm_i.h"      /*  Variables used by the vocal tract model   */
-//#include "vtmtabli.h"   /*  Tables used by the vocal tract model      */
-//#include "vtmfunci.h"   /*  Functions used by the vocal tract model   */
-
 #include <stdio.h>
-
-
 
 extern short *global_spc_buf;
 short noiseb;
@@ -41,9 +30,12 @@ extern S16 APgain;    /*  Gain factor for aspiration source                  */
 extern S16 AFgain;    /*  Gain factor for frication source                   */
 extern S16 rnpa;      /*  "a" coef for nasal pole                            */
 
+extern UINT uiNumberOfSamplesPerFrame;
+
 unsigned short control;
 
 extern BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate );
+extern void output_data();
 
 int vtm_loop(unsigned short *input) {
     int i,tmp;
@@ -62,11 +54,7 @@ int vtm_loop(unsigned short *input) {
             }
             if ( !KS.halting ) {
                 speech_waveform_generator();
-                //OutputData(phTTS, pVtm_t->iwave, pVtm_t->uiNumberOfSamplesPerFrame,
-                //    (DWORD)global_spc_buf[OUT_PH + 1],
-                //    (DWORD)global_spc_buf[OUT_DU + 1],
-                //    (DWORD)global_spc_buf[OUT_PH2 + 1]);
-                printf("OutputData!\n");
+                output_data();
             }
             break;
         case SPC_type_tone:
@@ -75,7 +63,6 @@ int vtm_loop(unsigned short *input) {
             }
             //  If not halting then generate tone samples.
             if (!KS.halting) {
-                printf("PlayTones!\n");
                 /* The elements of pVtm_t are used ,not been modified in PlayTones() function MVP MI */
                 if (PlayTones((double)(global_spc_buf[1]),
                       (double)global_spc_buf[2],
@@ -97,7 +84,18 @@ int vtm_loop(unsigned short *input) {
         //  Process a Sync. packet.
         case SPC_type_sync:
             break;
-        // TODO: SPC_type_index & SPC_type_force & SPC_type_samples_per_frame
+        // TODO: SPC_type_index & SPC_type_force
+        case SPC_type_samples_per_frame:
+            InitializeVTM();
+            global_spc_buf[1] = input[1];
+            S16 spf = ((((uiSampleRate * 64) + 5000) / 10000) * global_spc_buf[1]) / 100;
+            if (spf > MAXIMUM_FRAME_SIZE) {
+                spf = MAXIMUM_FRAME_SIZE;
+            } else if (spf <= 0) {
+                spf = 1;
+            }
+            uiNumberOfSamplesPerFrame = spf;
+            break;
         default:
             break;
     }

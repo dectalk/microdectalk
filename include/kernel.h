@@ -189,6 +189,8 @@ typedef struct RING_struct      {
 #define SPC_type_flush          9
 #define SPC_type_flush_sync    10
 
+#define SPC_type_samples_per_frame     12
+
 #define SPC_flush_all           0
 #define SPC_flush_until         1
 #define SPC_flush_mask          2

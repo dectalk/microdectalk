@@ -80,8 +80,8 @@
 /*  eab 3/22/95 removed because we don't have this osf file set yet*/
 /*#include "ttsapi.h"*/
 
-
-#define i386
+// this causes clipping
+// #define i386
 
 /**********************************************************************/
 /**********************************************************************/
@@ -93,8 +93,7 @@
  * In the MSVC++ environment, we define it on the compiler option
  * line as /D i386
  */
-/*#define i386 */
-	
+
 /* Perfect Paul */
  short paul_8[SPDEF] = {
 	MALE,   /* SEX = m */

@@ -61,7 +61,8 @@
 //#include "kernel.h"
 //#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
 //#endif
-extern void vtmmain(void);
+//extern void vtm_main(void);
+extern int vtm_loop(unsigned short *input);
 
 /*
  * spcget
@@ -119,8 +120,9 @@ int spcwrite( unsigned short * spc_buffer ) {
 
     /* find size of SPC packet */
     nwords = spc_dma_lengths[ spc_buffer[0] ];
-  
-	vtmmain();
+
+    //vtm_main();
+    vtm_loop(spc_buffer);
 
 
     /* free buffer */
