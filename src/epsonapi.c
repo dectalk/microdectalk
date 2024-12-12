@@ -7,6 +7,16 @@
 #include "epsonapi.h"
 #include "cmd.h"
 
+// ICONV
+#include <langinfo.h>
+#include <iconv.h>
+#include <locale.h>
+#include <wchar.h>
+#include <errno.h>
+#define REALLOC_SIZE 4096
+iconv_t cd;
+char *convert_string_for_dapi(char *in, size_t inlen);
+
 extern int lsmain();
 extern void usa_main();
 extern int kltask_init();
@@ -51,6 +61,9 @@ void TextToSpeechSetRate(int rate) {
 int TextToSpeechStart(char *input) {
     int i=0;
     KS.halting=0;	//had to reset the halting flag - since if you halt you want to halt only the one TTS you are on
+
+    // ensure all characters are valid
+    input = convert_string_for_dapi(input, strlen(input));
 
     while (input[i]) {
         dtpc_cmd(input[i]);
@@ -137,3 +150,53 @@ int TextToSpeechReset() {
     KS.halting=1;
     return 0;
 }
+
+
+// utility function
+char *convert_string_for_dapi(char *in, size_t inlen) {
+        char *out, *outp;
+        size_t outsize = REALLOC_SIZE;
+        size_t outleft = 0;
+        size_t inleft = inlen;
+        size_t r;
+        size_t offset;
+
+        out = malloc(outsize + 1);
+        if (out == NULL) {
+                perror("malloc");
+                exit(EXIT_FAILURE);
+        }
+	outleft = outsize;
+        outp = out;
+
+        do {
+            	memset(outp, 0, outleft + 1);
+                errno = 0;
+                r = iconv(cd, &in, &inleft, &outp, &outleft);
+                if (r == -1 && errno == E2BIG) {
+                        offset = outp - out;
+                        outsize += REALLOC_SIZE;
+                        out = realloc(out, outsize + 1);
+                        if (out == NULL) {
+                                perror("realloc");
+                                exit(EXIT_FAILURE);
+                        }
+                        outleft += REALLOC_SIZE;
+                        outp = out + offset;
+                } else if (r == -1) {
+                        if (inleft > 0) {
+                                /* Skip */
+                                in++;
+                                inleft--;
+                        } else {
+                                perror("iconv");
+                                exit(EXIT_FAILURE);
+                        }
+                }
+        } while (inleft > 0);
+
+        iconv(cd, NULL, NULL, NULL, NULL);
+
+        return out;
+}
+
