@@ -50,7 +50,7 @@ UINT uiSampleRate = 11025;
 UINT uiSampleRateChange = SAMPLE_RATE_INCREASE;
 S16 rate_scale = 18063;
 S16 inv_rate_scale = 29722;
-UINT uiNumberOfSamplesPerFrame = 51;
+UINT uiNumberOfSamplesPerFrame = 71;
 double SampleRate = 11025.0;
 double SamplePeriod = 9.07029478458E-5;
 
@@ -254,7 +254,7 @@ S16 d2pole_cf123( S16 * bcoef,
   /*  resonator in the high-order bits.                               */
   /********************************************************************/
 
-  acoef = frac4mul( gain, temp5 ) << 1;
+  acoef = frac4mul( gain, temp5 );
 
   return( acoef );
 }

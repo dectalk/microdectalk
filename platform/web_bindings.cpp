@@ -36,7 +36,7 @@ extern "C" {
             return;
         }
 	for (int i = 0; i < length; i++) {
-            samples[total_size + i] = iwave[i];
+            samples[total_size + i] = iwave[i] << 1;
         }
 	total_size += length;
         //printf("Total Size: %i\n", total_size);
