@@ -3,7 +3,6 @@
 #include <math.h>
 #include "lsdef.h"
 #include "kernel.h"
-#include "dtk/dtmmedefs.h"
 #include "vtm_idef.h"
 
 static double Tone( double, double * );
@@ -17,7 +16,7 @@ static double Tone( double, double * );
 //extern void output_data();
 extern void write_wav(short *iwave, int length);
 
-BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate ) {
+int PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate ) {
     int i;
     int iRiseSamples;
     int iCenterSamples;

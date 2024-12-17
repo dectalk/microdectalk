@@ -2,7 +2,6 @@
 #include "vtm_idef.h"
 #include "viport.h"
 #include "phdefs.h"
-#include "dtk/dtmmedefs.h"
 #include "vtm_idef.h"
 #include <stdio.h>
 
@@ -162,7 +161,7 @@ extern UINT uiNumberOfSamplesPerFrame;
 
 unsigned short control;
 
-extern BOOL PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate );
+extern int PlayTones(double DurationInMsec, double Freq_0, double Amp_0, double Freq_1, double Amp_1, double SampleRate );
 extern void output_data();
 
 int vtm_loop(unsigned short *input) {
