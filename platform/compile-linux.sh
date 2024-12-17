@@ -1,5 +1,5 @@
 DEFINES=(-DSIMULATOR -DSINGLE_THREADED -DHACK_ALERT -DFULL_LANGUAGE_SUPPORT -DFULL_LTS -DNO_INDEXES -DDIRECT_LTS_INPUT -DACNA -DHOMOGRAPHS -DMATH_MODE -DDIVIDED_LTS_RULES -DOUTPUT_FILE -D__linux__ -DSINGLE_LANGUAGE -DMultiple_Sample_Rates)
-CFLAGS=(-I include -g -w -lm)
+CFLAGS=(-I include -g -w -lm -ffunction-sections -Wl,--gc-sections -Wl,--print-gc-sections)
 
 mkdir -p out/linux
 
