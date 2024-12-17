@@ -93,12 +93,12 @@ void VocalTract();
 
 void output_data(void);
 
-S16 ranmul;
-S16 ranadd;
-extern S16 noisec;
+int16_t ranmul;
+int16_t ranadd;
+extern int16_t noisec;
 
-void SetSampleRate( U16 uiSampRate ) {
-  U32 qval;
+void SetSampleRate( uint16_t uiSampRate ) {
+  uint32_t qval;
 
   uiSampleRate = uiSampRate;
   SampleRate = (double)uiSampleRate;
@@ -108,9 +108,9 @@ void SetSampleRate( U16 uiSampRate ) {
 
     uiSampleRateChange = SAMPLE_RATE_INCREASE; // 11025
 
-    qval = ((((1<<14)*(U32)uiSampleRate)+5000)/10000);
+    qval = ((((1<<14)*(uint32_t)uiSampleRate)+5000)/10000);
     rate_scale = qval;   /*  Equals 1.1025 in Q14 format for 11 KHz.    */
-    qval = (((((1<<15)*(U32)10000))+(uiSampleRate/2))/uiSampleRate);
+    qval = (((((1<<15)*(uint32_t)10000))+(uiSampleRate/2))/uiSampleRate);
     inv_rate_scale = qval;    /*  Equals 0.909 in Q15 format.        */
     uiNumberOfSamplesPerFrame = ((uiSampleRate*64)+5000)/10000;
   } else {
@@ -152,11 +152,11 @@ void output_data(void) {
     write_wav(iwave, 71);
 }
 
-S16 ldspdef;
+int16_t ldspdef;
 
 void speech_waveform_generator() {
   // READ VARIABLE PARAMETERS FOR ONE FRAME (64 SAMPLES) OF SPEECH
-  S16 *variabpars = &global_spc_buf[1];
+  int16_t *variabpars = &global_spc_buf[1];
 
   /* EAB If we just loaded a speaker def zero all vocal tract gains
      so that this looks like a silence packet (last packet of previous frame
@@ -209,9 +209,9 @@ void speech_waveform_generator() {
 
 
   F1inHZ = variabpars[OUT_F1];
-  F1inHZ = frac4mul( F1inHZ, fnscal ) +(S16) ((4096 - (S32)fnscal ) >> 4);
+  F1inHZ = frac4mul( F1inHZ, fnscal ) +(int16_t) ((4096 - (int32_t)fnscal ) >> 4);
   F2inHZ = variabpars[OUT_F2];
-  F2inHZ = frac4mul( F2inHZ, fnscal ) + (S16) ((4096 - (S32)fnscal ) >> 3);
+  F2inHZ = frac4mul( F2inHZ, fnscal ) + (int16_t) ((4096 - (int32_t)fnscal ) >> 3);
   F3inHZ = variabpars[OUT_F3];
   F3inHZ = frac4mul( F3inHZ, fnscal );
 

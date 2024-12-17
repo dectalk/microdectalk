@@ -55,46 +55,46 @@
 /*  tract model.                                                      */
 /**********************************************************************/
 
-extern S32 temp0;
-extern S32 temp1;
+extern int32_t temp0;
+extern int32_t temp1;
 
-extern const S16 B0[224];
+extern const int16_t B0[224];
 
 /**********************************************************************/
 /*  VARIABLES TO HOLD SPEAKER DEFINITION FROM HOST:                   */
 /**********************************************************************/
 
-//extern S16 f4c;       /*  Frequency of fixed cascade 4th formant             */
-//extern S16 b4c;       /*  Bandwidth of fixed cascade 4th formant             */
-//extern S16 f5c;       /*  Frequency of fixed cascade 5th formant             */
-//extern S16 b5c;       /*  Bandwidth of fixed cascade 5th formant             */
-extern S16 b2p;       /*  Bandwidth of parallel 2th formant                  */
-extern S16 b3p;       /*  Bandwidth of parallel 3th formant                  */
-//extern S16 f4p;       /*  Frequency of fixed parallel 4th formant            */
-extern S16 b4p;       /*  Bandwidth of fixed parallel 4th formant            */
-//extern S16 f5p;       /*  Frequency of fixed parallel 5th formant            */
-extern S16 b5p;       /*  Bandwidth of fixed parallel 5th formant            */
-extern S16 f6p;       /*  Frequency of fixed parallel 6th formant            */
-extern S16 b6p;       /*  Bandwidth of fixed parallel 6th formant            */
-//extern S16 fnp;       /*  Frequency of fixed nasal formant                   */
-//extern S16 bnp;       /*  Bandwidth of fixed nasal formant                   */
-extern S16 flp;       /*  Frequency of fixed glottal decimating filter       */
-extern S16 blp;       /*  Bandwidth of fixed glottal decimating filter       */
-extern S16 rlpg;      /*  Gain of down-sampling low-pass resonator           */
+//extern int16_t f4c;       /*  Frequency of fixed cascade 4th formant             */
+//extern int16_t b4c;       /*  Bandwidth of fixed cascade 4th formant             */
+//extern int16_t f5c;       /*  Frequency of fixed cascade 5th formant             */
+//extern int16_t b5c;       /*  Bandwidth of fixed cascade 5th formant             */
+extern int16_t b2p;       /*  Bandwidth of parallel 2th formant                  */
+extern int16_t b3p;       /*  Bandwidth of parallel 3th formant                  */
+//extern int16_t f4p;       /*  Frequency of fixed parallel 4th formant            */
+extern int16_t b4p;       /*  Bandwidth of fixed parallel 4th formant            */
+//extern int16_t f5p;       /*  Frequency of fixed parallel 5th formant            */
+extern int16_t b5p;       /*  Bandwidth of fixed parallel 5th formant            */
+extern int16_t f6p;       /*  Frequency of fixed parallel 6th formant            */
+extern int16_t b6p;       /*  Bandwidth of fixed parallel 6th formant            */
+//extern int16_t fnp;       /*  Frequency of fixed nasal formant                   */
+//extern int16_t bnp;       /*  Bandwidth of fixed nasal formant                   */
+extern int16_t flp;       /*  Frequency of fixed glottal decimating filter       */
+extern int16_t blp;       /*  Bandwidth of fixed glottal decimating filter       */
+extern int16_t rlpg;      /*  Gain of down-sampling low-pass resonator           */
 #ifndef MINIMAL_SYNTH
-extern S16 t0jitr;    /*  Alternating jitter for voicing period              */
+extern int16_t t0jitr;    /*  Alternating jitter for voicing period              */
 #endif
-extern S16 fnscal;    /*  Q12 scale factor for F1inHZ, F2inHZ, and F3inHZ    */
-extern S16 avg;       /*  Gain factor for voicing                            */
-extern S16 abrg;      /*  Gain factor for breathiness                        */
-extern S16 apg;       /*  Gain factor for aspiration                         */
-extern S16 afg;       /*  Gain factor for frication                          */
-extern S16 rnpg;      /*  Gain factor for nasal pole resonator               */
-extern S16 a5gain;    /*  Gain in dB for the 5th cascade resonator.          */
-extern S16 a4gain;    /*  Gain in dB for the 4th cascade resonator.          */
-extern S16 a3gain;    /*  Gain in dB for the 3rd cascade resonator.          */
-extern S16 a2gain;    /*  Gain in dB for the 2nd cascade resonator.          */
-extern S16 a1gain;    /*  Gain in dB for the 1st cascade resonator.          */
+extern int16_t fnscal;    /*  Q12 scale factor for F1inHZ, F2inHZ, and F3inHZ    */
+extern int16_t avg;       /*  Gain factor for voicing                            */
+extern int16_t abrg;      /*  Gain factor for breathiness                        */
+extern int16_t apg;       /*  Gain factor for aspiration                         */
+extern int16_t afg;       /*  Gain factor for frication                          */
+extern int16_t rnpg;      /*  Gain factor for nasal pole resonator               */
+extern int16_t a5gain;    /*  Gain in dB for the 5th cascade resonator.          */
+extern int16_t a4gain;    /*  Gain in dB for the 4th cascade resonator.          */
+extern int16_t a3gain;    /*  Gain in dB for the 3rd cascade resonator.          */
+extern int16_t a2gain;    /*  Gain in dB for the 2nd cascade resonator.          */
+extern int16_t a1gain;    /*  Gain in dB for the 1st cascade resonator.          */
 
 /**********************************************************************/
 /*  CONSTANTS OF SPEAKER DEFINITION                                   */
@@ -105,245 +105,245 @@ extern S16 a1gain;    /*  Gain in dB for the 1st cascade resonator.          */
 /*  VARIABLES TO HOLD INPUT PARAMETERS FROM HOST:                     */
 /**********************************************************************/
 
-extern S16 T0inS4;  /*  Voicing fund freq in Hz*10,      500 to 1650         */
-extern S16 F1inHZ;  /*  First formant freq in Hz,        200 to 1300         */
-extern S16 F2inHZ;  /*  Second formant freq in Hz,       550 to 3000         */
-extern S16 F3inHZ;  /*  Third formant freq in Hz,       1200 to 4800         */
-extern S16 FZinHZ;  /*  Nasal zero freq in Hz,           248 to  528         */
-extern S16 B1inHZ;  /*  First formant bw in Hz,           40 to 1000         */
-extern S16 B2inHZ;  /*  Second formant bw in Hz,          40 to 1000         */
-extern S16 B3inHZ;  /*  Third formant bw in Hz,           40 to 1000         */
-extern S16 AVinDB;  /*  Amp of voicing in dB,             0 to   70          */
-extern S16 APinDB;  /*  Amp of aspiration in dB,          0 to   70          */
-extern S16 A2inDB;  /*  Amp of F2 frication in dB,        0 to   80          */
-extern S16 A3inDB;  /*  Amp of F3 frication in dB,        0 to   80          */
-extern S16 A4inDB;  /*  Amp of F4 frication in dB,        0 to   80          */
-extern S16 A5inDB;  /*  Amp of F5 frication in dB,        0 to   80          */
-extern S16 A6inDB;  /*  Amp of F6                         0 to   80          */
-extern S16 ABinDB;  /*  Amp of bypass fric. in dB,        0 to   80          */
-extern S16 TILTDB;  /*  Voicing spectral tilt in dB,      0 to   24          */
-extern S16 Aturb;   /*  Amplitude of breathiness in dB,   0 to   24          */
+extern int16_t T0inS4;  /*  Voicing fund freq in Hz*10,      500 to 1650         */
+extern int16_t F1inHZ;  /*  First formant freq in Hz,        200 to 1300         */
+extern int16_t F2inHZ;  /*  Second formant freq in Hz,       550 to 3000         */
+extern int16_t F3inHZ;  /*  Third formant freq in Hz,       1200 to 4800         */
+extern int16_t FZinHZ;  /*  Nasal zero freq in Hz,           248 to  528         */
+extern int16_t B1inHZ;  /*  First formant bw in Hz,           40 to 1000         */
+extern int16_t B2inHZ;  /*  Second formant bw in Hz,          40 to 1000         */
+extern int16_t B3inHZ;  /*  Third formant bw in Hz,           40 to 1000         */
+extern int16_t AVinDB;  /*  Amp of voicing in dB,             0 to   70          */
+extern int16_t APinDB;  /*  Amp of aspiration in dB,          0 to   70          */
+extern int16_t A2inDB;  /*  Amp of F2 frication in dB,        0 to   80          */
+extern int16_t A3inDB;  /*  Amp of F3 frication in dB,        0 to   80          */
+extern int16_t A4inDB;  /*  Amp of F4 frication in dB,        0 to   80          */
+extern int16_t A5inDB;  /*  Amp of F5 frication in dB,        0 to   80          */
+extern int16_t A6inDB;  /*  Amp of F6                         0 to   80          */
+extern int16_t ABinDB;  /*  Amp of bypass fric. in dB,        0 to   80          */
+extern int16_t TILTDB;  /*  Voicing spectral tilt in dB,      0 to   24          */
+extern int16_t Aturb;   /*  Amplitude of breathiness in dB,   0 to   24          */
 
 /**********************************************************************/
 /*  INTERNAL MEMORY FOR DIGITAL RESONATORS AND ANTIRESONATOR          */
 /**********************************************************************/
 
-extern S16 r2pd1;    /*  Last output sample from parallel 2nd formant        */
-extern S16 r2pd2;    /*  Second-previous output sample                       */
+extern int16_t r2pd1;    /*  Last output sample from parallel 2nd formant        */
+extern int16_t r2pd2;    /*  Second-previous output sample                       */
 
-extern S16 r3pd1;    /*  Last output sample from parallel 3rd formant        */
-extern S16 r3pd2;    /*  Second-previous output sample                       */
+extern int16_t r3pd1;    /*  Last output sample from parallel 3rd formant        */
+extern int16_t r3pd2;    /*  Second-previous output sample                       */
 
-extern S16 r4pd1;    /*  Last output sample from parallel 4th formant        */
-extern S16 r4pd2;    /*  Second-previous output sample                       */
+extern int16_t r4pd1;    /*  Last output sample from parallel 4th formant        */
+extern int16_t r4pd2;    /*  Second-previous output sample                       */
 
-extern S16 r5pd1;    /*  Last output sample from parallel 5th formant        */
-extern S16 r5pd2;    /*  Second-previous output sample                       */
+extern int16_t r5pd1;    /*  Last output sample from parallel 5th formant        */
+extern int16_t r5pd2;    /*  Second-previous output sample                       */
 
-extern S16 r6pd1;    /*  Last output sample from parallel 6th formant        */
-extern S16 r6pd2;    /*  Second-previous output sample                       */
+extern int16_t r6pd1;    /*  Last output sample from parallel 6th formant        */
+extern int16_t r6pd2;    /*  Second-previous output sample                       */
 
-extern S16 r1cd1;    /*  Last output sample from cascade 1st formant         */
-extern S16 r1cd2;    /*  Second-previous output sample                       */
+extern int16_t r1cd1;    /*  Last output sample from cascade 1st formant         */
+extern int16_t r1cd2;    /*  Second-previous output sample                       */
 
-extern S16 r2cd1;    /*  Last output sample from cascade 2nd formant         */
-extern S16 r2cd2;    /*  Second-previous output sample                       */
+extern int16_t r2cd1;    /*  Last output sample from cascade 2nd formant         */
+extern int16_t r2cd2;    /*  Second-previous output sample                       */
 
-extern S16 r3cd1;    /*  Last output sample from cascade 3rd formant         */
-extern S16 r3cd2;    /*  Second-previous output sample                       */
+extern int16_t r3cd1;    /*  Last output sample from cascade 3rd formant         */
+extern int16_t r3cd2;    /*  Second-previous output sample                       */
 
-extern S16 r4cd1;    /*  Last output sample from cascade 4th formant         */
-extern S16 r4cd2;    /*  Second-previous output sample                       */
+extern int16_t r4cd1;    /*  Last output sample from cascade 4th formant         */
+extern int16_t r4cd2;    /*  Second-previous output sample                       */
 
-extern S16 r5cd1;    /*  Last output sample from cascade 5th formant         */
-extern S16 r5cd2;    /*  Second-previous output sample                       */
+extern int16_t r5cd1;    /*  Last output sample from cascade 5th formant         */
+extern int16_t r5cd2;    /*  Second-previous output sample                       */
 
-extern S16 rnpd1;    /*  Last output sample from cascade nasal pole          */
-extern S16 rnpd2;    /*  Second-previous output sample                       */
+extern int16_t rnpd1;    /*  Last output sample from cascade nasal pole          */
+extern int16_t rnpd2;    /*  Second-previous output sample                       */
 
-extern S16 rnzd1;    /*  Last output sample from cascade nasal zero          */
-extern S16 rnzd2;    /*  Second-previous output sample                       */
+extern int16_t rnzd1;    /*  Last output sample from cascade nasal zero          */
+extern int16_t rnzd2;    /*  Second-previous output sample                       */
 
-extern S16 rlpd1;    /*  Last output sample from low-pass filter             */
-extern S16 rlpd2;    /*  Second-previous output sample                       */
+extern int16_t rlpd1;    /*  Last output sample from low-pass filter             */
+extern int16_t rlpd2;    /*  Second-previous output sample                       */
 
-extern S16 ablas1;   /*  Last output sample from nasal anti-resonator        */
-extern S16 ablas2;   /*  Second-previous output sample                       */
+extern int16_t ablas1;   /*  Last output sample from nasal anti-resonator        */
+extern int16_t ablas2;   /*  Second-previous output sample                       */
 
-extern S16 vlast;    /*  Last output sample of the tilt filter.              */
+extern int16_t vlast;    /*  Last output sample of the tilt filter.              */
 
 /**********************************************************************/
 /*  MEMORY VARIABLES FOR ONE-POLE and ONE-ZERO FILTERING              */
 /**********************************************************************/
 
-extern S16 nolast;    /*  Previous value of noisea                           */
+extern int16_t nolast;    /*  Previous value of noisea                           */
 
 /**********************************************************************/
 /*  COEFFICIENTS FOR DIGITAL RESONATORS AND ANTIRESONATOR             */
 /**********************************************************************/
 
-extern S16 r2pa;      /*  "a" coef for parallel 2nd formant                  */
-extern S16 r2pb;      /*  "b" coefficient                                    */
-extern S16 r2pc;      /*  "c" coefficient                                    */
+extern int16_t r2pa;      /*  "a" coef for parallel 2nd formant                  */
+extern int16_t r2pb;      /*  "b" coefficient                                    */
+extern int16_t r2pc;      /*  "c" coefficient                                    */
 
-extern S16 r3pa;      /*  "a" coef for parallel 3rd formant                  */
-extern S16 r3pb;      /*  "b" coefficient                                    */
-extern S16 r3pc;      /*  "c" coefficient                                    */
+extern int16_t r3pa;      /*  "a" coef for parallel 3rd formant                  */
+extern int16_t r3pb;      /*  "b" coefficient                                    */
+extern int16_t r3pc;      /*  "c" coefficient                                    */
 
-extern S16 r4pa;      /*  "a" coef for parallel 4th formant                  */
-extern S16 R4pb;      /*  "b" coefficient                                    */
-extern S16 r4pc;      /*  "c" coefficient                                    */
+extern int16_t r4pa;      /*  "a" coef for parallel 4th formant                  */
+extern int16_t R4pb;      /*  "b" coefficient                                    */
+extern int16_t r4pc;      /*  "c" coefficient                                    */
 
-extern S16 r5pa;      /*  "a" coef for parallel 5th formant                  */
-extern S16 R5pb;      /*  "b" coefficient                                    */
-extern S16 r5pc;      /*  "c" coefficient                                    */
+extern int16_t r5pa;      /*  "a" coef for parallel 5th formant                  */
+extern int16_t R5pb;      /*  "b" coefficient                                    */
+extern int16_t r5pc;      /*  "c" coefficient                                    */
 
-extern S16 r6pa;      /*  "a" coef for parallel 6th formant                  */
-S16 r6pb;      /*  "b" coefficient                                    */
-S16 r6pc;      /*  "c" coefficient                                    */
+extern int16_t r6pa;      /*  "a" coef for parallel 6th formant                  */
+int16_t r6pb;      /*  "b" coefficient                                    */
+int16_t r6pc;      /*  "c" coefficient                                    */
 
-extern S16 R1ca;      /*  "a" coefficient for cascade 1st formant            */
-extern S16 r1cb;      /*  "b" coefficient                                    */
-extern S16 r1cc;      /*  "c" coefficient                                    */
+extern int16_t R1ca;      /*  "a" coefficient for cascade 1st formant            */
+extern int16_t r1cb;      /*  "b" coefficient                                    */
+extern int16_t r1cc;      /*  "c" coefficient                                    */
 
-extern S16 R2ca;      /*  "a" coefficient for cascade 2nd formant            */
-extern S16 r2cb;      /*  "b" coefficient                                    */
-extern S16 r2cc;      /*  "c" coefficient                                    */
+extern int16_t R2ca;      /*  "a" coefficient for cascade 2nd formant            */
+extern int16_t r2cb;      /*  "b" coefficient                                    */
+extern int16_t r2cc;      /*  "c" coefficient                                    */
 
-extern S16 R3ca;      /*  "a" coefficient for cascade 3rd formant            */
-extern S16 r3cb;      /*  "b" coefficient                                    */
-extern S16 r3cc;      /*  "c" coefficient                                    */
+extern int16_t R3ca;      /*  "a" coefficient for cascade 3rd formant            */
+extern int16_t r3cb;      /*  "b" coefficient                                    */
+extern int16_t r3cc;      /*  "c" coefficient                                    */
 
-extern S16 R4ca;      /*  "a" coefficient for cascade 4th formant            */
-extern S16 R4cb;      /*  "b" coefficient                                    */
-extern S16 R4cc;      /*  "c" coefficient                                    */
+extern int16_t R4ca;      /*  "a" coefficient for cascade 4th formant            */
+extern int16_t R4cb;      /*  "b" coefficient                                    */
+extern int16_t R4cc;      /*  "c" coefficient                                    */
 
-S16 R5ca;      /*  "a" coefficient for cascade 5th formant            */
-extern S16 R5cb;      /*  "b" coefficient                                    */
-extern S16 R5cc;      /*  "c" coefficient                                    */
+int16_t R5ca;      /*  "a" coefficient for cascade 5th formant            */
+extern int16_t R5cb;      /*  "b" coefficient                                    */
+extern int16_t R5cc;      /*  "c" coefficient                                    */
 
-extern S16 rnpa;      /*  "a" coef for nasal pole                            */
-extern S16 rnpb;      /*  "b" coefficient                                    */
-extern S16 rnpc;      /*  "c" coefficient                                    */
+extern int16_t rnpa;      /*  "a" coef for nasal pole                            */
+extern int16_t rnpb;      /*  "b" coefficient                                    */
+extern int16_t rnpc;      /*  "c" coefficient                                    */
 
-extern S16 rnza;      /*  "a" coefficient for nasal zero                     */
-extern S16 rnzb;      /*  "b" coefficient                                    */
-extern S16 rnzc;      /*  "c" coefficient                                    */
+extern int16_t rnza;      /*  "a" coefficient for nasal zero                     */
+extern int16_t rnzb;      /*  "b" coefficient                                    */
+extern int16_t rnzc;      /*  "c" coefficient                                    */
 
-extern S16 rlpa;      /*  "a" coefficient for low-pass filter                */
-extern S16 rlpb;      /*  "b" coefficient                                    */
-extern S16 rlpc;      /*  "c" coefficient                                    */
+extern int16_t rlpa;      /*  "a" coefficient for low-pass filter                */
+extern int16_t rlpb;      /*  "b" coefficient                                    */
+extern int16_t rlpc;      /*  "c" coefficient                                    */
 
-extern S16 noiseb;    /*  "b" coefficient                                    */
-S16 noisec;    /*  "c" coefficient                                    */
+extern int16_t noiseb;    /*  "b" coefficient                                    */
+int16_t noisec;    /*  "c" coefficient                                    */
 
-extern S16 decay;     /*  decay coefficient for tilt low-pass filter         */
-extern S16 one_minus_decay;  /*  tilt filter first order iir filter.         */
+extern int16_t decay;     /*  decay coefficient for tilt low-pass filter         */
+extern int16_t one_minus_decay;  /*  tilt filter first order iir filter.         */
 
 /**********************************************************************/
 /*  OUTPUT SIGNAL FROM EACH ANTIRESONATOR                             */
 /*  (Output of a resonator is r__d1 variable defined above)           */
 /**********************************************************************/
 
-extern S16 rnzout;    /*  Output signal from nasal zero                      */
-extern S16 about;     /*  Output signal from bypass path                     */
+extern int16_t rnzout;    /*  Output signal from nasal zero                      */
+extern int16_t about;     /*  Output signal from bypass path                     */
 
 /**********************************************************************/
 /*  OTHER OUTPUT SIGNALS                                              */
 /**********************************************************************/
 
-extern S16 noise;     /*  Output of random number generator                  */
-extern S16 voice0;    /*  Used for glottal pulse waveform generation         */
-extern S16 voice;     /*  Current sample of voicing waveform                 */
+extern int16_t noise;     /*  Output of random number generator                  */
+extern int16_t voice0;    /*  Used for glottal pulse waveform generation         */
+extern int16_t voice;     /*  Current sample of voicing waveform                 */
 
 /**********************************************************************/
 /*  FIXED AND VARIABLE GAIN FACTORS                                   */
 /**********************************************************************/
 
-extern S16 avgain;    /*  Gain factor for voicing source                     */
-extern S16 aturb1;    /*  Gain factor for breathiness of voice               */
-extern S16 APgain;    /*  Gain factor for aspiration source                  */
-extern S16 AFgain;    /*  Gain factor for frication source                   */
-extern S16 r3cg;      /*  Gain factor for 3rd formant                        */
-extern S16 r2cg;      /*  Gain factor for 2nd formant                        */
-extern S16 r1cg;      /*  Gain factor for 1st formant                        */
+extern int16_t avgain;    /*  Gain factor for voicing source                     */
+extern int16_t aturb1;    /*  Gain factor for breathiness of voice               */
+extern int16_t APgain;    /*  Gain factor for aspiration source                  */
+extern int16_t AFgain;    /*  Gain factor for frication source                   */
+extern int16_t r3cg;      /*  Gain factor for 3rd formant                        */
+extern int16_t r2cg;      /*  Gain factor for 2nd formant                        */
+extern int16_t r1cg;      /*  Gain factor for 1st formant                        */
 
-extern S16 avlin;     /*  AVinDB converted to linear ampl. control           */
-extern S16 avlind;    /*  AV after convert from dB to linear, delayed        */
-extern S16 APlin;     /*  AP linear ampl. control                            */
-extern S16 ABlin;     /*  AB linear ampl. control                            */
-extern S16 r2pg;      /*  amp of parameter F2 for iir filter                 */
-extern S16 r3pg;      /*  amp of parameter F3 for iir filter                 */
+extern int16_t avlin;     /*  AVinDB converted to linear ampl. control           */
+extern int16_t avlind;    /*  AV after convert from dB to linear, delayed        */
+extern int16_t APlin;     /*  AP linear ampl. control                            */
+extern int16_t ABlin;     /*  AB linear ampl. control                            */
+extern int16_t r2pg;      /*  amp of parameter F2 for iir filter                 */
+extern int16_t r3pg;      /*  amp of parameter F3 for iir filter                 */
 
-extern S16 a;         /*  Makes waveshape of glottal pulse when open         */
-extern S16 b;         /*  Makes waveshape of glottal pulse when open         */
+extern int16_t a;         /*  Makes waveshape of glottal pulse when open         */
+extern int16_t b;         /*  Makes waveshape of glottal pulse when open         */
 
-extern S16 k1;        /*  Equals nopen1 for glottal period duration.         */
-extern S16 k2;        /*  Equals nopen2 for glottal period duration.         */
+extern int16_t k1;        /*  Equals nopen1 for glottal period duration.         */
+extern int16_t k2;        /*  Equals nopen2 for glottal period duration.         */
 
 /**********************************************************************/
 /*  COUNTERS                                                          */
 /**********************************************************************/
 
-extern S16 ns;  /*  Number of samples into current frame            */
+extern int16_t ns;  /*  Number of samples into current frame            */
 /* eab was this U32 ns;*/  /*  Number of samples into current frame   */
-extern S16 nper;      /*  Current loc in voicing period   40000 samp/s       */
-extern S16 nsr4;      /*  Counter of 4 samples in glottal source loop        */
+extern int16_t nper;      /*  Current loc in voicing period   40000 samp/s       */
+extern int16_t nsr4;      /*  Counter of 4 samples in glottal source loop        */
 
 /**********************************************************************/
 /*  COUNTER LIMITS                                                    */
 /**********************************************************************/
 
-extern S16 T0;        /*  Fundamental period in output samples times 4       */
-extern S16 nopen;     /*  Number of samples in open phase of period          */
-extern S16 nmod;      /*  Position in period to begin noise amp. modul       */
+extern int16_t T0;        /*  Fundamental period in output samples times 4       */
+extern int16_t nopen;     /*  Number of samples in open phase of period          */
+extern int16_t nmod;      /*  Position in period to begin noise amp. modul       */
 
 /**********************************************************************/
 /*  ALL-PURPOSE TEMPORARY VARIABLES                                   */
 /**********************************************************************/
 
-extern S16 temp;
-extern S16 f;         /*  Frequency argument to setb()                       */
-extern S16 bw;        /*  Bandwidth argument to setc()                       */
-extern S16 gain;      /*  Gain term used in seta() calculations              */
+extern int16_t temp;
+extern int16_t f;         /*  Frequency argument to setb()                       */
+extern int16_t bw;        /*  Bandwidth argument to setc()                       */
+extern int16_t gain;      /*  Gain term used in seta() calculations              */
 
 /**********************************************************************/
 /*  OTHER VARIABLES                                                   */
 /**********************************************************************/
 
-extern S16 randomx;    /*  Varible used by random unmber generator           */
-/*S32 ranmul;*/    /*  Magic constant to make next random number          */
-//extern S16 ranmul;    /*  Magic constant to make next random number          */
-/*S32 ranadd;*/    /*  Magic constant to make next random number          */
-//extern S16  ranadd;    /*  Magic constant to make next random number          */
+extern int16_t randomx;    /*  Varible used by random unmber generator           */
+/*int32_t ranmul;*/    /*  Magic constant to make next random number          */
+//extern int16_t ranmul;    /*  Magic constant to make next random number          */
+/*int32_t ranadd;*/    /*  Magic constant to make next random number          */
+//extern int16_t  ranadd;    /*  Magic constant to make next random number          */
 
-extern S16 out;       /*  Output signal from the vocal tract model           */
+extern int16_t out;       /*  Output signal from the vocal tract model           */
 
 
-extern const S16 voices[14];
-extern const S16 radius_table[];
-extern const S16 amptable[88];
-extern const S16 azero_tab[35];
-extern const S16 bzero_tab[35];
-extern const S16 czero_tab[35];
-extern S16 iwave[];
+extern const int16_t voices[14];
+extern const int16_t radius_table[];
+extern const int16_t amptable[88];
+extern const int16_t azero_tab[35];
+extern const int16_t bzero_tab[35];
+extern const int16_t czero_tab[35];
+extern int16_t iwave[];
 
 extern short vcount;
 extern short cas_count;
 extern short par_count;
 
 
-S16 rampdown;
+int16_t rampdown;
 extern short *global_spc_buf;
 extern short global_spc_v_buf[VOICE_PARS+2];
 extern short arg1,arg2; /*eab 3/18/95 for math functions*/	
 
-extern S16 ranmul;
-extern S16 ranadd;
+extern int16_t ranmul;
+extern int16_t ranadd;
 extern UINT uiNumberOfSamplesPerFrame;
 
 void VocalTract() {
-    S16 *variabpars;
+    int16_t *variabpars;
     variabpars = &global_spc_buf[1];
 
     for ( ns = 0; ns < uiNumberOfSamplesPerFrame; ns++ ) {
@@ -440,13 +440,13 @@ void VocalTract() {
                 /**************************************************************/
                 switch( uiSampleRateChange ) {
                     case SAMPLE_RATE_INCREASE:
-                        decay = 1094 * (S32)TILTDB;
+                        decay = 1094 * (int32_t)TILTDB;
                         break;
                     case SAMPLE_RATE_DECREASE:
-                        decay = 1073 * (S32)TILTDB;
+                        decay = 1073 * (int32_t)TILTDB;
                         break;
                     case NO_SAMPLE_RATE_CHANGE:
-                        decay = 1094 * (S32)TILTDB;
+                        decay = 1094 * (int32_t)TILTDB;
                         break;
                     default:
                         break;
@@ -487,11 +487,11 @@ void VocalTract() {
                 temp = b + 1;
 
                 if ( nopen > 95 ) {
-                    temp = (S32)temp * nopen;
+                    temp = (int32_t)temp * nopen;
                     a = frac1mul(10923, temp ); /* Q1.15 -> 0.333 */
                 } else {
                     temp = frac1mul(10923, temp ); /* Q1.15 -> 0.333 */
-                    a = (S32)temp * nopen;
+                    a = (int32_t)temp * nopen;
                 }
                 /**************************************************************/
                 /*  Set coeficients of variable cascade resonators.           */

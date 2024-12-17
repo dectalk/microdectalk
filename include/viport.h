@@ -37,12 +37,7 @@
 #ifndef VIPORT_H
 #define VIPORT_H
 
-/*
- ************************************************************************
- * Include port.h for OS specific defines for VTM
- */
-
-#include "port.h"
+#include <stdint.h>
 
 /*
  ************************************************************************

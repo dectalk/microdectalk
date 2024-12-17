@@ -48,8 +48,8 @@
 
 UINT uiSampleRate = 11025;
 UINT uiSampleRateChange = SAMPLE_RATE_INCREASE;
-S16 rate_scale = 18063;
-S16 inv_rate_scale = 29722;
+int16_t rate_scale = 18063;
+int16_t inv_rate_scale = 29722;
 UINT uiNumberOfSamplesPerFrame = 71;
 double SampleRate = 11025.0;
 double SamplePeriod = 9.07029478458E-5;
@@ -59,8 +59,8 @@ double SamplePeriod = 9.07029478458E-5;
 //#define  MULAW_SAMPLE_RATE   8000
 //UINT uiSampleRate = 8000;
 //UINT uiSampleRateChange = SAMPLE_RATE_DECREASE;
-//S16 rate_scale = 18063;
-//S16 inv_rate_scale = 29722;
+//int16_t rate_scale = 18063;
+//int16_t inv_rate_scale = 29722;
 //UINT uiNumberOfSamplesPerFrame = 51;
 //double SampleRate = 8000.0;
 //double SamplePeriod = 9.07029478458E-5;
@@ -86,17 +86,17 @@ unsigned int uiCurrentSpeaker = 0;
 /*                                                                    */
 /**********************************************************************/
 
-S16 radius;    /*  Radius of pole locations                           */
+int16_t radius;    /*  Radius of pole locations                           */
 /* 24-mar-95 cjl missing declaration.*/
-S16 temp5;
+int16_t temp5;
 
-S16 d2pole_cf45( S16 * bcoef,
-                 S16 * ccoef,
-                 S16 frequency,
-                 S16 bandwidth,
-                 S16 gain )
+int16_t d2pole_cf45( int16_t * bcoef,
+                 int16_t * ccoef,
+                 int16_t frequency,
+                 int16_t bandwidth,
+                 int16_t gain )
 {
-  S16 acoef;
+  int16_t acoef;
 
   /********************************************************************/
   /*  Scale the frequency and bandwidth if the sample rate is not     */
@@ -185,13 +185,13 @@ S16 d2pole_cf45( S16 * bcoef,
 /*                                                                    */
 /**********************************************************************/
 
-S16 d2pole_cf123( S16 * bcoef,
-                  S16 * ccoef,
-                  S16 frequency,
-                  S16 bandwidth,
-                  S16 gain )
+int16_t d2pole_cf123( int16_t * bcoef,
+                  int16_t * ccoef,
+                  int16_t frequency,
+                  int16_t bandwidth,
+                  int16_t gain )
 {
-  S16 acoef;
+  int16_t acoef;
 
   /********************************************************************/
   /*  Scale the frequency and bandwidth if the sample rate is not     */
@@ -273,13 +273,13 @@ S16 d2pole_cf123( S16 * bcoef,
 /*                                                                    */
 /**********************************************************************/
 
-S16 d2pole_pf( S16 * bcoef,
-               S16 * ccoef,
-               S16 frequency,
-               S16 bandwidth,
-               S16 gain )
+int16_t d2pole_pf( int16_t * bcoef,
+               int16_t * ccoef,
+               int16_t frequency,
+               int16_t bandwidth,
+               int16_t gain )
 {
-  S16 acoef;
+  int16_t acoef;
 
   /********************************************************************/
   /*  Scale the frequency and bandwidth if the sample rate is not     */

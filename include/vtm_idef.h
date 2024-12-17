@@ -41,8 +41,8 @@
 extern UINT uiSampleRate;
 extern UINT uiSampleRateChange;
 #endif
-extern S16 rate_scale;
-extern S16 inv_rate_scale;
+extern int16_t rate_scale;
+extern int16_t inv_rate_scale;
 #ifndef MINIMAL_SYNTH
 extern double SampleRate;
 extern double SamplePeriod;
@@ -59,32 +59,32 @@ extern unsigned int uiCurrentSpeaker;
 /*  of desired duration of open phase N0.                             */
 /**********************************************************************/
 #ifdef VARIABLE_OPEN_PERIOD
-extern const S16 B0[224];
+extern const int16_t B0[224];
 #else
-extern const S16 voices[14];
+extern const int16_t voices[14];
 #endif
 
 /**********************************************************************/
 /*  Data arrays for conversion of nasal antiresonator FZinHZ & BW to  */
 /*  difference equation coeficients azero, bzero, and czero           */
 /**********************************************************************/
-extern const S16 azero_tab[35];
-extern const S16 bzero_tab[35];
-extern const S16 czero_tab[35];
+extern const int16_t azero_tab[35];
+extern const int16_t bzero_tab[35];
+extern const int16_t czero_tab[35];
 
 /**********************************************************************/
 /*  Convertion table, db to linear,                                   */
 /**********************************************************************/
-extern const S16 amptable[88];
+extern const int16_t amptable[88];
 
 /**********************************************************************/
 /*  Cosine table used by function setb()                              */
 /**********************************************************************/
-extern const S16 cosine_table[];
+extern const int16_t cosine_table[];
 
 /**********************************************************************/
 /*  Radius table used by function setc()                              */
 /**********************************************************************/
-extern const S16 radius_table[];
+extern const int16_t radius_table[];
 
 #endif

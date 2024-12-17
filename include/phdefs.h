@@ -41,14 +41,7 @@
 #ifndef PHDEFSH
 #define PHDEFSH 1
 
-#include "port.h"
-
-#ifdef SIMULATOR
-#define __far
-#define _far
-#define far
-#endif
-
+#include <stdint.h>
 
 #include	"defs.h"
 #include	"kernel.h"
@@ -433,15 +426,15 @@ short frac4mul();
 
 /* !! These definitions need to be checked to make sure they are right */
 //typedef long S32;
-//typedef short S16;
+//typedef short int16_t;
 
 //#define klrmul(x,y)     ((x) * (y))
 //#define kllmul(x,y)     ((x) * (*(y)))
 //#define klrdiv(x,y)     ((x) / (y))
 //#define klldiv(x,y)     ((x) / (*(y)))
 
-#define muldv()         (S16)(((arg1) * (S16)(arg2)) / (arg3))
-#define mlsh1()         (S16)(((arg1) * (S16)(arg2)) >> 14)
+#define muldv()         (int16_t)(((arg1) * (int16_t)(arg2)) / (arg3))
+#define mlsh1()         (int16_t)(((arg1) * (int16_t)(arg2)) >> 14)
 /* 
  * #define mlsh2()         ((arg1*arg2) << 3) #define mlsh3() ((arg1*arg2) << 4) */
 
