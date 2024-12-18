@@ -238,7 +238,6 @@ int cmd_dial() {
           pipe[3] = 0;
           pipe[4] = 1000;
           pipe[5] = 0;
-
           vtm_loop(pipe);
         } else {
           pipe[0] = SPC_type_tone;

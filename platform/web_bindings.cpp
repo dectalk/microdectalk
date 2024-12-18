@@ -19,7 +19,9 @@ uint32_t header_raw[11] = {
 };
 
 extern "C" {
-    void (*user_callback)(long, int); // array pointer, length
+    extern	short	last_phoneme;
+
+    void (*user_callback)(long, int, int); // array pointer, length
 
     #define MAX_BUFFER (10 * 60) * 11025
     short samples[MAX_BUFFER]; // store 60 seconds of speech
@@ -27,10 +29,6 @@ extern "C" {
 
     void write_wav(short *iwave, int length) {
         // user callback not robust enough yet, let old method proceed
-        //if (user_callback) {
-        //    user_callback((long)iwave, length);
-        //    return; // user specified valid callback, override default behavior
-        //}
 
         if (total_size + length > MAX_BUFFER) {
             return;
@@ -39,6 +37,13 @@ extern "C" {
             samples[total_size + i] = iwave[i] << 2;
         }
 	total_size += length;
+
+        if (user_callback) {
+            user_callback((long)iwave, length, (int) last_phoneme);
+//            return; // user specified valid callback, override default behavior
+        }
+
+        //printf("Last Phoneme: %i\n", last_phoneme);
         //printf("Total Size: %i\n", total_size);
         //printf("Current Duration: %i\n", total_size / 11025);
     }
@@ -50,7 +55,7 @@ extern "C" {
 
     // Initialize TTS system and set user callback
     EMSCRIPTEN_KEEPALIVE
-    void TTSinit(void (*callback)(long, int) ) {
+    void TTSinit(void (*callback)(long, int, int) ) {
         // Your TTS initialization code here
         printf("TextToSpeechInit\n");
         TextToSpeechInit();

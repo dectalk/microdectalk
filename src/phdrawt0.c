@@ -274,6 +274,8 @@ printf("At newpar sw %d %d	beginfall and endfall\n",beginfall,endfall);
       {
          extrad = 4;     /* Was 4 when f0_lp_filter was 1536 */
       }
+
+
       /* Delay f0 fall from voiceless plosive until vot */
       if ((featb[phocur] & FVOICD) IS_MINUS)
       {

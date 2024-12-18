@@ -48,6 +48,7 @@
  */
 
 #include "phdefs.h"
+#include <stdio.h>
 
 /*    Input variables to PHCLAUSE()					     */
 extern short symbols[]; /* Integer represent of input string         */
@@ -110,6 +111,9 @@ short initpardelay=0;
  * allophonics ...
  */
 
+extern int total_size;
+short last_phoneme;
+
 void phclause()
 {
 
@@ -164,8 +168,10 @@ void phclause()
    init_pars();      /* Initialize, routine included below	*/
 
    /* For each 6.4 msec frame of current clause */
-   while (TRUE)
-   {
+   int i = 0;
+   while (TRUE) {
+      last_phoneme = phonemes[nphone];
+
       /* If time exceeds duration of current phone, Move to next one */
       if (++tcum >= durfon)
       {
@@ -203,7 +209,9 @@ void phclause()
       /* Send pars to synthesizer (or print/save them) */
       send_pars();
 
-
+      //last_phoneme = phonemes[nphone];
+      printf("Frame %i, phone: %i, wav size: %i\n", i, phonemes[nphone], total_size);
+      i++;
    }
 }
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

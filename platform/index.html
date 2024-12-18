@@ -15,9 +15,119 @@
     <button onclick="synth_tts()">Synthesize</button>
     <audio id="audioPlayer" controls></audio>
 
+    <div id="phon"></div>
     <script src="epsonapi.js"></script>
     <script>
+        const textInput = document.getElementById('textInput');
+        const audioPlayer = document.getElementById('audioPlayer');
+        var time_map = {};
+
+        var phonemes = [
+            "SIL", // 1
+            "IY", // 2
+            "IH", // 3
+            "EY", // 4
+            "EH", // 4
+            "AE", // 5
+            "AA", // 6
+            "AY", // 7
+            "AW", // 8
+            "AH","AO","OW","OY","UH","UW","RR","YU","AX","IX","IR","ER","AR","OR","UR","W","Y","R","LL","HX","RX","LX","M","N","NX","EL","D_DENTALIZED","EN","F","V","TH","DH","S","Z","SH",
+            "ZH","P","B","T","D","K","G","DX","TX","Q","CH","JH","DF"
+        ];
+
+var image_map = {
+    "SIL": ["sil.svg"],
+    "IY": ["ax_i_ii.svg"],
+    "IH": ["ax_i_ii.svg"],
+    "EY": ["ei.svg"],
+    "EH": ["e.svg"],
+    "AE": ["ax_i_ii.svg"],
+    "AA": ["a_aa_uh.svg"],
+    "AY": ["a_aa_uh.svg"],
+    "AW": ["a_aa_uh.svg"],
+    "AH": ["a_aa_uh.svg"],
+    "AO": ["o.svg"],
+    "OW": ["o.svg"],
+    "OY": ["ei.svg"],
+    "UH": ["a_aa_uh.svg"],
+    "UW": ["o.svg"],
+    "RR": ["n_k_g_ng_y_r.svg"],
+    "YU": ["n_k_g_ng_y_r.svg"],
+    "AX": ["ax_i_ii.svg"],
+    "IX": ["ax_i_ii.svg"],
+    "IR": ["n_k_g_ng_y_r.svg"],
+    "ER": ["n_k_g_ng_y_r.svg"],
+    "AR": ["n_k_g_ng_y_r.svg"],
+    "OR": ["o.svg"],
+    "UR": ["w_oo_uu_u.svg"],
+    "W": ["w_oo_uu_u.svg"],
+    "Y": ["n_k_g_ng_y_r.svg"],
+    "R": ["n_k_g_ng_y_r.svg"],
+    "LL": ["l.svg"],
+    "HX": ["ax_i_ii.svg"],  // Default to silence
+    "RX": ["n_k_g_ng_y_r.svg"],
+    "LX": ["l.svg"],
+    "M": ["p_b_m.svg"],
+    "N": ["n_k_g_ng_y_r.svg"],
+    "NX": ["n_k_g_ng_y_r.svg"],
+    "EL": ["l.svg"],
+    "D_DENTALIZED": ["t_d_s_z.svg"],
+    "EN": ["n_k_g_ng_y_r.svg"],
+    "F": ["f_v.svg"],
+    "V": ["f_v.svg"],
+    "TH": ["th_dh.svg"],
+    "DH": ["th_dh.svg"],
+    "S": ["t_d_s_z.svg"],
+    "Z": ["t_d_s_z.svg"],
+    "SH": ["sh_zh_ch_jh.svg"],
+    "ZH": ["sh_zh_ch_jh.svg"],
+    "P": ["p_b_m.svg"],
+    "B": ["p_b_m.svg"],
+    "T": ["t_d_s_z.svg"],
+    "D": ["t_d_s_z.svg"],
+    "K": ["n_k_g_ng_y_r.svg"],
+    "G": ["n_k_g_ng_y_r.svg"],
+    "DX": ["t_d_s_z.svg"],
+    "TX": ["t_d_s_z.svg"],
+    "Q": ["sil.svg"],  // Glottal stop defaulted to silence
+    "CH": ["sh_zh_ch_jh.svg"],
+    "JH": ["sh_zh_ch_jh.svg"],
+    "DF": ["t_d_s_z.svg"]
+};
+
+// load images
+var images = {}
+for (var i = 0; i < phonemes.length; i++) {
+    var img = document.createElement('img');
+    img.width = 100;
+    img.height = 100;
+    img.src = "//ssl.gstatic.com/dictionary/static/pronunciation/20180801/desktop/" + image_map[phonemes[i]][0];
+    images[ phonemes[i] ] = img;
+    document.body.appendChild(img);
+}
+
+        setInterval(function () {
+            // time is current frame
+            console.log("Time", audioPlayer.currentTime, audioPlayer.currentTime * 11025, total_size);
+            var time = Math.min( Math.round( audioPlayer.currentTime * 11025 ), total_size) ;
+            const phon = document.getElementById('phon');
+            phon.innerHTML =  phonemes[time_map[time]]; 
+
+            for (var i = 0; i < phonemes.length; i++) {
+                images[phonemes[i]].style.display = "none";
+            }
+            if (phonemes[ time_map[time] ] == undefined) {
+                images[ phonemes[0] ].style.display = "block";
+            } else {
+                images[ phonemes[ time_map[time] ] ].style.display = "block";
+            }
+        }, 100);
+
         async function synth_tts() {
+            total_size = 0;
+            time_map = {}; // reset mouth mappings
+
             const textInput = document.getElementById('textInput');
             const audioPlayer = document.getElementById('audioPlayer');
             console.log("Begin TTS");
@@ -49,19 +159,29 @@
             audioPlayer.play();
         };
 
-        function callback(ptr, length) { // TODO implement js side audio callback            
+        var total_size = 0;
+        function callback(ptr, length, last_phoneme) { // TODO implement js side audio callback            
             const shortArray = new Int16Array(
                 Module.HEAPU8.buffer,
                 ptr,
                 length
             );
-            console.log("Callback:", shortArray);
+            //console.log("Callback:", shortArray);
+            console.log("last_phoneme: " + last_phoneme);
+
+            //total_size += length;
+            for (var i = 0; i < length; i++) {
+                time_map[total_size + i] = last_phoneme;
+            }
+            total_size =  Module.ccall('get_total_size', 'number', [], []);
+            //total_size += length;
+
         }
 
         // Wait until the Emscripten runtime is initialized
         Module.onRuntimeInitialized = function() {
             console.log("Emscripten runtime initialized!");
-            var pointer = Module.addFunction(callback, "vii"); // prepare user callback
+            var pointer = Module.addFunction(callback, "viii"); // prepare user callback
             Module.ccall('TTSinit', 'void', ['pointer'], [pointer]);
             //var tts_init = Module.cwrap('TTSinit', 'void', ['pointer']);
             //tts_init(pointer);

@@ -45,7 +45,10 @@
 
 short cmd_number;
 short cmd_count;
+
+__attribute__((section(".data"))) // this fixes readonly memory hardfault on rpi pico
 short insertflag = 0;
+
 char tempa[60];
 extern struct icomm setv[10];
 /*

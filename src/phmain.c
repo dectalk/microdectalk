@@ -224,8 +224,8 @@ int ph_loop(short *input_phone) {
 	/*
 	*  Check for syncs and always process them ...
 	*/
-	if(buf[0] == SYNC || buf[0] == CNTRLK)
-	{
+
+	if(buf[0] == SYNC || buf[0] == CNTRLK) {
 		speak_now();
 		spcwrite(spcget(SPC_type_sync));
 		return 0;

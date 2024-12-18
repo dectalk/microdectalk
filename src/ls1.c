@@ -2304,11 +2304,12 @@ void sendlist(char *pp)
  * the last phoneme put out by anyone is in the external
  * for future examination.
  */
-void sendphone(short ph)
-{
+
+void sendphone(short ph) {
 
 	short   buf[1];
 	lphone = ph;
+
 	if ((ph&0xFF00)==0)
 	{
 		buf[0] = (PFUSA<<PSFONT) + ph;
