@@ -73,7 +73,7 @@ int TextToSpeechStart(char *input) {
 // dictionary externs
 extern unsigned char *mdict;
 extern unsigned char *udict;
-//extern const unsigned char main_dict[];
+extern const unsigned char main_dict[];
 
 // unused for now
 int TextToSpeechLoadUserDictionary(const unsigned char *user_dict) {
@@ -85,9 +85,9 @@ int TextToSpeechLoadUserDictionary(const unsigned char *user_dict) {
 int TextToSpeechInit() {
     memset(kernel_share,0,sizeof(struct share_data));
 
-    //if (main_dict) { //load main dictionary
-    //    mdict = main_dict;
-    //}
+    if (main_dict) { //load main dictionary
+        mdict = main_dict;
+    }
 
     vtm_main();
     usa_main();
