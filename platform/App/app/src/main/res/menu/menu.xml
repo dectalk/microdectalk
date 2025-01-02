@@ -18,8 +18,7 @@
 
     <item
         android:id="@+id/activity_system_settings"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title=""
+        android:title="File"
         app:showAsAction="always">
         <menu>
             <item android:title="Export"
@@ -31,8 +30,7 @@
         </menu>
     </item>
 
-    <item android:title=""
+    <item android:title="Settings"
         android:id="@+id/activity_settings"
-        app:showAsAction="always"
-        android:icon="@drawable/baseline_settings_24"/>
+        app:showAsAction="always"/>
 </menu>

@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             try {
                 File wavFile = writeWavFile(this, samples);
                 shareAudioFile(this, wavFile);
-                wavFile.delete();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
