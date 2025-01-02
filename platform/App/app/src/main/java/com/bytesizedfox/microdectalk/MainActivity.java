@@ -1,9 +1,15 @@
 package com.bytesizedfox.microdectalk;
 
+import static com.bytesizedfox.microdectalk.App.shareAudioFile;
+import static com.bytesizedfox.microdectalk.App.writeWavFile;
 import static com.bytesizedfox.microdectalk.tts.TTSUtil.nameToNameCode;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
@@ -25,6 +31,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -109,6 +120,37 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         int id = item.getItemId();
 
         if (id == R.id.voiceSettings) {
+            return super.onOptionsItemSelected(item);
+        }
+
+        EditText inputText = findViewById(R.id.inputText);
+        String text = "[:phoneme on] " + inputText.getText().toString().replaceAll("\\P{ASCII}", "");
+        short[] samples = new short[0];
+        if (id == R.id.share || id == R.id.export) {
+            // reset TTS to avoid bugginess
+            TextToSpeechReset();
+            TextToSpeechChangeVoice(nameToNameCode(App.current_voice));
+            TextToSpeechInit();
+            TextToSpeechSetRate( 180 + ((App.rate-50)*2) );
+            samples = TextToSpeechStart(text);
+        }
+        if (id == R.id.share) {
+            try {
+                File wavFile = writeWavFile(this, samples);
+                shareAudioFile(this, wavFile);
+                wavFile.delete();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return super.onOptionsItemSelected(item);
+        }
+        if (id == R.id.export) {
+            try {
+                File wavFile = writeWavFile(this, samples);
+                App.saveAudioFile(this, wavFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return super.onOptionsItemSelected(item);
         }
 
@@ -251,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         Button applySettingsButton = dialogView.findViewById(R.id.ApplySettingsButton);
         applySettingsButton.setOnClickListener(v -> {
@@ -339,6 +381,36 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
         } else {
             speakButton.setEnabled(false);
+        }
+    }
+
+    // Add this to your Activity class
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri uri = data.getData();
+                try {
+                    InputStream inputStream = new FileInputStream(App.currentAudioFile);
+                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
+
+                    if (outputStream != null) {
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = inputStream.read(buf)) > 0) {
+                            outputStream.write(buf, 0, len);
+                        }
+                        outputStream.close();
+                        inputStream.close();
+                        Toast.makeText(this, "File saved successfully", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error saving file", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 }

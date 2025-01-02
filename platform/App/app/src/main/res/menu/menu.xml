@@ -20,7 +20,17 @@
         android:id="@+id/activity_system_settings"
         android:icon="@android:drawable/ic_menu_manage"
         android:title=""
-        app:showAsAction="always" />
+        app:showAsAction="always">
+        <menu>
+            <item android:title="Export"
+                android:id="@+id/export"
+                app:showAsAction="always"/>
+            <item android:title="Share"
+                android:id="@+id/share"
+                app:showAsAction="always"/>
+        </menu>
+    </item>
+
     <item android:title=""
         android:id="@+id/activity_settings"
         app:showAsAction="always"

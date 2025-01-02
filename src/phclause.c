@@ -111,18 +111,28 @@ short initpardelay=0;
  * allophonics ...
  */
 
-extern int total_size;
+short first_phoneme;
 short last_phoneme;
+short frame_index = 0;
 
-void phclause()
-{
+const char *names[] = {
+    "SIL", // 1
+            "IY", // 2
+            "IH", // 3
+            "EY", // 4
+            "EH", // 4
+            "AE", // 5
+            "AA", // 6
+            "AY", // 7
+            "AW", // 8
+            "AH","AO","OW","OY","UH","UW","RR","YU","AX","IX","IR","ER","AR","OR","UR","W","Y","R","LL","HX","RX","LX","M","N","NX","EL","D_DENTALIZED","EN","F","V","TH","DH","S","Z","SH",
+            "ZH","P","B","T","D","K","G","DX","TX","Q","CH","JH","DF"
+};
 
-
+int i = 0;
+void phclause() {
    /* Initialization (init variables, zero arrays */
-
-
-	init_clause();
-
+   init_clause();
    /* 1. If speaker def changed, now it time to really change it.		*/
    /* The old (KL) code used to set "initsw". This gets done in the	*/
    /* "send_pars" routine now (it only mattered on halt).			*/
@@ -168,9 +178,8 @@ void phclause()
    init_pars();      /* Initialize, routine included below	*/
 
    /* For each 6.4 msec frame of current clause */
-   int i = 0;
+
    while (TRUE) {
-      last_phoneme = phonemes[nphone];
 
       /* If time exceeds duration of current phone, Move to next one */
       if (++tcum >= durfon)
@@ -209,9 +218,8 @@ void phclause()
       /* Send pars to synthesizer (or print/save them) */
       send_pars();
 
-      //last_phoneme = phonemes[nphone];
-      printf("Frame %i, phone: %i, wav size: %i\n", i, phonemes[nphone], total_size);
-      i++;
+      last_phoneme = phonemes[nphone];
+      frame_index++;
    }
 }
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

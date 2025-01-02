@@ -3,6 +3,7 @@ source ~/emsdk/emsdk_env.sh
 mkdir -p out/web/
 rm -rf out/web/*
 cp platform/index.html out/web
+cp platform/index.html ./
 
 emcc src/*.c platform/web_bindings.cpp \
      -lembind \

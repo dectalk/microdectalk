@@ -23,10 +23,10 @@
         var time_map = {};
 
         var phonemes = [
-            "SIL", // 1
-            "IY", // 2
-            "IH", // 3
-            "EY", // 4
+            "SIL", // 0
+            "IY", // 1
+            "IH", // 2
+            "EY", // 3
             "EH", // 4
             "AE", // 5
             "AA", // 6
@@ -96,21 +96,21 @@ var image_map = {
     "DF": ["t_d_s_z.svg"]
 };
 
-// load images
-var images = {}
-for (var i = 0; i < phonemes.length; i++) {
-    var img = document.createElement('img');
-    img.width = 100;
-    img.height = 100;
-    img.src = "//ssl.gstatic.com/dictionary/static/pronunciation/20180801/desktop/" + image_map[phonemes[i]][0];
-    images[ phonemes[i] ] = img;
-    document.body.appendChild(img);
-}
+    // load images
+    var images = {}
+    for (var i = 0; i < phonemes.length; i++) {
+        var img = document.createElement('img');
+        img.width = 100;
+        img.height = 100;
+        img.src = "//ssl.gstatic.com/dictionary/static/pronunciation/20180801/desktop/" + image_map[phonemes[i]][0];
+        images[ phonemes[i] ] = img;
+        document.body.appendChild(img);
+    }
 
         setInterval(function () {
             // time is current frame
-            console.log("Time", audioPlayer.currentTime, audioPlayer.currentTime * 11025, total_size);
-            var time = Math.min( Math.round( audioPlayer.currentTime * 11025 ), total_size) ;
+            console.log("Time", Math.floor( Math.floor( audioPlayer.currentTime * 11025.0 ) / 71 ) );
+            var time = Math.floor( Math.floor( audioPlayer.currentTime * 11025.0) / 71 ) ;
             const phon = document.getElementById('phon');
             phon.innerHTML =  phonemes[time_map[time]]; 
 
@@ -160,28 +160,20 @@ for (var i = 0; i < phonemes.length; i++) {
         };
 
         var total_size = 0;
-        function callback(ptr, length, last_phoneme) { // TODO implement js side audio callback            
+        function callback(ptr, length, last_phoneme, frame_index) { // TODO implement js side audio callback            
             const shortArray = new Int16Array(
                 Module.HEAPU8.buffer,
                 ptr,
                 length
             );
-            //console.log("Callback:", shortArray);
-            console.log("last_phoneme: " + last_phoneme);
-
-            //total_size += length;
-            for (var i = 0; i < length; i++) {
-                time_map[total_size + i] = last_phoneme;
-            }
+            time_map[frame_index] = last_phoneme;
             total_size =  Module.ccall('get_total_size', 'number', [], []);
-            //total_size += length;
-
         }
 
         // Wait until the Emscripten runtime is initialized
         Module.onRuntimeInitialized = function() {
             console.log("Emscripten runtime initialized!");
-            var pointer = Module.addFunction(callback, "viii"); // prepare user callback
+            var pointer = Module.addFunction(callback, "viiii"); // prepare user callback
             Module.ccall('TTSinit', 'void', ['pointer'], [pointer]);
             //var tts_init = Module.cwrap('TTSinit', 'void', ['pointer']);
             //tts_init(pointer);
