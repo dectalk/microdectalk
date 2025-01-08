@@ -121,5 +121,6 @@ int ind = get_long_int(&offsets[index * 4]);
 char *entry = &data[ ind + 4 ];`
 ```
 
-finally, if you want to see an example parser, just check out [parse.c](https://github.com/dectalk/microdectalk/docs/parse.c)
+finally, if you want to see an example parser, just check out [parse.c](https://github.com/dectalk/microdectalk/blob/microdectalk-android/docs/parse.c).
+
 i apologize for the messy parser code lol
