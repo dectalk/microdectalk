@@ -8,7 +8,7 @@ int main () {
     init_wav("output.wav");
     TextToSpeechInit();
 
-    TextToSpeechStart("Hello World, engine, radio, to, test");
+    TextToSpeechStart("Hello World, engine, radio, to, test, Hello World, describe image.");
 
     close_wav();
 }
