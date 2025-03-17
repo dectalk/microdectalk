@@ -82,12 +82,46 @@ int TextToSpeechLoadUserDictionary(const unsigned char *user_dict) {
     }
 }
 
-int TextToSpeechInit() {
-    memset(kernel_share,0,sizeof(struct share_data));
-
+void loadDict() {
+#ifdef LOAD_DICT_FILE
+    FILE *dict_file = fopen("main.dict", "rb");
+    if (dict_file) {
+        // Get file size
+        fseek(dict_file, 0, SEEK_END);
+        long file_size = ftell(dict_file);
+        fseek(dict_file, 0, SEEK_SET);
+        
+        // Allocate memory for dictionary
+        unsigned char *file_dict = (unsigned char *)malloc(file_size);
+        if (file_dict) {
+            // Read file into memory
+            if (fread(file_dict, 1, file_size, dict_file) == file_size) {
+                mdict = file_dict;
+            } else {
+                free(file_dict);
+                printf("Fell back to internal dictionary\n");
+                //mdict = main_dict; // disabled for testing
+            }
+        } else {
+            printf("Fell back to internal dictionary\n");
+            //mdict = main_dict; // disabled for testing
+        }
+        fclose(dict_file);
+    } else {
+        printf("Fell back to internal dictionary\n");
+        // mdict = main_dict; // disabled for testing
+    }
+#else
     if (main_dict) { //load main dictionary
         mdict = main_dict;
     }
+#endif
+}
+
+int TextToSpeechInit() {
+    memset(kernel_share,0,sizeof(struct share_data));
+
+    loadDict();
 
     vtm_main();
     usa_main();

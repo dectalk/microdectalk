@@ -43,7 +43,7 @@ char *d_lookup(LETTER llp[], char table[]) {
                 break;
             }
         }
-        printf("entry: %i\n", entry[i]);
+
         if (ls_lower[ llp[i].l_ch ] != 0) {
             continue;
         }
