@@ -1,7 +1,8 @@
 /*
  ***********************************************************************
  *
- *                           Coryright (c)
+ *                           Copyright ©
+ *	  Copyright © 2000-2001 Force Computers Inc., a Solectron company. All rights reserved.
  *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -10,9 +11,9 @@
  *    52.227-14 Alt. III, as applicable.
  *
  *    This software is proprietary to and embodies the confidential
- *    technology of Digital Equipment Corporation and other parties.
+ *    technology of Force Computers Incorporated and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Digital or an
+ *    only pursuant to a valid written license from Force or an
  *    authorized sublicensor.
  *
  ***********************************************************************
@@ -25,9 +26,17 @@
  *
  ***********************************************************************
  *    Revision History:
- * 06nov95	...tek		add FLUSH_type_char subcode.
- * 13dec95	...tek		merge dtex 
- * 01mar96	...tek		added error codes for wrong-software-for-module
+ * 001	11/06/1995	tek		add FLUSH_type_char subcode.
+ * 002	12/13/1995	tek		merge dtex 
+ * 003	03/01/1996	tek		added error codes for wrong-software-for-module
+ * 004	04/21/1997	GL      BATS#360  remove spaces before "#define" or "#if" 
+ * 005	09/25/1997	GL      change the dictionary pointer structure to support
+ *							UK_english and language expansion and add "lang" item for
+ *							PKT_set_dic and dma_set_dic data structure.
+ * 006	06/22/1998	mfg     Added LANG_latin_american support
+ * 007	10/05/1998  ETT     Added Linux code.
+ * 008	06/12/2000	nal		warning removal (fuzzy #ifdefs)
+ * 009	01/19/2001	cab		Fixed copyright info
  */
 
 #ifndef PCPORTH
@@ -72,12 +81,16 @@
 #define    	    POST_load_dsp		0x000D /* loading the default DSP code.. */
 
 	/*xxxx eab changed to free up bit for flush done*/
-#define         MODE_ready                      0x1000                          /* module ready for next phase */
-/*#define               MODE_ready                      0xc000                           module ready for next phase */
-/*#define               READY_boot                      0x0000   */                                               
-#define               READY_kernel            0x0001                          
-#define         FLUSH_DONE                      0x2000                  /*xxx needed to interlock module*/
-#define MODE_error                              0xf000
+
+#ifdef MSDOS			// NAL warning removal
+#define MODE_ready          0x1000                          /* module ready for next phase */
+#else
+#define MODE_ready          0xc000                    /*       module ready for next phase */
+#define READY_boot          0x0000                                                  
+#endif
+#define READY_kernel        0x0001                          
+#define FLUSH_DONE          0x2000                  /*xxx needed to interlock module*/
+#define MODE_error          0xf000
 
 #define CMD_mask                                        0xf000                  /* mask for command nibble */
 #define CMD_null                                        0x0000                  /* post status */
@@ -91,7 +104,7 @@
 #define         CTRL_pause                              0x0400          /*   pause spc */
 #define         CTRL_resume                             0x0500          /*   resume spc clock */
 #define         CTRL_resume_spc         0x0001  /*   resume spc soft pause */
-	#define         CLR_DONE                                        0x0002                  /* clear flush done bit */
+#define         CLR_DONE                                        0x0002                  /* clear flush done bit */
 #define         CTRL_flush                              0x0600          /*   flush all buffers */
 #define		FLUSH_type_char			0x0001	/* like DMA_sync_char, but better. */
 #define         CTRL_int_enable         0x0700          /*   enable status change ints */
@@ -176,23 +189,18 @@ struct  set_dic_packet                  {
 			unsigned int far                *dic_start;
 			long                                            dic_entries;
 			int                                             type;
+
+            unsigned int                                    lang;
+
 };
 
-#define EPRIMARY_DIC                    0
-#define USER_DIC                                1
-#define COMMAND_DIC                     2
-#define ABBREV_DIC                      3
-#define SPRIMARY_DIC                    4
-#define SUSER_DIC                               5
-#define FPRIMARY_DIC                    6
-#define FUSER_DIC                               7
-#define GPRIMARY_DIC                    8
-#define GUSER_DIC                               9
+/* GL 09/25/1997 use new symbol for dictionary loading */
+#define PRIMARY_DIC                 0
+#define USER_DIC                    1
+#define ABBREV_DIC                  2
 
 
-
-struct  load_mem_packet         {
-			unsigned int                    low_addr;
+struct  load_mem_packet         {			unsigned int                    low_addr;
 			unsigned int                    high_addr;
 			unsigned int                    count;
 };
@@ -264,8 +272,14 @@ struct  dma_start_task          {
 
 struct  dma_set_dic                     {
 			unsigned int far                *dic_start;
+#ifdef MSDOS
 			long                                            dic_entries;
+#else
+			S32												dic_entries;
+#endif			
 			int                                             type;
+
+            unsigned int                                    lang;
 };                                      
 #define DMA_SET_DIC_SIZE                        (sizeof(struct dma_set_dic))    
 

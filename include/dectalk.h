@@ -2,8 +2,7 @@
  ***********************************************************************
  *
  *                           Coryright (c)
- *    © Digital Equipment Corporation 1995. All rights reserved.
- * Copyright (c) 1985, Digital Equipment Corporation, Maynard, Mass.
+ *    © Digital Equipment Corporation 1985, 1996, 1997. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -22,61 +21,65 @@
  *    Creation Date:
  *
  *    Functionality:
- * This header file is used
- * by all parts of DECtalk III. This file
- * includes all the changes needed to run
- * with the new syntnesizer.
+ * 	  This header file is used
+ * 	  by all parts of DECtalk III. This file
+ * 	  includes all the changes needed to run
+ * 	  with the new syntnesizer.
  *
  ***********************************************************************
  *    Revision History:
- * 01   19-Jan-85 DGC   Removed "undef vax" for DHK.
- * 02   31-Jan-85 DGC   Added "PTSYNC".
- * 03   12-Feb-85 DGC   Modified error syndromes. Deleted "NTASK".
- *                      Added diagnostic states.
- * 04   13-Feb-85 DGC   Added definition for ABO "test ok" flag.
- *                      Changed the power-up mode definitions to
- *                      ignore W11. Put firmware version code into
- *                      this file, so "dialup" can get it.
- * 05   22-Feb-85 DK    [M] is no more. It's slot is now used by
- *                      D_DENTALIZED.
- * 06   05-Mar-85 DGC   Ripped out all of the clock queue stuff.
- *                      Moved the definition of the NUDPHON from
- *                      "lsdef.h" to here, where it belongs.
- * 07   06-Mar-85 DGC   Changed the test and sync codes fed to
- *                      the SPC again.
- * 08   11-Mar-85 DGC   Changes to the I/O map to deal with
- *                      the bugs in the DTMF chip. The "option
- *                      present" moved to SWJMPR. The "tone valid"
- *                      is brought in where "option present" was
- *                      in GPIO (read).
- * 09   19-Mar-85 DGC   Added some definitions to deal with the
- *                      call progress detection system.
- * 10   04-Apr-85 DGC   Added support for 150 baud and the SNUSECR
- *                      option switch.
- * 11   10-Apr-85 DGC   Added the definitions for the option module.
- * 12   17-Apr-85 DGC   Added default versus 0 stuff to "SEQ".
- *                      Added the "PPARSE" structure.
- * 13   29-Apr-85 DGC   Added a subfunction code for testing the
- *                      TLI cadence detector.
- * 14   30-Apr-85 DGC   Rearranged the switches so that the
- *                      "factory default" is all switches open.
- * 15   10-May-85 DGC   W11 => NNOTIME
- * 16   07-Jun-85 DGC   "ef" => "lx" in speaker definition.
- * 17   18-Jun-85 DGC   "g5" => "lo" in speaker definition.
- * 18   19-Jun-85 DGC   Added a new telephone subfunction code to
- *                      request reduced level DTMF bursts during the
- *                      self tests.
- * 19   08-Aug-85 DGC   Put the NTASK back. Needed by the new code
- *                      for sync.
+ *
+ * Rev  Who     Date            Description
+ * ---  -----   -----------     -------------------------------------------- 
+ * 01   DGC		01/19/1985		Removed "undef vax" for DHK.
+ * 02   DGC		01/31/1985		Added "PTSYNC".
+ * 03   DGC		02/12/1985		Modified error syndromes. Deleted "NTASK".
+ *                      		Added diagnostic states.
+ * 04   DGC		02/13/1985		Added definition for ABO "test ok" flag.
+ *                      		Changed the power-up mode definitions to
+ *                      		ignore W11. Put firmware version code into
+ *                      		this file, so "dialup" can get it.
+ * 05   DK		02/22/1985		[M] is no more. It's slot is now used by
+ *                      		D_DENTALIZED.
+ * 06   DGC		03/05/1985		Ripped out all of the clock queue stuff.
+ *                      		Moved the definition of the NUDPHON from
+ *                      		"lsdef.h" to here, where it belongs.
+ * 07   DGC		03/06/1985      Changed the test and sync codes fed to
+ *                      		the SPC again.
+ * 08   DGC		03/11/1985		Changes to the I/O map to deal with
+ *                      		the bugs in the DTMF chip. The "option
+ *                      		present" moved to SWJMPR. The "tone valid"
+ *                      		is brought in where "option present" was
+ *                      		in GPIO (read).
+ * 09   DGC		03/19/1985		Added some definitions to deal with the
+ *                      		call progress detection system.
+ * 10   DGC		04/04/1985		Added support for 150 baud and the SNUSECR
+ *                      		option switch.
+ * 11   DGC		04/10/1985		Added the definitions for the option module.
+ * 12   DGC		04/17/1985		Added default versus 0 stuff to "SEQ".
+ *                      		Added the "PPARSE" structure.
+ * 13   DGC		04/29/1985		Added a subfunction code for testing the
+ *                      		TLI cadence detector.
+ * 14   DGC		04/30/1985		Rearranged the switches so that the
+ *                      		"factory default" is all switches open.
+ * 15   DGC		05/10/1985		W11 => NNOTIME
+ * 16   DGC		06/07/1985	    "ef" => "lx" in speaker definition.
+ * 17   DGC		06/18/1985   	"g5" => "lo" in speaker definition.
+ * 18   DGC		06/19/1985      Added a new telephone subfunction code to
+ *                      		request reduced level DTMF bursts during the
+ *                      		self tests.
+ * 19   DGC		08/08/1985    	Put the NTASK back. Needed by the new code
+ *                      		for sync.
  * ------------------   Released as C5005 V1.0 firmware.
- * 20   21-Oct-86 DGC   Changes for KRM.
- * 21   06-Apr-87 DGC   Bumped firmware revision to 1.1
- * 22   06-May-87 DGC   Added KRMMOD conditional for real KRM module.
- * 23   22-nov-89 eab   updated for new krm build added bch define
- *                      added nkr define
- * 24   16-jan-90 eab   Remove bch def. all version now support
- *						sprate to 550.
- * 25	15-DEC-94 cjl	Added pre-processor code to prevent duplicates.
+ * 20   DGC		10/21/1986	    Changes for KRM.
+ * 21   DGC		04/06/1987	    Bumped firmware revision to 1.1
+ * 22   DGC		05/06/1987	    Added KRMMOD conditional for real KRM module.
+ * 23   eab		11/22/1989	    updated for new krm build added bch define
+ *                      		added nkr define
+ * 24   eab		01/16/1990	    Remove bch def. all version now support
+ *								sprate to 550.
+ * 25	cjl		12/15/1994	 	Added pre-processor code to prevent duplicates.
+ * 26	gl		04/04/1996	 	Added debug flag to support the debug command.
  */
 
 #ifndef DECTALKH
@@ -84,7 +87,7 @@
 
 #define EOS               0             /* Some folks like to use this  */
 #define NINTER           10             /* Intermediates, ANSI sequence */
-#define NPARAM           2             /* Parameters, ANSI sequence    */
+#define NPARAM           10             /* Parameters, ANSI sequence    */
 #define NSTRING         254             /* Control string, < 256        */
 #define NUDPHON         100             /* User phonemes,  < 128 (byte) */
 #define NLPIPE          250             /* # of words in LTS pipe       */
@@ -101,7 +104,6 @@
 
 typedef char    FLAG;                   /* A nice type for a Boolean    */
 
-/*#define SIMULATOR*/
 
 /*
  * This structure is used to
@@ -149,18 +151,40 @@ typedef struct PPARSE_struc     {
 #define UPPITY_URSULA           6
 #define ROUGH_RITA              7
 #define WHISPERY_WILLY          8
+#if defined(HLSYN) || defined(CHANGES_AFTER_V43)
+#define CRAFTY_CHRIS            9
+#define VARIABLE_VAL            10
+#else
 #define VARIABLE_VAL            9
-
+#endif
 
 /*
  *  pipe connection codes ...   supports up to 32 languages
  */
-#ifdef SIMULATOR
-#define LTS_PIPE                0x01 // short pipe   
-#define PH_PIPE                 0x01 // short pipe
-#else
-#define LTS_PIPE                0x00 
-#define PH_PIPE                 0x20 
-#endif
+
+#define LTS_PIPE                0x00
+#define PH_PIPE                 0x20
+
+/*
+ * debug switch :
+ * bit  15  CMD module
+ *      14  LTS module
+ *      13  PH  module
+ *      12  VTM module
+ *    11-0  12 debug points
+ */
+
+#define CMD_DBG       0x8000
+#define LTS_DBG       0x4000
+#define PH_DBG        0x2000
+#define VTM_DBG       0x1000
+
+#define DT_DBG(section, code) \
+		((pKsd_t->debug_switch & section) && (pKsd_t->debug_switch & code))
+
+#define DTT_DBG(section, code) \
+                ((KS.debug_switch & section) && (KS.debug_switch & code))
+
+
 
 #endif
