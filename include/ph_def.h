@@ -74,9 +74,9 @@
 #define printf WINprintf
 #endif
 
-#if defined (MSDOS) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define WINprintf printf
-#endif /* defined (MSDOS) || defined (__osf__) || defined (__linux__) */
+#endif /* defined (MSDOS) || defined (__osf__) || defined (__unix__) */
 
 #endif /* PRINTFDEBUG */
 

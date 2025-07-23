@@ -47,8 +47,8 @@ void close_wav() {
 
 int main() {
     init_wav("output.wav");
-    TextToSpeechInit(nullptr, nullptr);
-    TextToSpeechStart("engine radio, choose a watch.", nullptr, WAVE_FORMAT_1M16);
+    TextToSpeechInit(NULL, NULL);
+    TextToSpeechStart("engine radio, choose a watch.", NULL, WAVE_FORMAT_1M16);
 
     close_wav();
     //TextToSpeechSync

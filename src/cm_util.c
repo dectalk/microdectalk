@@ -87,7 +87,7 @@
 #include "opthread.h"
 #endif
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#include "opthread.h"
 extern void usa_init(PKSD_T);
 #endif
@@ -343,7 +343,7 @@ void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode)
 
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined ARM7 || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined ARM7 || defined (__APPLE__)
 /*
  *      Function Name: cm_util_dtpc_tones() 
  *
@@ -422,13 +422,13 @@ int cm_util_dtpc_tones( LPTTS_HANDLE_T phTTS,
   pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   vtm_loop(phTTS,pipe);
 #endif
 
   return( CMD_success );
 }
-#endif /* (WIN32) || (__osf__) || (__linux__)*/
+#endif /* (WIN32) || (__osf__) || (__unix__)*/
 
 #ifdef MSDOS
 /*
@@ -773,7 +773,7 @@ if (s == NULL) //mfg check for a NULL argument BATS#628
 		putc('\n');
 #endif		
 		t = s;
-		ta = sa[index];
+		ta = (unsigned char*)sa[index];
 		while(TRUE)
 		{
 			if (*ta == par_lower[*t])

@@ -606,7 +606,7 @@ static void PlaceMemoryOnFreeList( void * pMemory )
 
 #else
 
-#if !defined UNDER_CE && !defined __linux__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
+#if !defined UNDER_CE && !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
 /**********************************************************************/
 /*  Locked memory allocation functions for Windows NT and Windows 95. */
 /**********************************************************************/

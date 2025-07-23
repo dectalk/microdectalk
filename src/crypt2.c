@@ -13,7 +13,7 @@
 * COMMENTS	
 * Tom Kopec, 13 May 96 
 * 001		28Apr97		Licensee changes 
-* 002	MGS	02/09/2000	now used for __linux__ and not __osf__ 
+* 002	MGS	02/09/2000	now used for __unix__ and not __osf__ 
 * 003  	mfg 09/22/2000	added prototype to support windows CE  
 * 004 	CAB	10/16/2000	Changed copyright info
 * 005  	mfg 09/22/2000	fixed time.h include to support windows CE versions 

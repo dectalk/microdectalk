@@ -90,7 +90,7 @@ int ls_math_do_math(PKSD_T pKsd_t, unsigned char check_char)
 
 	if(pKsd_t->modeflag & MODE_MATH)
 	{
-		ms = math_table;
+		ms = (struct math_symbols*)math_table;
 		while((*ms).sym)
 		{
 			if((*ms).sym == check_char)

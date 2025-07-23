@@ -85,7 +85,7 @@
 
 #include "port.h"
 
-#if defined __linux__  || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__  || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define HWND unsigned long
 #include "dtmmedefs.h"
 #endif
@@ -96,7 +96,7 @@
 #endif
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //typedef  HPLAY_AUDIO_T  LPAUDIO_HANDLE_T;
 #endif
 
@@ -118,7 +118,7 @@
 
 /* DECtalk Version Numbers moved to coop.h: 11/22/96 CJL */
 #include "coop.h"
-#if !defined __linux__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
+#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
 /* externs for global variables :MVP   */
 extern volatile int gnInstanceCounter;
 #ifndef ARM7
@@ -145,7 +145,7 @@ extern DT_HANDLE gufordicFileHandle;
 extern LPVOID gufordicMapStartAddr;
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /**********************************************************************/
 /* Sybmol definitiopns for return status from CheckLicenses           */
 /**********************************************************************/
@@ -212,7 +212,7 @@ typedef AU_FILE_HDR_T * LPAU_FILE_HDR_T;
 #define AU_HEADER_OFFSET  32
 #endif
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (NOWIN) || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (NOWIN) || defined (__APPLE__)
 /**********************************************************************/
 /*  Text Message Linked List structure for digital unix.              */
 /**********************************************************************/
@@ -226,7 +226,7 @@ struct TEXT_MSG_TAG
 
 typedef  struct TEXT_MSG_TAG  TEXT_MSG_T;
 typedef  TEXT_MSG_T * LPTEXT_MSG_T;
-#endif /* __osf__ || __linux__ */
+#endif /* __osf__ || __unix__ */
 
 /**********************************************************************/
 /*  This structure is the text to speech handle.                      */
@@ -260,7 +260,7 @@ struct TTS_HANDLE_TAG
 #endif // WIN32
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   //HEVENT_T hMallocSuccessEvent;    /* Event handle to report successful memory allocations */
   //HTHREAD_T hThread_TXT;
   //HTHREAD_T hThread_CMD;
@@ -353,7 +353,7 @@ struct TTS_HANDLE_TAG
   ULONG LastError;
 #endif
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   //HMUTEX_T pcsCallback;            /*New Audio Integration*/
   //HMUTEX_T pcsMemoryBuffer;
   //HMUTEX_T pcsQueuedSampleCount;
@@ -503,7 +503,7 @@ void Report_TTS_Status( LPTTS_HANDLE_T ttsHandle, UINT uiMsg, long lParam1, long
 #endif
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 void Report_TTS_Status( LPTTS_HANDLE_T phTTS, UINT uiMsg, long lParam1, long lParam2);
 #endif
 

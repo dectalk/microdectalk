@@ -97,7 +97,7 @@
  //#define HLSYN
 #include "dectalkf.h"
 
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#include "playaudd.h"
 #endif
 
@@ -376,7 +376,7 @@ char szTemp[256]="";
 /**********************************************************************/
 #ifdef WIN32
 DWORD __stdcall vtm_main( LPTTS_HANDLE_T phTTS )
-#elif defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#elif defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 DWORD vtm_main( LPTTS_HANDLE_T phTTS )
 #else
 DWORD vtm_main( LPTTS_HANDLE_T phTTS )

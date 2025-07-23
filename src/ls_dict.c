@@ -100,7 +100,7 @@
 #include "string.h"
 #endif
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 #endif
 
@@ -886,7 +886,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
         S32 fdic_fc_entries = get_long_int(main_dict+8);
         S32 *fdic_fc_entry = (volatile S32 *) (main_dict+12);
         S32 *fdic_index = (S32 *)(main_dict+12+((fdic_fc_entries)*4));
-        unsigned char *fdic_data = (main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
+        unsigned char *fdic_data = ((unsigned char*)main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
         // *ppent = ((struct dic_entry *)(&(fdic_data[((U32 *)fdic_index)[(index)]])));
 
         *ppent = (struct dic_entry *) DICT_ACCESS(index);

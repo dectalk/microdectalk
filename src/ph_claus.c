@@ -174,7 +174,7 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS);
 //#ifndef UNDER_CE
 //#ifdef FRENCH
 //#ifndef ARM7
-//#if !defined __linux__ && !defined _SPARC_SOLARIS_
+//#if !defined __unix__ && !defined _SPARC_SOLARIS_
 //#define DEBGFRENCH 1
 //#endif
 //#endif
@@ -201,7 +201,7 @@ void phclause (LPTTS_HANDLE_T phTTS)
 {
 /* GL 04/21/1997  add this for OSF build */
 #ifndef MSDOS
-//#if defined  (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined  (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 #ifndef EPSON_ARM7
 	DT_PIPE_T   pipe_item[1];
 #endif
@@ -404,7 +404,7 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 #endif                                 // Michel : should it be an #else ???
 
 /* GL 04/21/1997  add this for OSF build */
-//#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 #ifndef MSDOS
 					check_index (phTTS, pDph_t->nphone+1);
 #endif
@@ -419,7 +419,7 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 #ifndef EPSON_ARM7/* GL 04/21/1997  change this as the latest OSF code */
 /* write forced clause boundary symbol to VTM */
 #ifndef MSDOS
-//#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 				pipe_item[0] = SPC_type_force;
 				vtm_loop(phTTS,pipe_item);
 #endif
@@ -766,11 +766,11 @@ static void send_pars (LPTTS_HANDLE_T phTTS)
 
 /* GL 04/21/1997  add this for OSF build */
 #ifndef MSDOS
-//#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
+//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
 
 
 		spcwrite (pKsd_t, pDph_t->delaypars);
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__)
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__)
 		pDph_t->delaypars = (short far *) spcget (SPC_type_voice);
 #endif	// SEPARATE_PROCESSES
 
@@ -810,7 +810,7 @@ static void send_pars (LPTTS_HANDLE_T phTTS)
 
 /* GL 04/21/1997  add this for OSF build */
 #ifndef MSDOS
-//#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	pDph_t->delaypars[OUT_PH] = pDph_t->parstochip[OUT_PH];
 	pDph_t->delaypars[OUT_DU] = pDph_t->parstochip[OUT_DU];
 	pDph_t->delaypars[OUT_PH2] = pDph_t->parstochip[OUT_PH2];

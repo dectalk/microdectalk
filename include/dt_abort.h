@@ -46,14 +46,14 @@
 #endif
 #endif //WIN32
 
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #include <assert.h>
 #define dt_abort \
 { \
     assert(0); \
 }
 
-#endif  //__osf__ || (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+#endif  //__osf__ || (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 #ifdef DTPC1
 #include "pcport.h"

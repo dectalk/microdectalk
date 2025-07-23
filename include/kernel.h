@@ -95,7 +95,7 @@
 #include "kernp.h"
 #endif
 
-#if defined __linux__ ||defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ ||defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include "dtmmedefs.h"
 #endif
 
@@ -220,7 +220,7 @@ extern FILE *fpODS_File;
 #endif //WIN32
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define _PIPE
 //#include "opthread.h"
 //#include "pipe.h"
@@ -234,9 +234,9 @@ typedef struct PIPE_struct {
 #endif
 
 // tek 30apr97 some debugging stuff..
-#if defined __osf__ || defined __linux__ || defined _SPARC_SOLARIS_ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #ifdef _DEBUG
-#if defined __linux__ || defined (__APPLE__)
+#if defined __unix__ || defined (__APPLE__)
 #define timeGetTime() (unsigned long)(time(NULL))
 #endif
 extern FILE *fpODS_File;
@@ -250,10 +250,10 @@ extern FILE *fpODS_File;
 #undef OutputDebugString
 #define OutputDebugString(x)
 #endif // _DEBUG
-#endif // __osf__ || __linux__ || defined _SPARC_SOLARIS_
+#endif // __osf__ || __unix__ || defined _SPARC_SOLARIS_
 
 /* GL 04/21/1997 add this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //typedef  PIPE_T  PIPE;
 //typedef  LPPIPE_T  P_PIPE;
 #endif
@@ -316,7 +316,7 @@ typedef struct RING_struct {
 #define SPC_type_digitized              5
 #define SPC_type_mixed                  6
 #define SPC_type_index                  7
-#if defined _WIN32 || defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined _WIN32 || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /* tek 01aug97 index subtypes for the new messages */
 #define		SPC_subtype_bookmark	(0x0100) // this is already shifted.
 #define		SPC_subtype_wordpos		(0x0200)
@@ -325,7 +325,7 @@ typedef struct RING_struct {
 #define		SPC_subtype_sentence	(0x0500) // this is already shifted.
 #define		SPC_subtype_volume		(0x0600) // this is already shifted.
 #define		SPC_subtype_noise		(0x0700) // this is already shifted.
-#endif //_WIN32 || defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
+#endif //_WIN32 || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 
 #define SPC_type_sync                   8
 #define SPC_type_flush                  9
@@ -605,7 +605,7 @@ struct share_data {
  */
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	//P_PIPE          cmd_pipe;               /* cmd input  */
 	//P_PIPE          sync_pipe;              /* sync input */
 	//P_PIPE          buffer_pipe;            /* Used to pass buffers */
@@ -621,7 +621,7 @@ struct share_data {
 	// tek 21nov97 BATS 530 provide a secondary interlock on the
 	// pipe draining process to avoid deadlock
 	//#endif
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 /*
  *  language specific pipes and enables ...
@@ -986,7 +986,7 @@ void destroy_pipe( PIPE * );
 #endif // WIN32
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define _DEF_PIPES
 //#include "opthread.h"
 #endif
@@ -1018,11 +1018,11 @@ P_PIPE  create_pipe(int,int);
 #undef putc
 #endif
 
-#if defined __linux__ || defined (__APPLE__)
+#if defined __unix__ || defined (__APPLE__)
 #define putc(c)      putc(c,stderr)
 #else
 #define putc(c)
-#endif // __linux__
+#endif // __unix__
 #endif // !defined VXWORKS && !defined _SPARC_SOLARIS_
 /* Volume control */
 

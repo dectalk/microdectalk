@@ -1,0 +1,49 @@
+flags("MultiProcessorCompile")
+
+workspace("DECTalk")
+        configurations({
+                "Debug",
+                "Release"
+        })
+        platforms({
+                "Native"
+        })
+        defaultplatform("Native")
+
+filter({})
+
+project("libdtc")
+	kind("StaticLib")
+	targetname("dtc")
+	includedirs("include")
+	files("src/*.c")
+	removefiles("src/main.c")
+	characterset("MBCS")
+	defines({
+		"_REENTRANT",
+		"NOMME",
+		"LTSSIM",
+		"TTSSIM",
+		"ANSI",
+		"BLD_DECTALK_DLL",
+		"ENGLISH",
+		"ENGLISH_US",
+		"ACCESS32",
+		"TYPING_MODE",
+		"OS_SIXTY_FOUR_BIT",
+		"ACNA",
+		"DISABLE_AUDIO",
+		"SINGLE_THREADED",
+		"DICDEBUG",
+		"__inline="
+	})
+
+project("say")
+	kind("ConsoleApp")
+	includedirs("include")
+	files("src/main.c")
+	characterset("MBCS")
+	links({
+		"libdtc",
+		"m"
+	})

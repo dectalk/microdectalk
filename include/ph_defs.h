@@ -323,7 +323,7 @@
 
 /* 6. Various constants  */
 
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #if PC_SAMPLE_RATE == 10000
 #define NSAMP_FRAME     64			   /* # of samples per output frame 10 KHz. */
 #else

@@ -56,7 +56,7 @@
 #include <string.h>
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#include "opthread.h"
 #endif
 
