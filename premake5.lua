@@ -10,7 +10,17 @@ workspace("DECTalk")
         })
         defaultplatform("Native")
 
-filter({})
+newoption({
+        trigger = "build-speak",
+        value = "type",
+        description = "Build speak or not",
+        allowed = {
+		{"yes", "Build speak"},
+		{"no", "Do not build speak"}
+        },
+        category = "DECTalk",
+        default = "no"
+})
 
 project("libdtc")
 	kind("StaticLib")
@@ -47,3 +57,26 @@ project("say")
 		"libdtc",
 		"m"
 	})
+
+if _OPTIONS["build-speak"] == "yes" then
+	project("speak")
+		kind("ConsoleApp")
+		includedirs("include")
+		files("speak/*.c")
+		characterset("MBCS")
+		includedirs({
+			"/usr/X11R7/include",
+			"/usr/pkg/include"
+		})
+		libdirs({
+			"/usr/X11R7/lib",
+			"/usr/pkg/lib"
+		})
+		links({
+			"libdtc",
+			"m",
+			"Xpm",
+			"Xm",
+			"Xt"
+		})
+end
