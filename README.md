@@ -1,4 +1,4 @@
-A smaller version of dectalk indended for portability between platforms
+A smaller version of dectalk intended for portability between platforms
 supports unix-like operating systems and Android
 
 dependencies for gui:
