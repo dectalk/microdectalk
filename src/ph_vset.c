@@ -192,7 +192,7 @@ void setparam (LPTTS_HANDLE_T phTTS, int which, int value)
 	{								   /* Check for junk. */
 		return;
 	}
-	lp = &limit[which];
+	lp = (LIMIT*)&limit[which];
 
 	if(pVtm_t->bDoTuning) /* Ignore autotuned vals when autotuning *///
 	{

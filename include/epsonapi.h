@@ -1,6 +1,13 @@
 #ifndef _EPSONAPI_H
 #define _EPSONAPI_H
 //Sample rate selection
+#ifdef WAVE_FORMAT_1M16
+#undef WAVE_FORMAT_1M16
+#endif
+#ifdef WAVE_FORMAT_08M16
+#undef WAVE_FORMAT_08M16
+#endif
+
 #define WAVE_FORMAT_1M16  0x0001	// 11Khz Output (71 samles per buffer)
 #define WAVE_FORMAT_08M16 0x0002	// 8Khz Output (51 samples per buffer)
 

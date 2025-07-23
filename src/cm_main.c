@@ -68,7 +68,7 @@
 #include "string.h"
 #endif
 
-#if (defined  __linux__) || (defined UNDER_CE) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if (defined  __unix__) || (defined UNDER_CE) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 extern void FreeCMDThreadMemory(PCMD_T);
 #endif
@@ -90,7 +90,7 @@ struct share_data *kernel_share;
  *				main()
  *			#ifdef ARM7
  *				cmd_main()
- *			#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_
+ *			#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
  *				OP_THREAD_ROUTINE()
  *
  *      Description: 
@@ -124,7 +124,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 //#endif
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //OP_THREAD_ROUTINE( cmd_main, LPTTS_HANDLE_T phTTS )
 #endif
 
@@ -143,7 +143,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 	pKsd_t = phTTS->pKernelShareData;    
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     /* Initialize thread error field to no error */
     //phTTS->uiThreadError = MMSYSERR_NOERROR;
 #endif
@@ -171,7 +171,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 #endif
 #endif
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	if((pCmd_t= (PCMD_T) calloc(1,sizeof(CMD_T))) == NULL)
             printf("Error\n");
 //	        phTTS->uiThreadError = MMSYSERR_NOMEM;
@@ -217,7 +217,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 	}
 #endif
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     /* 
 	 * CP: Set the event, even if malloc eerror occurred. User
      * will look at uiThreadError for actual error code.
@@ -261,7 +261,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 	return 0;
 #endif
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     //OP_ExitThread(MMSYSERR_NOERROR);
 	//OP_THREAD_RETURN;
 #endif

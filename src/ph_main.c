@@ -109,7 +109,7 @@
 #include "cemm.h"
 #endif //UNDER_CE
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 #endif
 
@@ -188,7 +188,7 @@ short TOT_ALLOPHONES = (PH_LAST_PH+1);  /* total number of phones */
 
 /* MVP : Function prototypes */
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern void spcfree(unsigned short *);
 #endif
 
@@ -250,7 +250,7 @@ int ph_main(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change to be the same as the latest OSF code */
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 DWORD ph_main(LPTTS_HANDLE_T phTTS)
 #endif
 
@@ -291,7 +291,7 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 			pDph_t->phTTS=phTTS;
 #else
 	pKsd_t = phTTS->pKernelShareData;
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     /* GL 04/21/1997  add this as the latest OSF code */
     /* Initialize thread error field to no error */
     //phTTS->uiThreadError = MMSYSERR_NOERROR;
@@ -679,7 +679,7 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 #if defined (MSDOS) || defined (WIN32)
 	return 0;						/* No error MVP */
 #endif
-#if defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	return MMSYSERR_NOERROR;
 #endif
 #endif

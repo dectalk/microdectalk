@@ -1,3 +1,7 @@
 *.o
+/bin
+/obj
+/*.make
+/Makefile
 out/
 toolchain

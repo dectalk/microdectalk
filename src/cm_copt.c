@@ -164,7 +164,7 @@ void send_index( int how, int value );
 #include "string.h"
 #endif
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef __cplusplus
 extern "C" { 
 #endif //__cplusplus
@@ -178,7 +178,7 @@ void wait_semaphore( P_SEMAPHORE );
 #endif //__cplusplus
 #else
 extern void wait_semaphore( P_SEMAPHORE ); 
-#endif //__linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif //__unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 
 #ifndef MSDOS
@@ -509,7 +509,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RESERVE );*/
   //OP_LockMutex( phTTS->pcsLogFile );
 #endif
@@ -525,7 +525,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -546,7 +546,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -565,7 +565,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -585,7 +585,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -638,7 +638,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 #endif // WIN32
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RESERVE );*/
   //OP_LockMutex( phTTS->pcsLogFile );
 #endif
@@ -654,7 +654,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -682,7 +682,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -699,7 +699,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*ToggleLogfileMutex( MUTEX_RELEASE );*/
     //OP_UnlockMutex( phTTS->pcsLogFile );
 #endif
@@ -885,7 +885,7 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*LPTTS_HANDLE_T phTTS; */
   DWORD dwDelay;
 #ifdef WIN32
@@ -925,7 +925,7 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     while ((dwDelay > 0) && ( ! pKsd_t->halting))
     {	if ( dwDelay > 10)
         {	//OP_Sleep(10);
@@ -940,7 +940,7 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 #endif
   }
   return(CMD_success);
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 #else // ARM7
   return(CMD_success);
 #endif // ARM7
@@ -970,7 +970,7 @@ int cm_cmd_resume(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   if( cm_cmd_sync(phTTS) == CMD_flushing )
 	return(CMD_flushing);
 
@@ -1118,7 +1118,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 #endif /* #ifdef MSDOS */       
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
   DT_PIPE_T pipe_value;
 
 /*  LPTTS_HANDLE_T phTTS; */    /* MVP MI earlier the value of phTTS used to get by
@@ -1134,7 +1134,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     //OP_ResetEvent( phTTS->hSyncEvent );
 #endif
 
@@ -1150,7 +1150,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     //OP_WaitForEvent( phTTS->hSyncEvent, OP_INFINITE );
 #endif
 
@@ -1161,7 +1161,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 
   return(CMD_success);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 }
 
 /* ******************************************************************
@@ -1198,7 +1198,7 @@ int cm_cmd_enable(PKSD_T pKsd_t)
 		kernel_enable(old_flags);
 #endif
 
-#if !defined __linux__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ || defined (__APPLE__)
 		wait_semaphore(&pKsd_t->spc_sync);
 #endif
 	}
@@ -1438,7 +1438,7 @@ int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
    while (flag) 
    {
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined __EMSCRIPTEN__ || defined (__APPLE__)
           //read_pipe(pKsd_t->cmd_pipe, &temp[j], 1);
 #endif
 
@@ -2875,7 +2875,7 @@ int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
 				Sleep(100);
 #endif
 				
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 				//OP_Sleep(100);
 #endif
 				
@@ -3018,7 +3018,7 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	pipe[5] = 0;
 	
 	/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	vtm_loop(phTTS,pipe);
 #endif
 
@@ -3241,10 +3241,10 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 	else
@@ -3261,9 +3261,9 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	  /****************************************************************/
 	  /*  Interdigital space.                                         */
@@ -3277,10 +3277,10 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 

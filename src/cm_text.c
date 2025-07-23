@@ -147,7 +147,7 @@ extern const unsigned short parser_char_types[];
 extern const unsigned char *par_illegal_cluster[];
 extern const unsigned char par_lower[];
 
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 // MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
 extern int _far par_dict_lookup(LPTTS_HANDLE_T, char *, int);
 #endif
@@ -517,7 +517,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	else
 	{
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		/* GL 09/30/1997 BATS# 475 redesign the header detection code */
 		unsigned char header1[]={"From"};
 		unsigned char header2[]={"Return-Path:"};
@@ -542,7 +542,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
       	   ((header_buff[0] == 0xd && header_buff[1] == 0xa) || (header_buff[0] == 0xa)))
 #endif
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		if ((pCmd_t->email_header == 1) && (header_buff[0] == 0xa))
 #endif
 		{   
@@ -569,7 +569,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		&& (pCmd_t->clausebuf[pCmd_t->input_counter-2] == 0xd))
 #endif
 /* GL 04/21/1997  add this for OSF build */
-#if defined __linux__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		if (pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa)
 #endif
 		{
@@ -635,7 +635,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		else
 		{
 		  /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		  if ((pCmd_t->skip_mode != SKIP_email) &&
 		      ((pKsd_t->modeflag & MODE_EMAIL) != 0))
 		    {
@@ -838,7 +838,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 
 				temp_mode = 0x00000001 << pCmd_t->punct_mode;
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__linux__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 
 				if ((pKsd_t->modeflag & MODE_EMAIL) != 0)
 				{
