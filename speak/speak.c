@@ -202,9 +202,9 @@ int main(int argc, char** argv){
 	ma_mutex_init(&speaking);
 
 	top = XtVaAppInitialize(&ctx, "Speak", NULL, 0, &argc, argv, NULL, XtNtitle, "Speak",
-		XmNmaxWidth, 640,
+		XmNmaxWidth, 660,
 		XmNmaxHeight, 480,
-		XmNminWidth, 640,
+		XmNminWidth, 660,
 		XmNminHeight, 480,
 	NULL);
 	if(top == NULL){
@@ -325,7 +325,7 @@ int main(int argc, char** argv){
 
 	XtManageChild(w_form);
 
-	XtResizeWidget(top, 640, 480, 1);
+	XtResizeWidget(top, 660, 480, 1);
 	XtRealizeWidget(top);
 
 	XtAppMainLoop(ctx);
