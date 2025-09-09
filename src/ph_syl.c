@@ -378,7 +378,7 @@ static short syl_find_affix (PDPH_T pDph_t, int *ph)
 
 #ifndef MSDOS
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <mmsystem.h>
 #endif
@@ -426,7 +426,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
  */
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	//EnterCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -580,7 +580,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 #endif // #ifdef MSDOS
 
 	}
-#ifdef WIN32
+#ifdef WIN32_OLD
 	//LeaveCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -777,7 +777,7 @@ static void speak_syllable (LPTTS_HANDLE_T phTTS)
 {
 /* GL 04/21/1997  change this as the latest OSF code */
 #ifndef MSDOS
-//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	DT_PIPE_T               pipe_item[1];
 #endif
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
@@ -803,7 +803,7 @@ static void speak_syllable (LPTTS_HANDLE_T phTTS)
 #ifndef  MSDOS
 	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
 	{
-//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	pipe_item[0] = SPC_type_force;
 	vtm_loop(phTTS,pipe_item);
 	}

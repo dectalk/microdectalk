@@ -76,19 +76,23 @@
 #include "dtmmedefs.h"
 //#include "opthread.h"
 #include <unistd.h>
+#ifdef _WIN32
+#include "../mman-win32/mman.h"
+#else
 #include <sys/mman.h>
+#endif
 #endif
 
 #include "ls_def.h"
  
-#ifdef WIN32
+#ifdef WIN32_OLD
 /* GL 10/30/1996, change to mmalloc.h as V4.3 */
 #include "mmalloc.h"
 #include "ttsapi.h"
 #ifndef UNDER_CE
 #include <time.h> // tek 14may98 needed for dic load log
 #endif //UNDER_CE
-#endif // WIN32
+#endif // WIN32_OLD
 
 // global varable in memory mapping fails
 //int	dicfallback = MEMMAP_ON;
@@ -116,7 +120,7 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 {
 	if(dict_map && dicMapStartAddr && *dicMapStartAddr)
 	{	
-#ifdef WIN32
+#ifdef WIN32_OLD
 		if(UnmapViewOfFile(*dicMapStartAddr)) //unmap file and close all handles
 		{ 	CloseHandle(*dicMapObject);
 			CloseHandle(*dicFileHandle);
@@ -125,11 +129,11 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 			return;
 		}
 		return;
-#endif // WIN32
+#endif // WIN32_OLD
 
 #if defined __unix__ || defined __osf__ || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-		munmap(*dicMapStartAddr,(long)*dicMapObject);
-		close((long)*dicFileHandle);
+		munmap(*dicMapStartAddr,(PTRINT)*dicMapObject);
+		close((PTRINT)*dicFileHandle);
 		*dicMapStartAddr=NULL;
 		*dicMapObject=0;
 		*dicFileHandle=0;
@@ -140,13 +144,13 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 		{
 			/* Make dict_ref point to real head of dictionary 
 			(including the 4 bytes storing the size), JAW 7/7/98 */
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 			freeLock( *dict_index );
 #else
 			free( *dict_index );
 #endif
 			*dict_index = (void *)NULL;
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 			freeLock( *dict_data );
 #else
 			free( *dict_data );
@@ -175,7 +179,7 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 
  *					dict_name				Name of the dictionary databse file
  *
- *      Return Value:	#ifdef WIN32
+ *      Return Value:	#ifdef WIN32_OLD
  *							MMRESULT
  *						#else
  *							int
@@ -188,7 +192,7 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
  *      Comments:
  *
  * *****************************************************************/
-#ifdef WIN32
+#ifdef WIN32_OLD
 void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
 
 #ifdef UNDER_CE
@@ -253,7 +257,7 @@ restart:if ( *dict_siz > 0 )
 		if ( bRequired )
 		{
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 			/* tek 14may98 We have had several OEMs who have had trouble
 			getting their registry entries and install scripts configured
 			to load the dictionary correctly. To help with this, log
@@ -302,7 +306,7 @@ restart:if ( *dict_siz > 0 )
 			/*    *dict_siz = 0xFFFFFFFF;   */
 #else
 			fprintf(stderr,"Failed to open dictionary file %s\n",dict_nam);
-#endif //WIN32
+#endif //WIN32_OLD
 			return ( MMSYSERR_INVALPARAM );
 
 		}
@@ -316,7 +320,7 @@ restart:if ( *dict_siz > 0 )
 	/* Read in file header */
 	if ( fread( &entries, 4, 1, dict_file ) != 1 )
     {
-#ifdef WIN32  
+#ifdef WIN32_OLD  
 		if ( bReportToWindow )
 		{	
                     TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_ERROR );
@@ -325,7 +329,7 @@ restart:if ( *dict_siz > 0 )
 #else	
 		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
 		perror("load_dictionary"); 
-#endif // WIN32
+#endif // WIN32_OLD
 
 		fclose(dict_file);
 		return ( MMSYSERR_ERROR );
@@ -344,7 +348,7 @@ restart:if ( *dict_siz > 0 )
 	pointer_list_size = ( entries * sizeof(S32) );
 	if ( fread( &bytes, 4, 1, dict_file ) != 1 )
     {  
-#ifdef WIN32
+#ifdef WIN32_OLD
 		if ( bReportToWindow )
 		{	TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_ERROR );
 		}
@@ -366,7 +370,7 @@ restart:if ( *dict_siz > 0 )
 {
 	if ( fread( &fc_entries, 4, 1, dict_file ) != 1 )
     {  
-#ifdef WIN32
+#ifdef WIN32_OLD
 		if ( bReportToWindow )
 		{	TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_ERROR );
 		}
@@ -391,7 +395,7 @@ restart:if ( *dict_siz > 0 )
 
 	if(dict_map)
 	{   
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifdef UNDER_CE
 		MultiByteToWideChar(CP_ACP,0,dict_nam,strlen(dict_nam),wdict_nam,sizeof(wdict_nam));
 		*dicFileHandle = CreateFileForMapping(wdict_nam, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,  FILE_ATTRIBUTE_NORMAL, NULL);
@@ -447,20 +451,20 @@ restart:if ( *dict_siz > 0 )
 			goto restart;
 		}
 	  
-#endif // WIN32
+#endif // WIN32_OLD
 
 #if defined __unix__ || defined __osf__  || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__) //|| defined VXWORKS
 		fclose(dict_file);
 		// open the file */
-		*dicFileHandle=(DT_HANDLE)(long)open(dict_nam,O_RDONLY);
-		if (((long)*dicFileHandle)==-1)
+		*dicFileHandle=(DT_HANDLE)(PTRINT)open(dict_nam,O_RDONLY);
+		if (((PTRINT)*dicFileHandle)==-1)
 		{	*dicFileHandle=0;
 			return(MMSYSERR_ERROR);
 		}
-		*dicMapObject=(DT_HANDLE)(unsigned long)(size+8);
-		*dicMapStartAddr=mmap(0,size+8,PROT_READ,MAP_SHARED,(long)*dicFileHandle,0);
-		if (((long)*dicMapStartAddr)==-1)
-		{	close((long)*dicFileHandle);
+		*dicMapObject=(DT_HANDLE)(PTRINT)(size+8);
+		*dicMapStartAddr=mmap(0,size+8,PROT_READ,MAP_SHARED,(PTRINT)*dicFileHandle,0);
+		if (((PTRINT)*dicMapStartAddr)==-1)
+		{	close((PTRINT)*dicFileHandle);
 			*dicFileHandle=0;
 			*dicMapObject=0;
 			*dicMapStartAddr=0;
@@ -478,21 +482,21 @@ restart:if ( *dict_siz > 0 )
 	else
 #endif
 		{
-			dict_index_buffer = (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+			dict_index_buffer = (int *)(PTRINT)((((QWORD)(PTRINT)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
 		}
 	  
-		dict_data_buffer = (unsigned char *)(pointer_list_size + ((QWORD)dict_index_buffer)); //start 	  	  
+		dict_data_buffer = (unsigned char *)(PTRINT)(pointer_list_size + ((QWORD)(PTRINT)dict_index_buffer)); //start 	  	  
 	}
 	else
 	{ 
   
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 		if ( !( dict_index_buffer = (void *)mallocLock(pointer_list_size )))
 #else
 		if ( !( dict_index_buffer = (S32 *)malloc(pointer_list_size )))
 #endif
 		{
-#ifdef WIN32
+#ifdef WIN32_OLD
 		if ( bReportToWindow )
 		{	TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_NOMEM );
 		}
@@ -505,14 +509,14 @@ restart:if ( *dict_siz > 0 )
 		return( MMSYSERR_NOMEM );
 	}
 
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 	if ( !( dict_data_buffer = (void *)mallocLock(bytes +1)))
 #else
     if ( !( dict_data_buffer = (unsigned char *)malloc(bytes +1)))
 #endif
 	{
 
-#ifdef WIN32	
+#ifdef WIN32_OLD	
 		if ( bReportToWindow )
 		{
 			TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_NOMEM );
@@ -537,7 +541,7 @@ restart:if ( *dict_siz > 0 )
 	/* read in the index table */
 	if (fread(dict_index_buffer,4,entries,dict_file)!=(unsigned)entries)
 	{
-#ifdef WIN32
+#ifdef WIN32_OLD
 		if ( bReportToWindow )
 		{	TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_ERROR );
 		}
@@ -558,7 +562,7 @@ restart:if ( *dict_siz > 0 )
 		status = feof( dict_file );
 		free(dict_index_buffer);
 		free(dict_data_buffer);
-#endif // WIN32
+#endif // WIN32_OLD
 
 		fclose(dict_file);
 		return( MMSYSERR_ERROR );
@@ -567,7 +571,7 @@ restart:if ( *dict_siz > 0 )
 	/* Read in the rest of the dictionary */
 	if ( fread( dict_data_buffer, bytes, 1, dict_file ) != 1 )
 	{
-#ifdef WIN32	
+#ifdef WIN32_OLD	
 		if ( bReportToWindow )
 		{	TextToSpeechErrorHandler( phTTS, ERROR_READING_DICTIONARY, MMSYSERR_ERROR );
 		}
@@ -585,7 +589,7 @@ restart:if ( *dict_siz > 0 )
 		perror("load_dictionary");
 		free(dict_index_buffer);
 		free(dict_data_buffer);
-#endif // WIN32
+#endif // WIN32_OLD
 		fclose(dict_file);
 		return( MMSYSERR_ERROR );
 	}

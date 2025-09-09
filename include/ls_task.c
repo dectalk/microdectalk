@@ -499,7 +499,7 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 
 		/* ET 6/9/1998: BATS #691
 		copied from ...\dapi\src\CMD\cm_pars.c to get the debug win to come up */
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		/* open debug window for window environement */
 		if (/*(windbg_flag == 0) && ET 6/9/1998*/(Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{

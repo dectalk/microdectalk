@@ -35,7 +35,7 @@
  * 							the one in the "wh" code be UNK_WH.
  *  005	GL		05/10/1995	Get the order right. lsdefs.h should be before ltsp.h
  *  006	MGS		02/02/1996	Moved old lsdef.h to ls_def.h   
- *  007 MGS		03/18/1996	Finished WIN32 code merge, function headers need updating
+ *  007 MGS		03/18/1996	Finished WIN32_OLD code merge, function headers need updating
  *  008 MGS		03/27/1996	Changed ls_prot.h to ls_protp.h for automatic
  *							 prototype generation
  *  009	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
@@ -63,7 +63,7 @@
 
 #include "tts.h"    /* For the declarartion of LPTTS_HANDLE_T */
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include "dbgwins.h"
 #include <windows.h>
 #endif
@@ -133,7 +133,7 @@
 
 /* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define printf WINprintf
 #endif
 #if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)

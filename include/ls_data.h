@@ -30,8 +30,8 @@
  *                                                                             
  *	Rev	Who		Date			Description                    
  *	---	-----	-----------		---------------------------------------
- *	001	MGS		02/29/1996		Added LTS_T instance data structure for WIN32 merge
- *	002	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *	001	MGS		02/29/1996		Added LTS_T instance data structure for WIN32_OLD merge
+ *	002	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  *  003 GL		10/03/1996		change rpart to U16 instead of S16.(to take care of the longer
  *								rule table indexing.    
  *  004	GL		04/21/1997		BATS#357  Add the code for __osf__ build 

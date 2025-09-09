@@ -40,7 +40,7 @@
  * 008	GL		02/02/1996		Add codes to support Spanish and German user dictionary.
  * 009	MGS		02/07/1996		Moved code to ls_dict.c
  * 010 	MGS		02/27/1996		Added function headers and reformatted code
- * 011	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ * 011	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 012  GL		05/12/1996		Add codes to support French dictionary search
  *								also allow "I" to perform dictionary search.
  * 013  GL		05/15/1996		limit should point to DICT_ENTRY
@@ -1682,7 +1682,7 @@ MMRESULT DumpUserDictionary(LPTTS_HANDLE_T phTTS, char *filename)
  * ******************************************************************/
 void *UserDictionaryHead(PKSD_T pKsd_t)
 {
-	return (void *) ((long) UDICT_INDEX );
+	return (void *) ((PTRINT) UDICT_INDEX );
 }
 
 
@@ -1764,13 +1764,13 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		entry_size = GetUserEntrySize(entry);
 		dict_bytes = 4 + entry_size; /* 4 bytes for dict_bytes, 4 bytes for the pointer */
 
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 		if (!(UDICT_INDEX = (S32 *) mallocLock(4)))
 #else
 		if (!(UDICT_INDEX_ASSIGN = (S32 *) malloc(4)))
 #endif
 			return MMSYSERR_NOMEM;
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 		if (!(UDICT_DATA = (unsigned char *) mallocLock(entry_size)))
 #else
 		if (!(UDICT_DATA = (unsigned char *) malloc(entry_size)))
@@ -1840,7 +1840,7 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 
 	/* reallocate the dictionary */
 
-#if defined (WIN32) && !defined (UNDER_CE)
+#if defined (WIN32_OLD) && !defined (UNDER_CE)
 	//tek 18jun98 this is inconsistent; use reallocLock.
 	if ((UDICT_INDEX = reallocLock(UDICT_INDEX, (UDICT_ENTRY+1) * sizeof(S32))) == NULL)
 	{
@@ -1861,7 +1861,7 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		return MMSYSERR_NOMEM;
 	}
 
-#endif // defined (WIN32) && !defined (UNDER_CE)
+#endif // defined (WIN32_OLD) && !defined (UNDER_CE)
 
 #ifdef LTS_DEBUG
 		{
@@ -1954,7 +1954,7 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		}
 #endif // LTS_DEBUG
 
-#if (defined WIN32) && (!defined UNDER_CE)
+#if (defined WIN32_OLD) && (!defined UNDER_CE)
 		freeLock(UDICT_INDEX);
 		freeLock(UDICT_DATA);
 #else
@@ -1985,7 +1985,7 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 
 	/* reallocate the dictionary */
 
-#if defined (WIN32) && !defined (UNDER_CE)
+#if defined (WIN32_OLD) && !defined (UNDER_CE)
 	// tek 18jun98 must be reallocLock..
 	UDICT_INDEX = reallocLock(UDICT_INDEX, (UDICT_ENTRY-1) * sizeof(S32));
 	UDICT_DATA = reallocLock(UDICT_DATA, new_size);

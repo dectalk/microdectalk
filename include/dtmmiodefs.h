@@ -136,7 +136,15 @@
 
 /* MMIO data types */
 typedef DWORD FOURCC;         /* a four character code */
+#ifdef _WIN32
+#ifdef _WIN64
+typedef QWORD HMMIO;          /* a handle to an open file */
+#else
+typedef DWORD HMMIO;          /* a handle to an open file */
+#endif
+#else
 typedef long HMMIO;          /* a handle to an open file */
+#endif
 typedef LPSTR HPSTR;          /* a huge version of LPSTR */
 
 typedef MMRESULT MMIOPROC

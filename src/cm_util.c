@@ -343,7 +343,7 @@ void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode)
 
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined ARM7 || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined ARM7 || defined (__APPLE__)
 /*
  *      Function Name: cm_util_dtpc_tones() 
  *
@@ -422,13 +422,13 @@ int cm_util_dtpc_tones( LPTTS_HANDLE_T phTTS,
   pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   vtm_loop(phTTS,pipe);
 #endif
 
   return( CMD_success );
 }
-#endif /* (WIN32) || (__osf__) || (__unix__)*/
+#endif /* (WIN32_OLD) || (__osf__) || (__unix__)*/
 
 #ifdef MSDOS
 /*

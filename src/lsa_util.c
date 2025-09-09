@@ -30,7 +30,7 @@
  *  Rev Who     Date        	Description                    
  *  --- -----   ----------- 	---------------------------------------
  *  001 MGS     02/13/1996 		Moved functions fron ACNA code tree to lsa_util.c
- *	002 MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *	002 MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  *	003	MGS		03/27/1996		Added ACNA compile switch and ls_util.c as an 
  * 								include file a tthe bottom
  *  004 TQL     02/05/1997      Moved #include "ls_def.h" to follow #define ACNA 

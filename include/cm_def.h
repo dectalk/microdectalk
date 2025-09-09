@@ -29,7 +29,7 @@
  *
  * Rev	Who     Date            Description
  * ---  -----   -----------     -----------------------------------------
- * 001  MGS     04/22/1996      Added WIN32 includes and cmd.h
+ * 001  MGS     04/22/1996      Added WIN32_OLD includes and cmd.h
  * 002	SIK	    09/23/1996	    remove NEW_INDEX definition if in VOCAL mode
  * 003	GL	    04/21/1997	    BATS#357  Add the code for __osf__ build 
  * 004 	GL	    04/21/1997	    BATS#360  remove spaces before "#define" or "#if" 
@@ -46,7 +46,7 @@
 
 #include "dectalk.h"
  
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
@@ -80,7 +80,7 @@
 
 /* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define printf WINprintf
 #endif
 #if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)

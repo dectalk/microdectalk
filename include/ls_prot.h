@@ -30,7 +30,7 @@
  *  Rev Who     Date            Description                    
  *  --- -----   --------        ---------------------------------------
  *  001 MGS		02/08/1996		Renamed from ltsp.h    
- *  002 MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *  002 MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  *  003 jdb		06/12/1996		added spanish prototypes, if-def'd english
  *  004 GL		11/15/1996		add un_flag as the argument for Spanish do_group()
  *								pass TRUE if want "1 --> uno"
@@ -93,7 +93,7 @@ extern void ls_rule_do_lts(LPTTS_HANDLE_T phTTS, LETTER *lp2, LETTER *lp1);
 extern int ls_util_is_name(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp);
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern  void ls_task_main(LPTTS_HANDLE_T phTTS);
 #endif
 

@@ -63,7 +63,7 @@
  * 019  SGS		09/17/1990    	Added PR control switches
  * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG
  * 021  JDB		09/17/1995   	Replaced /n's with \n's.
- * 022  MGS 	03/21/1996	  	WIN32 code merge 
+ * 022  MGS 	03/21/1996	  	WIN32_OLD code merge 
  * 023	MGS	 	05/31/1996		kltask moved to ph_task.c file
  * 024	MGS		05/31/1996		Merged spanish with english
  * 025	MGS		06/06/1996		Changed file name from phmain.c ph_main.c
@@ -71,7 +71,7 @@
  * 027  GL		10/26/1996		merge the TEK 8/13/96 change into the code
  * 028  GL		12/05/1996		remove the language pipe hack for DTEX.
  * 029  GL		12/11/1996		initialize the lang_curr only for MSDOS
- *								also remove the WIN32 language pipe hack
+ *								also remove the WIN32_OLD language pipe hack
  * 030	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
  * 031	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
  * 032  DR		09/30/1997		UK BUILD: added UK STUFF
@@ -217,7 +217,7 @@ void spcfree(unsigned short *); // NAL warning removal
  *
  */
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 
 int __stdcall ph_main (LPTTS_HANDLE_T phTTS)
 
@@ -676,7 +676,7 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 
 	kltask (phTTS);
 	return MMSYSERR_NOERROR;
-#if defined (MSDOS) || defined (WIN32)
+#if defined (MSDOS) || defined (WIN32_OLD)
 	return 0;						/* No error MVP */
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)

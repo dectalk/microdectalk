@@ -36,7 +36,7 @@
  *							add make sure LATIN mode get the correct logging for Spanish
  *  004 GL		03/21/1997  for BATS#305	
  *							need to send the space for single phoneme character logging
- *							for WIN32
+ *							for WIN32_OLD
  *  005 GL		03/24/1997  for BATS#313	
  *							the ascky logging should no have the spaces.
  *  006	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
@@ -60,7 +60,7 @@
 #include "dectalkf.h"
 #include		"port.h"
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 
@@ -91,7 +91,7 @@ extern unsigned char german_arpa[];
 extern unsigned char uk_arpa[];
 extern unsigned char french_arpa[];
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 #define printf WINprintf
 #endif
 
@@ -160,7 +160,7 @@ char                   *logspnames[] =
 
 #ifndef MSDOS
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <mmsystem.h>
 #endif
@@ -214,7 +214,7 @@ logclaus (LPTTS_HANDLE_T phTTS,
 	for (i = 1; i < nsym; ++i)
 	{
 		cnt++;
-#ifdef WIN32
+#ifdef WIN32_OLD
 		EnterCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -257,7 +257,7 @@ logclaus (LPTTS_HANDLE_T phTTS,
 			}
 		}
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 		LeaveCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -352,7 +352,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 	WAIT_PRINT;
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	EnterCriticalSection (phTTS->pcsLogFile);
 #endif
 
@@ -569,7 +569,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 		break;
 	}
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	//LeaveCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -608,7 +608,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 	 * LPTTS_HANDLE_T phTTS; phTTS = TextToSpeechGetHandle(); */
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	//EnterCriticalSection (phTTS->pcsLogFile);
 #endif
 
@@ -846,7 +846,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 #endif
 #endif // MSDOS
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	//LeaveCriticalSection (phTTS->pcsLogFile);
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)

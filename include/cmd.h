@@ -88,7 +88,7 @@
 #define	PAPAUSE			((PFCONTROL<<PSFONT)+16)
 #define	CNTRLK			((PFCONTROL<<PSFONT)+17)
 #define RESET                   ((PFCONTROL<<PSFONT)+18)
-//#ifdef _WIN32 // tek 01aug97 bats 404 new index control codes
+//#ifdef WIN32_OLD // tek 01aug97 bats 404 new index control codes
 // WARNING: these are also in cm_defs.h!
 #define	INDEX_BOOKMARK	((PFCONTROL<<PSFONT)+19)
 #define	INDEX_WORDPOS	((PFCONTROL<<PSFONT)+20)
@@ -97,7 +97,7 @@
 #define	INDEX_SENTENCE	((PFCONTROL<<PSFONT)+24)
 #define	INDEX_VOLUME	((PFCONTROL<<PSFONT)+25)
 #define	INDEX_NOISE		((PFCONTROL<<PSFONT)+26)
-//#endif //_WIN32
+//#endif //WIN32_OLD
 #define WORD_CLASS		((PFCONTROL<<PSFONT)+23)
 #define PREAMBLE		((PFCONTROL<<PSFONT)+27)
 
@@ -194,7 +194,7 @@
 #define SPD_OQ  	36
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define SPD_OS		37
 #define SPD_NM		38
 #define SPDEF		39

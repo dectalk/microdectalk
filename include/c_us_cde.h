@@ -326,7 +326,7 @@ const unsigned char *index_options[] = {
 	"reply",
 	"query",
 	"pause",
-#ifdef _WIN32	//tek 12nov97 bats404 new index types
+#ifdef WIN32_OLD	//tek 12nov97 bats404 new index types
 	"bookmark",
 	"wordpos",
 	"start",
@@ -334,7 +334,7 @@ const unsigned char *index_options[] = {
 	"sentence",
 	"volume",
 	"noise",
-#endif //_WIN32
+#endif //WIN32_OLD
 	0
 };
 

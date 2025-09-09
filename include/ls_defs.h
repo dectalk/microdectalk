@@ -34,7 +34,7 @@
  *	001 MGS		02/02/1996		Moved lsdefs.h to ls_def.h
  *	002	MGS		02/02/1996		Moved other #defines and typedefs to ls_defs.h	
  *	003	MGS		02/22/1996		Changed NON_VOWEL(C) macro to special characters
- *	004	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *	004	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  *	005	DR		07/21/1997		UK BUILD: Changed ENGLISH_US to ENGLISH or added ENGLISH_UK
  *  006	MFG		06/18/1998		SPANISH_SP & SPANISH_LA support added
  *  007	MGS		04/13/2000		Changes for integrated phoneme set 

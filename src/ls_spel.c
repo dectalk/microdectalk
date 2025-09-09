@@ -34,7 +34,7 @@
  * 003	MGS		02/26/1996		Added function headers
  * 004	MGS		02/26/1996		ls_spel_spell now uses ls_lower for case folding
  * 005	MGS		02/26/1996		NON_VOWEL changed to !IS_VOWEL 
- * 006	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ * 006	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 007	GL		07/29/1996		use ls_util_write_pipe() to replace write_pipe()
  * 008	GL		11/22/1996		remove extra SIL in ls_spel_spell()
  * 009	DR		07/21/1997		UK BUILD: ENGLISH_US was changed to ENGLISH or added a copy as ENGLISH_UK 

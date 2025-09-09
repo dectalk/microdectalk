@@ -73,7 +73,7 @@
  * 014  JDB 	09/17/1995	    Fix \n's in printfs...
  * 015  GL		08/26/1995     	update the readphone() routine to be same as phmain.c
 #endif
- * 022  MGS		03/21/1996	    WIN32 code merge
+ * 022  MGS		03/21/1996	    WIN32_OLD code merge
  * 023	MGS		06/06/1996 		Merged spanish with english
  * 024	MGS		06/18/1996	 	Merged german with spanish/english
  * 025	SIK		07/08/1996  	Cleaning up and maintenance
@@ -81,7 +81,7 @@
  * 027  GL		09/16/1996		Add debug switch
  * 028  GL      10/03/1996		use period to end the [:sync] or control-K
  * 029	GL		11/11/1996		Add US_AND_SP dual language support for DTEX
- * 030	GL		12/11/1996		remove the WIN32 language pipe hack
+ * 030	GL		12/11/1996		remove the WIN32_OLD language pipe hack
  * 031	GL		03/27/1997		for BATS#319 
  *                              add 0800 debug switch.
  * 032	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
@@ -99,9 +99,9 @@
  *                              Included objbase.h for CoTaskMemAlloc.
  * 042 JAW      04/27/1998      Added support for glottal speed in GetSpeakerParams and
  *                              SetSpeakerParams.  Made both functions access output gain
- *                              multiplier only if WIN32 or __osf__ is defined and i386 isn't.
+ *                              multiplier only if WIN32_OLD or __osf__ is defined and i386 isn't.
  * 043 JAW      05/01/1998      In GetSpeakerParams, made it so CoTaskMemAlloc/CoTaskMemFree
- *                              will only be used if WIN32 is defined; otherwise, malloc/free
+ *                              will only be used if WIN32_OLD is defined; otherwise, malloc/free
  *                              will be used.
  * 044 JAW      05/04/1898      Made GetSpeakerParams and SetSpeakerParams only be compiled
  *                              under non-MS-DOS environments.
@@ -155,7 +155,7 @@
 #include <string.h>
 #endif
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 #include "objbase.h" /* for CoTaskMemAlloc and CoTaskMemFree, JAW 4/6/98 */
 #endif
 
@@ -453,13 +453,13 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 #endif
 /* GL 04/21/1997  change to be the same as the latest OSF code */
 #ifndef MSDOS
-//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 			buf[0] = SPC_type_sync;
 			vtm_loop(phTTS,buf);
 #endif // #ifndef MSDOS
 #endif // SEPARATE_PROCESSES
 		/* 
-		 * #ifdef WIN32 buf[0] = SPC_type_sync; 
+		 * #ifdef WIN32_OLD buf[0] = SPC_type_sync; 
 		 * write_pipe( pKsd_t->vtm_pipe, buf, 1 ); 
 		 * #endif 
 		 * #ifdef __osf__ buf[0] = SPC_type_sync; 
@@ -534,7 +534,7 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 		/* debug eab */
 		if (   buf[0] == INDEX 
 			|| buf[0] == INDEX_REPLY   // tek 01aug97 bats 404 new msg types
-#ifdef _WIN32
+#ifdef WIN32_OLD
 			|| buf[0] == INDEX_BOOKMARK
 			|| buf[0] == INDEX_WORDPOS
 			|| buf[0] == INDEX_START
@@ -542,7 +542,7 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 			|| buf[0] == INDEX_SENTENCE
 			|| buf[0] == INDEX_VOLUME
 			|| buf[0] == INDEX_NOISE
-#endif //_WIN32
+#endif //WIN32_OLD
 		   )
 		{
 #ifdef MSDOS
@@ -1007,7 +1007,7 @@ if (pKsd_t->lang_curr!=LANG_french)
 	if (pDph_t->nsymbtot>1)
 	{
 #ifndef MSDOS
-	//#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
+	//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
 	/* write forced clause boundary symbol to VTM */
 	pipe_item[0] = SPC_type_force;
 	/* debug switch GL 3/27/1997 BATS#319 */
@@ -1197,7 +1197,7 @@ int mstofr (int nms)
  *      Comments:
  *
  * *****************************************************************/
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifdef SAPI_GROUP_F_INTERFACES
 int GetCurrentPitch(LPTTS_HANDLE_T phTTS, int *pitch)
 {
@@ -1324,7 +1324,7 @@ short *GetPhVdefParams(LPTTS_HANDLE_T phTTS, UINT index)
 {
 	short *params=NULL;
 	
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 	params = (short *) CoTaskMemAlloc(sizeof(SPDEFS));
 #else
 	params = (short *) malloc(sizeof(SPDEFS));
@@ -1332,7 +1332,7 @@ short *GetPhVdefParams(LPTTS_HANDLE_T phTTS, UINT index)
 
 	if (params == NULL)
 	{
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 		CoTaskMemFree(params);
 #else
 		free(params);
@@ -1406,7 +1406,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	pKsd_t = phTTS->pKernelShareData;
 	voice = pKsd_t->last_voice;
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 	*ppspCur     = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
 #else
 	*ppspCur     = (SPDEFS *) malloc(sizeof(SPDEFS));
@@ -1415,7 +1415,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	if (*ppspCur == NULL)
 		return MMSYSERR_NOMEM;
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 	*ppspLoLimit = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
 #else
 	*ppspLoLimit = (SPDEFS *) malloc(sizeof(SPDEFS));
@@ -1423,7 +1423,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 
 	if (*ppspLoLimit == NULL)
 	{
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 		CoTaskMemFree(*ppspCur);
 #else
 		free(*ppspCur);
@@ -1431,14 +1431,14 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 		return MMSYSERR_NOMEM;
 	}
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 	*ppspHiLimit = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
 #else
 	*ppspHiLimit = (SPDEFS *) malloc(sizeof(SPDEFS));
 #endif
 	if (*ppspHiLimit == NULL)
 	{
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 		CoTaskMemFree(*ppspCur);
 		CoTaskMemFree(*ppspLoLimit);
 #else
@@ -1448,14 +1448,14 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 		return MMSYSERR_NOMEM;
 	}
 
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 	*ppspDefault = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
 #else
 	*ppspDefault = (SPDEFS *) malloc(sizeof(SPDEFS));
 #endif
 	if (*ppspDefault == NULL)
 	{
-#if defined(WIN32) && !defined(UNDER_CE)
+#if defined(WIN32_OLD) && !defined(UNDER_CE)
 		CoTaskMemFree(*ppspCur);
 		CoTaskMemFree(*ppspLoLimit);
 		CoTaskMemFree(*ppspHiLimit);
@@ -1505,7 +1505,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	(*ppspCur)->open_quo      = pDph_t->curspdef[SPD_OQ] - (pDph_t->tunedef[voice][SPD_OQ]);
 
 
-#if (defined (WIN32) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
+#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	(*ppspCur)->output_gain_mult   = pDph_t->curspdef[SPD_OS] - (pDph_t->tunedef[voice][SPD_OS]);
 #endif
 
@@ -1655,7 +1655,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	(*ppspDefault)->hat_rise           = cur_speaker[SPD_HR];
 	(*ppspDefault)->stress_rise        = cur_speaker[SPD_SR];
 	(*ppspDefault)->avg_glot_open      = cur_speaker[SPD_AGO];
-#if (defined (WIN32) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
+#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	(*ppspDefault)->output_gain_mult   = cur_speaker[SPD_OS];
 #endif
 
@@ -1732,7 +1732,7 @@ MMRESULT SetSpeakerParams(LPTTS_HANDLE_T phTTS, SPDEFS *pspSet)
 	pDph_t->curspdef[SPD_CHINK]  = pspSet->area_chink	 +	(pDph_t->tunedef[voice][SPD_CHINK]);
 	pDph_t->curspdef[SPD_OQ]  = pspSet->open_quo	 +	(pDph_t->tunedef[voice][SPD_OQ]);
 
-#if (defined (WIN32) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
+#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	pDph_t->curspdef[SPD_OS]  = pspSet->output_gain_mult + (pDph_t->tunedef[voice][SPD_OS]);;
 #endif
 

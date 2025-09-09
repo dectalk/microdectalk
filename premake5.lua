@@ -6,7 +6,9 @@ workspace("DECTalk")
                 "Release"
         })
         platforms({
-                "Native"
+                "Native",
+		"Win32",
+		"Win64"
         })
         defaultplatform("Native")
 
@@ -22,8 +24,21 @@ newoption({
         default = "no"
 })
 
+filter("platforms:Win32")
+        system("windows")
+        architecture("x86")
+        gccprefix("i686-w64-mingw32-")
+
+filter("platforms:Win64")
+        system("windows")
+        architecture("x86_64")
+        gccprefix("x86_64-w64-mingw32-")
+
+filter({})
+
 project("libdtc")
 	kind("StaticLib")
+	language("C")
 	targetname("dtc")
 	includedirs("include")
 	files("src/*.c")
@@ -40,16 +55,20 @@ project("libdtc")
 		"ENGLISH_US",
 		"ACCESS32",
 		"TYPING_MODE",
-		"OS_SIXTY_FOUR_BIT",
 		"ACNA",
 		"DISABLE_AUDIO",
 		"SINGLE_THREADED",
 		"DICDEBUG",
 		"__inline="
 	})
+	filter("system:windows")
+		files("mman-win32/*.c")
+		defines("__unix__")
+	filter({})
 
 project("say")
 	kind("ConsoleApp")
+	language("C")
 	includedirs("include")
 	files("src/main.c")
 	characterset("MBCS")

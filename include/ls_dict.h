@@ -30,7 +30,7 @@
  *	---	-----	-----------		---------------------------------------
  *	001	CJL		02/22/1995		Added diffs from Ed B's spanish version.
  *	002 MGS		03/18/1996		added #pragma directives for win32 compatility
- *	003	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *	003	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 	004 GL      07/29/1996      Remove the MARK_*  symbols. These symbols are not used.
  *                              They are also used in CMD codes with different definition.
  *	005	GL		08/01/1996		Add WIN95 udic switch
@@ -62,7 +62,7 @@
 #include "ls_def.h"     
 
 /* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32
+#ifdef WIN32_OLD
 #pragma pack(push,enter_ls_dict,1)
 #endif
 #ifdef MSDOS
@@ -75,7 +75,7 @@
 
 typedef DWORD MEMMAP_T;
 
-#if defined(_WIN32_WCE_EMULATION) || defined VXWORKS
+#if defined(WIN32_OLD_WCE_EMULATION) || defined VXWORKS
 #define MEMMAP_ON	0 //turn memory mapping off for sh3 not supported mfg hack fix later
 #else
 #define MEMMAP_ON	1
@@ -92,7 +92,7 @@ struct  suff_rule
 };    
 
 /* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32
+#ifdef WIN32_OLD
 #pragma pack(pop,enter_ls_dict,1)
 #endif
 #ifdef MSDOS

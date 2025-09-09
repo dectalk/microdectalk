@@ -189,7 +189,7 @@ extern int 	OutputCharacter( unsigned char c );
 extern void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c );
 #endif
 
-#if defined (WIN32) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern  void save_index(PKSD_T pKsd_t,unsigned int sym,unsigned int type,unsigned int value,unsigned int how);
 /* 
  * MVP : This function is used only in PH subsystem
@@ -213,7 +213,7 @@ extern  int puthex(unsigned int n);
 #if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern  int putstring(char *str);
 #endif
-#endif //defined (WIN32) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif //defined (WIN32_OLD) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 #ifdef NEW_BINARY_PARSER
 preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,

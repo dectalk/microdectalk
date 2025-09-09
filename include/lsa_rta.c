@@ -38,7 +38,7 @@
  *  007	MGS		04/11/2002		ARM7 port
  * 
  */
-#ifdef WIN32 
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 #include "port.h"

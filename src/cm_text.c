@@ -55,8 +55,8 @@
  * 020  GL		10/29/1996	move the mode_table processing code to getclause()
  * 021	GL		11/11/1996	Add US_AND_SP build flag to set par_lang_code to lang_curr.
  * 022	GL		11/22/1996  Fix the 0x0fff breaking problem
- * 023	GL		11/27/1996	Add switch to allow WIN32 pick up right language setting
- * 024  GL		12/11/1996	Use pKsd_t->lang_curr for WIN32.  Language flag
+ * 023	GL		11/27/1996	Add switch to allow WIN32_OLD pick up right language setting
+ * 024  GL		12/11/1996	Use pKsd_t->lang_curr for WIN32_OLD.  Language flag
  *							will be set in ttsapi.c
  * 025	GL		12/13/1996	call cm_util_flush_init() for text flush
  * 026  GL		01/10/1997  remove the leading space add at 013(09/06/1996)
@@ -517,7 +517,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	else
 	{
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		/* GL 09/30/1997 BATS# 475 redesign the header detection code */
 		unsigned char header1[]={"From"};
 		unsigned char header2[]={"Return-Path:"};
@@ -536,7 +536,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 
 		/* catch the empty line as 0xd 0xa or 0xa for OSF */
 		/* this empty line will mark the end of header section */
-#if defined (WIN32) || defined (MSDOS)
+#if defined (WIN32_OLD) || defined (MSDOS)
 		if ((pCmd_t->email_header == 1) &&
 			// Add fix for email mode BATS#985
       	   ((header_buff[0] == 0xd && header_buff[1] == 0xa) || (header_buff[0] == 0xa)))
@@ -563,7 +563,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 #endif
 		/* GL 02/08/1997,  catch record line by line if in email mode */
       	/* GL 02/11/1997   fix the hight-light mode by catching 0xd, 0x20 as new-line*/
-#if defined (WIN32) || defined (MSDOS)
+#if defined (WIN32_OLD) || defined (MSDOS)
 		if ((pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa ||
 		     pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0x20)
 		&& (pCmd_t->clausebuf[pCmd_t->input_counter-2] == 0xd))
@@ -635,7 +635,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		else
 		{
 		  /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		  if ((pCmd_t->skip_mode != SKIP_email) &&
 		      ((pKsd_t->modeflag & MODE_EMAIL) != 0))
 		    {
@@ -838,7 +838,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 
 				temp_mode = 0x00000001 << pCmd_t->punct_mode;
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 
 				if ((pKsd_t->modeflag & MODE_EMAIL) != 0)
 				{

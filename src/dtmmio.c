@@ -292,7 +292,7 @@ _mmiopHandle DTKmmiopAddHandle(
         _MMIOAllocedHandles += CHUNK_SIZE;
     }
 
-    bzero(&_MMIOOpenHandles[handle], sizeof(_MMIOOpenHandleStruct));
+    memset(&_MMIOOpenHandles[handle], 0, sizeof(_MMIOOpenHandleStruct));
     _MMIOOpenHandles[handle].fd = fd;
     _MMIOOpenHandles[handle].hmmio = handle;
 
@@ -1002,7 +1002,9 @@ DTKmmioRename(
 	case EROFS:
 	case ENOSPC:
 #ifndef VXWORKS
+#ifndef _WIN32
 	case EDQUOT:
+#endif
 #endif
 	case EPERM:
 	    return MMIOERR_CANNOTWRITE;
@@ -1689,11 +1691,11 @@ DTKmmioDescend(
 	    lpckRet.fccType=SWAP_32_LITTLE(lpckRet.fccType);
 	}
 	else
-	    lpckRet.fccType = (long) NULL;
+	    lpckRet.fccType = (long) 0;
 
 	/* if this is the chunk we're looking for, stop looking */
-	if ( ((ckidFind == (long) NULL) || (ckidFind == lpckRet.ckid)) &&
-	     ((fccTypeFind == (long) NULL) || (fccTypeFind == lpckRet.fccType)) )
+	if ( ((ckidFind == (long) 0) || (ckidFind == lpckRet.ckid)) &&
+	     ((fccTypeFind == (long) 0) || (fccTypeFind == lpckRet.fccType)) )
 	    break;
 	
 	/* ascend out of the chunk and try again */
@@ -1703,7 +1705,7 @@ DTKmmioDescend(
 	}
     }
 
-    bcopy(&lpckRet, lpck, sizeof(MMCKINFO));
+    memcpy(&lpckRet, lpck, sizeof(MMCKINFO));
     return 0;
 }
 /*

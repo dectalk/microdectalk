@@ -135,7 +135,7 @@
 
 #ifndef PARSER_STANDALONE_DEBUG
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include "tts.h"
 #endif
@@ -154,7 +154,7 @@
 #include <string.h>
 #include <limits.h>
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 #include "dbgwins.h"
 #define printf WINprintf
 #endif
