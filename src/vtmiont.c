@@ -111,7 +111,7 @@
 #endif // SAPI_GROUP_H_TIMING
 // Must be defined above..
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 
@@ -374,7 +374,7 @@ char szTemp[256]="";
 /**********************************************************************/
 /*  Start of the VTM thread.                                          */
 /**********************************************************************/
-#ifdef WIN32
+#ifdef WIN32_OLD
 DWORD __stdcall vtm_main( LPTTS_HANDLE_T phTTS )
 #elif defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 DWORD vtm_main( LPTTS_HANDLE_T phTTS )
@@ -2427,8 +2427,8 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 		dwSyncParams[3]=(DWORD)pvdPacket;
 #endif
 #else
-		dwSyncParams[2]=(DWORD)((((QWORD)(pvdPacket)) & 0xFFFFFFFF00000000) >> 32);
-		dwSyncParams[3]=(DWORD)(((QWORD)(pvdPacket)) & 0x00000000FFFFFFFF);
+		dwSyncParams[2]=(DWORD)((((QWORD)(PTRINT)(pvdPacket)) & 0xFFFFFFFF00000000) >> 32);
+		dwSyncParams[3]=(DWORD)(((QWORD)(PTRINT)(pvdPacket)) & 0x00000000FFFFFFFF);
 #endif
 		//write_pipe(pKsd_t->sync_pipe, (unsigned char*)dwSyncParams,4);
 		

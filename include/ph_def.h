@@ -43,7 +43,7 @@
 
 #ifndef PHDEFH
 #define PHDEFH
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <stdio.h>
 #include <windows.h>
 #endif
@@ -70,7 +70,7 @@
 /* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define printf WINprintf
 #endif
 

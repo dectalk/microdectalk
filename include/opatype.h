@@ -42,23 +42,4 @@ typedef  ATYPE_T *  LPATYPE_T;
 
 #endif
 
-/**********************************************************************/
-/*  Windows 95 and Windows NT. Allow the symbol WIN32 (the old way)   */
-/*  in addition to _WIN32.                                            */
-/**********************************************************************/
-
-#ifdef WIN32
-#ifndef _WIN32
-#define _WIN32
-#endif
-#endif
-
-#if defined(_WIN64)
-typedef  unsigned long long ATYPE_T;
-typedef  ATYPE_T *  LPATYPE_T;
-#elif defined(_WIN32)
-typedef  unsigned int  ATYPE_T;
-typedef  ATYPE_T *  LPATYPE_T;
-#endif
-
 #endif

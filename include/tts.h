@@ -72,7 +72,7 @@
 #ifndef _TTS_H_
 #define _TTS_H_
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <mmreg.h>
 #include <stdio.h>
@@ -250,14 +250,14 @@ struct TTS_HANDLE_TAG
   PVOID    pLTSThreadData  ;       /* Instance specific LTS thread data */
   PVOID    pVTMThreadData  ;       /* Instance specific VTM thread data */
   PVOID    pPHThreadData   ;       /* Instance specific PH thread data */
-#ifdef WIN32
+#ifdef WIN32_OLD
   DT_HANDLE   hMallocSuccessEvent;    /* Event handle to report successful memory allocations */
   DT_HANDLE   hThread_TXT;
   DT_HANDLE hThread_CMD;
   DT_HANDLE hThread_SYNC;
   DT_HANDLE hSyncEvent;
   DT_HANDLE hNotEmptyingVtmPipeEvent;
-#endif // WIN32
+#endif // WIN32_OLD
 
 /* GL 04/21/1997  add this as the latest OSF code */
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -339,7 +339,7 @@ struct TTS_HANDLE_TAG
 #endif
 
   DWORD dwTTSInstanceParameter;    //New Audio Integration
-#ifdef WIN32
+#ifdef WIN32_OLD
   HMUTEX_T hmxCallback;            //New Audio Integration
   LPCRITICAL_SECTION pcsMemoryBuffer;
   LPCRITICAL_SECTION pcsQueuedSampleCount;
@@ -408,7 +408,7 @@ struct TTS_HANDLE_TAG
   //int bisau;
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
   TCHAR dictionary_file_name[500];
 #else
   char dictionary_file_name[500];
@@ -428,7 +428,7 @@ typedef SAMPLE_T * LPSAMPLE_T;
 // tek 04aug97 sapi fixes
 // these data structures are used to transport the info we need
 // to do notifications
-//#ifdef WIN32 for all now
+//#ifdef WIN32_OLD for all now
 typedef struct VISUAL_DATA_STRUCT
 {
 	QWORD	qTimeStamp;
@@ -475,7 +475,7 @@ typedef struct NOTIFY_LIST
 } NOTIFYLIST, *PNOTIFYLIST;
 #endif //OLEDECTALK
 
-//#endif //WIN32
+//#endif //WIN32_OLD
 // end of sapi fixes
 #endif // ARM7
 /**********************************************************************/
@@ -498,7 +498,7 @@ void TextToSpeechErrorHandler( LPTTS_HANDLE_T,
 /* MVP : This fucntion is become now obsolete 
 LPTTS_HANDLE_T TextToSpeechGetHandle(void);
 */
-#ifdef WIN32
+#ifdef WIN32_OLD
 void Report_TTS_Status( LPTTS_HANDLE_T ttsHandle, UINT uiMsg, long lParam1, long lParam2);
 #endif
 

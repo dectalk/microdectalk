@@ -136,7 +136,7 @@ typedef unsigned char U8;
 #ifdef __osf__
 typedef unsigned long QWORD;
 #endif
-#if defined __unix__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined __unix__ || defined __EMSCRIPTEN__ || defined (__APPLE__) || defined _WIN32
 typedef unsigned long long QWORD;
 #endif
 
@@ -154,6 +154,13 @@ typedef U32 UINT;
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 #define _stricmp strcasecmp
 #define PRINTFDEBUG
+
+#if defined(_WIN64) || defined(_LP64)
+typedef QWORD PTRINT;
+#else
+typedef DWORD PTRINT;
+#endif
+
 #endif
 
 /*
@@ -187,7 +194,7 @@ typedef unsigned char U8;
  ************************************************************************
  *  WINDOWS/NT
  */
-#ifdef WIN32
+#ifdef WIN32_OLD
 
 #include <windows.h>
 #include <stdio.h>
@@ -226,7 +233,7 @@ typedef  MUTEX_T *  HMUTEX_T;
 typedef PLAY_AUDIO_T * 	LPAUDIO_HANDLE_T;
 #endif //OLEDECTALK
 
-#endif //WIN32
+#endif //WIN32_OLD
 
 // #define __osf__
 

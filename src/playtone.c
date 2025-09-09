@@ -48,7 +48,7 @@
 /*  Include files.                                                    */
 /**********************************************************************/
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 

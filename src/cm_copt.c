@@ -57,7 +57,7 @@
  * 0018 GL		11/27/1996	    pass mode argument while calling say_string() function
  * 0019 GL		12/04/1996		implement [:skip cpg] to skip code page translation.
  * 0020	GL		12/05/1996		remove the language pipe hack for DTEX
- * 0021 GL		12/11/1996		change the way WIN32 handle cmd_remove()
+ * 0021 GL		12/11/1996		change the way WIN32_OLD handle cmd_remove()
  * 0022 GL		01/28/1997		force SYNC for mode command
  * 0023 GL		02/04/1997		add MODE_EMAIL mode switch
  * 0024 GL		02/06/1997		add SKIP_email mode switch
@@ -142,7 +142,7 @@ void vol_tone(int volume);
 extern short tlitone0[];    /* added 4/22/96 MGS */
 extern short tlitone1[];
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include "tts.h"
 #endif
@@ -504,7 +504,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
   phTTS = TextToSpeechGetHandle();
   */
 #ifndef ARM7
-#ifdef WIN32
+#ifdef WIN32_OLD
   EnterCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -520,7 +520,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 
   if ( phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE )
   {
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -541,7 +541,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
   if (( phTTS->dwOutputState != STATE_OUTPUT_AUDIO )
    && ( phTTS->dwOutputState != STATE_OUTPUT_NULL ))
   {
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -560,7 +560,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 
   if (( phTTS->pLogFile = fopen( "log.txt", "w" )) == NULL )
   {
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -580,7 +580,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 	cm_cmd_sync(phTTS);
 
 	phTTS->dwOutputState = STATE_OUTPUT_LOG_FILE;
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -627,7 +627,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 
   cm_cmd_sync(phTTS);
 
-#ifdef WIN32
+#ifdef WIN32_OLD
   EnterCriticalSection( phTTS->pcsLogFile );
 
 #if (UNDER_CE == 211) || (UNDER_CE == 200)
@@ -635,7 +635,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 #else
 	_flushall();
 #endif // (UNDER_CE == 211) || (UNDER_CE == 200)
-#endif // WIN32
+#endif // WIN32_OLD
 
 /* GL 04/21/1997  change this for OSF build */
 #if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -649,7 +649,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 
   if ( phTTS->dwOutputState != STATE_OUTPUT_LOG_FILE )
   {
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -677,7 +677,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 
   if ( fclose( phTTS->pLogFile ))
   {
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -694,7 +694,7 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
   else
   {
 	pKsd_t->logflag = 0;
-#ifdef WIN32
+#ifdef WIN32_OLD
 	LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 
@@ -885,14 +885,14 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*LPTTS_HANDLE_T phTTS; */
   DWORD dwDelay;
-#ifdef WIN32
+#ifdef WIN32_OLD
   DWORD dwStartTime;
   DWORD dwElapsedTime;
   DWORD dwRemainingTime;
-#endif // WIN32
+#endif // WIN32_OLD
 
 /* GL 10/30/1996, comment out this as V43 code
   if( cm_cmd_sync(phTTS) == CMD_flushing )
@@ -904,7 +904,7 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
   {
 	//TextToSpeechPause( phTTS );
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	dwStartTime = GetTickCount();
 
 	while ((( dwElapsedTime = GetTickCount() - dwStartTime ) < dwDelay )
@@ -940,7 +940,7 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 #endif
   }
   return(CMD_success);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 #else // ARM7
   return(CMD_success);
 #endif // ARM7
@@ -970,7 +970,7 @@ int cm_cmd_resume(LPTTS_HANDLE_T phTTS)
 #endif
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   if( cm_cmd_sync(phTTS) == CMD_flushing )
 	return(CMD_flushing);
 
@@ -1118,7 +1118,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 #endif /* #ifdef MSDOS */       
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
   DT_PIPE_T pipe_value;
 
 /*  LPTTS_HANDLE_T phTTS; */    /* MVP MI earlier the value of phTTS used to get by
@@ -1129,7 +1129,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
   {
 	/*phTTS = TextToSpeechGetHandle();*/   /*MVP MI */
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	  ResetEvent( phTTS->hSyncEvent );
 #endif
 
@@ -1145,7 +1145,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 	pipe_value = SYNC;
 	lts_loop(phTTS,&pipe_value);
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	WaitForSingleObject( phTTS->hSyncEvent, INFINITE );
 #endif
 
@@ -1161,7 +1161,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 
   return(CMD_success);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 }
 
 /* ******************************************************************
@@ -1438,7 +1438,7 @@ int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
    while (flag) 
    {
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined __EMSCRIPTEN__ || defined (__APPLE__)
           //read_pipe(pKsd_t->cmd_pipe, &temp[j], 1);
 #endif
 
@@ -2522,7 +2522,7 @@ int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
 		//tek 01aug97 bats 404
 		// handle these new index types.
                 //cjl 18nov97 Add ifdef for 32bit only.
-#ifdef _WIN32
+#ifdef WIN32_OLD
 		case DCS_INDEX_BOOKMARK:
 			pipe_value[0] = (2<<PSNEXTRA) | INDEX_BOOKMARK;
 			pipe_value[2] = pCmd_t->params[2];//NH
@@ -2547,7 +2547,7 @@ int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
 			pipe_value[0] = (2<<PSNEXTRA) | INDEX_VOLUME;
 			pipe_value[2] = pCmd_t->params[2];//N?
 			break;
-#endif // _WIN32
+#endif // WIN32_OLD
 
 		default:
 	    /* change for the parser index buffer */
@@ -2871,7 +2871,7 @@ int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
 				sleep(100);
 #endif
 				
-#ifdef WIN32
+#ifdef WIN32_OLD
 				Sleep(100);
 #endif
 				
@@ -3018,7 +3018,7 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	pipe[5] = 0;
 	
 	/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	vtm_loop(phTTS,pipe);
 #endif
 
@@ -3241,10 +3241,10 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 	else
@@ -3261,9 +3261,9 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	  /****************************************************************/
 	  /*  Interdigital space.                                         */
@@ -3277,10 +3277,10 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[5] = 0;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
 
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 

@@ -29,7 +29,7 @@
  *  Rev Who     Date        	Description
  *  --- -----   -----------		---------------------------------------
  *  001 MGS     02/13/1996 		renamed fr.c to lsa_fr.c
- *	002	MGS		03/13/1996		Added include <windows.h> for WIN32		
+ *	002	MGS		03/13/1996		Added include <windows.h> for WIN32_OLD		
  *  003	GL		04/21/1997	    BATS#357  Add the code for __osf__ build 
  *  004 GL      10/13/1997      For BATS#486 remove English_us only ACNA setting 
  *  005	MGS		02/26/2002		ACNA updates
@@ -40,7 +40,7 @@
 #ifndef NEW_ACNA
 #ifdef ACNA
 /*#ifdef ENGLISH_US*/
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 unsigned char far french[27][27][27] = {

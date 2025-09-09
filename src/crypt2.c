@@ -17,7 +17,7 @@
 * 003  	mfg 09/22/2000	added prototype to support windows CE  
 * 004 	CAB	10/16/2000	Changed copyright info
 * 005  	mfg 09/22/2000	fixed time.h include to support windows CE versions 
-* 006 	mfg 10/25/2000	Temporarly Added _WIN32_WCE_EMULATION to get rid of x86em error
+* 006 	mfg 10/25/2000	Temporarly Added WIN32_OLD_WCE_EMULATION to get rid of x86em error
 * 007	cab 10/26/2000	Fixed uncomment comment section
 * 008   mfg	07/10/2002	Merged into code changes needed for the Mitsubishi CE/SH4 Project
 * 009	cab	07/31/2002	Updated copyright info
@@ -34,7 +34,7 @@
 #include <time.h>
 #else
 
-#ifndef _WIN32_WCE_EMULATION
+#ifndef WIN32_OLD_WCE_EMULATION
 #if	((UNDER_CE == 300) || (UNDER_CE == 211))
 long time(long *); //added prototype to support windows CE mfg 09/22/00
 #else

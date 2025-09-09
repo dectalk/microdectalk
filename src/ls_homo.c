@@ -28,7 +28,7 @@
  *                                                                             
  * Rev	Who      Date            (*entry_secondary)cription                    
  * ---	-----	-----------		---------------------------------------
- * 001	MGS     03/18/1996      Finished WIN32 code merge, function headers need updating
+ * 001	MGS     03/18/1996      Finished WIN32_OLD code merge, function headers need updating
  * 002  GL      05/12/1996      move the pronunce (primary and secondary)
  *                              flag checking before formclass checking.
  *                              also fix the bug of "to lead"

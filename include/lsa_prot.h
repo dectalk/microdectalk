@@ -28,7 +28,7 @@
  *  Rev Who     Date        	Description                    
  *  --- -----   ----------- 	---------------------------------------
  *  001 MGS     02/08/1996 		Renamed from altsp.h to lsa_prot.h    
- *	002	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ *	002	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  *  	003	MGS		02/26/2002		ACNA updates
  * 
  */

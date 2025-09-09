@@ -50,7 +50,7 @@
 /**********************************************************************/
 
 #include "dectalkf.h"
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 #include <string.h>

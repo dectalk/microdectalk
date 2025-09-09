@@ -44,7 +44,7 @@
  */
 
 #include "dectalkf.h"
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
   #if !defined (__APPLE__)
     #include <malloc.h>
@@ -89,9 +89,9 @@ short global_spc_s_buf[SPDEF_PARS+2];
 static int spc_size( unsigned short spc_type )
 {
 	//tek 01aug97 bats 404 support for packet subtypes
-//#ifdef _WIN32
+//#ifdef WIN32_OLD
 	spc_type &= SPC_TYPE_MASK;
-//#endif //_WIN32
+//#endif //WIN32_OLD
     switch( spc_type )
     {
 		case SPC_type_voice:

@@ -32,7 +32,7 @@
  * ---	-----	-----------		---------------------------------------
  * 001	MGS		02/27/1996 		Reformatted code and added function headers    
  * 002	MGS		03/18/1996		Added LSSUFFDEBUG tag
- * 003  MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ * 003  MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 004	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
  * 005	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
  * 006  GL      07/16/1997      for BATS#402 fix the "documents" problem
@@ -446,7 +446,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
             
 #else
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <mmsystem.h>
 #endif
@@ -495,7 +495,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
   if (pLts_t->fc_index == 0) return;
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
   EnterCriticalSection( phTTS->pcsLogFile );
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -627,7 +627,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 	}
   }
 
-#ifdef WIN32
+#ifdef WIN32_OLD
   LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)

@@ -29,7 +29,7 @@
  * Rev	Who		Date			Description                    
  * ---	-----	-----------		---------------------------------------
  * 001	MGS		02/27/1996		reformatted code and added function headers
- * 002	MGS		03/18/1996		Finished WIN32 code merge, function headers need updating
+ * 002	MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 003  GL      07/29/1996		use ls_util_write_pipe() to replace write_pipe()
  * 004	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
  * 005	CHJ		07/20/2000		Warning removal

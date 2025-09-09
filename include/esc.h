@@ -231,7 +231,7 @@
 #define	DCS_INDEX_REPLY			21
 #define	DCS_INDEX_QUERY			22
 
-//#ifdef _WIN32 // tek these are the new 404 messages
+//#ifdef WIN32_OLD // tek these are the new 404 messages
 #define DCS_INDEX_PAUSE			23 // really just a placeholder
 #define	DCS_INDEX_BOOKMARK		24
 #define DCS_INDEX_WORDPOS		25

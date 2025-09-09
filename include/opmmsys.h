@@ -69,8 +69,16 @@ extern "C" {
 #define  OS_SIXTY_FOUR_BIT
 #endif
 
-#ifdef _WIN64
+#ifdef _LP64
+#ifndef OS_SIXTY_FOUR_BIT
 #define OS_SIXTY_FOUR_BIT
+#endif
+#endif
+
+#ifdef _WIN64
+#ifndef OS_SIXTY_FOUR_BIT
+#define OS_SIXTY_FOUR_BIT
+#endif
 #endif
 
 /**********************************************************************/
@@ -88,12 +96,12 @@ extern "C" {
 #endif
 
 /**********************************************************************/
-/*  Allow WIN32 (the old way) in addition to _WIN32.                  */
+/*  Allow WIN32_OLD (the old way) in addition to WIN32_OLD.                  */
 /**********************************************************************/
 
-#ifdef WIN32
-#ifndef _WIN32
-#define _WIN32
+#ifdef WIN32_OLD
+#ifndef WIN32_OLD
+#define WIN32_OLD
 #endif
 #endif
 
@@ -102,7 +110,7 @@ extern "C" {
 /*  Windows NT.                                                       */
 /**********************************************************************/
 
-#ifdef _WIN32
+#ifdef WIN32_OLD
 
 #include <windows.h>
 #include <mmreg.h>

@@ -53,7 +53,7 @@
 #define PAR_DEFH 1
 
 #define PAR_MAX_MATCH_ARRAY			30
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifdef PRINTFDEBUG
 #define printf WINprintf
 #endif

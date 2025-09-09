@@ -28,7 +28,7 @@
  * 004  TQL		05/01/1997	BATS#365  Removed includes of cmd.h and cm_def.h
  * 005	NCS		05/01/1997	Moved an #if 0 statement above the comment
  * 006	tek		12nov97		bats404: handle new index messages (SAPI traansport)
- * 007  MGS		12/29/1997	ifdefed sapi index stuff for WIN32
+ * 007  MGS		12/29/1997	ifdefed sapi index stuff for WIN32_OLD
  * 008  ETT		10/05/1998  Added Linux code.
  * 009	MGS		07/14/2000	Sapi 5 additions
  * 010 	CAB		10/16/00	Changed copyright info
@@ -47,7 +47,7 @@
 
 
 #include "dectalkf.h"
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include  <windows.h>
 #endif
 
@@ -80,7 +80,7 @@
 #include <stdlib.h>
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include "playaud.h"
 
 /*LPTTS_HANDLE_T TextToSpeechGetHandle(void);*/
@@ -97,7 +97,7 @@ int vtm_loop(LPTTS_HANDLE_T phTTS,short *input);
 void check_index( LPTTS_HANDLE_T phTTS, unsigned int which_phone );
 void kernel_enable(PKSD_T pKsd_t, unsigned int);
 unsigned int kernel_disable(PKSD_T pKsd_t);
-#ifdef WIN32
+#ifdef WIN32_OLD
 void wait_semaphore( int * );
 #endif
 
@@ -206,7 +206,7 @@ void save_index( PKSD_T pKsd_t,unsigned int sym,
   /********************************************************************/
   /*  Go to the end of the packet chain and add a new packet.         */
   /********************************************************************/
-//#ifdef WIN32
+//#ifdef WIN32_OLD
 #ifndef ARM7
   /* tek 6mar97 bats 278 this is protected by a critial section */
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -265,7 +265,7 @@ void save_index( PKSD_T pKsd_t,unsigned int sym,
   spc_pkt->data[4] = sym;
   spc_pkt->data[5] = sym;
   spc_pkt->data[6] = 0;  /* KSB 11/14/1996,  Sync bug for uninitialized number */
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -290,7 +290,7 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
   struct spc_packet _far *last_pkt; /*MVP : Usuage doesn't appear like a static variable*/
   DT_PIPE_T buf[3];
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -309,8 +309,8 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 	case INDEX_REPLY:
 		buf[0] = SPC_type_index;
 		break;
-/* MGS 007 12/29/1997 ifdefed sapi stuff for WIN32 only */
-//#ifdef WIN32
+/* MGS 007 12/29/1997 ifdefed sapi stuff for WIN32_OLD only */
+//#ifdef WIN32_OLD
 	case INDEX_BOOKMARK:
 		buf[0] = SPC_type_index	| SPC_subtype_bookmark;
 		break;
@@ -353,7 +353,7 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 	vtm_loop(phTTS,buf);
 
   }
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -374,7 +374,7 @@ void adjust_index( PKSD_T pKsd_t,unsigned int which, int direction, int del )
   struct spc_packet _far *spc_pkt;
   /*static struct spc_packet _far *last_pkt;*/  /*MVP : NEVER USED */
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -393,7 +393,7 @@ void adjust_index( PKSD_T pKsd_t,unsigned int which, int direction, int del )
 	  spc_pkt = spc_pkt->link;
 	}
   }
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -412,7 +412,7 @@ void adjust_allo( PKSD_T pKsd_t,unsigned int which, int direction )
 {
   struct spc_packet _far *spc_pkt;
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -432,7 +432,7 @@ void adjust_allo( PKSD_T pKsd_t,unsigned int which, int direction )
 	}
   }
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -452,7 +452,7 @@ void set_index_allo( PKSD_T pKsd_t,unsigned int nphone, unsigned int nallo )
 {
   struct spc_packet _far *spc_pkt;
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -471,7 +471,7 @@ void set_index_allo( PKSD_T pKsd_t,unsigned int nphone, unsigned int nallo )
 	}
   }
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -491,7 +491,7 @@ void free_index(PKSD_T pKsd_t)
   struct spc_packet _far *spc_pkt;
   struct spc_packet _far *free_pkt;
 
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -512,12 +512,12 @@ void free_index(PKSD_T pKsd_t)
 	  free( free_pkt );
 #endif
 	}
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 7mar97 bats 278 - have to update spc_pkt_save! */
   pKsd_t->spc_pkt_save = NULL_SPC_PACKET;
 //#endif
   }
-//#ifdef WIN32
+//#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
 #ifndef ARM7
   //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
@@ -577,7 +577,7 @@ void send_index( int how, int value )
 void start_flush( int serial_mode )
 {
 /*
-#ifdef WIN32
+#ifdef WIN32_OLD
   int i;
   LPTTS_HANDLE_T phTTS;
 
@@ -806,7 +806,7 @@ void kernel_enable( PKSD_T pKsd_t, unsigned int flags )
 /**********************************************************************/
 /**********************************************************************/
 /* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32
+#ifdef WIN32_OLD
 void wait_semaphore( int * semaphore )
 #endif
 
@@ -857,7 +857,7 @@ void clr_gpio( int dummy )
 /**********************************************************************/
 
 /* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32
+#ifdef WIN32_OLD
 void sleep( unsigned int uiTimeInMsec )
 {
   Sleep((DWORD)uiTimeInMsec );
@@ -916,7 +916,7 @@ static int dwVolumeTable[MAX_VOLUME+1] =
 };
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 static dwVolumeTable[MAX_VOLUME+1] =
 {
   0,  2220,  2298,  2379,  2463,
@@ -1172,7 +1172,7 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
   /*LPTTS_HANDLE_T phTTS;*/
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*phTTS = TextToSpeechGetHandle();*/
   //PA_GetVolume( phTTS->pAudioHandle, &dwStereoVolume );
 #endif
@@ -1249,7 +1249,7 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
   dwStereoVolume = ( dwRightChannelVolume << 16 ) | dwLeftChannelVolume;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifndef SOFTWARE_VOLUME
   //PA_SetVolume( phTTS->pAudioHandle, dwStereoVolume );
 #else
@@ -1406,7 +1406,7 @@ void SetStereoVolume( LPTTS_HANDLE_T phTTS, int iLeftVolume, int iRightVolume )
 	dwStereoVolume = ( dwRightChannelVolume << 16 ) | dwLeftChannelVolume;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	/*phTTS = TextToSpeechGetHandle();*/
 	//PA_SetVolume( phTTS->pAudioHandle, dwStereoVolume );
 #endif

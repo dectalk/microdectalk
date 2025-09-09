@@ -36,7 +36,7 @@
  * 002  TEK		07/14/1995		added gpio images for dtpcII
  * 003  TEK		08/09/1995		rationalized with DTPC1 stutter changes.
  * 004	TEK		12/13/1995		merge DTEX.
- * 005	MGS		03/26/1995		Merge WIN32 code 2 fields added to share data
+ * 005	MGS		03/26/1995		Merge WIN32_OLD code 2 fields added to share data
  * 006	GL		04/08/1996      Add debug_switch for debug command
  * 007  MGS     05/01/1996		Added typedefs for kernel share data structure 
  * 008  GL		11/22/1996		Add gender_switch for gender command
@@ -189,7 +189,7 @@ typedef struct PIPE_struct {
 
 #endif /* MSDOS */
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define _PIPE
 
 #ifndef _WINDOW_H
@@ -217,7 +217,7 @@ extern FILE *fpODS_File;
 #define ODSFlush()
 #endif //DEBUG
 //#include "pipe.h"
-#endif //WIN32
+#endif //WIN32_OLD
 
 /* GL 04/21/1997  add this for OSF build */
 #if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -253,7 +253,7 @@ extern FILE *fpODS_File;
 #endif // __osf__ || __unix__ || defined _SPARC_SOLARIS_
 
 /* GL 04/21/1997 add this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //typedef  PIPE_T  PIPE;
 //typedef  LPPIPE_T  P_PIPE;
 #endif
@@ -300,13 +300,13 @@ typedef struct RING_struct {
 /*
  *  spc control structures, defines, etc ...
  */
-//#ifdef _WIN32 //tek 01aug97 bats 404 index transport
+//#ifdef WIN32_OLD //tek 01aug97 bats 404 index transport
 // break the packet type field down into two parts; the 
 // low nibble is the actual packet type, and the high 
 // nibble is the subtype. Define the subtypes here, so we
 // don't lose track..
 #define SPC_TYPE_MASK			(0x00ff) 
-//#endif //_WIN32
+//#endif //WIN32_OLD
 
 #define SPC_type_voice                  0
 #define SPC_type_speaker                1
@@ -316,7 +316,7 @@ typedef struct RING_struct {
 #define SPC_type_digitized              5
 #define SPC_type_mixed                  6
 #define SPC_type_index                  7
-#if defined _WIN32 || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined WIN32_OLD || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /* tek 01aug97 index subtypes for the new messages */
 #define		SPC_subtype_bookmark	(0x0100) // this is already shifted.
 #define		SPC_subtype_wordpos		(0x0200)
@@ -325,7 +325,7 @@ typedef struct RING_struct {
 #define		SPC_subtype_sentence	(0x0500) // this is already shifted.
 #define		SPC_subtype_volume		(0x0600) // this is already shifted.
 #define		SPC_subtype_noise		(0x0700) // this is already shifted.
-#endif //_WIN32 || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
+#endif //WIN32_OLD || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 
 #define SPC_type_sync                   8
 #define SPC_type_flush                  9
@@ -605,7 +605,7 @@ struct share_data {
  */
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	//P_PIPE          cmd_pipe;               /* cmd input  */
 	//P_PIPE          sync_pipe;              /* sync input */
 	//P_PIPE          buffer_pipe;            /* Used to pass buffers */
@@ -615,13 +615,13 @@ struct share_data {
 #endif
 
 /* MGS 02/15/2001 for all now */
-//#ifdef WIN32
+//#ifdef WIN32_OLD
 	// 16jun97 tek bats385 (delay return of "remaining buffers"
 	//P_PIPE			buffer_delay_pipe;		/* holding tank for returning buffers */
 	// tek 21nov97 BATS 530 provide a secondary interlock on the
 	// pipe draining process to avoid deadlock
 	//#endif
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 /*
  *  language specific pipes and enables ...
@@ -649,7 +649,7 @@ struct share_data {
 #ifdef EPSON_ARM7
 	struct spc_packet *g_spc_packet;
 #endif
-//#ifdef WIN32
+//#ifdef WIN32_OLD
 #ifndef ARM7
 //	LPCRITICAL_SECTION	pcsSpcPktSave;	/* tek 6mar97 bats 278 protect this linked list */
 #endif
@@ -839,7 +839,7 @@ volatile int iSwVolume;
 #endif // MSDOS
 
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 		volatile unsigned short			ph_reload;
 		volatile unsigned short			ph_group;
 #endif
@@ -969,7 +969,7 @@ int test_pipe(P_PIPE);
 //int printf(VOID_FP,);
 #endif // MSDOS
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define _DEF_PIPES
 /* Pipes declared previously in pipe.h for Windows NT (see above) */
 /*
@@ -983,7 +983,7 @@ void read_pipe( PIPE *, PIPE_ITEM_T *, UINT );
 void reset_pipe( PIPE * );
 void destroy_pipe( PIPE * );
 */
-#endif // WIN32
+#endif // WIN32_OLD
 
 /* GL 04/21/1997  add this for OSF build */
 #if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -1003,7 +1003,7 @@ P_PIPE  create_pipe(int,int);
 #ifndef ARM7
 
 #ifndef MSDOS
-#ifndef WIN32
+#ifndef WIN32_OLD
 
 /*
  * over-ride the getc function in cmd_get.c
@@ -1040,7 +1040,7 @@ P_PIPE  create_pipe(int,int);
 #define set_gpio(x)
 */
 
-#endif // WIN32
+#endif // WIN32_OLD
 #endif // MSDOS
 
 /*

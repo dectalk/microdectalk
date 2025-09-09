@@ -84,7 +84,7 @@ struct share_data *kernel_share;
 
 /* ******************************************************************
  *      Function Name: 
- *			#ifdef WIN32 
+ *			#ifdef WIN32_OLD 
  *				cmd_main()
  *			#ifdef MSDOS
  *				main()
@@ -102,7 +102,7 @@ struct share_data *kernel_share;
  *      Comments:
  *
  * *****************************************************************/
-#ifdef WIN32
+#ifdef WIN32_OLD
 int __stdcall cmd_main( LPTTS_HANDLE_T phTTS )  /* MVP was DWORD lparam */
 #endif
 
@@ -153,7 +153,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 #endif
 	
 	/* Allocate a Thread specific instance data structure */
-#ifdef WIN32 
+#ifdef WIN32_OLD 
 	if((pCmd_t= (PCMD_T) malloc(sizeof(CMD_T))) == NULL)
 	{
 			return(MMSYSERR_NOMEM);
@@ -199,7 +199,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 #endif
 
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 	SetEvent(phTTS->hMallocSuccessEvent); /*MVP :Set the malloc success event after the last malloc */
 #endif
 	
@@ -257,7 +257,7 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
 
 #endif
 /* GL 04/21/1997  add this for OSF build */
-#ifdef WIN32
+#ifdef WIN32_OLD
 	return 0;
 #endif
 

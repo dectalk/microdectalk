@@ -191,7 +191,7 @@ int ii;			   /* for regression testing eab */
 #endif                                           
 
 #include "ph_draw1.c" /* pick up the language dependent code */
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 #include "dbgwins.h"
 #endif
 	//EAB		7/13/98			BATS 711 
@@ -717,7 +717,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			}
 			*parp += frac4mul (pDph_t->spdeflaxprcnt, pDphsettar->breathytilt);
 #ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 				WINprintf("til2=%d \n",*parp);
 #endif
 #endif	// DEBUGPHT
@@ -4771,7 +4771,7 @@ abort_til_later:
 	if( (pDphsettar->phcur & PVALUE) != 0)
 	{
 #ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		WINprintf ("*phcur= %d \n", pDphsettar->phcur);
 				
 
@@ -4781,7 +4781,7 @@ abort_til_later:
 
 
 
-#endif	// defined (WIN32) && defined (PRINTFDEBUG)
+#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG)
 #endif	// DEBUGPHT
 
 #ifndef UNDER_CE
@@ -4793,20 +4793,20 @@ abort_til_later:
 		for (ii = 0; ii<=32; ii++)			   /* EAB FOR REGRESSION TESTING */
 		{
 			WAIT_PRINT;
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 			WINprintf("%d ", pDph_t->parstochip[ii]);
 #else
 			printf("%d ", pDph_t->parstochip[ii]);
-#endif // defined (WIN32) && defined (PRINTFDEBUG)
+#endif // defined (WIN32_OLD) && defined (PRINTFDEBUG)
 			SIGNAL_PRINT;
 		}
 		WAIT_PRINT;
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		WINprintf ("\n");
 #else
 		printf ("\n");
-#endif	// defined (WIN32) && defined (PRINTFDEBUG)
+#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		SIGNAL_PRINT;
 	}
 	}

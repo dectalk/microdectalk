@@ -78,7 +78,7 @@
  * 040  GL      12/13/1996      call cm_util_flush_init() for text flush
  * 041  GL      02/06/1997      add email help entry in debug mode help menu
  * 042  GL      03/18/1997      For BATS#301
- *                              add #ifdef to block away the bolck() call for WIN32/VOCAL build
+ *                              add #ifdef to block away the bolck() call for WIN32_OLD/VOCAL build
  * 043  GL      03/25/1997      For BATS#314
  *                              force SYNC after each control-K(oxb)
  * 044  GL      04/21/1997      BATS#357  Add the code for __osf__ build 
@@ -87,10 +87,10 @@
  * 047  GL      06/04/1997      BATS#383  fix want2go problem in VOCAL mode 
  * 048  MGS     06/27/1997      BATS#397  increase consecutive whitespace check to 40
  *                              also move 001 debug switch to the right place.
- * 049  CL      06/25/1997      Move "#include <tts.h>" into WIN32 and _osf_ code block
+ * 049  CL      06/25/1997      Move "#include <tts.h>" into WIN32_OLD and _osf_ code block
  *                              to fix the process problem.
  * 050  GL      08/22/1997      For BATS#449, fix the Xerox Cash problem
- *                              skip the 0x80, 0x81, 0x82 and 0xff for WIN32 build.  This character will be
+ *                              skip the 0x80, 0x81, 0x82 and 0xff for WIN32_OLD build.  This character will be
  *                              ignored in LTS but maintain in typing table.  The typing mode will
  *                              bypass CMD. So it should not be harmful to remove them here.
  * 051	MGS		08/22/1997		Added timing for parser debug switch 8100
@@ -117,7 +117,7 @@
 
 #include		"dectalkf.h"
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 #include                "dbgwins.h"
 #endif 
 #include        "cm_def.h"
@@ -193,7 +193,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	while (true)
 	{
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		/* open debug window for window environement */
 		if ((windbg_flag == 0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{
@@ -1200,7 +1200,7 @@ void cm_pars_new_state(PCMD_T pCmd_t, int state)
 
 #else  /* Use new DTParser */
 
-#if defined (WIN32) && defined (PRINTFDEBUG) && defined _DEBUG
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG) && defined _DEBUG
 extern int Thread_Alive;
 extern int in_winmain;
 #endif
@@ -1238,7 +1238,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	short   ws_count=0;             /* consecutive count for white space */
 	unsigned short temp;
 #endif
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 	short windbg_flag=0;
 #endif
 
@@ -1273,7 +1273,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 		int old_state;
 #endif
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
 		/* open debug window for window environement */
 		if ((Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{
@@ -1783,7 +1783,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
   while(TRUE)
     {
       /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef CUP28PROJECT 
 	  //special temp hack for mit to read kjhkj,kjlkj as two phrases--no comma pronounced 
       if(pCmd_t->lastchar == ',')
@@ -1891,7 +1891,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 					 * this path.. tek 1/3/95 
 					 */
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 					// read_pipe( pKsd_t->cmd_pipe, &inchar, 1 );
 					c = (int)inchar;
 					cm_util_type_out(phTTS, c);
@@ -2169,7 +2169,7 @@ int OutputCharacter( unsigned char c )
 
 #else
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include <mmsystem.h>
 #include "tts.h"
@@ -2205,7 +2205,7 @@ void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
     LPTTS_HANDLE_T phTTS;                                   MVP MI
     phTTS = TextToSpeechGetHandle();
   */
-#ifdef WIN32
+#ifdef WIN32_OLD
   EnterCriticalSection( phTTS->pcsLogFile );
 #endif
   
@@ -2222,7 +2222,7 @@ void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
 	//			  0L );
   }
 
-#ifdef WIN32
+#ifdef WIN32_OLD
   LeaveCriticalSection( phTTS->pcsLogFile );
 #endif
 

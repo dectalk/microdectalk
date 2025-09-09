@@ -30,7 +30,7 @@
  *
  *  Rev Name    Date        Description
  *  --- -----   ----------- --------------------------------------------
- *  001 MGS     04/22/1996  	added WIN32 CMD_ defines and MSDOS #ifdef's
+ *  001 MGS     04/22/1996  	added WIN32_OLD CMD_ defines and MSDOS #ifdef's
  *  002 MGS     05/31/1996  	removed SPDEF sectiion of defines, they are in cmd.h 
  *  003 SIK     10/10/1996  	Added old char type definitions to work with 
  *                          	VOCAL code build
@@ -262,7 +262,7 @@
 #define PAPAUSE					((PFCONTROL<<PSFONT)+16)
 #define CNTRLK					((PFCONTROL<<PSFONT)+17)
 #define RESET					((PFCONTROL<<PSFONT)+18)
-//#ifdef _WIN32 // tek 12nov97 bats 404 new index control codes
+//#ifdef WIN32_OLD // tek 12nov97 bats 404 new index control codes
 // WARNING: these are also in cmd.h!
 #define	INDEX_BOOKMARK			((PFCONTROL<<PSFONT)+19)
 #define	INDEX_WORDPOS			((PFCONTROL<<PSFONT)+20)
@@ -272,7 +272,7 @@
 #define	INDEX_SENTENCE			((PFCONTROL<<PSFONT)+24)
 #define	INDEX_VOLUME			((PFCONTROL<<PSFONT)+25)
 #define	INDEX_NOISE  			((PFCONTROL<<PSFONT)+26)
-//#endif //_WIN32
+//#endif //WIN32_OLD
 #define WORD_CLASS				((PFCONTROL<<PSFONT)+23)
 #define PREAMBLE				((PFCONTROL<<PSFONT)+27)
 

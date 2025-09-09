@@ -35,7 +35,7 @@
  *	006	CAB		06/17/2002		Removed assert.h for UNDER_CE
 */
 
-#ifdef _WIN32
+#ifdef WIN32_OLD
 #ifndef UNDER_CE
 #include <assert.h>
 #define dt_abort \
@@ -44,7 +44,7 @@
 	}\
 
 #endif
-#endif //WIN32
+#endif //WIN32_OLD
 
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #include <assert.h>

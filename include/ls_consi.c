@@ -49,7 +49,7 @@
  */
 
 #include        "tts.h"    /* For the declarartion of LPTTS_HANDLE_T */
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #endif
 

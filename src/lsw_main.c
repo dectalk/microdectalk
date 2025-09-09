@@ -36,7 +36,7 @@
  *  002 MGS     03/10/1996      Renamed file from lsm_acna.c
  *  003 JDB     05/30/1996      Add language dependent conditionals
  *  004 GL      11/26/1996      remove dummy msdos and dtex switch
- *  005 GL		12/11/1996		remove the WIN32 language pipe hack
+ *  005 GL		12/11/1996		remove the WIN32_OLD language pipe hack
  *  006 KSB     02/10/1997		Fixed bugs for DTDemo fetch, and added debug code
  *  007 NCS     02/21/1997      Merged Tom's multilanguage code in.
  *  008 NCS     02/26/1997      Changed LibMain to LTSLibMain.
@@ -75,7 +75,7 @@
  *  030 CAB		10/18/2000		Added copyright info
  *  032	MGS		01/11/2001		Added Foreigh langauge dictioanry
  *  033	MGS		02/08/2001		Fixed Linux foreign language dictionary issues
- *  034	MGS		02/19/2001		Added code to fix the foreign language dict for WIN32
+ *  034	MGS		02/19/2001		Added code to fix the foreign language dict for WIN32_OLD
  *  035 CAB		02/23/2001		Updated copyright info
  *  036	MGS		03/02/2001		Added code for multiple instances work with dictionary mapping
  *  037	MGS		05/09/2001		Some VxWorks porting BATS#972
@@ -96,7 +96,7 @@
  *  051	MFG		02/30/2003		Fixed the wide- string convertion for the WinCe dictionary 
  ***************************************************************************/
 
-#if !defined WIN32 && !defined __EMSCRIPTEN__
+#if !defined WIN32_OLD && !defined __EMSCRIPTEN__
 // Only for the DECTALK_INSTALL_PREFIX, which is usually "/opt/dectalk"
 #include "config.h"
 #endif
@@ -134,7 +134,7 @@ LTS_T   Lts_t;
 #include <limits.h>
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifndef UNDER_CE
 #include <io.h>		// File access
 #include <direct.h> // Directory fn's
@@ -142,7 +142,7 @@ LTS_T   Lts_t;
 #else
 #include <cemm.h> //needed for Window CE registry calls mfg 01/06/1999
 #endif //UNDER_CE
-#endif //WIN32
+#endif //WIN32_OLD
 
 #ifdef SEPARATE_PROCESSES
 struct share_data       *kernel_share;
@@ -157,7 +157,7 @@ void default_lang(PKSD_T, unsigned int, unsigned int); // NAL warning removal
 /*
  * extern int namef;
  */
-#ifdef WIN32
+#ifdef WIN32_OLD
 
 /* tek 23jan97 need the dictionary globals if we're doing the code_DLL thing */
 #ifdef BLD_CORE_DLL
@@ -192,7 +192,7 @@ int __stdcall lts_main( LPTTS_HANDLE_T phTTS )
 /* Line below is commented out due to the line above */
 // DllExport int __stdcall lts_main( LPTTS_HANDLE_T phTTS )
 
-#endif // WIN32
+#endif // WIN32_OLD
 
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 
@@ -250,7 +250,7 @@ char ch_dictionary_file_name[500];
 	kernel_share = (struct share_data *)malloc(sizeof(struct share_data));
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 // RDK These should not be TCHAR
   // CAB 8/12/2002
 //  TCHAR szMainDict[MAX_STRING_LENGTH];
@@ -463,7 +463,7 @@ char ch_dictionary_file_name[500];
   }
 
   
-#endif /* #ifdef WIN32 */
+#endif /* #ifdef WIN32_OLD */
 
 #if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   int nDicLoad;
@@ -620,7 +620,7 @@ ls_util_lts_init (pLts_t, pKsd_t);
 
 /*extern int fc_index; */    /*MVP MI */
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifndef UNDER_CE
 
 /**********************************************************************/
@@ -1080,7 +1080,7 @@ WideStringtoAsciiString(szUserDict, wszUserDict, MAX_STRING_LENGTH);
 			KEY_QUERY_VALUE,
 			&hKey ) != ERROR_SUCCESS )
 		{
-#ifdef WIN32
+#ifdef WIN32_OLD
 			// tek 14may98 log the fact that we are using the default dictionary name
 #ifdef UNDER_CE
 #ifndef CUP28PROJECT
@@ -1232,7 +1232,7 @@ WideStringtoAsciiString(szUserDict, wszUserDict, MAX_STRING_LENGTH);
 #endif
 				&cbData ) != ERROR_SUCCESS )
 			{
-#ifdef WIN32
+#ifdef WIN32_OLD
 				// tek 14may98 log the fact that we are using the default dictionary name
 #ifdef UNDER_CE
 #ifndef CUP28PROJECT
@@ -1270,7 +1270,7 @@ WideStringtoAsciiString(szUserDict, wszUserDict, MAX_STRING_LENGTH);
 				}
 #endif
 				
-#endif //WIN32
+#endif //WIN32_OLD
 				strcpy( szMainDict, szMainDictDef );
 			}
 
@@ -1303,7 +1303,7 @@ WideStringtoAsciiString(szUserDict, wszUserDict, MAX_STRING_LENGTH);
 #endif
 				&cbData ) != ERROR_SUCCESS )
 			{
-#ifdef WIN32
+#ifdef WIN32_OLD
 #ifdef FOREIGNDICT_DTDIC_LOG // Bats 987 12/03/01
 				// Log the fact that we are using the default foreign dictionary name
 #ifdef UNDER_CE
@@ -1341,7 +1341,7 @@ WideStringtoAsciiString(szUserDict, wszUserDict, MAX_STRING_LENGTH);
 				}
 #endif
 #endif //FOREIGNDICT_DTDIC_LOG
-#endif //WIN32
+#endif //WIN32_OLD
 				strcpy( szForeignDict, szForeignDictDef );
 		}
 
@@ -1514,7 +1514,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	if (config_file==NULL)
 	{
 		char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+		ssize_t count = 3;
+		p[0] = '.';
+		p[1] = '/';
+		p[2] = 'h';
+		p[3] = 0;
+#elif defined(__unix__)
 		ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 		char ep[PATH_MAX] = {};
@@ -1541,7 +1547,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	if (config_file==NULL)
 	{
 		char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+		ssize_t count = 3;
+		p[0] = '.';
+		p[1] = '/';
+		p[2] = 'h';
+		p[3] = 0;
+#elif defined(__unix__)
 		ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 		char ep[PATH_MAX] = {};
@@ -1594,7 +1606,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #if defined(__unix__) || defined (__APPLE__)
 				if (exe_path && (main_dict_name[0] != '/')) {
 					char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+					ssize_t count = 3;
+					p[0] = '.';
+					p[1] = '/';
+					p[2] = 'h';
+					p[3] = 0;
+#elif defined(__unix__)
 					ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 					char ep[PATH_MAX] = {};
@@ -1630,7 +1648,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #if defined(__unix__) || defined (__APPLE__)
 		if (exe_path && (main_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+			ssize_t count = 3;
+			p[0] = '.';
+			p[1] = '/';
+			p[2] = 'h';
+			p[3] = 0;
+#elif defined(__unix__)
 			ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 			char ep[PATH_MAX] = {};
@@ -1670,7 +1694,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #if defined(__unix__) || defined (__APPLE__)
 				if (exe_path && (foreign_dict_name[0] != '/')) {
 					char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+					ssize_t count = 3;
+					p[0] = '.';
+					p[1] = '/';
+					p[2] = 'h';
+					p[3] = 0;
+#elif defined(__unix__)
 					ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 					char ep[PATH_MAX] = {};
@@ -1706,7 +1736,13 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #if defined(__unix__) || defined (__APPLE__)
 		if (exe_path && (foreign_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {};
-#if defined(__unix__)
+#if defined(_WIN32)
+			ssize_t count = 3;
+			p[0] = '.';
+			p[1] = '/';
+			p[2] = 'h';
+			p[3] = 0;
+#elif defined(__unix__)
 			ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #elif defined(__APPLE__)
 			char ep[PATH_MAX] = {};

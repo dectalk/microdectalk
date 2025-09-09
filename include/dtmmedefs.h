@@ -159,7 +159,7 @@ typedef Uint32      	    DWORD;
 #endif
 #endif
 /* Windows specific data types */
-#ifdef WIN32
+#ifdef WIN32_OLD
 typedef Uint32      	    DWORD;
 #endif
 #ifdef VXWORKS

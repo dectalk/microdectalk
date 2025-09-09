@@ -161,11 +161,11 @@ extern "C" {
 /* I don't think we use this yet */
 #ifndef BLD_DECTALK_DLL
 
-#ifdef _WIN32
+#ifdef WIN32_OLD
 #ifndef CUP28PROJECT
 #include <mmreg.h>
 #endif /* CUP28PROJECT */
-#endif /* _WIN32 */
+#endif /* WIN32_OLD */
 
 #ifdef __osf__
 #ifndef H_MMBASIC
@@ -431,7 +431,7 @@ typedef TTS_BUFFER_T * LPTTS_BUFFER_T;
 /**********************************************************************/
 /* structure used to hold the pieces of phoneme marks                 */
 /**********************************************************************/
-#ifdef WIN32
+#ifdef WIN32_OLD
 #pragma pack (push,phoneme_mark)
 #endif
 
@@ -472,7 +472,7 @@ typedef union {
 } PHONEME_TAG;
 #pragma pack ()
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #pragma pack (pop,phoneme_mark)
 #endif
 
@@ -493,7 +493,7 @@ typedef void * LPTTS_HANDLE_T;
 /*  include file mmsystem.h.                                          */
 /**********************************************************************/
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #define WAVE_FORMAT_08M16 0x00002000
 #ifndef BLD_DECTALK_DLL
 #ifndef CUP28PROJECT
@@ -555,7 +555,7 @@ MMRESULT TextToSpeechStartupExFonix( LPTTS_HANDLE_T * pphTTS,
 							  DWORD,
 							  UINT),
 				LONG,
-#ifdef WIN32
+#ifdef WIN32_OLD
 				TCHAR *
 #else
 				char * 
@@ -573,7 +573,7 @@ MMRESULT TextToSpeechStartup( LPTTS_HANDLE_T * pphTTS,
 			      LONG );
 #endif
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 MMRESULT TextToSpeechStartup( HWND, LPTTS_HANDLE_T *, UINT, DWORD );
 #endif
 
@@ -640,7 +640,7 @@ MMRESULT TextToSpeechOpenLogFile( LPTTS_HANDLE_T, LPSTR, DWORD );
 MMRESULT TextToSpeechCloseLogFile( LPTTS_HANDLE_T );
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#ifdef WIN32
+#ifdef WIN32_OLD
 VOID TextToSpeechControlPanel( LPTTS_HANDLE_T );
 #ifdef UNDER_CE
 ULONG TextToSpeechVersion(LPTSTR* VersionStr);
@@ -667,7 +667,7 @@ MMRESULT TextToSpeechGetVolume( LPTTS_HANDLE_T phTTS,int type, int *volume);
 #define VOLUME_ATTENUATION  2
 
 
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /* ML add-ons */
 #ifdef UNDER_CE
 DWORD TextToSpeechVersion(LPTSTR* VersionStr);
@@ -688,7 +688,7 @@ DWORD TextToSpeechGetFeatures(void);
 #define TTS_NOT_SUPPORTED       0x7FFF
 #define TTS_NOT_AVAILABLE       0x7FFE
 #define TTS_LANG_ERROR          0x4000
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 /* New LPVERSION_INFO structure data   KSB 15-SEP-97 */
 /* DO NOT CHANGE THE ORDER OF VARIABLES HERE!!! ONLY ADD NEW ONES TO THE END!!! */

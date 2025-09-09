@@ -144,7 +144,7 @@
  */
 #ifndef PARSER_STANDALONE_DEBUG
 
-#ifdef WIN32
+#ifdef WIN32_OLD
 #include <windows.h>
 #include "tts.h"
 #endif

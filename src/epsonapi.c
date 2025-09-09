@@ -58,7 +58,7 @@ short *(*g_callback)(short *,long);
                         (((U8 *)(ptr))[1] << 8)  | \
                         (((U8 *)(ptr))[0])))
 
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char main_dict[];
@@ -68,27 +68,27 @@ extern const unsigned char main_dict[];
 
 #ifdef EPSON_ARM7
 
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char sp_main_dict[];
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char us_main_dict[];
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char gr_main_dict[];
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char la_main_dict[];
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char uk_main_dict[];
-#if defined ARM7 && !defined WIN32_TEST
+#if defined ARM7 && !defined WIN32_OLD_TEST
 __align(8) 
 #endif
 extern const unsigned char fr_main_dict[];
