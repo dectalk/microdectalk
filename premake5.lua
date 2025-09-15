@@ -96,6 +96,7 @@ if _OPTIONS["build-speak"] == "yes" then
 			})
 		filter("system:windows")
 			files("speak-w32/*.c")
+			files("speak-w32/*.rc")
 		filter({})
 		links("libdtc")
 

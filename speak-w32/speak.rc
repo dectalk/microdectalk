@@ -1,0 +1,3 @@
+#include <winver.h>
+
+DTC ICON "paul.ico"
