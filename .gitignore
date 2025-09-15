@@ -1,4 +1,5 @@
 *.o
+*.wav
 /bin
 /obj
 /*.make
