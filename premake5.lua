@@ -81,21 +81,29 @@ if _OPTIONS["build-speak"] == "yes" then
 	project("speak")
 		kind("ConsoleApp")
 		includedirs("include")
-		files("speak/*.c")
 		characterset("MBCS")
-		includedirs({
-			"/usr/X11R7/include",
-			"/usr/pkg/include"
-		})
-		libdirs({
-			"/usr/X11R7/lib",
-			"/usr/pkg/lib"
-		})
-		links({
-			"libdtc",
-			"m",
-			"Xpm",
-			"Xm",
-			"Xt"
-		})
+		filter("system:not windows")
+			files("speak/*.c")
+			includedirs({
+				"/usr/X11R7/include",
+				"/usr/pkg/include"
+			})
+			libdirs({
+				"/usr/X11R7/lib",
+				"/usr/pkg/lib"
+			})
+		filter("system:windows")
+			files("speak-w32/*.c")
+		filter({})
+		links("libdtc")
+
+		filter("system:not windows")
+			links({
+				"Xpm",
+				"Xm",
+				"Xt"
+			})
+		filter("system:windows")
+			links("m")
+		filter({})
 end
