@@ -14,8 +14,17 @@
 
 static HINSTANCE hInst;
 
+#define BTNSZ 70
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
-	return DefWindowProc(hWnd, msg, wp, lp);
+	if(msg == WM_CLOSE){
+		DestroyWindow(hWnd);
+	}else if(msg == WM_DESTROY){
+		PostQuitMessage(0);
+	}else{
+		return DefWindowProc(hWnd, msg, wp, lp);
+	}
+	return 0;
 }
 
 BOOL InitApp(void) {
@@ -36,11 +45,24 @@ BOOL InitApp(void) {
 }
 
 BOOL InitWindow(int nCmdShow) {
+	RECT rc;
+	int pad;
 	HWND hWnd = CreateWindow("dectalk", "Speak", (WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME) ^ WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 660, 440, NULL, 0, hInst, NULL);
+	int i;
 
 	if(!hWnd) {
 		return FALSE;
 	}
+
+	GetClientRect(hWnd, &rc);
+
+	pad = (rc.right - rc.left) - BTNSZ * 9;
+	pad /= 8;
+
+	for(i = 0; i < 9; i++){
+		HWND hBtn = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, (BTNSZ + pad) * i, 0, BTNSZ, BTNSZ, hWnd, 0, hInst, NULL);
+	}
+
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 	return TRUE;
