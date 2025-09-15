@@ -82,6 +82,8 @@ if _OPTIONS["build-speak"] == "yes" then
 		kind("ConsoleApp")
 		includedirs("include")
 		characterset("MBCS")
+		includedirs("speak-common")
+		files("speak-common/*.c")
 		filter("system:not windows")
 			files("speak/*.c")
 			includedirs({
