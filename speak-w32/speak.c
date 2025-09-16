@@ -1,3 +1,7 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include <windows.h>
 
 #include <stb_ds.h>
@@ -10,6 +14,15 @@ HWND* btns = NULL;
 HWND text, start, stop;
 HBRUSH person_brush, black_brush;
 COLORREF person_color;
+ma_device_config config;
+ma_device device;
+ma_mutex mutex;
+
+typedef struct buffer {
+	short* data;
+	unsigned int length;
+	unsigned int seek;
+} buffer_t;
 
 const char* people[] = {
 	"PAUL",
@@ -24,6 +37,79 @@ const char* people[] = {
 };
 
 #define BTNSZ 70
+
+buffer_t* buffers = NULL;
+unsigned int wavelen;
+short* wave = NULL;
+int rate = 200;
+
+void write_wav(short* iwave, unsigned int length){
+	if(wave == NULL){
+		wave = malloc(length * 2);
+		memcpy(wave, iwave, length * 2);
+	}else{
+		short* old = wave;
+		wave = malloc((wavelen + length) * 2);
+		memcpy(wave, old, wavelen * 2);
+		memcpy(wave + wavelen, iwave, length * 2);
+		free(old);
+	}
+
+	wavelen += length;
+}
+
+void data_callback(ma_device* dev, void* out, const void* in, ma_uint32 frame){
+	unsigned int seek = 0;
+	memset(out, 0, frame * 2);
+	ma_mutex_lock(&mutex);
+	while(frame > 0 && arrlen(buffers) > 0){
+		unsigned int bsz = buffers[0].length - buffers[0].seek;
+		unsigned int sz = bsz > frame ? frame : bsz;
+
+		memcpy(((short*)out) + seek, buffers[0].data + buffers[0].seek, sz * 2);
+
+		buffers[0].seek += sz;
+		frame -= sz;
+		seek += sz;
+
+		if((buffers[0].length - buffers[0].seek) == 0){
+			free(buffers[0].data);
+			arrdel(buffers, 0);
+		}
+	}
+	ma_mutex_unlock(&mutex);
+}
+
+void speak(const char* str){
+	buffer_t buf;
+	char ratebuf[32];
+	char* sbuf;
+
+	sprintf(ratebuf, "[:rate %d]", rate);
+	sbuf = malloc(strlen(ratebuf) + strlen(str) + 1);
+
+	strcpy(sbuf, ratebuf);
+	strcat(sbuf, str);
+
+	if(wave != NULL){
+		free(wave);
+		wave = NULL;
+	}
+	wavelen = 0;
+
+	TextToSpeechStart(sbuf, NULL, WAVE_FORMAT_1M16);
+
+	buf.data = malloc(wavelen * 2);
+	memcpy(buf.data, wave, wavelen * 2);
+	buf.length = wavelen;
+	buf.seek = 0;
+
+	ma_mutex_lock(&mutex);
+	arrput(buffers, buf);
+	ma_mutex_unlock(&mutex);
+
+	free(sbuf);
+}
 
 void ShowPerson(HDC hdc, const char* name, RECT* rc){
 	HBITMAP hBitmap = LoadBitmap(hInst, name);
@@ -45,6 +131,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 		DestroyWindow(hWnd);
 	}else if(msg == WM_DESTROY){
 		PostQuitMessage(0);
+	}else if(msg == WM_COMMAND){
+		int m = LOWORD(wp);
+		if(100 <= m && m < 109){
+			char buf[128];
+
+			sprintf(buf, "[:name %s]%s", people[m - 100], people[m - 100]);
+
+			speak(buf);
+		}else if(m == 200){
+			int len = GetWindowTextLength(text);
+			char* buf = malloc(len + 2);
+			GetWindowText(text, buf, len + 1);
+
+			buf[len] = 0;
+
+			speak(buf);
+
+			free(buf);
+		}else if(m == 201){
+			ma_mutex_lock(&mutex);
+			if(arrlen(buffers) > 0){
+				free(buffers[0].data);
+				arrdel(buffers, 0);
+			}
+			ma_mutex_unlock(&mutex);
+		}
 	}else if(msg == WM_SIZE){
 		RECT rc;
 		int i;
@@ -194,6 +306,20 @@ BOOL InitWindow(int nCmdShow) {
 int WINAPI WinMain(HINSTANCE hCurInst, HINSTANCE hPrevInst, LPSTR lpsCmdLine, int nCmdShow){
 	BOOL bret;
 	MSG msg;
+
+	config = ma_device_config_init(ma_device_type_playback);
+	config.playback.format = ma_format_s16;
+	config.playback.channels = 1;
+	config.sampleRate = 11025;
+	config.dataCallback = data_callback;
+
+	ma_mutex_init(&mutex);
+
+	if(ma_device_init(NULL, &config, &device) != MA_SUCCESS || ma_device_start(&device) != MA_SUCCESS){
+		return 0;
+	}
+
+	TextToSpeechInit(NULL, NULL);
 
 	hInst = hCurInst;
 

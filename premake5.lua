@@ -79,7 +79,8 @@ project("say")
 
 if _OPTIONS["build-speak"] == "yes" then
 	project("speak")
-		kind("ConsoleApp")
+		kind("WindowedApp")
+		language("C")
 		includedirs("include")
 		characterset("MBCS")
 		includedirs("speak-common")
