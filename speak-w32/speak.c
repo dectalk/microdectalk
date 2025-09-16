@@ -7,6 +7,7 @@
 
 HINSTANCE hInst;
 HWND* btns = NULL;
+HWND text;
 HBRUSH person_brush;
 COLORREF person_color;
 
@@ -44,6 +45,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 		DestroyWindow(hWnd);
 	}else if(msg == WM_DESTROY){
 		PostQuitMessage(0);
+	}else if(msg == WM_SIZE){
+		RECT rc;
+		int i;
+		int padleft;
+
+		GetClientRect(hWnd, &rc);
+
+		padleft = ((rc.right - rc.left) - (BTNSZ * 9)) / 2;
+
+		for(i = 0; i < arrlen(btns); i++){
+			SetWindowPos(btns[i], NULL, padleft + i * BTNSZ, 0, 0, 0, SWP_NOSIZE);
+		}
+
+		SetWindowPos(text, NULL, 0, BTNSZ, rc.right - rc.left, rc.bottom - rc.top - BTNSZ - 48, 0);
 	}else if(msg == WM_DRAWITEM){
 		int i;
 		LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
@@ -96,23 +111,19 @@ BOOL InitApp(void) {
 }
 
 BOOL InitWindow(int nCmdShow) {
-	RECT rc;
-	int padleft;
-	HWND hWnd = CreateWindow("dectalk", "Speak", (WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME) ^ WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 660, 440, NULL, 0, hInst, NULL);
+	HWND hWnd = CreateWindow("dectalk", "Speak", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 660, 440, NULL, 0, hInst, NULL);
 	int i;
 
 	if(!hWnd) {
 		return FALSE;
 	}
 
-	GetClientRect(hWnd, &rc);
-
-	padleft = ((rc.right - rc.left) - BTNSZ * 9) / 2;
-
 	for(i = 0; i < 9; i++){
-		HWND hBtn = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, padleft + BTNSZ * i, 0, BTNSZ, BTNSZ, hWnd, 0, hInst, NULL);
+		HWND hBtn = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, BTNSZ, BTNSZ, hWnd, (HMENU)(LONG_PTR)(i + 100), hInst, NULL);
 		arrput(btns, hBtn);
 	}
+
+	text = CreateWindow("EDIT", "", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
