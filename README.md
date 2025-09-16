@@ -22,6 +22,12 @@ make
 
 to compile for windows
 ```
-premake5 gmake --build-speak=no # speak is currently unsupported on windows
+premake5 gmake
+make config=release_win64
+```
+
+to compile for windows with speak gui demo
+```
+premake5 gmake --build-speak=yes
 make config=release_win64
 ```
