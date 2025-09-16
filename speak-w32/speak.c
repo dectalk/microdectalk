@@ -7,8 +7,8 @@
 
 HINSTANCE hInst;
 HWND* btns = NULL;
-HWND text;
-HBRUSH person_brush;
+HWND text, start, stop;
+HBRUSH person_brush, black_brush;
 COLORREF person_color;
 
 const char* people[] = {
@@ -58,10 +58,67 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 			SetWindowPos(btns[i], NULL, padleft + i * BTNSZ, 0, 0, 0, SWP_NOSIZE);
 		}
 
+		SetWindowPos(start, NULL, rc.right - 32 - 32 - 8, rc.bottom - 48 + 16 / 2, 0, 0, SWP_NOSIZE);
+		SetWindowPos(stop, NULL, rc.right - 32 - 8, rc.bottom - 48 + 16 / 2, 0, 0, SWP_NOSIZE);
+
 		SetWindowPos(text, NULL, 0, BTNSZ, rc.right - rc.left, rc.bottom - rc.top - BTNSZ - 48, 0);
 	}else if(msg == WM_DRAWITEM){
 		int i;
 		LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lp;
+
+		if(dis->hwndItem == start || dis->hwndItem == stop){
+			HDC dc = dis->hDC;
+			RECT rc, brc;
+			UINT fl = 0;
+
+			GetClientRect(dis->hwndItem, &rc);
+
+			brc.left = 0;
+			brc.top = 0;
+			brc.right = rc.right - rc.left;
+			brc.bottom = rc.bottom - rc.top;
+
+			fl = (dis->itemState & ODS_SELECTED) ? DFCS_PUSHED : 0;
+			DrawFrameControl(dc, &brc, DFC_BUTTON, DFCS_BUTTONPUSH | DFCS_ADJUSTRECT | fl);
+
+			if(dis->hwndItem == start){
+				POINT pts[3];
+
+				SelectObject(dc, black_brush);
+
+				pts[0].x = brc.left + 3;
+				pts[0].y = brc.top + 3;
+
+				pts[1].x = brc.right - 3;
+				pts[1].y = (brc.bottom - brc.top) / 2;
+
+				pts[2].x = brc.left + 3;
+				pts[2].y = brc.bottom - 3;
+				
+				Polygon(dc, pts, 3);
+			}else{
+				POINT pts[4];
+
+				SelectObject(dc, black_brush);
+
+				pts[0].x = brc.left + 3;
+				pts[0].y = brc.top + 3;
+
+				pts[1].x = brc.right - 3;
+				pts[1].y = brc.top + 3;
+
+				pts[2].x = brc.right - 3;
+				pts[2].y = brc.bottom - 3;
+
+				pts[3].x = brc.left + 3;
+				pts[3].y = brc.bottom - 3;
+				
+				Polygon(dc, pts, 4);
+			}
+
+			return 0;
+		}
+
 		for(i = 0; i < arrlen(btns); i++){
 			if(btns[i] == dis->hwndItem){
 				HDC dc = dis->hDC;
@@ -123,6 +180,9 @@ BOOL InitWindow(int nCmdShow) {
 		arrput(btns, hBtn);
 	}
 
+	start = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)200, hInst, NULL);
+	stop = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)201, hInst, NULL);
+
 	text = CreateWindow("EDIT", "", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
 
 	ShowWindow(hWnd, nCmdShow);
@@ -139,6 +199,7 @@ int WINAPI WinMain(HINSTANCE hCurInst, HINSTANCE hPrevInst, LPSTR lpsCmdLine, in
 
 	person_color = RGB(0xb3, 0x35, 0x3f);
 	person_brush = CreateSolidBrush(person_color);
+	black_brush = CreateSolidBrush(RGB(0, 0, 0));
 
 	if(!InitApp()) return 0;
 	if(!InitWindow(nCmdShow)) return 0;
