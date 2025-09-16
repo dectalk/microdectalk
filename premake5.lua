@@ -110,7 +110,8 @@ if _OPTIONS["build-speak"] == "yes" then
 			links("m")
 		filter("system:windows")
 			links({
-				"gdi32"
+				"gdi32",
+				"comctl32"
 			})
 		filter({})
 end

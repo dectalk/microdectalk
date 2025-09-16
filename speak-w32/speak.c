@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include <windows.h>
+#include <commctrl.h>
 
 #include <stb_ds.h>
 #include <miniaudio.h>
@@ -11,7 +12,7 @@
 
 HINSTANCE hInst;
 HWND* btns = NULL;
-HWND text, start, stop;
+HWND text, start, stop, ratebar;
 HBRUSH person_brush, black_brush;
 COLORREF person_color;
 ma_device_config config;
@@ -172,6 +173,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 
 		SetWindowPos(start, NULL, rc.right - 32 - 32 - 8, rc.bottom - 48 + 16 / 2, 0, 0, SWP_NOSIZE);
 		SetWindowPos(stop, NULL, rc.right - 32 - 8, rc.bottom - 48 + 16 / 2, 0, 0, SWP_NOSIZE);
+		SetWindowPos(ratebar, NULL, 48 * 2, rc.bottom - 48 / 2 - 16 / 2, 0, 0, SWP_NOSIZE);
 
 		SetWindowPos(text, NULL, 0, BTNSZ, rc.right - rc.left, rc.bottom - rc.top - BTNSZ - 48, 0);
 	}else if(msg == WM_DRAWITEM){
@@ -256,6 +258,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 			}
 		}
 		return DefWindowProc(hWnd, msg, wp, lp);
+	}else if(msg == WM_PAINT){
+		PAINTSTRUCT ps;
+		HDC dc = BeginPaint(hWnd, &ps);
+		RECT rc, frc;
+		char buf[32];
+
+		GetClientRect(hWnd, &rc);
+
+		rc.right = rc.right - rc.left;
+		rc.bottom = rc.bottom - rc.top;
+		rc.left = 0;
+		rc.top = 0;
+
+		FillRect(dc, &rc, GetSysColorBrush(COLOR_MENU));
+
+		SetTextAlign(dc, TA_CENTER | TA_TOP);
+		SetBkMode(dc, TRANSPARENT);
+		TextOut(dc, 48, rc.bottom - 48 / 2 - 16 / 2, "Speaking Rate", 13);
+
+		frc.left = 48 * 2 + 128 + 32;
+		frc.top = rc.bottom - 48 / 2 - 16 / 2;
+		frc.right = frc.left + 48 * 2;
+		frc.bottom = frc.top + 16;
+
+		sprintf(buf, "%d WPM", rate);
+		FrameRect(dc, &frc, black_brush);
+		TextOut(dc, 48 * 2 + 128 + 32 + 48, rc.bottom - 48 / 2 - 16 / 2, buf, strlen(buf));
+
+		EndPaint(hWnd, &ps);
+	}else if(msg == WM_HSCROLL){
+		if(ratebar == (HWND)lp){
+			rate = SendMessage(ratebar, TBM_GETPOS, 0, 0);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
 	}else{
 		return DefWindowProc(hWnd, msg, wp, lp);
 	}
@@ -292,8 +328,13 @@ BOOL InitWindow(int nCmdShow) {
 		arrput(btns, hBtn);
 	}
 
+	InitCommonControls();
+
 	start = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)200, hInst, NULL);
 	stop = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)201, hInst, NULL);
+	ratebar = CreateWindow(TRACKBAR_CLASS, "", WS_VISIBLE | WS_CHILD, 0, 0, 128 + 32, 16, hWnd, 0, hInst, NULL);
+	SendMessage(ratebar, TBM_SETRANGE, TRUE, MAKELPARAM(75, 600));
+	SendMessage(ratebar, TBM_SETPOS, TRUE, 200);
 
 	text = CreateWindow("EDIT", "", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
 
