@@ -1,3 +1,12 @@
 #include <winver.h>
 
 DTC ICON "paul.ico"
+BETTY BITMAP "icons/bet203a.bmp"
+DENNIS BITMAP "icons/den203a.bmp"
+FRANK BITMAP "icons/fra203a.bmp"
+HARRY BITMAP "icons/har203a.bmp"
+KIT BITMAP "icons/kid203a.bmp"
+PAUL BITMAP "icons/pau203a.bmp"
+RITA BITMAP "icons/rit203a.bmp"
+URSULA BITMAP "icons/urs203a.bmp"
+WENDY BITMAP "icons/wen203a.bmp"

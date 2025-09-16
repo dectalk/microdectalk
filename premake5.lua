@@ -106,7 +106,10 @@ if _OPTIONS["build-speak"] == "yes" then
 				"Xm",
 				"Xt"
 			})
-		filter("system:windows")
 			links("m")
+		filter("system:windows")
+			links({
+				"gdi32"
+			})
 		filter({})
 end
