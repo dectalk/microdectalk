@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Speak
+Type=Application
+Terminal=false
+Exec=speak
+Icon=paul
+Categories=Audio;
