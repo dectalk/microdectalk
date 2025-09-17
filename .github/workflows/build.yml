@@ -53,6 +53,28 @@ jobs:
         name: build-win64
         path: speak64.exe
 
+  build-ubuntu:
+    name: "Build for Ubuntu"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install packages
+      run: sudo apt-get install libXpm-dev motif-dev libXt-dev
+    - name: Get premake5
+      run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
+    - name: Build
+      run: ./premake5 gmake --build-speak=yes && make config=release_native -j3 && mv bin/*/*/speak speak
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-ubuntu
+        path: speak
+
   release:
     name: "Release"
     runs-on: ubuntu-latest
