@@ -28,7 +28,7 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_win32 -j3 && mv bin/*/*/speak.exe speak32.exe
+      run: ./premake5 gmake --build-speak=yes && make config=release_win32 -j3 && mv bin/*/*/speak.exe speak-win32.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -54,7 +54,7 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_win64 -j3 && mv bin/*/*/speak.exe speak64.exe
+      run: ./premake5 gmake --build-speak=yes && make config=release_win64 -j3 && mv bin/*/*/speak.exe speak-win64.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -116,6 +116,6 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Release
-      run: gh release create -t "latest-dectalk-develop" "latest" *.exe speak64 -n "Latest release"
+      run: gh release create -t "latest-dectalk-develop" "latest" *.exe speak-ubuntu64 -n "Latest release"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
