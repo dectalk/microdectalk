@@ -64,7 +64,7 @@
  *
  * Used by PH
  */
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 
 #include "dectalkf.h"
 #include "port.h"
@@ -600,7 +600,7 @@ void WINprintf(char *fmt, ...) {
 #endif
 
 
-#else //#ifdef _DEBUG
+#else //#ifdef _DEBUG_OLD
 void WINprintf(char *fmt, ...) {}
 
 void WINstart_thread(void){}

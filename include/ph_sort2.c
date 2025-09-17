@@ -247,7 +247,7 @@ static void move_stdangle (LPTTS_HANDLE_T phTTS, short msym)
 				pDph_t->user_durs[m] = durdangle;
 				pDph_t->user_f0[m] = f0dangle;
 				delete_symbol (phTTS, msym);
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 				printf ("delete rule 2\n");
 #endif
@@ -267,7 +267,7 @@ static void move_stdangle (LPTTS_HANDLE_T phTTS, short msym)
 				pDph_t->user_durs[m] = durdangle;
 				pDph_t->user_f0[m] = f0dangle;
 				delete_symbol (phTTS, msym);
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 				printf ("delete rule S2\n");
 #endif
@@ -291,7 +291,7 @@ static void move_stdangle (LPTTS_HANDLE_T phTTS, short msym)
 				pDph_t->symbols[m] = S1;
 				pDph_t->user_durs[m] = durdangle;
 				pDph_t->user_f0[m] = f0dangle;
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 				printf ("delete rule 4\n");
 #endif
@@ -311,7 +311,7 @@ static void move_stdangle (LPTTS_HANDLE_T phTTS, short msym)
 	{
 		if (is_wboundary (pDph_t->symbols[m]))
 		{
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 			printf ("delete rule 5\n");
 #endif
@@ -327,7 +327,7 @@ static void move_stdangle (LPTTS_HANDLE_T phTTS, short msym)
 				pDph_t->user_durs[m] = durdangle;
 				pDph_t->user_f0[m] = f0dangle;
 			}
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 			printf ("delete rule 6\n");
 #endif

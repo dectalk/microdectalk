@@ -65,7 +65,7 @@
  *      Comments:
  *
  */
-//#define DEBUG_TARGETS
+//#define DEBUG_OLD_TARGETS
 static short setloc (LPTTS_HANDLE_T phTTS,
 					 short nfonobst,	/* Segment thought to be an obstruent */
 					 short nfonsonor,	/* Segment thought to be a sonorant  */
@@ -290,7 +290,7 @@ static short setloc (LPTTS_HANDLE_T phTTS,
 	delta_freq = muldv (tmp, (curval - locus), 100);
   	pDphsettar->bouval = locus + delta_freq;
 
-#ifdef DEBUG_TARGETS
+#ifdef DEBUG_OLD_TARGETS
     printf ("locus %d delta_freq %d \n", locus, delta_freq);
     printf ("pDphsettar->bouval %d \n", pDphsettar->bouval);
 #endif
@@ -322,7 +322,7 @@ static short setloc (LPTTS_HANDLE_T phTTS,
 		pDphsettar->bouval -= pDphsettar->vvbouval;		/* pDphsettar->vvbouval will be added in phdraw */
 	}
 
-#ifdef DEBUG_TARGETS
+#ifdef DEBUG_OLD_TARGETS
 	printf ("\t\t\t      (vtar = %4d  locus[%d] = %4d Hz  prcnt = %3d)\n",
 			curval, ploc, locus, pDph_t->p_locus[ploc + 1]);
 #endif
@@ -373,7 +373,7 @@ static void vv_coartic_across_c (PDPH_T pDph_t, short remoteV, short remotetar,
 		pDphsettar->vvdurtran = 0;//NF80MS - (dur_cons >> 2);
 	}
 
-#ifdef DEBUG_TARGETS
+#ifdef DEBUG_OLD_TARGETS
 	printf ("\t -> BV=%d TC=%d\n", pDphsettar->vvbouval, pDphsettar->vvdurtran);
 #endif
 }

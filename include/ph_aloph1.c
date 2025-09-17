@@ -88,7 +88,7 @@
 /* #include "phinst.h" *//* MVP : new instance header file */
 #include "ph_def.h"
 
-						 /* #define DEBUGALLO 1 *//* debugiing eab */
+						 /* #define DEBUG_OLDALLO 1 *//* debugiing eab */
 /****************************************************************************/
 /* MVP : The following extern variables are now become elements of instance */
 /* specific PH thread data structure DPH_T.                                	*/
@@ -527,7 +527,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 		 */
 
 		curr_inph = pDph_t->phonemes[n];
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 		printf ("input phonenme to alloph is %d", curr_inph);
 #endif
 		curr_instruc = pDph_t->sentstruc[n];
@@ -732,7 +732,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 			{
 				pDph_t->phonemes[n + 1] = USP_OR;
 				next_inph = USP_OR;
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 				printf ("for rr->or rule firing");
 #endif
 			}
@@ -759,7 +759,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 			&& ((((pDph_t->sentstruc[n + 1] & FSTRESS) IS_MINUS) && ((pDph_t->sentstruc[n + 3] & FSTRESS) IS_MINUS))
 				|| Cite_It))
 		{
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 			printf ("and eh->ae rule firing");
 #endif
 			pDph_t->phonemes[n + 1] = USP_AE;
@@ -773,7 +773,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 		if ((curr_inph == GEN_SIL) && (pDph_t->phonemes[n + 1] == USP_EH) && (pDph_t->phonemes[n + 2] == USP_T)
 			&& Cite_It )
 		{
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 			printf ("at eh->ae rule firing");
 #endif
 				
@@ -1056,7 +1056,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 			{
 				pDph_t->phonemes[n + 1] = AO;
 				next_inph = AO;
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 				printf ("for rr->or rule firing");
 #endif
 			}
@@ -1072,7 +1072,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 			if ((((pDph_t->sentstruc[n + 1] & FSTRESS) IS_MINUS) && ((pDph_t->sentstruc[n + 3] & FSTRESS) IS_MINUS))
 				|| Cite_It)
 			{
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 			printf ("and eh->ae rule firing");
 #endif
 			pDph_t->phonemes[n + 1] = AE;
@@ -1103,7 +1103,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 		if ((curr_inph == GEN_SIL) && (pDph_t->phonemes[n + 1] == AX) && (pDph_t->phonemes[n + 2] == T)
 			&& Cite_It )
 		{
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 			printf ("at eh->ae rule firing");
 #endif
 				
@@ -1457,7 +1457,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 		{
 #if defined ENGLISH || defined SPANISH || defined GERMAN
 			ph_delcnt++;
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 
 			printf ("adjusting in alloph,n= %d n+del=%d  \n", n, n + ph_delcnt);
 
@@ -1470,7 +1470,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 
 			if (curr_indur != 0)
 			{
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 				printf (
 						   "\t  Delete [%s], add dur=%d ms to that of previous phone [%s]\n",
 						   phprint (curr_inph), curr_indur, phprint (curr_outph));
@@ -1686,7 +1686,7 @@ static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
 	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 	struct spc_packet _far *spc_pkt;   /* debug eab */
 
 #endif                               
@@ -1698,7 +1698,7 @@ static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
 	set_index_allo (pKsd_t, n, pDph_t->nallotot);	/* At minimum do set_index eab */
 #endif
 
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 
 	if ((spc_pkt = (struct spc_packet _far *) pKsd_t->index_pending.head) != NULL_SPC_PACKET)
 	{
@@ -1756,13 +1756,13 @@ static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
 	if ((curr_outph < 0) || (curr_outph >= LA_TOT_ALLOPHONES)) /* spanish and german  */
 #endif
 	{
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 		printf ("Error outputing phoneme \n");
 		printf ("outputting phoneme %d\n ", curr_outph);
 		return;
 #endif
 	}
-#ifdef DEBUGALLO
+#ifdef DEBUG_OLDALLO
 	printf ("outputting phoneme %d\n ", curr_outph);
 #endif
 
@@ -1786,7 +1786,7 @@ static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
 		pDph_t->user_f0[pDph_t->nallotot] = curr_inf0;	/* Move user_f0 if phone moved */
 	}
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 	if (curr_indur != 0)
 	{
 		printf ("\tFound user_dur[%s] = %3d ms in PHALLOPH\n",

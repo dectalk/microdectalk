@@ -797,8 +797,8 @@ void la_phtiming (LPTTS_HANDLE_T phTTS)
 		if (((phone_feature( pDph_t,pDph_t->allophons[nphon]) & FVOWEL) IS_PLUS )|| (nphon == pDph_t->nallotot - 2))
 		{
 			/* printf("strucc=%o of phon %d at %d",struccur,pDph_t->allophons[nphon],nphon); */
-#ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 			WINprintf (" 2fbound struccur%o, p= %d\n", struccur, pDph_t->allophons[nphon]);
 			WINprintf ("syldur = %d \n ", (syldur * 64) / 10);
 			WINprintf ("vowcnt=%d\n", vowcnt);
@@ -826,7 +826,7 @@ void la_phtiming (LPTTS_HANDLE_T phTTS)
 
 			default:
 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 				printf ("WHY HERE??");
 				printf ("vowcnt=%d phon= %d nphon= %d\n", vowcnt, pDph_t->allophons[nphon], nphon);
 				printf ("vowcnt=%d phon= %d nphon= %d\n", vowcnt, pDph_t->allophons[nphon], nphon);
@@ -877,7 +877,7 @@ void la_phtiming (LPTTS_HANDLE_T phTTS)
 					 * (syldur*64)/10,adjust); 
 					 */
 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("set  %d dur %d syldur=%d adj=%d", pDph_t->allophons[endcnt], pDph_t->allodurs[endcnt], (syldur * 64) / 10, adjust);
 #endif
 	
@@ -886,22 +886,22 @@ void la_phtiming (LPTTS_HANDLE_T phTTS)
 					/* If real short to beign with don't touch*/
 					if(pDph_t->allodurs[endcnt] <=6)
 					{
-#ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 						WINprintf("BINGO");
 #endif
 #endif
 						pDph_t->allodurs[endcnt]=6;
 					}
 					/* if(pDph_t->allodurs[endcnt] <= 5) pDph_t->allodurs[endcnt]=5; */
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("to  %d \n", ((pDph_t->allodurs[endcnt] * NSAMP_FRAME) / 10));
 #endif
 					ncnt++;
 				}
 			}
 			 	 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 			  /* WINprintf("set  syldur from %d to %d in %d adjusts.\n",
 			  ((syldur)*64)/10,((syldur+(ncnt*adjust))*64)/10,ncnt ); */
 #endif
@@ -942,7 +942,7 @@ void la_phtiming (LPTTS_HANDLE_T phTTS)
 
 
 
-#ifdef DEBUG_PHTIMING
+#ifdef DEBUG_OLD_PHTIMING
 		printf ("final dur of allodurs[%d]%d = %d\n",nphon, pDph_t->allophons[nphon], pDphsettar->durxx * 64 / 10);
 		printf ("final dur of allodurs[%d]%d = %d\n",nphon, pDph_t->allophons[nphon], pDph_t->allodurs[nphon] * 64 / 10);
 		printf ("user_durs[%d]=%d\n",nphon,pDph_t->user_durs[nphon]);

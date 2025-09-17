@@ -83,7 +83,7 @@ typedef DWORD           SEGPTR;
 #define FIXME()
 #define DUMP()
 #else
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 #define stddeb  stderr
 #define DPRINTF(format, args...) fprintf(stddeb, format, ## args)
 #define TRACE(fmt, args...) DPRINTF(fmt, ## args)
@@ -100,7 +100,7 @@ typedef DWORD           SEGPTR;
 #define FIXME(fmt, args...)
 #define DUMP(format, args...)
 #endif
-#endif /* NO_DEBUG_MSGS */
+#endif /* NO_DEBUG_OLD_MSGS */
 
 #define LOBYTE(w)              ((BYTE)(WORD)(w&0x00ff))
 #define HIBYTE(w)              ((BYTE)((WORD)(w&0xff00) >> 8))
@@ -499,7 +499,7 @@ BOOL16 DriverCallback(void (*dwCallBack)(void *, unsigned int,  unsigned int, lo
 			     long dwParam2);
      
 
-#undef _DEBUG
+#undef _DEBUG_OLD
 
 #endif
 #endif

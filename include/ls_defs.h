@@ -511,19 +511,19 @@ typedef	struct LETTER_struct	{
 #define _TOLOWER(c) (c += ('a' - 'A'))  /* Known to be uppercase */
 
 #ifdef VMS
-#define NBR_DEBUG       1
-#define LTS_DEBUG       2
-#define SYL_DEBUG       4
-#define STR_DEBUG       8
-#define DIC_DEBUG       16
-#define DEBUG(what)     ((lprintsw & (what)) != 0)
+#define NBR_DEBUG_OLD       1
+#define LTS_DEBUG_OLD       2
+#define SYL_DEBUG_OLD       4
+#define STR_DEBUG_OLD       8
+#define DIC_DEBUG_OLD       16
+#define DEBUG_OLD(what)     ((lprintsw & (what)) != 0)
 #define dt_lock()                                                
 #define dt_unlock()
 #else
-#define NBR_DEBUG       0
-#define SYL_DEBUG       0
-#define STR_DEBUG       0
-#define DIC_DEBUG       16      
+#define NBR_DEBUG_OLD       0
+#define SYL_DEBUG_OLD       0
+#define STR_DEBUG_OLD       0
+#define DIC_DEBUG_OLD       16      
 #endif // VMS
 
 #endif // SPANISH

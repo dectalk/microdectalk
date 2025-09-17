@@ -212,7 +212,7 @@ void ls_task_parse_sentence(LPTTS_HANDLE_T phTTS);
 /* protos */
 extern PHONE * ls_rule_phone_alloc(PLTS_T pLts_t);
 extern void ls_suff_print_fc(LPTTS_HANDLE_T phTTS);
-/*#define LS1DEBUG 1*/
+/*#define LS1DEBUG_OLD 1*/
 
 /*#define DUMP_WORD*/
 
@@ -235,7 +235,7 @@ extern char *form_class_strings[];
 	extern LPTTS_HANDLE_T phTTS;
 #endif
 
-#if defined (WIN32) && defined (PRINTFDEBUG) && defined _DEBUG
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD) && defined _DEBUG_OLD
 extern int Thread_Alive;
 extern int in_winmain;
 #endif
@@ -499,7 +499,7 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 
 		/* ET 6/9/1998: BATS #691
 		copied from ...\dapi\src\CMD\cm_pars.c to get the debug win to come up */
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		/* open debug window for window environement */
 		if (/*(windbg_flag == 0) && ET 6/9/1998*/(Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{
@@ -620,7 +620,7 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 			llp = &(pLts_t->cword[0]);
 			ls_task_find_end_of_word(llp,&rlp,&elp);
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("after find end of word ");
 			printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -678,11 +678,11 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 					rlp --;
 					done++;
 				}
-#ifdef _DEBUG 
+#ifdef _DEBUG_OLD 
 #ifndef UNDER_CE
 			printf("hit it \n");
 #endif
-#endif // _DEBUG
+#endif // _DEBUG_OLD
 			//eab what if prefix-looks like another prefix imim should be ok
 			done=ls_task_dictionary_search(phTTS,llp,rlp);
 			}
@@ -1154,7 +1154,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 		case '?':
 			if (pLts_t->wstate == IS_WH)    			/* Ignore the "?" if at */
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf("Changing question mark to period! \n");
 #endif
 				ls_util_send_phone(phTTS,PERIOD);       /* the end of a "Wh..." */
@@ -1448,7 +1448,7 @@ void ls_task_spell_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	
 	pLts_t=phTTS->pLTSThreadData;
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" gok spell\n");
 #endif
 		   
@@ -1491,7 +1491,7 @@ void ls_task_read_next_word(LPTTS_HANDLE_T phTTS)
 	PLTS_T pLts_t;
 	
 	pLts_t=phTTS->pLTSThreadData;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf(" got to out\n");
 #endif
 	if (pLts_t->rbphone!=WBOUND && ls_util_is_white(&(pLts_t->citem))!=FALSE) 
@@ -1534,7 +1534,7 @@ void ls_task_read_next_word(LPTTS_HANDLE_T phTTS)
 int ls_task_set_what_state(LPTTS_HANDLE_T phTTS, PLTS_T pLts_t)  
 {
 	LETTER *llp;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_set_what_state\n");
 #endif
 	if (pLts_t->wstate==UNK_WH && pLts_t->cword[0].l_ch!=EOS)
@@ -1648,25 +1648,25 @@ int ls_task_set_what_state(LPTTS_HANDLE_T phTTS, PLTS_T pLts_t)
  * *****************************************************************/
 void ls_task_find_end_of_word(LETTER *llp, LETTER **rlp, LETTER **elp)
 {
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_find_end_of_word\n");
 #endif
 	(*elp) = llp;
 	while ((*elp)->l_ch != EOS) /* find the end of the word ?? */
 	{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" %02x %c \n",(*elp)->l_ch,(*elp)->l_ch);
 #endif   
 		
 		++(*elp);               
 	}
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf (" %02x %c \n",(*elp)->l_ch,(*elp)->l_ch);
 #endif
 	
 	(*rlp) = (*elp);
 	
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("found the end of word ");
 		printf("left=%u  right=%u\n",llp,*rlp);
 #endif
@@ -1796,13 +1796,13 @@ int ls_task_spell_mode(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	pLts_t = phTTS->pLTSThreadData;
 	pKsd_t = phTTS->pKernelShareData;   
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_spell_mode\n");
 #endif
 	if ((pKsd_t->modeflag&MODE_SPELL)!=0) 
 	{
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf(" mode spell spell\n");
 #endif
 
@@ -1854,7 +1854,7 @@ int ls_task_minidic_search(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 
 	pLts_t = phTTS->pLTSThreadData;
 	pKsd_t = phTTS->pKernelShareData;   
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_minidic_search\n");
 #endif
 	// CAB 08/15/2002	Removed warning by typecast
@@ -1998,7 +1998,7 @@ int ls_task_dictionary_search(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	
 	pLts_t = phTTS->pLTSThreadData;
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_dictionary_search\n");
 #endif
 
@@ -2023,7 +2023,7 @@ int ls_task_dictionary_search(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	 *	nabtab
 	 */
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("%c %02x -- %c %02x\n",llp->l_ch,llp->l_ch,(llp+1)->l_ch,(llp+1)->l_ch);
 #endif
 
@@ -2203,12 +2203,12 @@ void ls_task_strip_left_punctuation(PLTS_T pLts_t, LETTER **llp, LETTER *rlp)
 	 * and abbreviations are more common than imbedded
 	 * periods.
 	 */
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_strip_left_punctuation\n");
 #endif
 	 pLts_t->lflag  = 0;                             /* Clear all flags.     */
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("before punctuation stripping ");
 	printf("left=%u  right=%u\n",(*llp),rlp);
 #endif
@@ -2217,7 +2217,7 @@ void ls_task_strip_left_punctuation(PLTS_T pLts_t, LETTER **llp, LETTER *rlp)
 	/* Change this "while" to an "if" to strip only 1 layer.        */
 	while ((lsctype[(*llp)->l_ch]&LS) != 0)
 	{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("in left stripping loop %c\n",(*llp)->l_ch);
 #endif
 		pLts_t->lflag |= LSTRIP;
@@ -2251,13 +2251,13 @@ void ls_task_strip_left_punctuation(PLTS_T pLts_t, LETTER **llp, LETTER *rlp)
  * *****************************************************************/
 void ls_task_strip_right_punctuation(PLTS_T pLts_t, LETTER *llp, LETTER **rlp)
 {
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_strip_right_punctuation\n");
 #endif
 	/* Change this "while" to an "if" to strip only 1 layer. */
 	while ((*rlp)!=llp && (lsctype[((*rlp)-1)->l_ch]&RS)!=0) 
 	{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("in right stripping loop %c\n",llp->l_ch);
 #endif
 		pLts_t->lflag |= RSTRIP;
@@ -2321,13 +2321,13 @@ int ls_task_spell_all_punct(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, LETTE
 {
 	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_spell_all_punct\n");
 #endif
 	if (llp == rlp) 
 	{                       /* Null word            */
 		ls_spel_spell(phTTS,lp1, lp2);  /* Always slowly.       */
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("null word spell\n");
 #endif
 
@@ -2349,7 +2349,7 @@ int ls_task_spell_all_punct(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, LETTE
 	if (pLts_t->lbphone != WBOUND)
 		ls_util_send_phone(phTTS,pLts_t->lbphone);
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("after punctuation stripping ");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -2389,7 +2389,7 @@ int ls_task_dictionary_after_punct(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER **r
 	LETTER *lp1;
 	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_dictionary_after_punct\n");
 #endif
 	
@@ -2466,7 +2466,7 @@ int ls_task_spell_vs_speak(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	PKSD_T	pKsd_t;
 	pKsd_t = phTTS->pKernelShareData;   
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("entering ls_task_spell_vs_speak\n");
 	printf("ls_spel_say_it ");
 	printf("left=%u  right=%u\n",llp,rlp);
@@ -2474,7 +2474,7 @@ int ls_task_spell_vs_speak(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 
 	if(ls_spel_say_it(llp,rlp) == FALSE)
 	{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("ls_spel_say_it spell\n");
 #endif
 				/* debug switch */
@@ -2530,7 +2530,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("entering ls_task_single_letter_spell_rules");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif 
@@ -2564,7 +2564,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 			/* BATS 460 MGS 10/08/1997 Fixed A. B. C. problem losing periods */
 			pLts_t->rbphone=PERIOD;
 			ls_util_read_item(phTTS);
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" spell cap letter \n");
 #endif
 
@@ -2615,7 +2615,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 #endif
 			ls_util_send_phone(phTTS,SPECIALWORD);	
 			ls_util_send_phone(phTTS,US_AX);			
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" a to ah code \n");
 #endif
 			return(FINISHED_WORD);
@@ -2657,7 +2657,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 			pLts_t->fc_struct[pLts_t->fc_index] = FC_ART;
 			ls_util_send_phone(phTTS,SPECIALWORD);	
 			ls_util_send_phone(phTTS,UK_AX);			
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" a to ah code \n");
 #endif
 			return(FINISHED_WORD);
@@ -2670,7 +2670,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 		{
 			pLts_t->fc_struct[pLts_t->fc_index] = FC_CONJ;
 			ls_util_send_phone(phTTS,SP_I);
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" iggre to i  code \n");
 #endif
 			return(FINISHED_WORD);
@@ -2685,7 +2685,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 		{
 			pLts_t->fc_struct[pLts_t->fc_index] = FC_CONJ;
 			ls_util_send_phone(phTTS,LA_I);
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" iggre to i  code \n");
 #endif
 
@@ -2708,7 +2708,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 		&& !IS_DIGIT(llp->l_ch) )
 #endif // FRENCH
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("single letter spell\n");
 #endif
 
@@ -2800,7 +2800,7 @@ int ls_task_single_letter_spell_rules(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER 
 			lp1 = llp;
 			while (lp1 != rlp) 
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf("ate it all spell\n");
 #endif
 
@@ -2898,7 +2898,7 @@ int ls_task_Dr_St_process(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	 * do decide if this is an abbreviation context.
 	 */
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("dr. st. processing ");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -2990,7 +2990,7 @@ int ls_task_set_sign_flag(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, LETTER
 	pKsd_t = phTTS->pKernelShareData;
 	pLts_t = phTTS->pLTSThreadData;	
 
-#ifdef LS1DEBUG       
+#ifdef LS1DEBUG_OLD       
 	printf("entering ls_task_set_sign_flag\n");
 	printf("beginnning number processing   ");
 	printf("left=%u  right=%u\n",llp,rlp);
@@ -3030,12 +3030,12 @@ int ls_task_set_sign_flag(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, LETTER
 		{               
 		pLts_t->sign = (*lp1)->l_ch;
 		++(*lp1);
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("num processing sign found\n");
 #endif
 		if ((*lp1) == rlp)
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" spell from num processing\n");
 #endif
 
@@ -3093,7 +3093,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 	pLts_t = phTTS->pLTSThreadData;
 
 #ifndef FRENCH
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_currency_processing\n");
 #endif
 	/*
@@ -3103,7 +3103,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 	 * to begin running the money rules.
 	 */
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("currency rules ");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -3112,7 +3112,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 		type = llp->l_ch;
 		if (++llp == rlp)               /* Lone currency mark.  */
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("currency mark spell \n");
 #endif
 
@@ -3125,7 +3125,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 
 			if (pLts_t->sign != 0)
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("sign spell \n");
 #endif
 
@@ -3135,7 +3135,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 			pLts_t->sign = llp->l_ch;
 			if (++llp == rlp)       /* "$+"                 */
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" spell from num sign proc \n");
 #endif
 
@@ -3146,7 +3146,7 @@ int ls_task_currency_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *lp1, 
 		lp2 = ls_task_parse_number(phTTS,llp, rlp, &num);
 		if (num.n_elp!=NULL || lp2!=rlp)
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("ls_task_parse_number spell \n");
 #endif
 
@@ -3490,7 +3490,7 @@ int ls_task_date_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	 * date or a time, because signs are legal.
 	 */
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("date time processing ");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -3525,7 +3525,7 @@ int ls_task_date_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 /* GL 02/13/1997, support am, pm for spanish as well since sometime they do use */
 			if (ls_proc_is_am_pm(&(pLts_t->nword[0]), lp1) != FALSE)
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("ls_proc_is_am_pm spell\n");
 #endif
 				ls_spel_spell(phTTS,&(pLts_t->nword[0]), lp1);
@@ -3576,7 +3576,7 @@ int ls_task_frac_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 {
 	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("entering ls_task_frac_processing\n");
 #endif             
 
@@ -3645,7 +3645,7 @@ int ls_task_plain_number_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *r
 
 	 /* Kurz. now wants it to be symetrical with negative numbers
 	 EAB-4-11-89*/
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("entering ls_task_plain_number_processing\n");
 	printf("number procesing ");
 	printf("left=%u  right=%u\n",llp,rlp);
@@ -3724,7 +3724,7 @@ int ls_task_plain_number_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *r
 #if defined (ENGLISH) || defined (GERMAN)
 			if (ls_proc_is_am_pm(&(pLts_t->nword[0]), lp1) != FALSE) 
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf("iasmpm spell\n");
 #endif
 
@@ -3995,7 +3995,7 @@ int ls_task_part_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("entering ls_task_part_number\n");
 	printf("no more heuristics ");
 	printf("left=%u  right=%u\n",llp,rlp);
@@ -4014,7 +4014,7 @@ int ls_task_part_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 		}
 		else if (c!='-' && !(IS_ALPHA(c)))
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" drop through spell %c  \n",c);
 #endif
 
@@ -4030,7 +4030,7 @@ int ls_task_part_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	{             /* Parts have digits or */
 		if (((pLts_t->lflag)&SQUOTE) != 0)        /* slashes, and do not  */
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 			printf(" punt spell \n");
 #endif
 
@@ -4103,7 +4103,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 	 * to the end without a fail, run the thing through
 	 * the letter to sound rules.
 	 */
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 	printf("entering ls_task_process_word ");
 	printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -4178,7 +4178,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 
 		pLts_t->tlflag=pLts_t->lflag;
 
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 		printf("b2a %c %c %d\n",lp2->l_ch,lp1->l_ch, lp1->l_ch);
 		printf("looking \n");
 
@@ -4192,7 +4192,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
                 //pKsd_t
 		if (ls_util_lookup(phTTS,lp2, lp1, FIRST) != MISS)
 		{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 
 			printf("got a hit");
 #endif
@@ -4200,7 +4200,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 			if(firsttim == 1 && lp1<rlp)
 			{
 				lp1++;
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 printf("sending hypen");
 #endif
 				ls_util_send_phone(phTTS, HYPHEN );
@@ -4217,7 +4217,7 @@ printf("sending hypen");
 			/* MGS 6/13/97 BATS #389 changed so single letters get spelled */
 			if( ((pLts_t->tlflag)&HVOWEL) != 0  && (lp2+1 != lp1))
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf("doing lts1 ");
 				printf("left=%u  right=%u\n",lp2,lp1);
 #endif
@@ -4233,7 +4233,7 @@ printf("sending hypen");
 #ifdef DUMP_WORD
 				//printf("done lts1\n");
 #endif
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 
 				printf("done lts1 ");
 				printf("left=%u  right=%u\n",lp2,lp1);
@@ -4257,7 +4257,7 @@ printf("sending hypen");
 					llp=lp1;
 					lp2=lp1;
 				}
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf("done lts1 333");
 				printf("left=%u  right=%u\n",llp,rlp);
 #endif
@@ -4268,7 +4268,7 @@ printf("sending hypen");
 		{
 			if (((pLts_t->lflag)&HNONY) == 0)         /* Spell if all "y".    */
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf(" spell all y \n");
 #endif
 				ls_spel_spell(phTTS,lp2,lp1);
@@ -4276,7 +4276,7 @@ printf("sending hypen");
 			}
 			if (((pLts_t->lflag)&HVOWEL) == 0)        /* Spell if no vowels.  */
 			{
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 				printf("spell no vowel  \n");
 #endif
 				ls_spel_spell(phTTS,lp2,lp1);
@@ -4286,7 +4286,7 @@ printf("sending hypen");
 			{       /* If no consonant, the */
 				/* if (lp2+1 != lp1)
 				{ */
-#ifdef LS1DEBUG
+#ifdef LS1DEBUG_OLD
 					printf(" spell no cons. \n");
 #endif
 					ls_spel_spell(phTTS,lp2,lp1);

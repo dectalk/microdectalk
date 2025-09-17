@@ -157,7 +157,7 @@
                         (((U8 *)(ptr))[0])))
 #endif
 
-#ifndef PARSER_DEBUG
+#ifndef PARSER_DEBUG_OLD
 #define  par_copy_return_value(dest,src) memcpy(dest,src,sizeof(return_value_t))
 #endif
 

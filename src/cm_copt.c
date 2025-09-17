@@ -287,7 +287,7 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 {
 	int i, value;
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	int	p, q;
 #endif
 	unsigned int flag_mask;
@@ -307,7 +307,7 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 		 * OUTPHON followed by ON
 		 * OFF or SET
 		 */
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		for (p=0;log_options[p];p++)
 		{
 			putc('l');
@@ -1911,7 +1911,7 @@ int cm_cmd_power(LPTTS_HANDLE_T phTTS)
 			break;
 		case 1: /* interval */
 			pKsd_t->power_interval=pCmd_t->params[1];
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 			printf("[:rem interval %d]",pKsd_t->power_interval);
 #endif /*debug*/
 			return(CMD_success);

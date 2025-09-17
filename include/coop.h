@@ -210,11 +210,11 @@
 #endif // WILLOWPOND
 #endif // ACI_LICENSE
 
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 #define DTALK_DBG_VERSION               1                       // NCS - DBG Version
 #else
 #define DTALK_DBG_VERSION               0                       // NCS - DBG Version
-#endif	// _DEBUG
+#endif	// _DEBUG_OLD
 
 /***********************************************************************************/
 /* DECtalk TTSVersion Data Information: 03/10/1998

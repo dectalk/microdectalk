@@ -67,9 +67,9 @@
 
 extern unsigned char par_lower[];
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 /* ******************************************************************
- *      Function Name: #ifdef DEBUGPARS print_string()
+ *      Function Name: #ifdef DEBUG_OLDPARS print_string()
  *
  *      Description:
  *
@@ -91,7 +91,7 @@ void print_string(unsigned char *string)
 }
 
 /* ******************************************************************
- *      Function Name: #ifdef DEBUGPARS print_decimal()
+ *      Function Name: #ifdef DEBUG_OLDPARS print_decimal()
  *
  *      Description:
  *
@@ -119,7 +119,7 @@ void print_decimal(int i)
 	}
 	print_string(s);
 }
-#endif // DEBUGPARS
+#endif // DEBUG_OLDPARS
 
 
 /* ******************************************************************
@@ -146,7 +146,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	//PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	printf("CMD_PARS: cm_cmd_match_comm:\n");
 #endif
 	save_matches = pCmd_t->total_matches;
@@ -179,7 +179,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 			cm_pars_new_state(pCmd_t, STATE_PARAM);
 			cm_cmd_build_param(phTTS, c);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_match_comm: Parse State Switch: STATE_COMMAND->STATE_PARAM\n");
 #endif
 		}
@@ -200,7 +200,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 				cm_cmd_error_comm(phTTS, CMD_bad_command);
 				cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_match_comm: Parse State Switch: STATE_COMMAND->STATE_TOSS\n");
 #endif
 			}
@@ -229,7 +229,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 	 	pCmd_t->ParseChar=temp;
 #endif
 		cm_cmd_do_command(phTTS, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_match_comm: Parse State Switch: STATE_COMMAND->STATE_NORMAL\n");
 #endif
 		return;
@@ -273,7 +273,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 			cm_cmd_error_comm(phTTS, CMD_bad_command);
 			cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_match_comm: Parse State Switch: STATE_COMMAND->STATE_TOSS\n");
 #endif
 		}
@@ -299,7 +299,7 @@ void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 			cm_pars_new_state(pCmd_t, STATE_PARAM);
 			cm_cmd_build_param(phTTS, c);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_match_comm: Parse State Switch: STATE_COMMAND->STATE_PARAM\n");
 #endif
 		}
@@ -326,7 +326,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	//PKSD_T pKsd_t = phTTS->pKernelShareData;
 	
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	printf("CMD_PARS: cm_cmd_do_command:\n");
 #endif
 	if(pCmd_t->total_matches == 1)
@@ -335,7 +335,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
 		if(err_value == CMD_success)
 		{
 			cm_cmd_reset_comm(pCmd_t, new_state);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_do_command: Parse State Switch: STATE_?->STATE_new?\n");
 #endif
 			return;
@@ -345,7 +345,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
 			if(err_value == CMD_flushing)
 			{
 				cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_do_command: Parse State Switch: STATE_?->STATE_NORMAL\n");
 #endif
 #ifdef ESCPAE_SEQ
@@ -361,7 +361,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
 					cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
 				else
 					cm_cmd_reset_comm(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_do_command: Parse State Switch: STATE_?->STATE_TOSS\n");
 #endif
 				return;
@@ -373,7 +373,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
 		cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
 	else
 		cm_cmd_reset_comm(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_do_command: Parse State Switch: STATE_?->STATE_TOSS\n");
 #endif
 }
@@ -397,7 +397,7 @@ void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state)
  * *****************************************************************/
 void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 {
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	int i,j;
 #endif
 	int temp;
@@ -407,7 +407,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 	/*
 	 *  first, if we get here and there are no more parameters needed ...
 	 */
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	/* printf("\nbuild_param;cmd_index=%d params[param_index]=%d",pCmd_t->cmd_index,pCmd_t->params[pCmd_t->param_index]);*/
     /* printf("\nbuild_param;param_index=%d format_index=%d ",pCmd_t->param_index,pCmd_t->format_index);*/
     /* printf(".");*/
@@ -419,7 +419,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 	if (FORMAT_PARAM == 0)
 	{
 		cm_cmd_do_command(phTTS, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_BRACKET\n");
 #endif
 		return;
@@ -433,7 +433,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 		if(c == ':')
 		{
 			cm_cmd_do_command(phTTS, STATE_COMMAND);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_COMMAND\n");
 #endif
 			return;
@@ -441,7 +441,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 		if(c == ' ' || c == '\t' || c == '\r' || c == '\n')
 		{
 			cm_cmd_do_command(phTTS, STATE_KEEP);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_KEEP\n");
 #endif
 			return;
@@ -449,7 +449,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 		if(c == ']')
 		{
 			cm_cmd_do_command(phTTS, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_NORMAL\n");
 #endif
 			return;
@@ -484,21 +484,21 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 
 				case ']':
 					cm_cmd_do_command(phTTS, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_NORMAL\n");
 #endif
 					return;
 
 				case ':':
 					cm_cmd_do_command(phTTS, STATE_COMMAND);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_COMMAND\n");
 #endif
 					return;
 
 				case '.':
 					cm_cmd_do_command(phTTS, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_BRACKET\n");
 #endif
 					return;
@@ -658,7 +658,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 			(pCmd_t->param_index) += 1;
 		}
 		cm_cmd_do_command(phTTS, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_BRACKET\n");
 #endif
 		return;
@@ -689,14 +689,14 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 			if(FORMAT_PARAM == '\0')
 			{
 				cm_cmd_do_command(phTTS, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_BRACKET\n");
 #endif
 			}
 			else if(FORMAT_PARAM == '*')
 			{
 				cm_cmd_do_command(phTTS, STATE_KEEP);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_KEEP\n");
 #endif
 			}
@@ -716,7 +716,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 				cm_cmd_error_comm(phTTS, CMD_bad_param);
 				cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_TOSS\n");
 #endif
 			}
@@ -724,7 +724,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 
 		case ']':
 			cm_cmd_do_command(phTTS, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_NORMAL\n");
 #endif
 			break;
@@ -741,7 +741,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 #endif
 			cm_cmd_error_comm(phTTS, CMD_bad_param);
 			cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS                                     
+#ifdef DEBUG_OLDPARS                                     
 		printf("CMD_PARS: cm_cmd_build_param: Parse State Switch: STATE_PARAM->STATE_TOSS\n");
 #endif
 			break;
@@ -767,7 +767,7 @@ void cm_cmd_reset_comm(PCMD_T pCmd_t, unsigned int state)
 {
 	int     i;
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	printf("CMD_PARS: cm_cmd_reset_comm:\n");
 #endif
 	if(state != STATE_KEEP)

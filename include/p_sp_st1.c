@@ -726,7 +726,7 @@ static void sp_forw_smooth_rules(LPTTS_HANDLE_T phTTS, short shrif, short pholas
 		{
 			if (pDphsettar->np <= &PF3)
 			{
-/* EAB 6/24/98 FOR DEBUG
+/* EAB 6/24/98 FOR DEBUG_OLD
 			if (pDphsettar->np == &PF1)
 			{
 				WINprintf("embeeded f1= %d \n",pDphsettar->bouval);

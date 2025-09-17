@@ -688,26 +688,26 @@ void * reallocLock( void * pMem, size_t size )
 
   hMem = GlobalHandle( pMem );
 
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
   {
 	  char szTemp[256];
 	  sprintf(szTemp,"reallocLock: was ptr:%08lx  hMem:%08lx\n",
 	  pMem, hMem);
 	  OutputDebugString(szTemp);
   }
-#endif //_DEBUG
+#endif //_DEBUG_OLD
 
   hMem = GlobalReAlloc( hMem, size, GMEM_MOVEABLE );
 
   pvReturn = GlobalLock( hMem );
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
   {
 	  char szTemp[256];
 	  sprintf(szTemp,"reallocLock: (ptr was %08lx) is ptr:%08lx  hMem:%08lx\n",
 	  pMem, pvReturn, hMem);
 	  OutputDebugString(szTemp);
   }
-#endif //_DEBUG
+#endif //_DEBUG_OLD
 
   return(pvReturn);
 }

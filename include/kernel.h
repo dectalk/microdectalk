@@ -198,7 +198,7 @@ typedef struct PIPE_struct {
 #endif // _WINDOW_H
 
 // tek 30apr97 some debugging stuff..
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 //#include "pipe.h"
 extern FILE *fpODS_File;
 #undef OutputDebugString
@@ -211,11 +211,11 @@ extern FILE *fpODS_File;
 
 #define ODSFlush()
 
-#else //_DEBUG
+#else //_DEBUG_OLD
 #undef OutputDebugString
 #define OutputDebugString(x)
 #define ODSFlush()
-#endif //DEBUG
+#endif //DEBUG_OLD
 //#include "pipe.h"
 #endif //WIN32_OLD
 
@@ -235,7 +235,7 @@ typedef struct PIPE_struct {
 
 // tek 30apr97 some debugging stuff..
 #if defined __osf__ || defined __unix__ || defined _SPARC_SOLARIS_ || defined (__APPLE__)
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 #if defined __unix__ || defined (__APPLE__)
 #define timeGetTime() (unsigned long)(time(NULL))
 #endif
@@ -246,10 +246,10 @@ extern FILE *fpODS_File;
 		fpODS_File = fopen("odslog.log","w"); \
 	fprintf(fpODS_File,"%s",x); \
   } \
-#else //DEBUG
+#else //DEBUG_OLD
 #undef OutputDebugString
 #define OutputDebugString(x)
-#endif // _DEBUG
+#endif // _DEBUG_OLD
 #endif // __osf__ || __unix__ || defined _SPARC_SOLARIS_
 
 /* GL 04/21/1997 add this for OSF build */

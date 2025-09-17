@@ -198,7 +198,7 @@ static short fr_special_coartic (PDPH_T pDph_t, short nfon, short diphpos) {
 
 
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 #ifndef UNDER_CE
 // write values for forward transition (the left transition of a phoneme)
 void writeTransF (LPTTS_HANDLE_T phTTS, char* message, short pholas) {

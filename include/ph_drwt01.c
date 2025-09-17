@@ -189,8 +189,8 @@ Later edit history of old ph_drwt0.c
 #define PIOVER2	1024
 #define ONE	(PIOVER2*PIOVER2)
 /* #define GRAPHF0*/
-/*#define DEBUGF0*/
-/* #define DEBUG_USER_PROSODICS */
+/*#define DEBUG_OLDF0*/
+/* #define DEBUG_OLD_USER_PROSODICS */
 
 #define HIGHEST_F0	  5121	/*  Maximum F0 in Hz*10	*/
 #define LOWEST_F0	   500	/*  Minimum F0 in Hz*10	*/
@@ -515,7 +515,7 @@ int temp,dtglst,pseudojitter;
 		pDphsettar->beginfall = pDphsettar->f0basestart;
 		pDphsettar->endfall = pDphsettar->f0endfall;
 		
-#ifdef DEBUGF0
+#ifdef DEBUG_OLDF0
 			WINprintf ("At newpar sw %d %d	beginfall and endfall \n", pDphsettar->beginfall, pDphsettar->endfall);
 #endif
 	
@@ -1052,7 +1052,7 @@ if (pDphsettar->lastone==-1)
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("\n");
 #endif
 				if (pKsd_t->logflag & LOG_OUTPHON)
@@ -1280,7 +1280,7 @@ else
 		pDphsettar->beginfall = pDphsettar->f0basestart;
 		pDphsettar->endfall = pDphsettar->f0endfall;
 		
-#ifdef DEBUGF0
+#ifdef DEBUG_OLDF0
 			WINprintf ("At newpar sw %d %d	beginfall and endfall \n", pDphsettar->beginfall, pDphsettar->endfall);
 #endif
 	
@@ -1912,7 +1912,7 @@ if (pDphsettar->lastone==-1)
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("\n");
 #endif
 				if (pKsd_t->logflag & LOG_OUTPHON)
@@ -2276,7 +2276,7 @@ getcosine(time) short time; {
 /* #define MSDBG2 */
 /* #define MSDBG3   #define MSDBG4 */
 
-// #define DEBUGF0        
+// #define DEBUG_OLDF0        
 
 #define TWOPI   4096				   /* For getcosine() function below */
 #define PI      2048
@@ -2468,7 +2468,7 @@ void pht0draw (LPTTS_HANDLE_T phTTS)
 #ifdef SPANISH
 		}
 #endif
-#ifdef DEBUGF0
+#ifdef DEBUG_OLDF0
 		printf ("beginfall = %d endfall = %d\n", pDphsettar->beginfall, pDphsettar->endfall);
 #endif
 		pDphsettar->nframb = 0;
@@ -2478,7 +2478,7 @@ void pht0draw (LPTTS_HANDLE_T phTTS)
 		{
 			pDphsettar->beginfall += 120;
 			pDphsettar->endfall += 70;
-#ifdef DEBUGF0
+#ifdef DEBUG_OLDF0
 			printf ("At newpar sw %d %d	beginfall and endfall\n", pDphsettar->beginfall, pDphsettar->endfall);
 #endif
 			pDph_t->newparagsw = FALSE;
@@ -2800,7 +2800,7 @@ void pht0draw (LPTTS_HANDLE_T phTTS)
 /* #endif */
 
 
-#ifdef DEBUGF0
+#ifdef DEBUG_OLDF0
 		WINprintf ("pDphsettar->tarbas %d tarhat %d	tarimp %d tarseg %d \n", pDphsettar->tarbas, pDphsettar->tarhat, pDphsettar->tarimp, pDphsettar->tarseg);
 #endif
 	
@@ -2982,7 +2982,7 @@ if (pDphsettar->lastone==-1)
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("\n");
 #endif
 				if (pKsd_t->logflag & LOG_OUTPHON)
@@ -3049,7 +3049,7 @@ static void set_user_target (PDPH_T pDph_t, short *psF0command)
 	PDPHSETTAR_ST           pDphsettar = pDph_t->pSTphsettar;
 
 	*psF0command -= 2000;
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 	printf ("\tFound user *psF0command[%s] = %d in PHDRAWT0, pDph_t->f0mode = %d\n",
 			phprint (phocur), *psF0command, pDph_t->f0mode);
 #endif

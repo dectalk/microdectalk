@@ -61,9 +61,9 @@
  *								used by other modules.
  *  019.5 ETT	10/05/1998      Added Linux code.
  *  020	GL		11/12/1998		BATS#800  need to initialize some Spanish variables 
- *  021	GL		11/20/1998		BATS#828 use LTS_DEBUG to replace _DEBUG
+ *  021	GL		11/20/1998		BATS#828 use LTS_DEBUG_OLD to replace _DEBUG_OLD
  *  022	MFG		01/06/1999		Added MainDIc and UserDic support for Windows CE
- *  023	MGS		08/22/1999		Change #ifdef LTS_DEBUG to #if LTS_DEBUG because of VMS debugging code
+ *  023	MGS		08/22/1999		Change #ifdef LTS_DEBUG_OLD to #if LTS_DEBUG_OLD because of VMS debugging code
  *								that was turned on by accident
  *  024	MGS		02/09/2000		Made the dictionary information come from a config
  *								file for __unix__ (and __osf__ in the future)
@@ -352,7 +352,7 @@ char ch_dictionary_file_name[500];
 		if(nDicLoad == MMSYSERR_INVALPARAM || nDicLoad == MMSYSERR_NOMEM ||
  			nDicLoad == MMSYSERR_ERROR)
 		{
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 			MessageBox(NULL,szMainDict,_T("Error loading dictionary"), MB_ICONSTOP | MB_OK);
 #endif
 			return (nDicLoad);
@@ -363,7 +363,7 @@ char ch_dictionary_file_name[500];
 //		if(nAdicLoad == MMSYSERR_INVALPARAM || nAdicLoad == MMSYSERR_NOMEM ||
 // 			nAdicLoad == MMSYSERR_ERROR)
 //		{
-//#ifdef DEBUG
+//#ifdef DEBUG_OLD
 //			MessageBox(NULL,szAbbrDict,"Error loading Abbr. dictionary", MB_ICONSTOP | MB_OK);
 //#endif
 //			return (nAdicLoad);
@@ -901,9 +901,9 @@ void GetDictionaryNames( char * szMainDict, char * szUserDict, char * szAbbrDict
 	{
 		//the file is invalid, and we're in trouble.
 		// not much we can do here.
-#if LTS_DEBUG
+#if LTS_DEBUG_OLD
 		OutputDebugString("Failed to find MAIN dictionary\n");
-#endif //LTS_DEBUG
+#endif //LTS_DEBUG_OLD
 	}
 
 	// same thing for the user dictionary..
@@ -924,9 +924,9 @@ void GetDictionaryNames( char * szMainDict, char * szUserDict, char * szAbbrDict
 	{
 		//the file is invalid, and we're in trouble.
 		// not much we can do here.
-#if LTS_DEBUG
+#if LTS_DEBUG_OLD
 		OutputDebugString("Failed to find USER dictionary\n");
-#endif //LTS_DEBUG
+#endif //LTS_DEBUG_OLD
 	}
 
 	if (IsFileAccessible(szForeignDict))
@@ -945,14 +945,14 @@ void GetDictionaryNames( char * szMainDict, char * szUserDict, char * szAbbrDict
 	{
 		//the file is invalid, and we're in trouble.
 		// not much we can do here.
-#if LTS_DEBUG
+#if LTS_DEBUG_OLD
 		OutputDebugString("Failed to find foreign dictionary\n");
-#endif //LTS_DEBUG
+#endif //LTS_DEBUG_OLD
 	}
 
 	
 	// if we're in debug, print the results..
-#if LTS_DEBUG
+#if LTS_DEBUG_OLD
 	{
 		char szTemp[_MAX_PATH*3]="";
 		sprintf(szTemp, "Main dictionary at %s\n",szMainDict);
@@ -960,7 +960,7 @@ void GetDictionaryNames( char * szMainDict, char * szUserDict, char * szAbbrDict
 		sprintf(szTemp, "User dictionary at %s\n",szUserDict);
 		OutputDebugString(szTemp);
 	}
-#endif //LTS_DEBUG
+#endif //LTS_DEBUG_OLD
 #endif // #ifndef UNDER_CE
 
 	return;

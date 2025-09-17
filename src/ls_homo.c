@@ -60,7 +60,7 @@
 #include "ls_def.h"
 #include "ls_homo.h"
 
-/*#define HDEBUG 1*/
+/*#define HDEBUG_OLD 1*/
 #define	DEP		(*entry_primary)
 #define	DES		(*entry_secondary)
 #define	HTAB	homo_table[i]
@@ -116,7 +116,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 		{
 			if((*entry_primary).text[i] != (*entry_secondary).text[i])
 			{
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 				printf("at2 %d %d \n",entry_primary,entry_secondary);
     			printf("landed incor \n");
 #endif
@@ -125,7 +125,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 		}
 		if((*entry_primary).text[i] == '\0' && (*entry_secondary).text[i] == '\0')
 		{
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 			printf("landed cor \n");
 #endif
 
@@ -147,7 +147,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 			{
 				if((*entry_primary).text[i] != (*entry_secondary).text[i])
 				{
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 					printf("plus and minus failed???");
 #endif
 					break;
@@ -157,7 +157,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 			if((*entry_primary).text[i] == '\0' && (*entry_secondary).text[i] == '\0')
 			{
 				/*match on + code so primnary=index+1 */
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 				printf("gtcha. reversing.");
 #endif
 				if(DICT_FC_ACCESS((*entry_secondary).fc[0]) & FC_CHARACTER)
@@ -165,7 +165,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 
 					entry_primary = entry_secondary;
 					entry_secondary = DICT_ACCESS(index);
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 
 		printf("rever again");
 #endif
@@ -417,7 +417,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 			   		printf("\nHOMO:(%d)",i);
 #endif
 				}
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 				printf(" got context at %d \n",i);
 #endif
 
@@ -437,7 +437,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 					}						
 					if(homo_table[i].h_select & DICT_FC_ACCESS((*entry_secondary).fc[0]))
 					{
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 						printf("changing primary to secondary1. rule i %d\n",i);
 						printf(" %d %d \n",entry_primary,entry_secondary);
 #endif
@@ -464,7 +464,7 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 					}
 					if(homo_table[i].h_elim & DICT_FC_ACCESS((*entry_primary).fc[0]))
 					{
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 						printf("changing primary to secondary2. rule %d\n",i);
 #endif
 #ifdef NEW_LTS
@@ -551,7 +551,7 @@ int ls_homo_sapi_homo(LPTTS_HANDLE_T phTTS, unsigned long fc1, unsigned long fc2
 			   		printf("\nHOMO:(%d)",i);
 #endif
 				}
-#ifdef HDEBUG
+#ifdef HDEBUG_OLD
 				printf(" got context at %d \n",i);
 #endif
 

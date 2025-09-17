@@ -686,7 +686,7 @@ int replay_buffer(LPTTS_HANDLE_T phTTS, unsigned int c, int insert_space, int ch
 	pCmd_t->international_temp = pCmd_t->hold_international_temp;
 	pCmd_t->international_phon_lang = pCmd_t->hold_international_phon_lang;
 	pCmd_t->q_flag = pCmd_t->hold_q_flag;
-#ifdef DEBUG_HACKS
+#ifdef DEBUG_OLD_HACKS
 	if (insert_space) {
 		printf("%snserting space\n",(check?"Check i":"I"));
 	}
@@ -706,7 +706,7 @@ int replay_buffer(LPTTS_HANDLE_T phTTS, unsigned int c, int insert_space, int ch
 		pCmd_t->hold_replay_ignore = 0;
 	}
 	for (i = 0; i < hc; i++) {
-#ifdef DEBUG_HACKS
+#ifdef DEBUG_OLD_HACKS
 		printf("%s >%c<, qf: %c\n", (check?"Replaying":"Checking"), pCmd_t->hold_strbuf[i], pCmd_t->q_flag);
 #endif
 		if (check) {
@@ -723,7 +723,7 @@ int replay_buffer(LPTTS_HANDLE_T phTTS, unsigned int c, int insert_space, int ch
 	}
 	pCmd_t->hold_count = 0;
 	if (c != 0) {
-#ifdef DEBUG_HACKS
+#ifdef DEBUG_OLD_HACKS
 		printf("%s >%c<, qf: %c\n", (check?"Replaying":"Checking"), c, pCmd_t->q_flag);
 #endif
 		if (check) {
@@ -790,7 +790,7 @@ void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c)
 			return;
 		}
 
-#ifdef DEBUG_HACKS
+#ifdef DEBUG_OLD_HACKS
 		printf("Checking >%c<, qf: %c\n", c, pCmd_t->q_flag);
 #endif
 		pCmd_t->hold_strbuf[pCmd_t->hold_count++] = c;

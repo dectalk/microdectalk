@@ -474,7 +474,7 @@ const struct dtpc_command command_table[] = {
 	{"pitch","d",1,DCS_STRESS,cm_cmd_stress},
 	{"define_voice","ad*",2,DCS_DEFINE,cm_cmd_define},
 	{"dv","ad*",2,DCS_DEFINE,cm_cmd_define},
-    {"debug","h",1,DCS_DEBUG,cm_cmd_debug},
+    {"debug","h",1,DCS_DEBUG_OLD,cm_cmd_debug},
 	{"setv","d",1,0,cm_cmd_setv},
 	{"loadv","d",1,0,cm_cmd_loadv},
 	{"gender","a",1,DCS_GENDER,cm_cmd_gender},

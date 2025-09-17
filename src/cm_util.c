@@ -276,7 +276,7 @@ void cm_util_init_type(PKSD_T pKsd_t)
 	*                          KM 4/29/94
 	*/
 
-#ifdef CMDDEBUG
+#ifdef CMDDEBUG_OLD
 f_fprintf("cmdtype: In init type\n");
 #endif
 
@@ -735,7 +735,7 @@ int cm_util_string_match(const unsigned char *sa[],unsigned char *s)
 	unsigned char *t, *ta;
 	int index, matches, match_index=0;
 
-#ifdef DEBUGPARS // NAL warning removal
+#ifdef DEBUG_OLDPARS // NAL warning removal
 	int i;
 #endif
 
@@ -746,10 +746,10 @@ if (s == NULL) //mfg check for a NULL argument BATS#628
 	return(NO_STRING_MATCH);
 	}
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: string_match:\n");
 #endif                         
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 	putc('s');
 	putc('=');
 	for (i=0;s[i];i++)
@@ -761,7 +761,7 @@ if (s == NULL) //mfg check for a NULL argument BATS#628
 #endif
 	for(index=0; sa[index]; index+=1)
 	{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		putc('s');
 		putc('a');
 		putc('=');
@@ -835,7 +835,7 @@ int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
     PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: sendat:\n");
 #endif                                                                                  
 	if(*cbufcnt==0)
@@ -873,7 +873,7 @@ int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
 		{
 			k=0;
 		}
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
         printf("CM_UTIL: sendat: offset=%d \n",offset);
 		printf("                  *cbufcnt%d \n",*cbufcnt);
 #endif
@@ -896,7 +896,7 @@ int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
 			pipe_value = (PFASCII << PSFONT) + cbuf[k];
 			cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
 			k++;
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: sendat: sending1 %c %d \n",cbuf[k-1],c);
 		printf("                           %d \n",k-1);
 #endif                                  
@@ -931,7 +931,7 @@ int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
 
 				}
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: sendat: sending2 %c %d \n",cbuf[k],cbuf[k]);
 #endif
 
@@ -951,7 +951,7 @@ int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
 					pipe_value = (PFASCII << PSFONT) + cbuf[k];
 					cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: sendat: sending5 %c %d \n",cbuf[k],cbuf[k]);
 #endif
 				}
@@ -990,7 +990,7 @@ void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
     PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData; 
 	
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: cm_util_sendit: \n");
 #endif
 	justone = 1;
@@ -1009,7 +1009,7 @@ void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
 					pipe_value = (PFASCII << PSFONT) + cbuf[k];
 					cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: cm_util_sendit: sending3 %c %d\n",cbuf[k],cbuf[k]);
 #endif
 					k==0;
@@ -1017,7 +1017,7 @@ void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
 			}
 		}
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
         printf("CM_UTIL: cm_util_sendit: laschar= %c ** posord=%d *modechng %d, c= %c",laschar,posord,*modechng,c);
 #endif
 
@@ -1029,7 +1029,7 @@ void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
 			/*==2 is an ordinal or fraction don't send space*/
 		{
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: cm_util_sendit: sending space in num proc  %d %c\n",c,c);
 #endif
         
@@ -1087,7 +1087,7 @@ void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
 					justone=0;
 				}
 			}
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CM_UTIL: cm_util_sendit: sending 43 %c %d \n",cbuf[k],cbuf[k]);
 #endif                                                                                  
 		}	/* End of for(k=0; (*cbufcnt-k) > 0; k++) */

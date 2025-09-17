@@ -99,7 +99,7 @@
  * 0036 EAB		09/29/1998 		Correct typo and raise elvelar level slightly
  * 0037 eab 	10/13/1998 		Tuned Spanish and improved debug code
  * 0038 EAB 	10/15/1998 		Modified out_gs for Spanish nasals
- * 0039	GL		11/20/1998		BATS#828 use PH_DEBUG to replace _DEBUG
+ * 0039	GL		11/20/1998		BATS#828 use PH_DEBUG_OLD to replace _DEBUG_OLD
  * 0040	mfg		01/08/1999		WINprint not supported under Windows CE #ifdef out 
  * 0042 EAB		1/26/99 EAB     0014 17-Sep-86 DK	Add code to control open quotient
              0015 19-Mar-87 DK	Female voice AV down and OQ up at low f0
@@ -186,12 +186,12 @@ const short bplos_build_time=7;
 
 
 
-#if defined PH_DEBUG || defined PH_SWAPDATA
+#if defined PH_DEBUG_OLD || defined PH_SWAPDATA
 int ii;			   /* for regression testing eab */
 #endif                                           
 
 #include "ph_draw1.c" /* pick up the language dependent code */
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 #include "dbgwins.h"
 #endif
 	//EAB		7/13/98			BATS 711 
@@ -582,7 +582,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						if(pDph_t->allophons[ pDph_t->nphone] != GEN_SIL)
 						{
 							pDph_t->target_ag = pVtm_t->NOM_VOIC_GLOT_AREA;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 							if(DT_DBG(PH_DBG,0x080))
 							{
 								printf(" vot sets glotal closing %d \n",np->tspesh);
@@ -716,11 +716,11 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDphsettar->breathytilt += 1;	/* tilt decrease 16 dB/100 ms */
 			}
 			*parp += frac4mul (pDph_t->spdeflaxprcnt, pDphsettar->breathytilt);
-#ifdef DEBUGPHT
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 				WINprintf("til2=%d \n",*parp);
 #endif
-#endif	// DEBUGPHT
+#endif	// DEBUG_OLDPHT
 		}
 	}
 	else
@@ -908,7 +908,7 @@ if(pKsd_t->lang_curr == LANG_french)
 	
 	if(pDph_t->nphone != pDph_t->nphonelast)
 	{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 
 		if(DT_DBG(PH_DBG,0x080))
 		{
@@ -964,7 +964,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			
 			
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" AT beg sil init to default.\n");
@@ -986,7 +986,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						pDph_t->area_g = pVtm_t->NOM_VOIC_GLOT_AREA;
 						pDph_t->agspeed =2;
 						pDph_t->target_ap = 100;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Voiced with (burst) so ag=40 ap =10\n");
@@ -1000,7 +1000,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						pDph_t->target_ag = pVtm_t->NOM_Open_Glottis; //default open
 						pDph_t->area_g=pVtm_t->NOM_Open_Glottis;
 						pDph_t->agspeed =3;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Unvoiced burst with stop ag to .\n");
@@ -1018,7 +1018,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						pDph_t->lstep=0;
 						pDph_t->bstep=0;
 						pDph_t->pressure = 200;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" At beg next a labial w burst.\n");
@@ -1030,7 +1030,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					if( place(pDph_t->allophons[pDph_t->nphone+1]) & BLADEAFFECTED )
 					{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("Phone after silence blade_affected with a burst so set area and target to 0\n");
@@ -1059,7 +1059,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						pDph_t->area_tb = 0;
 						pDph_t->bstep=0;
 						pDph_t->lstep=0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" At beg sil next a velar.\n");
@@ -1074,7 +1074,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					if(place(pDph_t->allophons[pDph_t->nphone+1]) & BLADEAFFECTED )
 					{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Phone after silence blade_affected without a burst \n");
@@ -1124,7 +1124,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					pDph_t->target_ag =pVtm_t->NOM_VOIC_GLOT_AREA;
 				}
 				
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" Phone after sil VOICD so targetag = %d \n",pDph_t->target_ag);
@@ -1142,7 +1142,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					pDph_t->lstep=0;
 					pDph_t->pressure = 300;
 					
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" At beg sil next a labial w/o burst.\n");
@@ -1174,7 +1174,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					{
 						pDph_t->target_ag =pVtm_t->NOM_VOIC_GLOT_AREA;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							//			NNOOOOO ADD IN NG
@@ -1189,7 +1189,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					{
 						pDph_t->area_b = 0;
 						pDph_t->target_b = 0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf(" the blade!\n");
 #endif
@@ -1199,7 +1199,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					{
 						pDph_t->area_l = 0;
 						pDph_t->target_l = 0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf(" the lips!\n");
 #endif
@@ -1217,7 +1217,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			{
 				pDph_t->area_g = 1410;
 				pDph_t->target_ag = 1410;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 					printf("Starting with unvoiced so open glottis\n");
 #endif
@@ -1232,7 +1232,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				//Post processsing rule to add special closure REF 1000
 			{
 				pDph_t->target_b = 0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("Special rule for blade with dh-th and dz \n");
@@ -1250,7 +1250,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			if (pDph_t->pressure_drop < 2000)
 			{
 				pDph_t->pressure_drop +=150;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("at ending sil press drop == %d \n",pDph_t->pressure_drop);
@@ -1264,7 +1264,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				if(!(place(pDph_t->allophons[pDph_t->nphone]) & BLADEAFFECTED ))
 				{
 					//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Blade NOT affected so target b to 1000\n");
@@ -1295,7 +1295,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					pDph_t->target_l =1000;
 				if((place(pDph_t->allophons[pDph_t->nphone-1])) & BLADEAFFECTED )
 				{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Phone before ending silence blade_affected so set target to 0\n");
@@ -1353,7 +1353,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 				}
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf(" obstruent dcstep to %d\n",pDph_t->dcstep);
 #endif			
@@ -1372,7 +1372,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->dcstep--;
 			if(	pDph_t->dcstep != 0)
 				pDph_t->dcstep--;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf("moving dcstep at end to %d\n",pDph_t->dcstep);
 #endif	
@@ -1404,7 +1404,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			//	if((pDph_t->allofeats[pDph_t->nphone+1] & FSTRESS))
 			//	pDph_t->dcstep++;
 			}
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf("moving dcstep to %d\n",pDph_t->dcstep);
 #endif	
@@ -1420,7 +1420,7 @@ if(pKsd_t->lang_curr == LANG_french)
 
 			}
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 							printf("now moving dcstep to %d\n",pDph_t->dcstep);
 #endif	
@@ -1533,7 +1533,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->pressure += 30;
 		else
 				pDph_t->pressure += 70;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 					
 				{
@@ -1548,7 +1548,7 @@ if(pKsd_t->lang_curr == LANG_french)
 		else
 				pDph_t->pressure += 50;
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 					
 				{
@@ -1631,7 +1631,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->in_tbrelease=0;
 				pDph_t->bstep=0;
 				
-#ifdef DEBUGIOT
+#ifdef DEBUG_OLDIOT
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("previous phone not a plos so we're not in a release cyle\n");
@@ -1651,7 +1651,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					if(place(pDph_t->allophons[pDph_t->nphone]) & FGLOTTAL)
 					{
 						
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" glottalized obstruent-- close glottis \n");
@@ -1690,7 +1690,7 @@ if(pKsd_t->lang_curr == LANG_french)
 							
 						}
 						
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("Voiced obstruent so  glottis to %d and ap to %d\n",
@@ -1718,7 +1718,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					pDph_t->target_ag = pVtm_t->NOM_Open_Glottis;
 					pDph_t->agspeed =2;
 				}
-	#ifdef PH_DEBUG
+	#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("Unvoiced obstruent so  glottis to %d and ap to %d\n",
@@ -1733,7 +1733,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						&& !(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone]-1) & FVOICD)
 						&& !(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone]) & FVOICD))
 					{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("Closing glottis to avoid an unwanted burst.\n");
@@ -1752,7 +1752,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				if(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone]) & 004000)
 				{
 					
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Has burst so shut something...");
@@ -1761,7 +1761,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					if((place(pDph_t->allophons[pDph_t->nphone])) & FLABIAL )
 					{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the lips so open the blade\n");
@@ -1776,7 +1776,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					if((place(pDph_t->allophons[pDph_t->nphone])) & BLADEAFFECTED )
 					{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the blade  so open the lips\n");
@@ -1794,7 +1794,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					if((place(pDph_t->allophons[pDph_t->nphone])) & FVELAR )
 					{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the tongue body so open blade and open the lips\n");
@@ -1816,7 +1816,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				
 				else 
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					
 					
 					
@@ -1829,7 +1829,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					if((place(pDph_t->allophons[pDph_t->nphone])) & FLABIAL )
 					{	
 						
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the lips and open the blade\n");
@@ -1848,7 +1848,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					
 					else if((place(pDph_t->allophons[pDph_t->nphone])) & BLADEAFFECTED )
 					{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the blade and open the lips\n");
@@ -1864,7 +1864,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					}
 					else if((place(pDph_t->allophons[pDph_t->nphone])) & FVELAR )
 					{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("the tongue body so open blade and open the lips\n");
@@ -1907,7 +1907,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			if(place(pDph_t->allophons[pDph_t->nphone]) & BLADEAFFECTED )
 				//for alvelars
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" At beg of Phone w / stop w/alvel so blade target to 0 ");
@@ -1933,7 +1933,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			
 			if(place(pDph_t->allophons[pDph_t->nphone]) & FLABIAL )
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" At beg of Phone w / stop w/labial so lip target to 0 ");
@@ -1955,7 +1955,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			//	|| pDph_t->allophons[ pDph_t->nphone+1] == USP_M)
 			{
 				pDph_t->target_ag += 1000;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x080))
 		{
 			printf(" widening test for r's and glottis \n");
@@ -1979,7 +1979,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				//and previous thing wasn't a stop i.e. vot 
 				pDph_t->target_ag= pVtm_t->NOM_VOIC_GLOT_AREA;
 		
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("in a FSON1 ag tar to pVtm_t->NOM_V  \n");	
@@ -2021,7 +2021,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			{
 				pDph_t->target_ag= pVtm_t->NOM_VOIC_GLOT_AREA;
 		
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("redundant?? in a FSON1 ag tar to pVtm_t->NOM_V  \n");	
@@ -2074,7 +2074,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				&& pDph_t->tcum > 8)
 				&& 	(!(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone+1]) & FVOICD)))
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("GERMAN vowel ending so target glottis to 1400 \n");
@@ -2103,7 +2103,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				{	
 					pDph_t->area_l = pVtm_t->NOM_Fricative_Opening;
 					pDph_t->target_l=100;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Anticipating fric narrow lips.\n");
@@ -2119,7 +2119,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				{
 					
 					//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" DENTAL or labial affected so jam A2\n");
@@ -2138,7 +2138,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						{
 							
 							//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 							if(DT_DBG(PH_DBG,0x080))
 							{
 								printf(" PALATEL affected so jam A3&4\n");
@@ -2150,7 +2150,7 @@ if(pKsd_t->lang_curr == LANG_french)
 						{
 							
 							//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 							if(DT_DBG(PH_DBG,0x080))
 						{
 								printf(" ALVELAR affected so jam A2\n");
@@ -2184,7 +2184,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->target_ag = 1800;
 				pDph_t->agspeed = 2;
 		
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 		if(DT_DBG(PH_DBG,0x080))
 		{
 			printf(" Open glottis in anticipation of  HX. \n");
@@ -2209,7 +2209,7 @@ if(pKsd_t->lang_curr == LANG_french)
 		
 			pDph_t->target_ag = pVtm_t->NOM_Open_Glottis;
 				pDph_t->agspeed = 2;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("HX so open glottis  target  at %d \n", pDph_t->target_ag);
@@ -2224,7 +2224,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				&& phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone+1]) & FCONSON
 				&& (pDph_t->tcum >= (pDph_t->allodurs[pDph_t->nphone]-7)))
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 		if(DT_DBG(PH_DBG,0x080))
 		{
 			printf("SPread glottis for hx  \n");
@@ -2261,7 +2261,7 @@ if(pKsd_t->lang_curr == LANG_french)
 	{
 		
 		//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 		if(DT_DBG(PH_DBG,0x080))
 		{
 			printf(" DENTAL affected so jam A2\n");
@@ -2300,7 +2300,7 @@ if(pKsd_t->lang_curr == LANG_french)
 	{
 				
 		//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 		if(DT_DBG(PH_DBG,0x080))
 		{
 			printf(" Labial affected so jam A2\n");
@@ -2326,7 +2326,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->parstochip[OUT_A2] = 3200;
 				
 				
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" PALATEL roll star \n ");
@@ -2347,7 +2347,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->parstochip[OUT_A2] = 2000;
 			else
 			pDph_t->parstochip[OUT_A2] = 2000;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" PALATEL affected so jam A3&4\n");
@@ -2360,7 +2360,7 @@ if(pKsd_t->lang_curr == LANG_french)
 	{
 			
 			//blade not affect so set it open
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" ALVELAR affected so jam A2\n");
@@ -2492,7 +2492,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				else 
 					if(pDph_t->nasal_step <7)
 						pDph_t->nasal_step ++;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf("Phone and prev blade affected so nasal step = %d \n",pDph_t->nasal_step);
@@ -2521,7 +2521,7 @@ if(pKsd_t->lang_curr == LANG_french)
 					pDph_t->nasal_step--;
 				}
 				
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("phone a nasal-- next obst so shut velum early \n");
@@ -2546,7 +2546,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				if(pDph_t->tcum < 4 && pDph_t->nasal_step < 1)
 				{
 					pDph_t->nasal_step =0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf("Nasal shor delay velum drop and then do it faster \n");
@@ -2575,7 +2575,7 @@ if(pKsd_t->lang_curr == LANG_french)
 			pDph_t->target_ag = 700;
 			//pDph_t->lclosure = 1; //set closure to allow reseting of counts'
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Phone is a nasal, area_n = %d\n",pDph_t->area_n);
@@ -2612,7 +2612,7 @@ else if(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone+1]) & FNASAL
 				pDph_t->nasal_step++;
 			
 			pDph_t->area_n = nasalization[pDph_t->nasal_step ];
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Next phone is a nasal-drop velum,area_n = %d\n",pDph_t->area_n);
@@ -2632,7 +2632,7 @@ else if(phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone+1]) & FNASAL
 				pDph_t->nasal_step++;
 			
 			pDph_t->area_n = nasalization[pDph_t->nasal_step ];
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Next phone is a nasal-drop velum,area_n = %d\n",pDph_t->area_n);
@@ -2663,7 +2663,7 @@ if(pKsd_t->lang_curr == LANG_french)
 				pDph_t->nasal_step--;
 			
 			pDph_t->area_n = nasalization[pDph_t->nasal_step ];
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Previous phone is a nasal in french -drop velum,area_n = %d\n",pDph_t->area_n);
@@ -2699,7 +2699,7 @@ else
 				pDph_t->nasal_step--;
 			
 			pDph_t->area_n = nasalization[pDph_t->nasal_step ];
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Previous phone is a nasal-drop velum,area_n = %d\n",pDph_t->area_n);
@@ -2720,7 +2720,7 @@ else
 				pDph_t->nasal_step = 0;
 			pDph_t->area_n = nasalization[pDph_t->nasal_step ];
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("Previous phone is a nasal-drop velum,area_n = %d\n",pDph_t->area_n);
@@ -2751,7 +2751,7 @@ skipit:
 			&& pDph_t->tcum >= pDph_t->allodurs[pDph_t->nphone]>>1)
 		{
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" Anticipating unvoiced obstruent spread glottis  \n");
@@ -2763,7 +2763,7 @@ skipit:
 		else
 		{
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" Anticipating an unvoiced obstruent spread glottis sooner  \n");
@@ -2789,7 +2789,7 @@ skipit:
 		
 		if( pDph_t->tcum >= (pDph_t->allodurs[pDph_t->nphone]-NF50MS))
 		{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" Anticipating voicing for nasal narrow glottis \n");
@@ -2817,7 +2817,7 @@ skipit:
 			if( pDph_t->tcum >= (pDph_t->allodurs[pDph_t->nphone]-NF50MS)
 				&& !(phone_feature(pDph_t,pDph_t->allophons[ pDph_t->nphone+1]) & FSTOP))
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" Anticipating voicing use high agspeed and narrow glottis \n");
@@ -2832,7 +2832,7 @@ skipit:
 			}
 			else
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" Not anticipating voicing using slow agspeed \n");
@@ -2844,7 +2844,7 @@ skipit:
 		}
 		else
 		{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" Voiced obstr to voiced agspeed = 2\n");
@@ -2923,7 +2923,7 @@ skipit:
 					if(pDph_t->tbstep <=9 )
 						pDph_t->tbstep++;
 					
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Phone with burst with body_affected so target b=areea %d\n",
@@ -2935,14 +2935,14 @@ skipit:
 				else
 				{
 					if((place(pDph_t->allophons[pDph_t->nphone])) & BLADEAFFECTED )
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Affricate release with tongue  so target_tb to pVtm_t->NOM_fric \n");
 						}
 #endif
 						pDph_t->area_tb = pVtm_t->NOM_Fricative_Opening;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Blade Affricate done- end rleease \n");
@@ -3003,7 +3003,7 @@ skipit:
 				 && pDph_t->allophons[pDph_t->nphone] != GEN_SIL)
 			{
 			pDph_t->parstochip[OUT_F1] = 210;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf("In a non-stopped velar so f1=210\n");
@@ -3014,7 +3014,7 @@ skipit:
 			}
 			else
 			{	
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("In stopped velar so f1=180\n");
@@ -3067,7 +3067,7 @@ skipit:
 
 
 				
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" velar  step %d f1 %d\n",pDph_t->tstep,pDph_t->parstochip[OUT_F1]);
@@ -3092,7 +3092,7 @@ skipit:
 					pDph_t->tstep = 0;
 				pDph_t->tstep++;
 				pDph_t->in_tbrelease =0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					
@@ -3120,7 +3120,7 @@ skipit:
 					pDph_t->parstochip[OUT_F1] =180;
 					pDph_t->in_tbclosure =0;
 					pDph_t->f1_velar =0;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" velar nasal ie. nx so delay release %d \n",pDph_t->tstep);
@@ -3134,7 +3134,7 @@ skipit:
 			{
 				//close earlier to avoid a burble
 					pDph_t->parstochip[OUT_F1] =180;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" shut f1 early velar coming \n");
@@ -3153,7 +3153,7 @@ skipit:
 				{
 
 					pDph_t->parstochip[OUT_F1] =180;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" lastf1=180 closure hold %d \n",pDph_t->tstep);
@@ -3205,7 +3205,7 @@ skipit:
 					pDph_t->area_l = 270;
 				pDph_t->lstep =3;
 								
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("Release labial frication\n");
@@ -3215,7 +3215,7 @@ skipit:
 
 				
 			}
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			 
 			if(DT_DBG(PH_DBG,0x080))
 			{
@@ -3260,7 +3260,7 @@ skipit:
 					if(pDph_t->lstep <=9 )
 						pDph_t->lstep++;
 					}
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Phone with burst with blade_affected so target l=areea %d\n",
@@ -3271,7 +3271,7 @@ skipit:
 				else
 				{
 					if((place(pDph_t->allophons[pDph_t->nphone])) & FLABIAL )
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Affricate release with lips so target_l to pVtm_t->NOM_fric \n");
@@ -3352,7 +3352,7 @@ skipit:
 			pDph_t->allophons[pDph_t->nphone] == USP_DF)
 		{
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" Saw a flaps o flap it \n");
@@ -3433,7 +3433,7 @@ skipit:
 					else
 						pDph_t->area_b =0;
 					}
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Phone with burst with blade_affected so area b=area %d\n",
@@ -3446,14 +3446,14 @@ skipit:
 				{
 					if(place(pDph_t->allophons[pDph_t->nphone]) & BLADEAFFECTED )
 					{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Affricate release with blade_affected so target_b to pVtm_t->NOM_fric \n");
 						}
 #endif
 						pDph_t->area_b = pVtm_t->NOM_Fricative_Opening;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" Blade Affricate done- end rleease \n");
@@ -3483,7 +3483,7 @@ skipit:
 							if( pDph_t->tcum <= 10)
 							{
 							
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 						if(DT_DBG(PH_DBG,0x080))
 						{
 							printf(" retro \n");
@@ -3533,7 +3533,7 @@ skipit:
 						&& pDph_t->area_b < 200)
 						pDph_t->area_b =0;
 					}
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Coarticulating if prvious was a blade fric close it temporarily \n");
@@ -3563,7 +3563,7 @@ skipit:
 			{
 				if (pDph_t->phonestep <  (pDph_t->allodurs[pDph_t->nphone]-1))
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Do a closure for dh or th when not after a obst or silence \n");
@@ -3575,7 +3575,7 @@ skipit:
 				}
 				else
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Open dh quickly for phonleaves slowly  \n");
@@ -3591,7 +3591,7 @@ skipit:
 				
 				if (pDph_t->phonestep <  (pDph_t->allodurs[pDph_t->nphone]-8))
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Do a closure for dh or th in word final \n");
@@ -3603,7 +3603,7 @@ skipit:
 				}
 				else
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						printf(" Open dh slowly  \n");
@@ -3671,7 +3671,7 @@ skipit:
 			{
 
 					pDph_t->delta_area_g +=  pVtm_t->EndOfPhrase_Spread;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf(" Spreading glotis at final sonorant delta value %d and pressure_droping also %d target %d\n",pDph_t->delta_area_g,pDph_t->pressure_drop,pDph_t->target_ag);
@@ -3712,7 +3712,7 @@ abort_til_later:
 				pDph_t->pressure_drop += 95;
 
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 				if(DT_DBG(PH_DBG,0x080))
 				{
 					printf("Dropping pressure for dummy vowel %d \n", pDph_t->pressure_drop);
@@ -3725,7 +3725,7 @@ abort_til_later:
 						{
 							if (pDph_t->pressure_drop < 2000)
 								pDph_t->pressure_drop += 1;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 							if(DT_DBG(PH_DBG,0x080))	
 							{
 								printf(" Pressure drop 100 frames from end \n");
@@ -3783,7 +3783,7 @@ abort_til_later:
 							{
 								if (pDph_t->pressure_drop < 2000)
 									pDph_t->pressure_drop += 18;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 								if(DT_DBG(PH_DBG,0x080))
 									
 								{
@@ -3799,7 +3799,7 @@ abort_til_later:
 								{
 									if (pDph_t->pressure_drop < 1000)
 										pDph_t->pressure_drop += 15;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 									if(DT_DBG(PH_DBG,0x080))
 										
 									{
@@ -3835,7 +3835,7 @@ abort_til_later:
 		{
 			
 			
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 				printf("I'm seeing the last boundary %d \n",pDph_t->nphone );
 			
@@ -3913,7 +3913,7 @@ abort_til_later:
 					}
 				}
 					
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					if(DT_DBG(PH_DBG,0x080))
 					{
 						//if(pDph_t->syl_pressure > 0)
@@ -3977,7 +3977,7 @@ abort_til_later:
 						{
 							if (pDph_t->pressure_drop < 2000)
 								pDph_t->pressure_drop += 18;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 							if(DT_DBG(PH_DBG,0x080))
 								
 							{
@@ -3992,7 +3992,7 @@ abort_til_later:
 							{
 								if (pDph_t->pressure_drop < 1000)
 									pDph_t->pressure_drop += 15;
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 								if(DT_DBG(PH_DBG,0x080))
 									
 								{
@@ -4055,7 +4055,7 @@ abort_til_later:
 				
 			//if( pDph_t->tcum > pDph_t->allodurs[pDph_t->nphone]-3)
 			{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf(" glottalized obstruent release slowly \n");
@@ -4103,7 +4103,7 @@ abort_til_later:
 			&& (phone_feature(pDph_t,pDph_t->allophons[pDph_t->nphone]) & FSYLL))
 		{
 			//spread glottis for unstressed vowels
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			if(DT_DBG(PH_DBG,0x080))
 			{
 				printf("spread glottis for unstressed vowels \n");
@@ -4527,9 +4527,9 @@ abort_til_later:
 	until we're able to rewrite the burst/frication code in general This is not
 	elegant but will work fine*/
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 
-/* DEBUG Code  verifies variables that should never hit 
+/* DEBUG_OLD Code  verifies variables that should never hit 
 	ceratin values  EAB 6/24/98*/
 
 	
@@ -4559,7 +4559,7 @@ abort_til_later:
 #endif
 		}
 
-#endif	// PH_DEBUG
+#endif	// PH_DEBUG_OLD
 
 
 #ifdef NEW_VTM
@@ -4765,13 +4765,13 @@ abort_til_later:
 			
 #endif	// PH_SWAPDATA
 		
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x020))
 	{
 	if( (pDphsettar->phcur & PVALUE) != 0)
 	{
-#ifdef DEBUGPHT
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		WINprintf ("*phcur= %d \n", pDphsettar->phcur);
 				
 
@@ -4781,8 +4781,8 @@ abort_til_later:
 
 
 
-#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG)
-#endif	// DEBUGPHT
+#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
+#endif	// DEBUG_OLDPHT
 
 #ifndef UNDER_CE
 //		WINprintf ("phon= %d  ", ((pDph_t->allophons[ pDph_t->nphone]& PVALUE)));
@@ -4793,25 +4793,25 @@ abort_til_later:
 		for (ii = 0; ii<=32; ii++)			   /* EAB FOR REGRESSION TESTING */
 		{
 			WAIT_PRINT;
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 			WINprintf("%d ", pDph_t->parstochip[ii]);
 #else
 			printf("%d ", pDph_t->parstochip[ii]);
-#endif // defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#endif // defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 			SIGNAL_PRINT;
 		}
 		WAIT_PRINT;
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		WINprintf ("\n");
 #else
 		printf ("\n");
-#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		SIGNAL_PRINT;
 	}
 	}
 	
-#endif	// PH_DEBUG
+#endif	// PH_DEBUG_OLD
 }
 
 

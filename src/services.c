@@ -89,7 +89,7 @@
 int vtm_loop(LPTTS_HANDLE_T phTTS,short *input);
 
 /*
- * #define SERVDEBUG 1
+ * #define SERVDEBUG_OLD 1
  * char tmp[200];
  */
 
@@ -696,7 +696,7 @@ void default_lang( PKSD_T pKsd_t,unsigned int lang_code, unsigned int ready_code
 	unsigned int flags;
 	volatile struct dtpc_language_tables _far *cp;
 
-#ifdef SERVDEBUG
+#ifdef SERVDEBUG_OLD
 sprintf(tmp, "serv: In default lang %d ready code: %d\n", lang_code, ready_code);
 f_fprintf(tmp);
 #endif
@@ -713,7 +713,7 @@ f_fprintf(tmp);
 	pKsd_t->lang_ready[lang_code] |= ready_code;
 	flags=kernel_disable(pKsd_t);
 
-#ifdef SERVDEBUG
+#ifdef SERVDEBUG_OLD
 sprintf(tmp, "serv: pKsd_t->lang_ready %d \n", pKsd_t->lang_ready[lang_code]);
 f_fprintf(tmp);
 #endif
@@ -735,7 +735,7 @@ f_fprintf(tmp);
 				pKsd_t->arpa_case = (*cp).lang_arpa_case;
 				pKsd_t->typing_table = (*cp).lang_typing;
 				pKsd_t->error_table = (*cp).lang_error;
-#ifdef SERVDEBUG
+#ifdef SERVDEBUG_OLD
 f_fprintf("serv: Updated typing table \n");    
 #endif
 				}

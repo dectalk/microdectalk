@@ -47,7 +47,7 @@
 extern short *featb;
 #define phone_feature(a,b) (all_featb[(b)>>8][(b)&0x00ff])
 
-#ifdef DEBUGFRENCH
+#ifdef DEBUG_OLDFRENCH
 char*  phprint (short c);
 #endif
 
@@ -346,9 +346,9 @@ void fr_phinton (LPTTS_HANDLE_T phTTS) {
 
   } // for
 
-//#define DEBUGFRENCH
+//#define DEBUG_OLDFRENCH
 
-#ifdef DEBUGFRENCH
+#ifdef DEBUG_OLDFRENCH
   { // block for local variables
       short nseg       = 0;
       short cumdur     = 0;
@@ -402,7 +402,7 @@ void fr_phinton (LPTTS_HANDLE_T phTTS) {
 static void make_f0_command_fr (LPTTS_HANDLE_T phTTS, short type, short rulenumber, short tar,
 				 			 short delay, short length, short *psCumdur, short nphon)
 {
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
 #endif
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
@@ -416,7 +416,7 @@ static void make_f0_command_fr (LPTTS_HANDLE_T phTTS, short type, short rulenumb
 	/* If requested time is earlier than last f0 command, zero offset */
 
 		
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 #ifndef UNDER_CE	//CAB 03/15/00 WINprintf not supported under Windows CE
 	if (DT_DBG(PH_DBG,0x010))
 		WINprintf("phon %d nphon %d rule %d type %d , tar %d delay %d length %d  \n",(pDph_t->allophons[nphon] & PVALUE), nphon, rulenumber,type, tar, delay, length);

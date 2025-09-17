@@ -85,7 +85,7 @@
  * 0069	CAB		05/02/2002		Updated copyright info
  */ 
 
-//#define DEBUGPHT
+//#define DEBUG_OLDPHT
 //#define FASTTALK
 //extern __inline short phone_feature(PDPH_T pDph_t, int phone);	   /* Phonetic features            */
 extern int inh_timing(LPTTS_HANDLE_T phTTS, int phone);
@@ -199,7 +199,7 @@ void uk_phtiming(LPTTS_HANDLE_T phTTS)
 			printf ("durxx = mstofr(user_durs[nphon]+4) durxx=%d\n", pDphsettar->durxx);
 #endif
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 			printf ("\tFound user_dur[%s] = %3d frames in PHTIMING\n",
 					phprint (phocur), pDphsettar->durxx);
 #endif
@@ -285,7 +285,7 @@ void uk_phtiming(LPTTS_HANDLE_T phTTS)
 				/* Note extra compause added if user command [:dv cp __] */
 				if ((struclas & FBOUNDARY) == FCBNEXT)
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 1111 asperation=%d\n", pDph_t->asperation);
 #endif
 
@@ -294,7 +294,7 @@ void uk_phtiming(LPTTS_HANDLE_T phTTS)
 					else if (pDph_t->asperation < MIN_ASP_COMMA);
 
 					pDph_t->asperation = MIN_ASP_COMMA;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 1111\n");
 #endif
 					dpause = pDph_t->nfcomma + pDph_t->compause + pDph_t->asperation;
@@ -303,14 +303,14 @@ void uk_phtiming(LPTTS_HANDLE_T phTTS)
 				/* Note extra perpause added if user command [:dv pp __] */
 				if (((struclas & FBOUNDARY) & FSENTENDS) IS_PLUS)
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 2222 asperation=%d\n", pDph_t->asperation);
 #endif
 					if (pDph_t->asperation > MAX_ASP_PERIOD)
 						pDph_t->asperation = MAX_ASP_PERIOD;
 					else if (pDph_t->asperation < MIN_ASP_PERIOD);
 					pDph_t->asperation = MIN_ASP_PERIOD;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 2222\n");
 #endif
 					dpause = pDph_t->nfperiod + pDph_t->perpause + pDph_t->asperation;	
@@ -1058,7 +1058,7 @@ break3:
 				//gets mangled hack alert until we know what the real rule shuld be
 		{
 			 //printf("strucc=%o of phon %d at %d",struccur,(pDph_t->allophons[nphon] & 0xff),nphon); 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 			printf (" 2fbound struccur%o, p= %d\n", struccur, (pDph_t->allophons[nphon] & PVALUE));
 			printf ("syldur = %d \n ", (syldur * 64) / 10);
 			printf ("sonocnt=%d\n", sonocnt);
@@ -1098,7 +1098,7 @@ break3:
 					break;
 				default:
 					adjust = ((pDph_t->timeref - (syldur )) >> 7);
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("WHY HERE??");
 					printf ("sonocnt=%d phon= %d nphon= %d\n", sonocnt, pDph_t->allophons[nphon], nphon);
 #endif

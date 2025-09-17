@@ -81,7 +81,7 @@ extern int min_timing(LPTTS_HANDLE_T phTTS, int phone);
 extern int inh_timing(LPTTS_HANDLE_T phTTS, int phone);
 //extern __inline short phone_feature(PDPH_T pDph_t, int phone);
 
-//#define DEBUGPHT
+//#define DEBUG_OLDPHT
 /* 
  * Some extra percentages:
  */
@@ -880,8 +880,8 @@ void sp_phtiming (LPTTS_HANDLE_T phTTS)
 		if(feacur & FSONOR)
 		{
 			/* printf("strucc=%o of phon %d at %d",struccur,pDph_t->allophons[nphon],nphon); */
-#ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 			WINprintf (" 2fbound struccur%o, p= %d\n", struccur, pDph_t->allophons[nphon]);
 			WINprintf ("syldur = %d \n ", (syldur * 64) / 10);
 			WINprintf ("sonorcnt=%d\n", sonorcnt);
@@ -909,7 +909,7 @@ void sp_phtiming (LPTTS_HANDLE_T phTTS)
 
 			default:
 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 				printf ("WHY HERE??");
 				printf ("sonorcnt=%d phon= %d nphon= %d\n", sonorcnt, pDph_t->allophons[nphon], nphon);
 				printf ("sonorcnt=%d phon= %d nphon= %d\n", sonorcnt, pDph_t->allophons[nphon], nphon);
@@ -962,7 +962,7 @@ void sp_phtiming (LPTTS_HANDLE_T phTTS)
 					 * (syldur*64)/10,adjust); 
 					 */
 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("set  %d dur %d syldur=%d adj=%d", pDph_t->allophons[endcnt], pDph_t->allodurs[endcnt], (syldur * 64) / 10, adjust);
 #endif
 	
@@ -971,22 +971,22 @@ void sp_phtiming (LPTTS_HANDLE_T phTTS)
 					/* If real short to beign with don't touch*/
 					if(pDph_t->allodurs[endcnt] <=6)
 					{
-#ifdef DEBUGPHT
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#ifdef DEBUG_OLDPHT
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 						WINprintf("BINGO");
 #endif
 #endif
 						pDph_t->allodurs[endcnt]=6;
 					}
 					/* if(pDph_t->allodurs[endcnt] <= 5) pDph_t->allodurs[endcnt]=5; */
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("to  %d \n", ((pDph_t->allodurs[endcnt] * NSAMP_FRAME) / 10));
 #endif
 					ncnt++;
 				}
 			}
 			 	 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 			  /* WINprintf("set  syldur from %d to %d in %d adjusts.\n",
 			  ((syldur)*64)/10,((syldur+(ncnt*adjust))*64)/10,ncnt ); */
 #endif
@@ -1027,7 +1027,7 @@ void sp_phtiming (LPTTS_HANDLE_T phTTS)
 
 
 
-#ifdef DEBUG_PHTIMING
+#ifdef DEBUG_OLD_PHTIMING
 		printf ("final dur of allodurs[%d]%d = %d\n",nphon, pDph_t->allophons[nphon], pDphsettar->durxx * 64 / 10);
 		printf ("final dur of allodurs[%d]%d = %d\n",nphon, pDph_t->allophons[nphon], pDph_t->allodurs[nphon] * 64 / 10);
 		printf ("user_durs[%d]=%d\n",nphon,pDph_t->user_durs[nphon]);

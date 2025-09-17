@@ -142,7 +142,7 @@
  *          set operations like intersection and union deletion addition 
  *											
  */
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 
 #ifdef WIN32_OLD
 #include <windows.h>
@@ -166,15 +166,15 @@
 
 void cm_util_flush_init(LPTTS_HANDLE_T); // NAL warning removal
 
-#endif /* PARSER_STANDALONE_DEBUG */
+#endif /* PARSER_STANDALONE_DEBUG_OLD */
 
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
 
-#if defined (WIN32) && defined (PRINTFDEBUG)
+#if defined (WIN32) && defined (PRINTFDEBUG_OLD)
 #include "dbgwins.h"
 #define printf WINprintf
 #endif 
@@ -204,7 +204,7 @@ PKSD_T pKsd_t;
 #include "compnoun.h"
 #endif
 
-#else    /* #ifdef PARSER_STANDALONE_DEBUG */
+#else    /* #ifdef PARSER_STANDALONE_DEBUG_OLD */
 
 #ifdef VXWORKS
 #include <ctype.h>
@@ -226,19 +226,19 @@ PKSD_T pKsd_t;
 #endif
 
 #include "cm_data.h"
-#endif // PARSER_STANDALONE_DEBUG
+#endif // PARSER_STANDALONE_DEBUG_OLD
 
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
 
 //#define DISPLAY_RULES_HIT
-//#define PARSER_DEBUG       
-//#define LOOK_DEBUG
-//#define DIGIT_DEBUG
-//#define INDEX_DEBUG
-//#define NEW_DEBUG
-//#define DEBUG_RULES
+//#define PARSER_DEBUG_OLD       
+//#define LOOK_DEBUG_OLD
+//#define DIGIT_DEBUG_OLD
+//#define INDEX_DEBUG_OLD
+//#define NEW_DEBUG_OLD
+//#define DEBUG_OLD_RULES
 
 
 
@@ -350,7 +350,7 @@ int par_match_standard(unsigned char *current_rule,
 					   preturn_value_t ret_value,
 					   int lookahead,
 					   int break_on_min_match);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 void par_copy_return_value(preturn_value_t dest, 
 						   preturn_value_t src);
 #endif
@@ -705,7 +705,7 @@ void (*(perform_action_funcs[0x20]))(unsigned char *current_rule,
 
 
 
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 preturn_value_t par_process_input(PKSD_T pKsd_t,
 #else
 								  preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
@@ -725,7 +725,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
                                   preturn_value_t ret_value);
  void par_initialize_arrays(pmatch_arrays_t match_arrays);
 
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 void par_initialize_variables(unsigned char *input_array,
 							  unsigned char *output_array,
 							  unsigned char *dict_hit_array);
@@ -774,7 +774,7 @@ int main(void)
 	pKsd_t->lang_curr=0xAAAAAAAA;
 	
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering	\n");
 #endif
 	memset(input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
@@ -864,7 +864,7 @@ int main(void)
 	fprintf(stderr,"difference =%d\n",end-start);
 	fprintf(stderr,"seconds =%6.3f\n",(double)(end-start) / CLOCKS_PER_SEC);
 #endif
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving main\n");
 #endif
 	return(0);
@@ -873,18 +873,18 @@ int main(void)
 int par_read_input(unsigned char *input_array)	/* read input from the keyboard */
 /* this is temporary */
 {
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_read_input\n");
 #endif
 	if ((fgets(input_array,PAR_MAX_INPUT_ARRAY-1,stdin))==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_read_input 0\n");
 #endif
 		return(0);
 	}
 	input_array[strlen(input_array)-1]='\0';
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_read_input 1\n");
 #endif
 	return(1);
@@ -937,17 +937,17 @@ void par_print_output(unsigned char *output_array,pindex_data_t output_indexes)	
 /* initialize the input and output arrays used in the matching */
 void par_initialize_variables(unsigned char *input_array, unsigned char *output_array, unsigned char *dict_hit_array)
 {
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_initialize_variables\n");
 #endif
 	memset(input_array,0,PAR_MAX_INPUT_ARRAY);
 	memset(output_array,0,PAR_MAX_OUTPUT_ARRAY);
 	memset(dict_hit_array,0,PAR_MAX_INPUT_ARRAY);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_initialize_variables\n");
 #endif
 }                             
-#endif /* #ifdef PARSER_STANDALONE_DEBUG */
+#endif /* #ifdef PARSER_STANDALONE_DEBUG_OLD */
 
 /* ******************************************************************
  *	Function Name:
@@ -967,12 +967,12 @@ void par_initialize_variables(unsigned char *input_array, unsigned char *output_
  * *****************************************************************/
  void par_initialize_arrays(pmatch_arrays_t match_arrays)
 {                               
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_initialize_arrays\n");
 #endif
 	memset(match_arrays,0,sizeof(match_arrays_t));
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_initialize_arrays\n");
 #endif
 }
@@ -1003,7 +1003,7 @@ void par_initialize_variables(unsigned char *input_array, unsigned char *output_
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 preturn_value_t par_process_input(PKSD_T pKsd_t,
 #else
 								  preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
@@ -1037,7 +1037,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	return_value_t		save_ret = { 0,0,0,0,0,0,0,0,NULL };
 #endif
 	U8 *		 		current_rule;	/* a pointer to the current rule */
-#if (defined DISPLAY_RULES_HIT) || !(defined PARSER_STANDALONE_DEBUG)
+#if (defined DISPLAY_RULES_HIT) || !(defined PARSER_STANDALONE_DEBUG_OLD)
 	unsigned int		current_rule_R_value=0;
 #endif
 	int 				cur_rule_next_hit;
@@ -1062,14 +1062,14 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	U32 *				rule_modes;
 	U16	*				rule_flags;
 	
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 	PCMD_T pCmd_t;
 	PKSD_T  pKsd_t;
 	pCmd_t=phTTS->pCMDThreadData;
 	pKsd_t=phTTS->pKernelShareData;
 #endif
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_process_input\n");
 #endif
 	new_ret.input_pos=ret_value->input_pos+ret_value->input_offset;	
@@ -1079,7 +1079,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	/* GL 02/08/1997 set the initial parser_flag value */
 	new_ret.parser_flag = ret_value->parser_flag;
 #ifdef NEW_PARSER_FILE_LOADING
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 	new_ret.phTTS=NULL;
 #else
 	new_ret.phTTS=phTTS;
@@ -1109,7 +1109,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
     while (((new_input[new_ret.input_pos+new_ret.input_offset]!='\0') && (go_until==0)) ||    	   
     	   (((new_ret.input_pos+new_ret.input_offset-new_input_diff)<input_length) && (go_until==1) ) )
 	{
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 		/* checking cmd_flushing */
 		if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
 		{
@@ -1128,13 +1128,13 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 		current_rule=NULL;                     
 		current_rule_number=rule_sections[rule];
 		last_rule_was_hit=0;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		par_print_rule_error("par_process_input;1 the input is",new_input,new_ret.input_pos+new_ret.input_offset);
 		par_print_rule_error("par_process_input;1 the output is",output_array,new_ret.output_pos+new_ret.output_offset);
 #endif
 		while (!done)
 		{  	
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 			/* checking cmd_flushing */
 			if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
 			{
@@ -1148,7 +1148,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			// CAB	05/20/02	Removed warnings by typecast
 			current_rule=(unsigned char*)&(rule_data_table[(rule_index_table[current_rule_number])]); /* this line will change for the new rule tables */
 			rule_p=0;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			par_print_rule_error("par_process_input;2 the input is",new_input,new_ret.input_pos+new_ret.input_offset);
 			par_print_rule_error("par_process_input;2 the output is",output_array,new_ret.input_pos+new_ret.output_offset);
 #endif
@@ -1200,7 +1200,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			}
 /* GL 04/16/98  add this for rule number caculation under debug mode */
 /*              keep the debug setting for DISPLAY_RULES_HIT         */
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 			if (DT_DBG(CMD_DBG,0x0010))
 			{
 				rule_p+=2; /* advance past the special rule value flags */
@@ -1226,7 +1226,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			/* check the language tag */
 			/* get the language flag */
 			rule_modes=(U32 *)(current_rule+rule_p);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("the language flag is 0x%08X\n",*rule_modes);
 #endif
 			/* check the language flag against the kernel langauge flag for the correct langauage */
@@ -1239,7 +1239,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 				continue;
 			}                                          
 			/* check the rule mode here */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("the mode flag is 0x%08X\n",rule_modes[1]);
 #endif
 			/*	044	MGS		09/24/1997	BATS#469 Fix for NWS parser problem */
@@ -1260,7 +1260,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 				if ((current_value & BIN_DICT_HIT) && (current_value & BIN_DICT_MISS) &&
 					(dict_hit_array[new_ret.input_pos+new_ret.input_offset]==DICT_ABBREV_VALUE))
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("processing rule because of dictionary ABBREV on the word\n");
 #endif			
 				}
@@ -1269,7 +1269,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 					if ((current_value & BIN_DICT_HIT) && 
 						(dict_hit_array[new_ret.input_pos+new_ret.input_offset]!=DICT_MISS_VALUE))
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("processing rule because of dictionary HIT on the word\n");
 #endif				
 					}
@@ -1278,7 +1278,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 						if ((current_value & BIN_DICT_MISS) && 
 							(dict_hit_array[new_ret.input_pos+new_ret.input_offset]==DICT_MISS_VALUE))
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("processing rule because of dictionary MISS on the word\n");
 #endif
 						}
@@ -1346,8 +1346,8 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 				cur_rule_copy_hit=-1;
 			}
 			
-#ifdef DEBUG_RULES
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef DEBUG_OLD_RULES
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 			fprintf(stderr,"rule number is R%d\n",current_rule_R_value);
 			fprintf(stderr,"next hit rule is %d\n",cur_rule_next_hit);
 			fprintf(stderr,"next_miss_rule is %d\n",cur_rule_next_miss);
@@ -1366,7 +1366,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			fprintf(stderr,"rule number is R%d\n",current_rule_R_value);
 #endif
 #endif
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 			if (DT_DBG(CMD_DBG,0x0200))
 			{
 #ifndef ARM7_NOSWI
@@ -1377,11 +1377,11 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 #endif
 
 			
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			par_print_rule_error("par_process_input; before par_match_rule",current_rule,new_ret.rule);
 #endif
 			
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 			/* checking cmd_flushing */
 			if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
 			{
@@ -1392,7 +1392,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			new_ret.rule=rule_p;
 			par_match_rule(current_rule,BIN_END_OF_RULE,new_input,output_array,new_input_indexes,output_indexes,match_array,&new_ret,0);
 			
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 			/* checking cmd_flushing */
 			if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
 			{
@@ -1491,7 +1491,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 					*		characters to the right
 					*/
 					/* debug switch */
-#ifndef PARSER_STANDALONE_DEBUG
+#ifndef PARSER_STANDALONE_DEBUG_OLD
 					if (DT_DBG(CMD_DBG,0x0010))
 					{
 #ifndef ARM7_NOSWI
@@ -1500,7 +1500,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 					}
 #endif
 #ifdef DISPLAY_RULES_HIT
-#ifdef PARSER_STANDALONE_DEBUG
+#ifdef PARSER_STANDALONE_DEBUG_OLD
 #ifdef OUTPUT_HITS_NORMAL
 					fprintf(stderr,"H");
 					printf("the rule hit was R%d\n",current_rule_R_value);
@@ -1540,13 +1540,13 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 						output_size=new_ret.output_offset-save_ret.output_offset;
 						if (output_size>input_size)
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("par_process_input;the output is larger than the input\n");
 #endif
 							size_diff=output_size-input_size;
 							/* should check for overrunning the new input array */
 							/* copy the input to its new location */
-#ifdef NEW_DEBUG
+#ifdef NEW_DEBUG_OLD
 							par_print_rule_error("the input_array before moving, changing",new_input,new_ret.input_pos+new_ret.input_offset);
 							par_print_rule_error("the output_array before moving, changing",output_array,new_ret.output_pos+new_ret.output_offset);
 #endif
@@ -1568,7 +1568,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 								for (i=strlen(new_input)+size_diff;i>j;i--)
 								{
 									k=i-size_diff;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 									printf("process_input;copying new_input[%d]%c(%0X)=new_input[%d]%c(%0X)\n",i,new_input[i],new_input[i],k,new_input[k],new_input[k]);
 #endif
 									new_input[i]=new_input[k];
@@ -1577,7 +1577,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 									
 								}
 								new_input_diff+=size_diff;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 								par_print_rule_error("111 input",new_input,new_ret.input_pos+new_ret.input_offset);
 								par_print_rule_error("111 output",output_array,new_ret.output_pos+new_ret.output_offset);
 #endif
@@ -1589,11 +1589,11 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 								new_ret.input_offset=save_ret.input_offset;
 								new_ret.output_offset=save_ret.output_offset;
 							}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							par_print_rule_error("222 input",new_input,new_ret.input_pos+new_ret.input_offset);
 							par_print_rule_error("222 output",output_array,new_ret.output_pos+new_ret.output_offset);
 #endif
-#ifdef NEW_DEBUG
+#ifdef NEW_DEBUG_OLD
 							par_print_rule_error("the input_array after moving, changing",new_input,new_ret.input_pos+new_ret.input_offset);
 							par_print_rule_error("the output_array after moving, changing",output_array,new_ret.output_pos+new_ret.output_offset);
 #endif
@@ -1602,7 +1602,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 						{
 							if (input_size==output_size)
 							{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 								printf("par_process_input;the output is the same size as the input\n");
 #endif              
 								/* overwrite the input with the output */
@@ -1614,7 +1614,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 							} /* if (input_size==output_size) */
 							else
 							{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 								printf("par_process_input;the output is smaller than the input\n");
 #endif                                   
 								/* 
@@ -1692,7 +1692,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 			*/
 			if ((current_rule_number>=num_rules) || (current_rule_number<0))
 				done=1;         
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("process_input done = %d\n",done);
 #endif
 			
@@ -1723,7 +1723,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	
 	ret_value->input_offset=new_ret.input_offset-new_input_diff;	 /* the offsets are the change from the current pos */
 	ret_value->output_offset=new_ret.output_offset; /* so add the values to the callers offsets */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_process_input\n");
 #endif
 	return(ret_value);
@@ -1742,7 +1742,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
  *		INPUT	short   current_rule_number		the_rule_number that is being processed now
  *
  *	Return Value:
- *		#ifdef PARSER_DEBUG
+ *		#ifdef PARSER_DEBUG_OLD
  *			int		the rule number to process next
  *		#else
  *			_inline int
@@ -1753,7 +1753,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 int par_get_return_level(int *return_rule, int *return_level, int current_rule_number)
 {
 	if (*return_level>0)
@@ -1784,7 +1784,7 @@ int par_get_return_level(int *return_rule, int *return_level, int current_rule_n
 		return(current_rule_number+1);
 	}
 }
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
 
 /* ******************************************************************
  *	Function Name:
@@ -1806,19 +1806,19 @@ int par_get_return_level(int *return_rule, int *return_level, int current_rule_n
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 void par_set_return_level(int *return_rule, int *return_level, int go_rule)
 {
 	if (*return_level<PAR_MAX_RETURN_LEVEL)
 	{
-		//#ifdef PARSER_DEBUG
+		//#ifdef PARSER_DEBUG_OLD
 		printf("par_set_return_level;saving rule %d in level %d\n",go_rule,*return_level);
 		//#endif
 		return_rule[(*return_level)++]=go_rule;
 	}
 	else
 	{
-		//#ifdef PARSER_DEBUG
+		//#ifdef PARSER_DEBUG_OLD
 		printf("par_set_return_level;too many levels of gorets throwing away %d\n",go_rule);
 		//#endif
 	}
@@ -1839,7 +1839,7 @@ void par_set_return_level(int *return_rule, int *return_level, int go_rule)
 #endif
 	}
 }
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
 
 /* ******************************************************************
  *	Function Name:
@@ -1862,7 +1862,7 @@ void par_set_return_level(int *return_rule, int *return_level, int go_rule)
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 void par_copy_index_list(pindex_data_t dest_index,
 						 int		   dest_pos,
 						 pindex_data_t src_index,
@@ -1878,7 +1878,7 @@ void par_copy_index_list(pindex_data_t dest_index,
 	//	}
 #endif
 }
-#else // PARSER_DEBUG
+#else // PARSER_DEBUG_OLD
  void par_copy_index_list(pindex_data_t dest_index,
 								  int		    dest_pos,
 								  pindex_data_t src_index,
@@ -1896,7 +1896,7 @@ void par_copy_index_list(pindex_data_t dest_index,
 ;
 #endif // ARM7
 }
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
 
 /* ******************************************************************
  *	Function Name:
@@ -1918,7 +1918,7 @@ void par_copy_index_list(pindex_data_t dest_index,
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 void par_copy_index(pindex_data_t dest_index,
 					int			  dest_pos,
 					pindex_data_t src_index,
@@ -1928,7 +1928,7 @@ void par_copy_index(pindex_data_t dest_index,
 	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,sizeof(index_data_t));
 #endif
 }
-#else // PARSER_DEBUG
+#else // PARSER_DEBUG_OLD
  void par_copy_index(pindex_data_t dest_index,
 							 int		   dest_pos,
 							 pindex_data_t src_index,
@@ -1940,7 +1940,7 @@ void par_copy_index(pindex_data_t dest_index,
 ;
 #endif
 }
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
 
 /* ******************************************************************
  *	Function Name:
@@ -1962,7 +1962,7 @@ void par_copy_index(pindex_data_t dest_index,
  *		
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 int par_is_index_set(pindex_data_t indexes, int pos)
 {
 #if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
@@ -1985,7 +1985,7 @@ int par_is_index_set(pindex_data_t indexes, int pos)
 #endif
 	return(0);
 }
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
 
 /* ******************************************************************
  *	Function Name:
@@ -2042,7 +2042,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 //	U8 end_of_action;
 //	U8 end_of_hit;
 											
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_rule state=%d\n",state);
 #endif
 
@@ -2050,7 +2050,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 	/* check the inputs or bail out at this point */                                      
 	if (ret_value==NULL) /* there was no input structure,  bail and return NULL */
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule ret_value is NULL\n");
 #endif
 		return;
@@ -2058,7 +2058,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 	if (current_rule==NULL || input_array==NULL || output_array==NULL || match_array==NULL)
 	{	/* return a failed value */
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule some input is NULL returning FAIL\n");
 #endif
 		return;
@@ -2092,7 +2092,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 	/* set the optional flag if the state is optional */
 	if (state==BIN_OPTIONAL)
 	{                                         
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("set optional to 1\n");
 #endif
 		new_ret.optional=1;
@@ -2229,7 +2229,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 				/* copy matched data to the output string */
 				if (num_chars_matched== -1)
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_match_rule; end of string reached in string\n");
 #endif
 					if (new_ret.optional==1)
@@ -2248,7 +2248,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 					new_ret.value=OPT_FAIL;
 					break;
 				}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				par_print_rule_error("after par_match_string",current_rule,new_ret.rule);
 #endif
 				par_copy_string_data(input_array,input_indexes,output_array,output_indexes,num_chars_matched,&new_ret);
@@ -2261,12 +2261,12 @@ void par_match_rule(unsigned char *current_rule, int state,
 					/* recursively call the par_match_rule function with the new action state */
 				par_match_rule(current_rule,new_operation,input_array,output_array,input_indexes,output_indexes,match_array,&new_ret,0);
 				
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				par_print_rule_error("after par_match_rule",current_rule,new_ret.rule);
 #endif
 				if (new_ret.value==END_OF_STRING)
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_match_rule; end of string reached in rule\n");
 #endif
 					if (new_ret.optional==1)
@@ -2305,13 +2305,13 @@ void par_match_rule(unsigned char *current_rule, int state,
 	* should remain unchanged for the following rules to use 
 		*/
 		ret_value->value=FAIL;
-#ifdef INDEX_DEBUG2
+#ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, failure\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
 #if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
 #endif
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule failure of the rule\n");
 #endif
 		
@@ -2320,14 +2320,14 @@ void par_match_rule(unsigned char *current_rule, int state,
 	if (new_ret.value==END_OF_STRING)
 	{
 		/* on finding the end of the string, return END_OF_STRING to the caller */
-#ifdef INDEX_DEBUG2
+#ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, end_of_string\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
 #if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
 #endif
 		ret_value->value=END_OF_STRING;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule; the end of the string was encountered\n");
 #endif
 		return;
@@ -2346,7 +2346,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 			}
 		}
 		/* performing the action of this state */  
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("the current output is:%s\n",output_array);
 		printf("output_pos=%d output_offset=%d\n",new_ret.output_pos,new_ret.output_offset);
 #endif
@@ -2366,27 +2366,27 @@ void par_match_rule(unsigned char *current_rule, int state,
 		/* updating ret_value */
 		/* only the value of offset is updated with the change in the offset */
 		/* pos values have the value of what they were at the beginning of the rule matching */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("par_match_rule;the output after the action has been performed\n is %s\n",output_array);
 #endif
 		if (new_ret.value==FATAL_FAIL)
 		{
 			ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_match_rule fatal failure of the rule\n");
 #endif
 			return;
 		}
 		if (new_ret.value==FAIL)
 		{
-#ifdef INDEX_DEBUG2
+#ifdef INDEX_DEBUG_OLD2
 			printf("cleared indexes from %d to %d in the output, fail-fail\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
 #if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 			memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
 #endif
 			ret_value->value=FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_match_rule failure of the rule\n");
 #endif
 			return;
@@ -2405,10 +2405,10 @@ void par_match_rule(unsigned char *current_rule, int state,
 	}
 	else
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("par_match_rule;optional set to OPT_FAIL\n");
 #endif
-#ifdef INDEX_DEBUG2
+#ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, opt_fail\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
 #if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
@@ -2424,7 +2424,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 	}
 	/* ret_value->rule should be pointing to the character afterh the rule now */
 	ret_value->rule=new_ret.rule;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_rule success\n");
 #endif
 }
@@ -2471,14 +2471,14 @@ void par_perform_action(unsigned char *current_rule, int state, unsigned char *i
 	int length=0;
 	unsigned char buf[10];
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering perform action\n");
 #endif
 
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving perform action ret_value is NULL\n");
 #endif
 		return;
@@ -2486,7 +2486,7 @@ void par_perform_action(unsigned char *current_rule, int state, unsigned char *i
 	if ((current_rule==NULL) || (output_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving perform action inputs are NULL\n");
 #endif
 		return;
@@ -2588,7 +2588,7 @@ void par_perform_action(unsigned char *current_rule, int state, unsigned char *i
 #endif // 0
 /* *****************************************************************/
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving perform action;the action is done\n");
 #endif
 }
@@ -2628,7 +2628,7 @@ void par_delete_string(unsigned char *current_rule, unsigned char *input_array,
 	int	i,j,save_offset=0;
 //055	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
 	index_data_t temp_index;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_delete_string\n");
 #endif
 	/*
@@ -2637,7 +2637,7 @@ void par_delete_string(unsigned char *current_rule, unsigned char *input_array,
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_delete_string ret_value is NULL\n");
 #endif
 		return;
@@ -2645,7 +2645,7 @@ void par_delete_string(unsigned char *current_rule, unsigned char *input_array,
 	if ((output_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_delete_string input is NULL\n");
 #endif
 		return;
@@ -2662,7 +2662,7 @@ void par_delete_string(unsigned char *current_rule, unsigned char *input_array,
 	{
 		if (par_is_index_set(output_indexes,i))
 		{
-#ifdef INDEX_DEBUG
+#ifdef INDEX_DEBUG_OLD
 			printf("copying index in delete state from %d to %d\n",i,j);
 #endif
 			par_copy_index(output_indexes,j,output_indexes,i);
@@ -2673,7 +2673,7 @@ void par_delete_string(unsigned char *current_rule, unsigned char *input_array,
 			ret_value->output_offset++;
 		}
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_delete_string string deleted\n");
 #endif
 }
@@ -2718,7 +2718,7 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 	index_data_t  temp_index[100];
 	
 	
-#if defined (PARSER_DEBUG) || defined (INDEX_DEBUG)
+#if defined (PARSER_DEBUG_OLD) || defined (INDEX_DEBUG_OLD)
 	printf("entering par_replace_string\n");
 #endif
 	
@@ -2729,7 +2729,7 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_replace_string ret_value is NULL\n");
 #endif
 		return;
@@ -2737,7 +2737,7 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 	if ((current_rule==NULL) || (output_array==NULL) || (match_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_replace_string inputs are invalid\n");
 #endif
 		return;
@@ -2758,7 +2758,7 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 			for (;j<length && buf[j]!=' ';j++);
 			if (j<length)
 			{
-#ifdef INDEX_DEBUG
+#ifdef INDEX_DEBUG_OLD
 				printf("copying index in replace 1 from %d to buf %d\n",i,j);
 #endif
 				par_copy_index(temp_index,j,output_indexes,i);
@@ -2771,7 +2771,7 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 				/* use the dummy character for the moved index */
 				buf[j]=PAR_INDEX_DUMMY_CHAR;
 				buf[j+1]='\0';     
-#ifdef INDEX_DEBUG
+#ifdef INDEX_DEBUG_OLD
 				printf("copying index in replace 2 from %d to buf %d\n",i,j);
 #endif
 				par_copy_index(temp_index,j,output_indexes,i);
@@ -2787,12 +2787,12 @@ void par_replace_string(unsigned char *current_rule, unsigned char *input_array,
 	/* 
 	* the output offset is now the length of of the new output string 
 	*/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("par_replace_string; length=%d\n",length);
 #endif	
 	ret_value->output_offset=length;
 	//	ret_value->rule++;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving replace_state replacement is successful\n");
 #endif
 }
@@ -2815,13 +2815,13 @@ void par_compound_break(unsigned char *current_rule,
 	char new_input[100];
 	char new_output[100];
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_compound_break\n");
 #endif
 
 	if (noun_num_character_in_mapping==0)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_compound_break, no table loaded\n");
 #endif
 		return;
@@ -2845,14 +2845,14 @@ void par_compound_break(unsigned char *current_rule,
 
 		if (ret_value->optional==1)
 		{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("set optional to opt_fail\n");
 #endif
 			ret_value->value=OPT_FAIL;
 		}
 	}
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_compound_break\n");
 #endif
 
@@ -2876,13 +2876,13 @@ int par_break_down_word(unsigned char *input,unsigned char *output)
 	int positions[10];
 	int result;
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_break_down_word %s\n",input);
 #endif
 	result=par_find_word_in_dict(head,input,positions,0,&number_of_pos);
 	if (result==0)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_break_down_word no matches\n");
 #endif
 		return(-1);
@@ -2908,7 +2908,7 @@ int par_break_down_word(unsigned char *input,unsigned char *output)
 					if (result>0)
 					{
 						output[positions[i]]='-';
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("leaving par_break_down_word no conj %s %s %d\n",input,output,result+positions[i]+1);
 #endif
 						return(result+positions[i]+1);
@@ -2924,7 +2924,7 @@ int par_break_down_word(unsigned char *input,unsigned char *output)
 							memcpy(output+positions[i],noun_conjunction[j].conj,noun_conjunction[j].length);
 							output[positions[i]+noun_conjunction[j].length]='-';
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("leaving par_break_down_word conj %s %s %d\n",input,output,result+positions[i]+1);
 #endif
 							return(result+positions[i]+noun_conjunction[j].length+1);
@@ -2936,7 +2936,7 @@ int par_break_down_word(unsigned char *input,unsigned char *output)
 		/* insert code for connecting characters here */
 		/* remove the connections in reverse order from longest to shortest */
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_break_down_word failure %s %s\n",input,output);
 #endif
 	return(-1);
@@ -3107,7 +3107,7 @@ void par_insert_string(unsigned char *current_rule, unsigned char *input_array,
 		return;
 	}
 #endif
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_insert_string\n");
 #endif
 	/* 
@@ -3116,7 +3116,7 @@ void par_insert_string(unsigned char *current_rule, unsigned char *input_array,
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string ret_value is NULL\n");
 #endif
 		return;
@@ -3124,7 +3124,7 @@ void par_insert_string(unsigned char *current_rule, unsigned char *input_array,
 	if ((current_rule==NULL) || (output_array==NULL) || (match_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string; inputs are invalid\n");
 #endif
 		return;
@@ -3172,7 +3172,7 @@ void par_insert_string(unsigned char *current_rule, unsigned char *input_array,
 	/* the output offset is equal to the total length of the new string */
 	ret_value->output_offset=new_length;
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_insert_string; insert is done\n");
 #endif
 	return;
@@ -3220,7 +3220,7 @@ void par_insert_string_after(unsigned char *current_rule, unsigned char *input_a
 	int length;
 	unsigned char buf[100];
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_insert_string_after\n");
 #endif
 	/*
@@ -3229,7 +3229,7 @@ void par_insert_string_after(unsigned char *current_rule, unsigned char *input_a
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string_after ret_value is NULL\n");
 #endif
 		return;
@@ -3237,7 +3237,7 @@ void par_insert_string_after(unsigned char *current_rule, unsigned char *input_a
 	if ((current_rule==NULL) || (output_array==NULL) || (match_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string_after inputs are invalid\n");
 #endif
 		return;
@@ -3257,7 +3257,7 @@ void par_insert_string_after(unsigned char *current_rule, unsigned char *input_a
 	memcpy((output_array+(ret_value->output_pos+ret_value->output_offset)),buf,length);
 	/* add the length of the inserted atring to the offset */
 	ret_value->output_offset+=length;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_insert_string_after insert after is done\n");
 #endif
 	return;
@@ -3308,7 +3308,7 @@ void par_insert_string_before(unsigned char *current_rule, unsigned char *input_
 	int i,j;
 	unsigned char buf[100];           
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_insert_string_before\n");
 #endif
 	/*
@@ -3317,7 +3317,7 @@ void par_insert_string_before(unsigned char *current_rule, unsigned char *input_
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string_before ret_value is NULL\n");
 #endif
 		return;
@@ -3325,7 +3325,7 @@ void par_insert_string_before(unsigned char *current_rule, unsigned char *input_
 	if ((current_rule==NULL) || (output_array==NULL) || (match_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_insert_string_before; inputs are invalid\n");
 #endif
 		return;
@@ -3354,7 +3354,7 @@ void par_insert_string_before(unsigned char *current_rule, unsigned char *input_
 	/* add the length of the inserted string to the offset */
 	ret_value->output_offset+=length;
 	//	ret_value->rule++;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_insert_string_before; insert before is done\n");
 #endif
 	return;
@@ -3399,7 +3399,7 @@ void par_save_string(unsigned char *current_rule, unsigned char *input_array,
 #endif
 {
 	/* this should be the last thing in the output array, but to be sure strncpy is used */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_save_string\n");
 #endif
 	/* 
@@ -3408,7 +3408,7 @@ void par_save_string(unsigned char *current_rule, unsigned char *input_array,
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_save_string ret_value is NULL\n");
 #endif
 		return;
@@ -3416,7 +3416,7 @@ void par_save_string(unsigned char *current_rule, unsigned char *input_array,
 	if ((output_array==NULL) || (match_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_save_string; inputs are invalid\n");
 #endif
 		return;
@@ -3442,7 +3442,7 @@ void par_save_string(unsigned char *current_rule, unsigned char *input_array,
 	match_array->array_lengths[save_num]=ret_value->output_offset;
 	/* null terminate the string */
 	match_array->array[save_num][ret_value->output_offset]='\0';
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_save_string; string is saved in array %d\n",save_num);
 #endif
 	return;
@@ -3491,7 +3491,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 {
 	int	ipos,opos;
 	int	result=FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_dom_dict_search\n");
 #endif
 	ipos=ret_value->input_pos;
@@ -3501,7 +3501,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 	if (ret_value->input_offset>=PAR_MAX_MATCH_ARRAY)
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_dom_dict_search fatal failure of the rule\n");
 #endif
 		return;
@@ -3509,7 +3509,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 	if (ret_value->output_offset>=PAR_MAX_MATCH_ARRAY)
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_dom_dict_search fatal failure of the rule\n");
 #endif
 		return;
@@ -3525,13 +3525,13 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 	{
 		if (result)
 		{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_dom_dict_search 1 success\n");
 #endif
 			ret_value->value=SUCCESS;
 			return;
 		}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_dom_dict_search 1 failure\n");
 #endif
 		return;		
@@ -3544,7 +3544,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 			ret_value->value=FAIL;
 			if (ret_value->optional==1)
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("par_dom_dict_search hit set optinal to -1\n");
 #endif
 //				ret_value->optional= -1;
@@ -3553,7 +3553,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 			}
 			else
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				par_print_rule_error("",current_rule,ret_value->rule);
 				printf("leaving par_dom_dict_search because of a fail hit_action\n");
 #endif
@@ -3563,7 +3563,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 		ret_value->input_offset=0;	/* reset for rematching */
 		ret_value->output_offset=0; /* reset for rematching */
 		par_match_rule(current_rule,BIN_COPY,input_array,output_array,input_indexes,output_indexes,match_array,ret_value,dict_state_flag);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("input_off = %d output_off =%d\n",ret_value->input_offset,ret_value->output_offset);
 #endif
 		/* skip the miss_action */ /* copy the code for this from the compiler */
@@ -3579,14 +3579,14 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 			ret_value->value=FAIL;
 			if (ret_value->optional==1)
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("par_dom_dict_search miss set optinal to -1\n");
 #endif
 //				ret_value->optional= -1;
 				ret_value->value=OPT_FAIL;
 				return;
 			}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_dom_dict_search because of a fail miss_action\n");
 			par_print_rule_error("",current_rule,ret_value->rule);
 #endif
@@ -3596,7 +3596,7 @@ void par_dom_dict_search(unsigned char *current_rule, unsigned char *input_array
 		ret_value->output_offset=0; /* reset for rematching */
 		par_match_rule(current_rule,BIN_COPY,input_array,output_array,input_indexes,output_indexes,match_array,ret_value,dict_state_flag);
 	}       
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_dom_dict_search\n");
 	par_print_rule_error("",current_rule,ret_value->rule);
 #endif
@@ -3629,7 +3629,7 @@ int par_look_ahead_dictionary(unsigned char *current_rule, unsigned char *input_
 {           
 	unsigned char temp_output[100];
 	index_data_t temp_indexes[100]; 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_look_ahead_dictionary\n");
 #endif
 	ret_value->output_pos=0;
@@ -3638,12 +3638,12 @@ int par_look_ahead_dictionary(unsigned char *current_rule, unsigned char *input_
 	par_match_rule(current_rule,BIN_DICTIONARY,input_array,temp_output,temp_indexes,temp_indexes,match_array,ret_value,1);
 	if (ret_value->value==SUCCESS)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_look_ahead_dictionary success\n");
 #endif
 		return(1);
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_look_ahead_dictionary failure\n");
 #endif                                                    
 	return(0);
@@ -3682,7 +3682,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	int value=0;
 	int rev_same=0,for_same=0,npos=0;
 	int save_for;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_search_for_word\n");
 #endif                        
 	dict_number=dict_num-1;	
@@ -3693,7 +3693,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	while (rev_same<=for_same)
 	{
 		pos=((rev_same+for_same)>>1); /* divide the offset by 2 */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("comparing %s to %d %s\n",input,pos,(unsigned char *)(dict_data_table+dict_index_table[pos]));
 #endif
 		if ((value=_stricmp(input,(unsigned char *)(dict_data_table+dict_index_table[pos])))==0)
@@ -3716,7 +3716,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	{
 		if (value==0)
 		{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_search_for_word in dict and short search\n");
 #endif
 			return(1);
@@ -3724,7 +3724,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	}                                    
 	if (value!=0)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_search_for_word not in dic\n");
 #endif
 		return(0);
@@ -3754,7 +3754,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 		while (rev_same<=for_same)
 		{
 			npos=((rev_same+for_same)>>1); /* divide the offset by 2 */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("comapring case %s to %d %s\n",input,npos,(unsigned char *)(dict_data_table+dict_index_table[npos]));
 #endif
 			if ((value=strcmp(input,(unsigned char *)(dict_data_table+dict_index_table[npos])))==0)
@@ -3781,7 +3781,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 		{
 			if ((parser_char_types[dict_data_table[dict_index_table[save_for]]] & TYPE_upper))
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_dom_dict_search capitilization doesn't match\n");
 #endif
 				return(0);
@@ -3792,13 +3792,13 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	{
 //		strcpy(output,((unsigned char *)(dict_data_table+dict_index_table[save_for]))+(strlen((unsigned char *)(dict_data_table+dict_index_table[save_for]))+1));
 		strcpy(output,((unsigned char *)(dict_data_table+dict_index_table[save_for]))+(input_length+1));
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_search_for_word success\n");
 #endif
 		return(1);
 	}             
 	return(0);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_search_for_word failure\n");
 #endif
 }
@@ -3845,7 +3845,7 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 	register int i;
 	int has_cons=0,has_vowel=0;
 	int temp;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_check_word_string\n");
 #endif
 	/*
@@ -3854,7 +3854,7 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_check_word_string ret_value is NULL\n");
 #endif
 		return;
@@ -3862,7 +3862,7 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 	if ((output_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_check_word_string input is NULL\n");
 #endif
 		return;
@@ -3891,7 +3891,7 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 			{	
 				ret_value->value=FAIL;
 			}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("the output is not a word\n");
 #endif
 			return;
@@ -3901,7 +3901,7 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 	/* BATS 874 MGS 03/03/1999 fixed word state */
 	if (has_cons && has_vowel && (ret_value->output_offset)>=2)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("the output may be a word\n");
 #endif
 	}         
@@ -3915,11 +3915,11 @@ void par_check_word_string(unsigned char *current_rule, unsigned char *input_arr
 		{	
 			ret_value->value=FAIL;
 		}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("the output is not a word\n");
 #endif
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_check_word_string\n");
 #endif
 	return;
@@ -4005,7 +4005,7 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 	U8 end_of_action;
 	U8 end_of_build;
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_build_string_from_rule\n");
 #endif
 	/*
@@ -4014,7 +4014,7 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_build_string_from_rule ret_value is NULL\n");
 #endif
 		return(NULL);
@@ -4022,7 +4022,7 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 	if ((current_rule==NULL) || (buf == NULL) || (match_array == NULL) ||
 		(state == BIN_END_OF_RULE) || (length==NULL))
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_build_string_from_rule; inputs are invalid\n");
 #endif
 		ret_value->value=FATAL_FAIL;
@@ -4033,7 +4033,7 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 	rule_p=ret_value->rule;
 	end_of_action=current_rule[in_rule_index+2];
 	end_of_build=end_of_action;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("current_rule[%d]=%c\n",rule_p,current_rule[rule_p]);
 	if (current_rule[rule_p]==BIN_EXACT)
 		printf("found an exact character delimiter\n");
@@ -4170,7 +4170,7 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 			break;
 		default:
 			/* the current character is not a recognized type */
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			par_print_rule_error("build_string;unrecognized delimiter",current_rule,rule_p);
 #endif
 			ret_value->value=FATAL_FAIL;
@@ -4181,10 +4181,10 @@ unsigned char *par_build_string_from_rule(unsigned char *current_rule, unsigned 
 	buf[buf_ind]='\0';
 	*length=buf_ind;
 	ret_value->rule=end_of_action+1;
-#ifdef DEBUG2
+#ifdef DEBUG_OLD2
 	par_print_rule_error("no error, just debugging output position",current_rule,rule_p);
 #endif
-#ifdef 	PARSER_DEBUG
+#ifdef 	PARSER_DEBUG_OLD
 	printf("leaving par_build_string_from_rule buf=%s\n",buf);
 #endif
 	return(buf);
@@ -4236,7 +4236,7 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 	int value;
 	
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_string\n");
 #endif
 	
@@ -4277,12 +4277,12 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 					{
 						if (par_lower[current_rule[rule_p]]!=par_lower[input_array[ipos+length]])
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("leaving par_match_string; exact characters dont match\n");
 #endif
 							if (ret_value->optional==1)
 							{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 								printf("par_match_string; exact optional set to -1\n");
 #endif
 //								ret_value->optional= -1;
@@ -4302,12 +4302,12 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 				{
 					if (current_rule[rule_p]!=input_array[ipos])
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("leaving par_match_string; exact characters dont match\n");
 #endif
 						if (ret_value->optional==1)
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("par_match_string; exact optional set to -1\n");
 #endif
 							//ret_value->optional= -1;
@@ -4321,12 +4321,12 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 					}
 					if (memcmp(input_array+ipos,current_rule+rule_p,value)!=0)
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("leaving par_match_string; exact characters dont match\n");
 #endif
 						if (ret_value->optional==1)
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("par_match_string; exact optional set to -1\n");
 #endif
 			//				ret_value->optional= -1;
@@ -4351,7 +4351,7 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 				{
 					if (ret_value->optional==1)
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("par_match_string; hex optional set to -1\n");
 #endif
 		//				ret_value->optional= -1;
@@ -4361,7 +4361,7 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 					{
 						ret_value->value=FAIL;
 					}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_match_string hexadecimal value %02X mismatch\n",value);
 #endif
 					return(0);
@@ -4381,7 +4381,7 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 				{
 					if (ret_value->optional==1)
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("par_match_string; save optional set to -1\n");
 #endif
 //						ret_value->optional= -1;
@@ -4431,7 +4431,7 @@ int par_match_string(register unsigned char *current_rule, int char_type,
 		length=0;
 	}
 	ret_value->rule=rule_p;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_string length = %d ret_value->value=%d\n",length,ret_value->value);
 #endif
 	return(length);
@@ -4467,7 +4467,7 @@ void par_copy_string_data(unsigned char *input_array, pindex_data_t input_indexe
 						  unsigned char *output_array, pindex_data_t output_indexes,
 						  int num_chars, preturn_value_t ret_value)
 {
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_copy_string_data\n");
 #endif
 	memcpy(&output_array[ret_value->output_pos+ret_value->output_offset],&input_array[ret_value->input_pos+ret_value->input_offset],num_chars);
@@ -4484,7 +4484,7 @@ void par_copy_string_data(unsigned char *input_array, pindex_data_t input_indexe
 #endif // 0
 /* *****************************************************************/
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_copy_string_data\n");
 #endif
 }
@@ -4590,20 +4590,20 @@ int par_get_int_length(register int i)
 /* **************** NOT USED ***************************************/
 #if 0
 	register int j;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_get_int_length\n");
 #endif
 
 	if (i==0)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_get_int_length length=1\n");
 #endif
 		return(1);
 	}
 	for (j=0;i;j++)
 		i/=10;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_get_int_length length=%d\n",j);
 #endif
 	return(j);
@@ -4653,7 +4653,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 	int char_type;
 
 	rule_p=find_index;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_look_ahead\n");
 	par_print_rule_error("par_look_ahead; the current position is",current_rule,ret_value->rule);
 #endif
@@ -4668,7 +4668,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 		{
 			if (par_lower[current_rule[rule_p]]!=par_lower[input_array[ipos]])
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_look_ahead; exact failure\n");
 #endif
 				return(0);
@@ -4677,7 +4677,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 			{
 				if (par_lower[current_rule[rule_p]]!=par_lower[input_array[ipos]])
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_look_ahead; exact failure\n");
 #endif
 					return(0);
@@ -4685,7 +4685,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 				ipos++;
 				rule_p++;
 			}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_look_ahead; exact success\n");
 #endif
 			return(1);
@@ -4694,7 +4694,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 		{
 			if (current_rule[rule_p]!=input_array[ipos])
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_look_ahead; exact failure\n");
 #endif
 				return(0);
@@ -4704,7 +4704,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 			{
 				if (current_rule[rule_p]!=input_array[ipos])
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_look_ahead; exact failure\n");
 #endif
 					return(0);
@@ -4712,12 +4712,12 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 				ipos++;
 				rule_p++;
 			}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("leaving par_look_ahead; exact success\n");
 #endif
 			return(1);
 		}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_look_ahead; exact failure\n");
 #endif
 		return(0);
@@ -4739,13 +4739,13 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 				{
 					if (char_length>0)
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("leaving par_look_ahead;digit range success\n");
 #endif
 						return(1);
 					}
 				}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_look_ahead;digit range fail\n");
 #endif
 				return(0);
@@ -4761,13 +4761,13 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 				{
 					if (char_length>0)
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("leaving par_look_ahead;standard success\n");
 #endif
 						return(1);
 					}
 				}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_look_ahead;standard fail\n");
 #endif
 				return(0);
@@ -4781,12 +4781,12 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 				rule_p++;
 				if (input_array[ipos]==current_rule[rule_p])
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_look_ahead; hex number success\n");
 #endif
 					return(1);
 				}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("leaving par_look_ahead; hex number failure\n");
 #endif
 				return(0);
@@ -4802,13 +4802,13 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 					{
 						if (match_array->array[value][0]!='\0')
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("leaving par_look_ahead; par_save_string success\n");
 #endif
 							return(1);
 						}
 					}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_look_ahead; par_save_string failure\n");
 #endif
 					return(0);
@@ -4824,13 +4824,13 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 					{
 						if (char_length>0)
 						{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 							printf("leaving par_look_ahead;sets success\n");
 #endif
 							return(1);
 						}
 					}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("leaving par_look_ahead;sets fail\n");
 #endif
 					return(0);
@@ -4841,12 +4841,12 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 					new_ret.input_pos=ipos;
 					if (par_look_ahead_dictionary(current_rule,input_array,match_array,&new_ret))
 					{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 						printf("par_look_ahead;dictionary_state dict entry found\n");
 #endif
 						return(1);
 					}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("par_look_ahead;dictionary_state dict entry not found\n");
 #endif
 					return(0);			   
@@ -4856,7 +4856,7 @@ int par_look_ahead( register unsigned char *current_rule, unsigned char *input_a
 		} /* if (char_type<=BIN_DIGIT) */
 	} /* if (char_type==BIN_EXACT) */
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_look_ahead; how did it get here??\n");
 #endif
 	return(0);
@@ -4892,12 +4892,12 @@ int par_copy_word_to_output(unsigned char *input_array, unsigned char *output_ar
 {
 	int i,ipos,opos;
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_copy_word_to_output\n");
 #endif
 	if ((ret_value==NULL) || (input_array==NULL) || (output_array==NULL))
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_copy_word_to_output a 0\n");
 #endif
 		return(0);
@@ -4911,7 +4911,7 @@ int par_copy_word_to_output(unsigned char *input_array, unsigned char *output_ar
 		output_array[opos+i]=input_array[ipos+i];        
 		/* copy the index anyway even if it isn't there */
 		par_copy_index(output_indexes,opos+i,input_indexes,ipos+i);
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("output_array[%d]=%c ",opos+i,output_array[opos+i]);
 #endif
 		i++;
@@ -4920,12 +4920,12 @@ int par_copy_word_to_output(unsigned char *input_array, unsigned char *output_ar
 	ret_value->output_offset+=i;
 	if (input_array[ipos+i]=='\0')
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_copy_word_to_output b -1\n");
 #endif
 		return(-1);
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_copy_word_to_output b \n");
 #endif
 	return(0);
@@ -4961,12 +4961,12 @@ int par_skip_white_space(unsigned char *input_array, pindex_data_t input_indexes
 {
 	int i,ipos,opos,j;
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_skip_white_space\n");
 #endif
 	if ((ret_value==NULL) || (input_array==NULL) || (output_array==NULL))
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_skip_white_space a 0\n");
 #endif
 		return(0);
@@ -4982,7 +4982,7 @@ int par_skip_white_space(unsigned char *input_array, pindex_data_t input_indexes
 			output_array[opos+j]=input_array[ipos+i];
 			if (par_is_index_set(input_indexes,ipos+i))
 			{                                       
-#ifdef INDEX_DEBUG
+#ifdef INDEX_DEBUG_OLD
 				printf("copying index from %d to %d\n",ipos+i,opos+j);
 #endif
 				par_copy_index(output_indexes,opos+j,input_indexes,ipos+i);
@@ -4992,7 +4992,7 @@ int par_skip_white_space(unsigned char *input_array, pindex_data_t input_indexes
 			{
 				j++;
 			}
-#ifdef INDEX_DEBUG
+#ifdef INDEX_DEBUG_OLD
 			if (i!=0)
 			{
 				printf("copied extra space because of index\n");
@@ -5007,12 +5007,12 @@ int par_skip_white_space(unsigned char *input_array, pindex_data_t input_indexes
 		ret_value->output_offset+=j;
 	if (input_array[ipos+i]=='\0')
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_skip_white_space b -1\n");
 #endif
 		return(-1);
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_skip_white_space b 0\n");
 #endif
 	return(0);
@@ -5071,7 +5071,7 @@ void par_print_rule_error(char *message, unsigned char *current_rule, int pos)
  *	Comments:
  *
  * *****************************************************************/
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 void par_copy_return_value(preturn_value_t dest, preturn_value_t src)
 {
 	memcpy(dest,src,sizeof(return_value_t));
@@ -5129,14 +5129,14 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 	int large_desc=0;
 	
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_standard\n");
 #endif
 
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_standard a 0\n");
 #endif
 		return(0);
@@ -5144,7 +5144,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 	if ((current_rule==NULL) || (input_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_standard b 0\n");
 #endif
 		return(0);
@@ -5158,7 +5158,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 	if (current_rule[rule_p] & BIN_LOOK_FROM_DISABLE)
 	{
 		lookahead=0;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("match_standard set no lookahead\n");
 #endif
 	}
@@ -5166,7 +5166,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 	temp=current_rule[rule_p];
 	if (temp & BIN_COMPLIMENT)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("match_standard set to non matches\n");
 #endif
 		match_non_match=0;
@@ -5174,7 +5174,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 	if (temp & BIN_LARGE_DESC)
 	{
 		large_desc=1;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("match_standard using large descriptors\n");
 #endif
 	}
@@ -5331,7 +5331,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 			}
 		}
 	}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("par_match_standard;rule_p=%d\n",rule_p);
 #endif
 	/* look for the next format type specifier */
@@ -5379,7 +5379,7 @@ int par_match_standard(unsigned char *current_rule, int char_type,
 		rule_p=temp;
 	}
 	ret_value->rule=rule_p;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_standard length=%d ret_value->value=%d\n",length,ret_value->value);
 #endif
 	return(length);
@@ -5439,14 +5439,14 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 	int large_desc=0;
 	
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_digits\n");
 #endif
 	
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_digits a 0\n");
 #endif
 		return(0);
@@ -5455,7 +5455,7 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 		(range_value==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_digits b 0\n");
 #endif
 		return(0);
@@ -5470,7 +5470,7 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 	if (current_rule[rule_p] & BIN_LOOK_FROM_DISABLE)
 	{
 		lookahead=0;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("match_standard set no lookahead\n");
 #endif
 	}
@@ -5478,7 +5478,7 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 	if (current_rule[rule_p] & BIN_LARGE_DESC)
 	{
 		large_desc=1;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("match_standard using large descriptors\n");
 #endif
 	}
@@ -5571,7 +5571,7 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 		range_value->end=max_range;
 		min_range=par_get_int_length(min_range);
 		max_range=par_get_int_length(max_range);
-#ifdef DIGIT_DEBUG
+#ifdef DIGIT_DEBUG_OLD
 		printf("par_match_digits; before match length=%d match_is_over=%d satisfied_min_cond=%d\n",length,match_is_over,satisfied_min_cond);
 		printf("par_match_digits; before match min_range=%d max_range=%d\n",min_range,max_range);
 #endif
@@ -5580,12 +5580,12 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 			(i<max_range))
 			;i++)
 		{
-#ifdef DIGIT_DEBUG
+#ifdef DIGIT_DEBUG_OLD
 			printf("looping in par_match_digits i=%d temp_num=%d\n",i,temp_num);
 #endif
 			if (temp_num>=range_value->min)
 			{
-#ifdef DIGIT_DEBUG
+#ifdef DIGIT_DEBUG_OLD
 				printf("matched %d\n",temp_num);
 #endif
 				temp=length=i+1;
@@ -5611,11 +5611,11 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 			break;
 		}
 	}                              
-#ifdef DIGIT_DEBUG
+#ifdef DIGIT_DEBUG_OLD
 	printf("take 2 length=%d match_is_over=%d satisfied_min_cond=%d\n",length,match_is_over,satisfied_min_cond);
 	printf("take 2 min_range=%d max_range=%d\n",min_range,max_range);
 #endif
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("par_match_digits;rule_p=%d\n",rule_p);
 #endif
 	if (counter!=num_desc)
@@ -5657,17 +5657,17 @@ int par_match_digits(unsigned char *current_rule, unsigned char *input_array,
 		}
 	}                                        
 	ret_value->rule=rule_p; 
-#ifdef DIGIT_DEBUG    
+#ifdef DIGIT_DEBUG_OLD    
 	par_print_rule_error("par_match_digits;testing the rule_p index",current_rule,rule_p);
 #endif
 
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_digits length=%d\n",length);
 #else
-#ifdef DIGIT_DEBUG
+#ifdef DIGIT_DEBUG_OLD
 	printf("leaving par_match_digits length=%d ret_value->value=%d\n",length,ret_value->value);
 #endif
-#endif // PARSER_DEBUG
+#endif // PARSER_DEBUG_OLD
    	return(length);
 }
 
@@ -5723,14 +5723,14 @@ int par_match_sets_with_ranges(unsigned char *current_rule, unsigned char *input
 	return_value_t		new_ret = { 0,0,0,0,0,0,0,0,NULL }; 
 #endif
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_sets_and_ranges\n");
 #endif
 
 #ifdef SANITY_CHECKING	
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_sets_and_ranges a 0\n");
 #endif
 		return(0);
@@ -5738,7 +5738,7 @@ int par_match_sets_with_ranges(unsigned char *current_rule, unsigned char *input
 	if ((current_rule==NULL) || (input_array==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_sets_and_ranges b 0\n");
 #endif
 		return(0);
@@ -5877,7 +5877,7 @@ int par_match_sets_with_ranges(unsigned char *current_rule, unsigned char *input
 			{
 				if (total_length==0)
 				{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 					printf("set satisfied_min_cond to -2\n");
 #endif
 					satisfied_min_cond= -2;
@@ -5917,7 +5917,7 @@ int par_match_sets_with_ranges(unsigned char *current_rule, unsigned char *input
 			}
 			
 		}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("par_match_sets_and_ranges;rule_p=%d\n",rule_p);
 #endif
 	}	/* while loop inner */
@@ -5953,7 +5953,7 @@ int par_match_sets_with_ranges(unsigned char *current_rule, unsigned char *input
 		}                                        
 	}
 	ret_value->rule=rule_p;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_sets_and_ranges length=%d total_length=%d ret_value->value=%d\n",length,total_length,ret_value->value);
 #endif
    	return(total_length);
@@ -6010,13 +6010,13 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 	int num_sections;
 	int end_of_all_sections;
 	
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("entering par_match_set\n");
 #endif
 #ifdef SANITY_CHECKING
 	if (ret_value==NULL)
 	{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_set ret_value is NULL\n");
 #endif
 		return(0);
@@ -6025,7 +6025,7 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 		(match_array==NULL) || (range_value==NULL))
 	{
 		ret_value->value=FATAL_FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_set, inputs are bad\n");
 #endif
 		return(0);
@@ -6057,7 +6057,7 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 				{	/* changed for speed */
 					return(-1);
 				}
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				par_print_rule_error("par_match_set;after par_match_string",current_rule,new_ret.rule);
 #endif
 			}
@@ -6072,7 +6072,7 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 			}
 			if (new_ret.value==FAIL)
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("par_match_set;this section has failed, look for the next section\n");
 #endif
 				this_success=FAIL;
@@ -6080,18 +6080,18 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 			} 
 			else
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("this type has succeeded, matching next type\n");
 #endif
 			}
 		}    
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		par_print_rule_error("par_match_set;after a comma or brace has been found",current_rule,new_ret.rule);
 #endif
 		if (this_success==SUCCESS)
 		{
 			a_success=SUCCESS;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 			printf("par_match_set;this section has succeeded\n");
 #endif
 			if (range_value->range_set==0)
@@ -6108,13 +6108,13 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 		{
 			if (num_match==num_sections)
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("par_match_set;all sections failed\n");
 #endif
 			}
 			else
 			{
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 				printf("par_match_set;this section has failed, going to next section\n");
 #endif
 				par_copy_return_value(&new_ret,&save_ret);
@@ -6126,11 +6126,11 @@ int par_match_set(unsigned char *current_rule, unsigned char *input_array,
 	if (a_success==FAIL)
 	{
 		ret_value->value=FAIL;
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 		printf("par_match_set; it failed\n");
 #endif
 	}    
-#ifdef PARSER_DEBUG
+#ifdef PARSER_DEBUG_OLD
 	printf("leaving par_match_set length=%d ret_value->value=%d\n",length,ret_value->value);
 #endif
 	return(length);

@@ -100,8 +100,8 @@
 #define GERMAN_COMPOUND_NOUNS
 
 #ifndef ARM7
-#ifdef _DEBUG
-#define PH_DEBUG
+#ifdef _DEBUG_OLD
+#define PH_DEBUG_OLD
 #endif
 #endif
 

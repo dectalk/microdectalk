@@ -54,7 +54,7 @@
 
 #define PAR_MAX_MATCH_ARRAY			30
 #ifdef WIN32_OLD
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 #define printf WINprintf
 #endif
 #define PAR_MAX_INPUT_ARRAY			500

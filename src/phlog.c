@@ -91,7 +91,7 @@ extern unsigned char german_arpa[];
 extern unsigned char uk_arpa[];
 extern unsigned char french_arpa[];
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 #define printf WINprintf
 #endif
 
@@ -237,7 +237,7 @@ logclaus (LPTTS_HANDLE_T phTTS,
 #ifdef MSDOS
 					printf ("[:i %d]", (*spc_pkt).data[2]);
 #else
-#ifdef PRINTDEBUG
+#ifdef PRINTDEBUG_OLD
 					printf ("[:i %d]", (*spc_pkt).data[2]);
 #endif
 #ifndef ARM7
@@ -277,7 +277,7 @@ logclaus (LPTTS_HANDLE_T phTTS,
 #ifdef MSDOS
 			printf("\n");
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			printf ("\n");
 #endif
 #ifndef ARM7
@@ -300,7 +300,7 @@ logclaus (LPTTS_HANDLE_T phTTS,
 	printf("\n");
 	SIGNAL_PRINT;
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif
 #ifndef ARM7
@@ -370,7 +370,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (":ra %d\n", buf[1]);
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (":ra %d\n", buf[1]);
 #endif
 #ifndef ARM7_NOSWI
@@ -399,7 +399,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (":cp %d\n", buf[1]);
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (":cp %d\n", buf[1]);
 #endif
 #ifndef ARM7_NOSWI
@@ -428,7 +428,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (":pp %d\n", buf[1]);
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (":pp %d\n", buf[1]);
 #endif
 #ifndef ARM7_NOSWI
@@ -458,7 +458,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (":n%c\n", oc);
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (":n%c\n", oc);
 #endif
 #ifndef ARM7_NOSWI
@@ -486,7 +486,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (" sp ");
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (" sp ");
 #endif
 #ifndef ARM7_NOSWI
@@ -545,7 +545,7 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 #ifdef MSDOS
 		printf (":dv save\n");
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (":dv save\n");
 #endif
 #ifndef ARM7_NOSWI
@@ -685,7 +685,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 	{
 		if (dur != 0 || f0 != 0)
 		{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			if (ascky[phone] == '_')
 				printf("%c<0,0>",ascky[phone]);
 			else
@@ -715,7 +715,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 		else
 		{
 		/* GL 03/24/1997 for BATS#313  should not send out the space for ASCKY logging */
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			printf ("%c", ascky[phone]);
 #endif
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
@@ -745,7 +745,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 		{
 			if (dur != 0 || f0 != 0)
 			{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			    
 				
 				printf ("%c<%d,%d>", arpa[phone * 2], dur, f0);
@@ -776,7 +776,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 			{
 
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("%c ", arpa[phone * 2]);
 #endif
 
@@ -801,7 +801,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 		{
 			if (dur != 0 || f0 != 0)
 			{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("%c%c<%d,%d>", arpa[phone * 2], arpa[phone * 2 + 1], dur, f0);
 #endif
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
@@ -822,7 +822,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 			else
 			{
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf ("%c%c", arpa[phone * 2], arpa[phone * 2 + 1]);
 #endif
 

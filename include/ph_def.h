@@ -68,7 +68,7 @@
 #endif
 
 /* GL 04/21/1997  add this for OSF build */
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 
 #ifdef WIN32_OLD
 #define printf WINprintf
@@ -78,7 +78,7 @@
 #define WINprintf printf
 #endif /* defined (MSDOS) || defined (__osf__) || defined (__unix__) */
 
-#endif /* PRINTFDEBUG */
+#endif /* PRINTFDEBUG_OLD */
 
 #endif /* PHDEFH */
 

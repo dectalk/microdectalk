@@ -61,7 +61,7 @@
  * 017  EAB		01/16/1990    	change rate limit from 350 to 550
  * 018  EAB		07/25/1990    	ADDED COMMA PAUSE CHANGED FOR NANCY JARRELL-CHB
  * 019  SGS		09/07/1990    	Added PR control switches
- * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG
+ * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG_OLD
  * 021  JDB		09/17/1995   	Replaced /n's with \n's.
 #ifdef GERMAN 					Merged from gph_main.c
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -642,7 +642,7 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 			/* debug switch */
 			if ((pKsd_t->logflag & LOG_PHONEMES) || DT_DBG(PH_DBG,0x002))
 			{
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 /* Added to debug [:log ...] printing problem 14-MAR-95 cjl */
 				printf ("This is the character %c\n\r", 'c');
 /* printf("This is the float number %f\n\r",9.0/5.0); */
@@ -760,7 +760,7 @@ if (pKsd_t->lang_curr==LANG_french)
 			/* memorise the word grammatical category */
 			pDph_t->sentstruc [pDph_t->nsymbtot] = buf [0] & 0xFF;
 			
-#ifdef GC_DEBUG
+#ifdef GC_DEBUG_OLD
 			if (dbgpros)
 				printf ("phmain.c kltask grammatical categ. sentstruc [%3d] %8x\n",
 				pDph_t->nsymbtot, pDph_t->sentstruc [pDph_t->nsymbtot]);
@@ -899,7 +899,7 @@ if (pKsd_t->lang_curr!=LANG_french)
 		/* debug switch */
 		if ((pKsd_t->logflag & LOG_PHONEMES) || DT_DBG(PH_DBG,0x002))
 		{
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 /* Added to debug [:log ...] printing problem 14-MAR-95 cjl */
 			printf ("This is the character %c\n\r", 'c');
 /* printf("This is the float number %f\n\r",9.0/5.0); */

@@ -61,7 +61,7 @@
  * 017  EAB 	01/16/1990  	change rate limit from 350 to 550
  * 018  EAB 	07/25/1990	    ADDED COMMA PAUSE CHANGED FOR NANCY JARRELL-CHB
  * 019  SGS		09/17/1990    	Added PR control switches
- * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG
+ * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG_OLD
  * 021  JDB		09/17/1995   	Replaced /n's with \n's.
  * 022  MGS 	03/21/1996	  	WIN32_OLD code merge 
  * 023	MGS	 	05/31/1996		kltask moved to ph_task.c file

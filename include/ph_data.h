@@ -453,7 +453,7 @@ typedef struct DPH_TAG
 	short                   f0;
 	short                   parstochip[VOICE_PARS];
 	short					lastf1;
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	short					printdata;
 #endif
 	short					at_ending_sil;
@@ -617,7 +617,7 @@ typedef struct DPH_TAG
 	short                   f0prime;
 	short					f0last;
 
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	short					temp;
 #endif
 

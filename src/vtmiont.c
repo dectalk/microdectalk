@@ -57,7 +57,7 @@
  *							hangs with leading pauses or syncs		
  *  14	28oct98		tek		init the bDoTuning flag	
  *  15	10nov98		ETT		added comments and bPipesNotEmpty init.
- *  16	20nov98		GL		BATS#828 use VTM_DEBUG to replace _DEBUG
+ *  16	20nov98		GL		BATS#828 use VTM_DEBUG_OLD to replace _DEBUG_OLD
  *  17	13apr99		mfg		to fixed ACCESS32 studder for ARM211 tek fix
  *  18	27jul99		mfg		included  cemm.h for WinCE builds
  *  19	29oct99		mgs		Fixed bug uncovered by removing the debug window for release builds
@@ -367,10 +367,10 @@ VTM_T Vtm_t;
 
 
 /*DWORD dwLastPhoneme;  */      /* Will be accesed through Kernel_share_data structure */
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 #include <stdio.h>
 char szTemp[256]="";
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 /**********************************************************************/
 /*  Start of the VTM thread.                                          */
 /**********************************************************************/
@@ -590,7 +590,7 @@ int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 
 		  
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x040))
 	{
 		  printf ("%s \n", phprint(pVtm_t->parambuff[OUT_PH+1]));
@@ -1141,7 +1141,7 @@ typedef struct tagLLFrame {
 		pVtm_t->supra_glot_press = pVtm_t->llframe.NDB1;
 		//printf(" Pm %d \n", pVtm_t->llframe.NDB1);
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x040))
 	{
 #ifdef FAKE_HLSYN
@@ -1270,7 +1270,7 @@ typedef struct tagLLFrame {
 #ifdef SAPI5DECTALK
 	}
 #endif
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x100))
 	{
 		
@@ -1327,7 +1327,7 @@ typedef struct tagLLFrame {
 #ifndef SAPI5DECTALK
 #ifdef TYPING_MODE
 	      phTTS->wTypingFrameCount++;
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	      {
 		char  szTemp[256]="";
 		sprintf(szTemp,"vtmiont: TFC=%d h=%d at %lu\n",
@@ -1336,7 +1336,7 @@ typedef struct tagLLFrame {
 			timeGetTime());
 		OutputDebugString(szTemp);
 	      }
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	      // tek drop back PH's priority after we've queued some audio.
 	      // note that this always happens, whether or not we are in 
 	      // typing mode; having PH runnin at "normal" priority is important
@@ -1375,14 +1375,14 @@ typedef struct tagLLFrame {
 //		      int	iNewPriority=0;
 //		      //int iSamplesOutstanding = 
 //			//(((HPLAY_AUDIO_T)(phTTS->pAudioHandle))->iSamplesWaitingForCompletion);
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 //		      {
 //			char szTemp[256];
 //			sprintf(szTemp,"VTMIO: %d samples waiting, VTM prio now %d, PH prio now %d\n",
 //				iSamplesOutstanding, iThreadPriority,iPHThreadPriority);
 //			OutputDebugString(szTemp);
 //		      }
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 		      
 		      //if (iSamplesOutstanding < BUFFER_LENGTH_RED)
 		//	{
@@ -1696,7 +1696,7 @@ typedef struct tagLLFrame {
 		  // glue together the two halves of the index value.
 		  pVtm_t->pMarkData->dwMarkValue  =  (LPARAM)( (pVtm_t->dwSyncParams[1]<<16) | (pVtm_t->dwSyncParams[2]&0xFFFF));
 		  pVtm_t->pMarkData->dwMarkType = pVtm_t->control;
-#ifdef VTM_DEBUG  //tek15aug97
+#ifdef VTM_DEBUG_OLD  //tek15aug97
 			{
 				char szTemp[256]="";
 				sprintf(szTemp,"vtmiont mark adr:%08lx Val:%08lx typ:%08lx samp:%lu at %lu\n",
@@ -1707,7 +1707,7 @@ typedef struct tagLLFrame {
 					timeGetTime());
 				OutputDebugString(szTemp);
 			}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 
 		}
 
@@ -1743,7 +1743,7 @@ typedef struct tagLLFrame {
 		  // glue together the two halves of the index value.
 		  pVtm_t->pMarkData->dwMarkValue  =  (LPARAM)( (pVtm_t->dwSyncParams[1]<<16) | (pVtm_t->dwSyncParams[2]&0xFFFF));
 		  pVtm_t->pMarkData->dwMarkType = pVtm_t->control;
-#ifdef VTM_DEBUG  //tek15aug97
+#ifdef VTM_DEBUG_OLD  //tek15aug97
 			{
 				char szTemp[256]="";
 				sprintf(szTemp,"vtmiont mark adr:%08lx Val:%08lx typ:%08lx samp:%lu at %lu\n",
@@ -1754,7 +1754,7 @@ typedef struct tagLLFrame {
 					timeGetTime());
 				OutputDebugString(szTemp);
 			}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 
 		}
 
@@ -1781,14 +1781,14 @@ typedef struct tagLLFrame {
 
 	  pVtm_t->dwSyncParams[3] = pVtm_t->dwSampleNumber;
 #ifdef USE_BOOKMARKS_FOR_SYNC // tek we have to rewrite queuing to use this.
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	  {
 		  char szTemp[256];
 		  sprintf(szTemp,"VTM index type %04x for sample %ld at %ld\n",
 			  (int)control, dwSampleNumber, timeGetTime());
 		  OutputDebugString(szTemp);
 	  }
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 
 	  // if this is a WordPos or a BookMark, try to set a destination
 	  if (  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_bookmark))
@@ -1803,39 +1803,39 @@ typedef struct tagLLFrame {
 		  if (!PA_SetBookmark(phTTS->pAudioHandle,(DWORD)pVtm_t->pMarkData))
 		  {
 			  // mananged to set a bookmark.
-#ifdef VTM_DEBUG  //tek15aug97
+#ifdef VTM_DEBUG_OLD  //tek15aug97
 			{
 				char szTemp[256]="";
 				sprintf(szTemp,"AudioDest BookMark %08lx set at %lu\n",
 					pVtm_t->pMarkData,timeGetTime());
 				OutputDebugString(szTemp);
 			}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 		  }
 		  else 
 		  {
-#ifdef VTM_DEBUG  //tek15aug97
+#ifdef VTM_DEBUG_OLD  //tek15aug97
 			{
 				char szTemp[256]="";
 				sprintf(szTemp,"AudioDest BookMark %08lx failed at %lu, using sync_pipe\n",
 					pVtm_t->pMarkData,timeGetTime());
 				OutputDebugString(szTemp);
 			}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	  //write_pipe( pKsd_t->sync_pipe, pVtm_t->dwSyncParams, 4 );
 		  }
 	  }
 	  else
 	  {
 		  // this is one that we don't use bookmarks for.
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 		  {
 			  char szTemp[256];
 			  sprintf(szTemp,"Using sync_pipe for notification type %04lx\n",
 				  control);
 			  OutputDebugString(szTemp);
 		  }
-#endif // VTM_DEBUG
+#endif // VTM_DEBUG_OLD
 		 //write_pipe( pKsd_t->sync_pipe, pVtm_t->dwSyncParams, 4 );
 	  }
 #else // USE_BOOKMARKS_FOR_SYNC
@@ -2107,14 +2107,14 @@ void OutputData( LPTTS_HANDLE_T phTTS,
        uiSamplesToOutput<<=2;
 #endif
 
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	if ( dwPhoneme != pKsd_t->dwLastPhoneme )
 	  {
 		  char szTemp[256]="";
 		  sprintf(szTemp,"vtm: pho:%08lx dur:%ld.\n",dwPhoneme,dwDuration);
 		  OutputDebugString(szTemp);
 	  }
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 
 // tek 07jan98 this now exists for DAPI too (bats 546)
 	if ( dwPhoneme != pKsd_t->dwLastPhoneme )
@@ -2139,14 +2139,14 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 // MGS HELP_ME THIS needs to be fixed once the entire single threading is done
 	//if (pipe_count( pKsd_t->cmd_pipe ) > 0)
 	//  {
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	//	OutputDebugString("VTMIONT : setting PipesNotEmpty to: TRUE \n");
 #endif//
 	//    phTTS->pAudioHandle->bPipesNotEmpty = TRUE;
 	//  }
 	//else
 	//  {
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	//    OutputDebugString("VTMIONT : setting PipesNotEmpty to: FALSE \n");
 #endif
 	  //  phTTS->pAudioHandle->bPipesNotEmpty = FALSE;
@@ -2387,7 +2387,7 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 			
 		}
 		
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 		{
 			char szTemp[256]="";
 			sprintf(szTemp,"SendVisualNotification: pho:%02lx (%08lx) [%c], dur:%04ld, samp:%08lxx TFC:%ld. at %lu\n",
@@ -2402,14 +2402,14 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 			ODSFlush();
 		}
 		
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	}
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	else
 	{
 		OutputDebugString("SendVisualNotification: pvdPacket allocate failed.\n");
 	}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	
 	
 	// now send the packet off to sync.
@@ -2481,7 +2481,7 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 			
 		}
 		
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 		{
 			char szTemp[256]="";
 			sprintf(szTemp,"SendVisualNotification (BM): pho:%02lx (%08lx) [%c], dur:%04ld, samp:%08lxx TFC:%ld. at %lu\n",
@@ -2496,14 +2496,14 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 			ODSFlush();
 		}
 		
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	}
-#ifdef VTM_DEBUG
+#ifdef VTM_DEBUG_OLD
 	else
 	{
 		OutputDebugString("SendVisualNotification: pvdPacket allocate failed.\n");
 	}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 	
 	
 	// now send the packet off to sync.
@@ -2517,7 +2517,7 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 		  // glue together the two halves of the index value.
 		  pMarkData->dwMarkValue  =  (LPARAM)pvdPacket;
 		  pMarkData->dwMarkType = SPC_type_visual;
-#ifdef VTM_DEBUG  //tek15aug97
+#ifdef VTM_DEBUG_OLD  //tek15aug97
 			{
 				char szTemp[256]="";
 				sprintf(szTemp,"visual mark adr:%08lx Val:%08lx typ:%08lx samp:%lu at %lu\n",
@@ -2528,7 +2528,7 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 					timeGetTime());
 				OutputDebugString(szTemp);
 			}
-#endif //VTM_DEBUG
+#endif //VTM_DEBUG_OLD
 		  if (!PA_SetBookmark(phTTS->pAudioHandle, (DWORD)pMarkData))
 		  {
 

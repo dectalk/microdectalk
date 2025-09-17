@@ -118,7 +118,7 @@ extern int inh_timing(LPTTS_HANDLE_T phTTS, int phone);
  *      Comments:
  *
  * *****************************************************************/
-//#define DEBUGPHT
+//#define DEBUG_OLDPHT
 void gr_phtiming (LPTTS_HANDLE_T phTTS)
 {
 	short                   psonsw = 0, posvoc = 0;
@@ -138,7 +138,7 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 	short                   fealas = phone_feature( pDph_t,GEN_SIL); /* Made local and initialized */
 	short                   prcnt = 0, durinh = 0, durmin = 0, deldur = 0, nphon = 0;
 	short                   phocur = 0, feacur = 0, feasyllabiccur = 0;
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	short					phontmp;
 #endif
 	short                   struccur = 0, strucboucur = 0, strucstresscur = 0;
@@ -182,7 +182,7 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 			fealas = phone_feature( pDph_t,pholas);
 		}
 		phocur =  pDph_t->allophons[nphon];
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 		phontmp = phocur & PVALUE;
 #endif
 		struccur = pDph_t->allofeats[nphon];
@@ -231,7 +231,7 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 			printf ("durxx = mstofr(user_durs[nphon]+4) durxx=%d\n", pDphsettar->durxx);
 #endif
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 			printf ("\tFound user_dur[%s] = %3d frames in PHTIMING\n",
 					phprint (phocur), pDphsettar->durxx);
 #endif
@@ -284,7 +284,7 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 				/* Note extra compause added if user command [:dv cp __ ] */
 				if ((struclas & FBOUNDARY) == FCBNEXT)
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 1111 asperation=%d\n", pDph_t->asperation);
 #endif
 
@@ -293,7 +293,7 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 					else if (pDph_t->asperation < MIN_ASP_COMMA);
 
 					pDph_t->asperation = MIN_ASP_COMMA;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 1111\n");
 #endif
 					dpause = pDph_t->nfcomma + pDph_t->compause + pDph_t->asperation;
@@ -302,14 +302,14 @@ void gr_phtiming (LPTTS_HANDLE_T phTTS)
 				/* Note extra perpause added if user command[:dv pp __ ] */
 				else
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 2222 asperation=%d\n", pDph_t->asperation);
 #endif
 					if (pDph_t->asperation > MAX_ASP_PERIOD)
 						pDph_t->asperation = MAX_ASP_PERIOD;
 					else if (pDph_t->asperation < MIN_ASP_PERIOD);
 					pDph_t->asperation = MIN_ASP_PERIOD;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 2222\n");
 #endif
 					dpause = pDph_t->nfperiod + pDph_t->perpause + pDph_t->asperation;
@@ -1001,7 +1001,7 @@ break3:  //Need to change this location for stressed timed and singing to both w
 				if((feasyllabiccur IS_PLUS) )
 				{
 				/* printf("strucc=%o of phon %d at %d",struccur,pDph_t->allophons[nphon],nphon); */
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf (" 2fbound struccur%o, p= %d\n", struccur, pDph_t->allophons[nphon]);
 					printf ("syldur = %d \n ", (syldur * 64) / 10);
 					printf ("vowcnt=%d\n", vowcnt);
@@ -1041,7 +1041,7 @@ break3:  //Need to change this location for stressed timed and singing to both w
 							break;
 						default:
 							adjust = ((pDph_t->timeref - (syldur )) >> 7);
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 							printf ("WHY HERE??");
 							printf ("sonocnt=%d phon= %d nphon= %d\n", sonocnt, pDph_t->allophons[nphon], nphon);
 #endif
@@ -1094,7 +1094,7 @@ break3:  //Need to change this location for stressed timed and singing to both w
 						         ,pDph_t->allodurs[endcnt], (syldur*64)/10,adjust); 
 							*/
 					
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 							WINprintf ("set  %d dur %d syldur=%d adj=%d", pDph_t->allophons[endcnt], pDph_t->allodurs[endcnt], syldur , adjust);
 #endif
 
@@ -1102,7 +1102,7 @@ break3:  //Need to change this location for stressed timed and singing to both w
 							if (pDph_t->allodurs[endcnt] <=6)
 								pDph_t->allodurs[endcnt]=6;
 							
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 							printf ("to  %d \n", pDph_t->allodurs[endcnt] );
 #endif
 							ncnt++;
@@ -1121,7 +1121,7 @@ break3:  //Need to change this location for stressed timed and singing to both w
 				}
 		} // if( pDph_t->number_words >= 3)
 
-#ifdef EABDEBUG
+#ifdef EABDEBUG_OLD
 		printf ("final duration = %d  durxx  \n", ((pDphsettar->durxx * NSAMP_FRAME) + 5) / 10);
 
 #endif

@@ -30,7 +30,7 @@
  * Rev  Who     Date            Description
  * ---  -----   -----------     -------------------------------------------- 
  * 001	TEK		12/15/1995		merge dtex
- * 002	MGS		04/02/1996		Added DCS_DEBUG flag
+ * 002	MGS		04/02/1996		Added DCS_DEBUG_OLD flag
  * 003	GL		08/29/1996		Add DCS_SKIP flag
  * 004  GL		10/29/1996		Add MODE_TABLE
  * 005	GL		11/22/1996		Add DCS_GENDER
@@ -267,7 +267,7 @@
 #define	DCS_BREAK				1300
 #define	DCS_CPU_RATE  			1400
 #define	DCS_CODE_PAGE  			1500
-#define DCS_DEBUG				0     /* MGS 4/8/1996 */
+#define DCS_DEBUG_OLD				0     /* MGS 4/8/1996 */
 #define DCS_SKIP                0     /* GL  8/29/1996 */
 #define DCS_GENDER              0     /* GL  11/22/1996 */
 #ifdef DBGV_ON

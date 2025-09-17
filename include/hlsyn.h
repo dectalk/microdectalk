@@ -50,8 +50,8 @@
 #include "flavor.h"
 #include "hlsynapi.h"
 
-//#define DEBUG
-//#undef DEBUG
+//#define DEBUG_OLD
+//#undef DEBUG_OLD
 
 #define WARNINGS
 #undef WARNINGS

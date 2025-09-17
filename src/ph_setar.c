@@ -244,7 +244,7 @@ static char sonequivindex[] =
 };
 
 
-/* #define DEBUG_targetS   0  *//* Print Debug stuff.            */
+/* #define DEBUG_OLD_targetS   0  *//* Print Debug stuff.            */
 
 /***************************************************************************/
 /* MVP : The following extern variables are now become elements of instance */
@@ -382,7 +382,7 @@ short (*(all_gettar[32]))(LPTTS_HANDLE_T phTTS, int nphone_temp) = {
 /* 1F */	NULL
 };
 
-#ifndef _DEBUG
+#ifndef _DEBUG_OLD
 //#define  gettar(a,b) ((all_gettar[(get_phone(((PDPH_T)((a)->pPHThreadData)),(b)))>>8])((a),((b))))
 #else
 //__inline short gettar(LPTTS_HANDLE_T phTTS,int nphone_temp)
@@ -1050,7 +1050,7 @@ void phsettar ( LPTTS_HANDLE_T phTTS)
 		}
 		else 
 		{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 		printf("OH MY GOD! You gave me ecoli, you dirty rat!\n");
 #endif
 		us_forw_smooth_rules (phTTS, pDph_t->shrif, pholas,
@@ -1166,7 +1166,7 @@ void phsettar ( LPTTS_HANDLE_T phTTS)
 		}
 		else 
 		{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			printf("OH MY GOD!! You got the West Nile Virus!\n");
 #endif
 			us_back_smooth_rules (phTTS, pDph_t->shrib, feacur, 
@@ -1270,7 +1270,7 @@ void phsettar ( LPTTS_HANDLE_T phTTS)
 		}
 		else 
 		{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 			printf("OH MY GOD! You tasmanian devil you, forgetting my specail rules!\n");
 #endif
 			us_special_rules (phTTS, fealas, feacur, feanex, struclm2,
@@ -1488,7 +1488,7 @@ static void make_dip (PDPH_T pDph_t,
 			
 		
 		
-#ifdef DEBUG_targetS
+#ifdef DEBUG_OLD_targetS
 		printf (
 				   " tarbeg=%4d  (from 10%% tarlas=%4d, 90%% tarbeg=%d)\n",
 				   oldvalue, pDphsettar->np->tarlas, pDph_t->p_diph[pdip]);
@@ -1630,7 +1630,7 @@ static short get_phone (PDPH_T pDph_t, short pointer)
 
 	if ((pointer >= 0) && (pointer < pDph_t->nallotot))
 	{
-#ifdef     DEBUG_targetS
+#ifdef     DEBUG_OLD_targetS
 		printf ("getp phone=%d \n", pDph_t->allophons[pointer]);
 #endif
 		return (pDph_t->allophons[pointer]);
@@ -1665,7 +1665,7 @@ static short get_phone (PDPH_T pDph_t, short pointer)
 void debugforward (char *message, PARAMETER *nparameter)
 {
 
-#ifdef DEBUG_targetS
+#ifdef DEBUG_OLD_targetS
 	short                   temp1;
 	static PARAMETER       *nparlast;
 	static short            savbvf, savtcf;
@@ -1712,7 +1712,7 @@ void debugforward (char *message, PARAMETER *nparameter)
 void debugbackward (char *message, PARAMETER *nparameter)
 {
 
-#ifdef DEBUG_targetS
+#ifdef DEBUG_OLD_targetS
 	short                   temp1;
 	static PARAMETER       *nparlast;
 	static short            savbvb, savtcb;
@@ -2037,7 +2037,7 @@ int gettar (LPTTS_HANDLE_T phTTS, int phone) {
 				} 
 				else 
 				{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 					printf("OH MY GOD! THEY'VE KILLED KENNY\n");
 #endif
 					tartemp = us_gettar(phTTS,phone & PVALUE);
@@ -2163,7 +2163,7 @@ __inline short place( int phone)
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD I shuldn't awta be here \n");
 #endif
 	return(0);
@@ -2215,7 +2215,7 @@ extern short fr_begtyp[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED NAT\n");
 #endif
 	return(0);
@@ -2267,7 +2267,7 @@ extern short fr_endtyp[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 		printf("OH MY GOD! THEY'VE KILLED ED\n");
 #endif
 		return(0);
@@ -2319,7 +2319,7 @@ extern short fr_ptram[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED MATT\n");
 #endif
 	return(0);
@@ -2370,7 +2370,7 @@ extern short fr_burdr[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED MIKE\n");
 #endif
 	return(0);
@@ -2421,7 +2421,7 @@ extern short fr_plocu[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED CARL\n");
 #endif
 	return (0);

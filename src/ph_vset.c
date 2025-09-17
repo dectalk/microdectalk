@@ -257,12 +257,12 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 	PVTM_T pVtm_t = phTTS->pVTMThreadData;
 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	//eab 11/16/98 BATS 804 
 	extern   const LIMIT         limit[];
 	LIMIT         *lp;
 #endif
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	short value;
 #endif
 
@@ -466,7 +466,7 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 			pDph_t->curspdef[i] = newspdef[i];
 		}
 		//eab 11/16/98 BATS 804 If ANY vlaues are out of allowable ranges scream LOUDLY 
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	value=0;
 	lp = &limit[i];
 	if (pDph_t->curspdef[i] < lp->l_min)
@@ -798,7 +798,7 @@ void setspdef (LPTTS_HANDLE_T phTTS)
 	free (spdef);
 #else
 /* for(i=0;i<=31;i++) { printf("spdef[%d]=%d \n",i,curspdef[i]); } */
-#ifdef DEBUGVSET
+#ifdef DEBUG_OLDVSET
 	printf ("r4cb is %d \n", spdef->r4cb);
 	printf ("r4cc is %d \n", spdef->r4cc);
 	printf ("r5cb is %d \n", spdef->r5cb);

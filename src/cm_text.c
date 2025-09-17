@@ -104,7 +104,7 @@
  * 054	GL		06/16/1998	BATS #697 fix "Chrysler" spelling problem.  It is a logical error
  *                          in #676 fix
  * 055  ETT     10/05/1998  added linux code
- * 056	GL		11/20/1998	BATS#828 use CMD_DEBUG to replace _DEBUG
+ * 056	GL		11/20/1998	BATS#828 use CMD_DEBUG_OLD to replace _DEBUG_OLD
  * 057  MFG		01/08/1998	WINprintf not supported under Windows CE
  * 058  GL		03/03/1999	BATS#676,697 and 744 fix the coding error
  * 059	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
@@ -130,7 +130,7 @@
  * 079	CAB		08/08/2002	Removed warnings
  */
 
-/* #define DEBUG_PARSER  */ 
+/* #define DEBUG_OLD_PARSER  */ 
 /* #define SKIP_PARSER */
 
 #include "dectalkf.h"
@@ -288,7 +288,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	U32 temp_mode=0;
 	U16 parser_flag;
 
-#ifdef CMD_DEBUG // NAL warning removal
+#ifdef CMD_DEBUG_OLD // NAL warning removal
         U32 ulStartTime,ulEndTime;
 #endif
 
@@ -454,7 +454,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		}
 	}
 	pCmd_t->clausebuf[pCmd_t->input_counter++] = (unsigned char)pCmd_t->ParseChar; // NAL warning removal
-#ifdef DEBUG_PARSER2
+#ifdef DEBUG_OLD_PARSER2
     	printf("at getc ,%c,%d\n",pCmd_t->ParseChar,pCmd_t->ParseChar);
 #endif
 	if(pCmd_t->ParseChar == 0x11)
@@ -601,13 +601,13 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			phTTS->TTP_return=1;
 #endif
 		/* timing here */
-#ifdef CMD_DEBUG
+#ifdef CMD_DEBUG_OLD
 		if (DT_DBG(CMD_DBG,0x100))
 		{
 			ulStartTime=timeGetTime();
 //			WINprintf("get_clause_parse at %ld.\n", ulStartTime);
 		}
-#endif //CMD_DEBUG
+#endif //CMD_DEBUG_OLD
 		
 		/* here we do clause base rule processing */
 		/* set the end of the clausebuf to NULL */
@@ -640,7 +640,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		      ((pKsd_t->modeflag & MODE_EMAIL) != 0))
 		    {
 				/* cm_text_preproc(pCmd_t); */             
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 		      printf("The input to Email.%s.\n",pCmd_t->clausebuf);		
 #endif
 		      
@@ -741,7 +741,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			if (pCmd_t->skip_mode != SKIP_punct)
 			{
 				/* cm_text_preproc(pCmd_t); */             
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 				printf("the input to punct.%s.\n",pCmd_t->clausebuf);		
 #endif
 				// add protection code for buffer overflows MGS
@@ -961,7 +961,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 					}
 				}
 			
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 				printf("the input to normal .%s.\n",pCmd_t->clausebuf);		
 				printf("the dict hit buf is  ");
 				for (i=0;i<pCmd_t->input_counter;i++)
@@ -1016,11 +1016,11 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		
 		} /* if (pCmd_t->input_counter<PAR_MIN_INPUT_SIZE) */
 
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 			printf("the output .");
 #endif
 /* put timing here */
-#ifdef CMD_DEBUG
+#ifdef CMD_DEBUG_OLD
 		if (DT_DBG(CMD_DBG,0x100))
 		{
 #ifndef ARM7_NOSWI
@@ -1035,7 +1035,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 #endif
 #endif
 		}
-#endif //CMD_DEBUG
+#endif //CMD_DEBUG_OLD
 
 		mode = PAR_OUTPUT_CHARS;
 		
@@ -1094,7 +1094,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 						printf("\n%c(%x)",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
 #endif
 					}
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 					putc(pCmd_t->output_buf[i]);
 #endif
 					pipe_value = (PFASCII<<PSFONT)+pCmd_t->output_buf[i];
@@ -1118,7 +1118,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 						printf("\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
 #endif
 					}
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 						putc(pCmd_t->output_buf[i]);
 #endif
 					pipe_value = pKsd_t->reverse_ascky[pCmd_t->output_buf[i]];
@@ -1167,7 +1167,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			}
 #endif // ARM7
 		}                                               
-#ifdef DEBUG_PARSER
+#ifdef DEBUG_OLD_PARSER
 		printf(".\n output offset=%d\n",pCmd_t->ret_value.output_offset);
 #endif
 		/* 

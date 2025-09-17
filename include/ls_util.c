@@ -101,8 +101,8 @@
  *  040	GL		09/02/98		block away the new code in ls_util_write_pipe() from msdos.
  *  041 ETT		10/05/1998  	Added Linux code.
  *  042	GL		10/19/1998		BATS#773 send one word_class for each word.
- *  043	GL		11/20/1998		BATS#828 use LTS_DEBUG to replace _DEBUG
- *  044	MGS		08/22/1999		Change #ifdef LTS_DEBUG to #if LTS_DEBUG because of VMS debugging code
+ *  043	GL		11/20/1998		BATS#828 use LTS_DEBUG_OLD to replace _DEBUG_OLD
+ *  044	MGS		08/22/1999		Change #ifdef LTS_DEBUG_OLD to #if LTS_DEBUG_OLD because of VMS debugging code
  *								that was turned on by accident
  *  045	MGS		04/13/2000		Changes for integrated phoneme set 
  *  046 NAL		05/05/2000		Now recognizes if phoneme is already 2 bytes
@@ -173,9 +173,9 @@ void ls_util_dump_cword(LETTER word[], char *message)
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 	printf("%s -- ", message);
-#endif	//	PRINTFDEBUG
+#endif	//	PRINTFDEBUG_OLD
 	fp=fopen("output.log", "a");
 	fprintf(fp,"%s -- ",message);
 #else
@@ -188,9 +188,9 @@ void ls_util_dump_cword(LETTER word[], char *message)
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
 #else
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
@@ -202,9 +202,9 @@ void ls_util_dump_cword(LETTER word[], char *message)
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 	printf ("\n");
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 	fprintf(fp,"\n");
 	fclose(fp);
 #else
@@ -241,9 +241,9 @@ void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
 	FILE *fp;
 	fp=fopen("output.log","a");
 	fprintf(fp,"%s -- ",message);
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
     printf ("%s -- ", message);
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 #else
     printf ("%s -- ", message);
 #endif // defined (WIN32) || defined (__osf__) || defined (__unix__)
@@ -254,9 +254,9 @@ void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
 #else
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
@@ -267,9 +267,9 @@ void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 	printf ("\n");
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 	fprintf(fp,"\n");
 	fclose(fp);
 #else
@@ -311,9 +311,9 @@ PHONE *pp1;
 	FILE *fp;
 	fp=fopen("output.log","a");
 	fprintf(fp,"%s -- ",message);
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
     printf ("%s -- ", message);
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 #else
     printf ("%s -- ", message);
 #endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
@@ -328,9 +328,9 @@ PHONE *pp1;
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf("(%d)",pp1->p_stress);
-#endif	// PRINTFDEBUG
+#endif	// PRINTFDEBUG_OLD
 				fprintf(fp,"(%d)",pp1->p_stress);
 #else
 				printf("(%d)",pp1->p_stress);
@@ -341,7 +341,7 @@ PHONE *pp1;
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 				printf("(%d)",pp1->p_sphone);
 #endif
 				fprintf(fp,"(%d)",pp1->p_sphone);
@@ -357,7 +357,7 @@ PHONE *pp1;
 /* GL 04/21/1997  change this for OSF build */
 #ifndef ARM7_NOSWI
 #if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif
 	fprintf(fp,"\n");
@@ -801,13 +801,13 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 	{
 		pLts_t->old_fc_index=pLts_t->fc_index;
 		buf2[0]=WORD_CLASS + (2 << PSNEXTRA);
-#ifdef LTS_PIPE_DEBUG
+#ifdef LTS_PIPE_DEBUG_OLD
 		buf2[1]=0xfcdc;
 		buf2[2]=0xfcdc;
 #else
 		buf2[1]=(unsigned short)((pLts_t->fc_struct[pLts_t->fc_index])>>16);
 		buf2[2]=(unsigned short)((pLts_t->fc_struct[pLts_t->fc_index]) & 0x0000FFFF);
-#endif // LTS_PIPE_DEBUG
+#endif // LTS_PIPE_DEBUG_OLD
 	//	printf("\nin lts FC(%d)(%08x)\n",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
 		ls_util_write_pipe(pKsd_t,&buf2[0],3);
 
@@ -1504,7 +1504,7 @@ void ls_util_lts_init( PLTS_T pLts_t, PKSD_T pKsd_t)
  *
  * *****************************************************************/
 #ifndef EPSON_ARM7
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 void f_fprintf(char *str)
 {
 #ifdef MSDOS
@@ -1553,7 +1553,7 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 
 		//gl  02sep98 these API codes for non-msdos only
 #if !defined MSDOS 
-#ifdef LTS_DEBUG
+#ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256]="l_u_w_p: ";
 			int i;
@@ -1564,7 +1564,7 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 			strcat(szTemp,"\n");
 			OutputDebugString(szTemp);
 		}
-#endif //LTS_DEBUG
+#endif //LTS_DEBUG_OLD
 		// tek 20aug98 decide if we need to log and act accordingly
 		// the pointer isn't null, we're logging.
 #ifndef ARM7

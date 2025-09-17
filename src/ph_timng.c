@@ -85,8 +85,8 @@
  */
 /* #define MSDBG4 */
 /* #define MSDBG5 */
-/* #define EABDEBUG  */
-/* #define  MSDEBUG */
+/* #define EABDEBUG_OLD  */
+/* #define  MSDEBUG_OLD */
 
 #include "dectalkf.h"
 #include "ph_def.h"
@@ -332,7 +332,7 @@ void prdurs (PDPH_T pDph_t, short phocur, short durinh,
 			 short durmin, short deldur, short prcnt, int n)
 {
 
-#ifdef EABDEBUG
+#ifdef EABDEBUG_OLD
 	if (n == 0)
 	{
 		printf ("phocur %d\n", phocur);
@@ -369,7 +369,7 @@ void prdurs (PDPH_T pDph_t, short phocur, short durinh,
 void prphdurs (PDPH_T pDph_t)
 {
 
-#ifdef   EABDEBUG
+#ifdef   EABDEBUG_OLD
 #ifdef   VERBOSE
 	/* extern short *user_f0; *//* Moved to DPH_T structure MVP */
 	short                   n, prf0;
@@ -394,7 +394,7 @@ void prphdurs (PDPH_T pDph_t)
 
 		printf ("\n");
 	}
-#endif /* EABDEBUG */
+#endif /* EABDEBUG_OLD */
 #endif /* VERBOSE */
 }
 /***************************end of ph_timng.c*********************************/
@@ -438,7 +438,7 @@ extern const short fr_mindur[];
 	}
 	else 
 	{
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED KENNY\n");
 #endif
 	return(us_mindur[phone & PVALUE]);
@@ -486,7 +486,7 @@ extern const short fr_inhdr[];
 	}
 	else 
 	{
-#ifdef PH__DEBUG
+#ifdef PH__DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED KENNY\n");
 #endif
 	return(us_inhdr[phone & PVALUE]);

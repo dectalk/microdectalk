@@ -117,7 +117,7 @@
 
 #include		"dectalkf.h"
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 #include                "dbgwins.h"
 #endif 
 #include        "cm_def.h"
@@ -193,7 +193,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	while (true)
 	{
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		/* open debug window for window environement */
 		if ((windbg_flag == 0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{
@@ -245,7 +245,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 #endif
 		}
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: First Char: char = %c %d insert= %d \n",pCmd_t->ParseChar,pCmd_t->ParseChar,pCmd_t->insertflag);
 #endif
 		if ((pCmd_t->last_char == '.') && (pCmd_t->ParseChar ==','))/* rule to handle e.g.,*/
@@ -299,7 +299,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 					modechng=1;
 					pCmd_t->ParseChar = '[';
 					cm_pars_new_state(pCmd_t, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_NORMAL->STATE_BRACKET\n");
 #endif
 					laschar=pCmd_t->ParseChar;
@@ -324,7 +324,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 				{
 					case ':':
 						cm_cmd_reset_comm(pCmd_t, STATE_COMMAND);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_COMMAND\n");
 #endif
 						break;
@@ -336,7 +336,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 						}
 
 						cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_NORMAL\n");
 #endif
 						break;
@@ -351,7 +351,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 					case ' ':
 					case CR:
 					case LF:
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Dumping white space\n");
 #endif
 						break;
@@ -369,7 +369,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 											&cbufcnt,&pcnt,&isAdigit,
 											&sndtel,&modechng,&posord,laschar);
 								cm_pars_new_state(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_NORMAL\n");
 #endif
 							}
@@ -377,7 +377,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 							{
 								cm_cmd_error_comm(phTTS, CMD_bad_command);
 								cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_TOSS\n");
 #endif
 							}
@@ -385,7 +385,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 						else
 						{
 							cm_pars_new_state(pCmd_t, STATE_PHONEME);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_PHONEME\n");
 #endif
 							cm_phon_match(phTTS, pCmd_t->ParseChar);
@@ -434,7 +434,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 					}
 		}
 				cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_TOSS->STATE_NORMAL\n");
 #endif
 				break;
@@ -491,7 +491,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 		*cbufcnt=0;
 		cbuf[1]=0;
 		cbuf[2]=0;
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: pKsd_t->text_flush or CMD_flush_toss\n");
 #endif
 		return;
@@ -513,14 +513,14 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 
 		case ST:
 			cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: ST->STATE_NORMAL\n");
 #endif
 			return;
 
 		default:
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default case of switch(%c)\n",c);
 #endif
 					/*****HACK ALERT*** This is a hack for now
@@ -537,7 +537,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 						(pKsd_t->lang_curr == LANG_german))
 					{
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: French, Spanish, German.\n");
 #endif
 /* GL 11/07/1996, fix the DTEX [:index reply xx] DTPC [:say letter] bug */
@@ -628,7 +628,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 		    if (((char_types[c] & (MARK_vowel|MARK_cons|MARK_digit)) == 0) &&
 			(c != 0xb) && (c != 0xaa) && (c != 0xba) && (c != CR) && (c != LF))
 					{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: MARK_vowel|cons|digit\n");
 #endif
 /*
@@ -639,7 +639,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 
 						switch(pCmd_t->punct_mode)
 						{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: switch(pCmd_t->punct_mode): PUNCT_some or PUNCT_none\n");
 #endif
 							case PUNCT_some:
@@ -688,7 +688,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 							case PUNCT_pass:
 								if(pKsd_t->sayflag & SAY_LETTER)
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: switch(pCmd_t->punct_mode): PUNCT_pass cm_util_type_out(pKsd_t, %c) \n",c);
 #endif
 									cm_util_type_out(phTTS, c);
@@ -702,7 +702,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 									}
 									else
 									{
-#ifdef DEBUGPARS			
+#ifdef DEBUG_OLDPARS			
 		printf("CMD_PARS: cm_pars_proc_char: Default: switch(pCmd_t->punct_mode): PUNCT_pass sending %c \n",c);
 #endif
 									pipe_value = (PFASCII<<PSFONT)+c;
@@ -714,7 +714,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 
 							case PUNCT_all:
 						
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: switch(pCmd_t->punct_mode): PUNC_all write_all\n");
 #endif
 								pipe_value = (PFASCII<<PSFONT)+' ';
@@ -723,7 +723,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
 								if(char_types[c] & MARK_clause)
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: switch(pCmd_t->punct_mode): PUNC_all sending MARK_clause %c\n",c);
 #endif
 
@@ -740,7 +740,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 			     */
 					else
 					{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: NOT MARK_vowel|cons|digit\n");
 #endif
 
@@ -748,7 +748,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 						{
 							if (pKsd_t->sayflag & SAY_LETTER)
 							{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: PUNCT_pass cm_util_type_out(%c) \n",c);
 #endif
 								cm_util_type_out(phTTS, c);
@@ -763,7 +763,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								}
 								else
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: Not PUNCT_pass: sending(%c)\n",c);
 #endif
 
@@ -776,7 +776,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 						}
 
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: PUNC_all into switch: c= %c  %d lpunct= %c pCmd_t->last_char = %c \n",c,c,pCmd_t->last_punct,pCmd_t->last_char);
 	printf("                                                                 %d\n",(char_types[c] & MARK_digit));
 #endif
@@ -789,19 +789,19 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 
 						if( pCmd_t->last_char == '-' && pCmd_t->last_punct == '-' && *isAdigit == 2 && (pKsd_t->modeflag & MODE_MATH) == 0 )
 						{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char STATE_NORMAL: in dash code\n");
 #endif                          
 
 							if ( c != ' ' || (pCmd_t->dcnt == 1) )          /* to send compound noun */
 							{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: STATE_NORMAL: 6sending %c \n",pCmd_t->last_punct);
 #endif
 
 								pipe_value = (PFASCII<<PSFONT)+pCmd_t->last_punct;
 								cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: STATE_NORMAL Case: sending dash from dash proc code\n");
 #endif
 							}
@@ -810,7 +810,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 							
 								pipe_value = (PFASCII<<PSFONT)+' ';
 								cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: STATE_NORMAL: sending space for dash from dash code\n");
 #endif
 
@@ -819,7 +819,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 						}
 					} /* end else */
 				/* EAB handle word.txt */
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: pCmd_t->lpchar at point = %c %d \n",pCmd_t->lpchar,pCmd_t->lpchar);
 		printf("                        c= %c pCmd_t->last_char = %c %d isdi= %d\n",c,pCmd_t->last_char,pCmd_t->last_char,isAdigit);
 #endif
@@ -835,7 +835,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 							{
 								if(c >= '0' && c <= '9')
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: parse_char: switching period and comma mode Europe. \n");
 #endif
 									if (pCmd_t->last_char==',')
@@ -894,7 +894,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								if ((*posord == 0) && (char_types[c] & (MARK_digit | MARK_space | MARK_clause)) || 
 									(char_types[cbuf[(*cbufcnt)-1]] && MARK_digit))
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: sending with cm_util_sendit\n");
 #endif
 
@@ -904,7 +904,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 						
 								if(*posord > 0)
 								{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: writing pCmd_t->heldchar 0 %c\n",pCmd_t->heldchar[0]);
 #endif
 									pipe_value = (PFASCII<<PSFONT)+pCmd_t->heldchar[0];
@@ -913,7 +913,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 
 									if(*posord == 2)
 									{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: writing pCmd_t->heldchar 1 %c \n",pCmd_t->heldchar[1]);
 #endif
 
@@ -962,7 +962,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 					    *isAdigit=1;
 					    pipe_value = (PFASCII<<PSFONT)+' ';
 					    cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Write_Pipe: Breaking out number with a space. \n");
 #endif
 					  }
@@ -984,7 +984,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								cm_util_sendat(phTTS,cbuf,cbufcnt,pcnt,isAdigit,sndtel,modechng,*posord,laschar);
 							}
 							cbuf[(*cbufcnt)++] = c;
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: INTO period and number processin\n");
 		printf("CMD_PARS: cm_pars_proc_char: cbufcnt= %d cbuf[cnt-1]=%c %d \n",*cbufcnt,cbuf[(*cbufcnt)-1],cbuf[(*cbufcnt)-1]);
 		printf("CMD_PARS: cm_pars_proc_char: cbufcnt= %d cbuf[0]=%c %d \n",cbufcnt,cbuf[0],cbuf[0]);
@@ -1020,7 +1020,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								{
 									pCmd_t->digcnt++;
 								}
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: pCmd_t->digcnt = %d sndtel = %d pCmd_t->postel = %d \n",pCmd_t->digcnt,sndtel,pCmd_t->postel);
 #endif
 
@@ -1031,7 +1031,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 								((c == '.') && (*sndtel == 1)) || ((pCmd_t->digcnt >= 1) && ((c == ',')  ||
 								 (c== '.'))))
 							{
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: breaking \n");
 #endif
 
@@ -1064,7 +1064,7 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 					}
 					pCmd_t->postel=0;
 					*sndtel =0;
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: sending %c %d \n",c,c);
 #endif
 skipit:                 cm_util_sendat(phTTS,cbuf,cbufcnt,pcnt,isAdigit,sndtel,modechng,*posord,laschar);
@@ -1173,7 +1173,7 @@ void cm_pars_new_state(PCMD_T pCmd_t, int state)
 	pCmd_t->p_count = 0;
 	pCmd_t->cmd_p_flag = 0;
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_new_state:\n");
 #endif
 	if(state == STATE_PARAM && pCmd_t->parse_state == STATE_PARAM)
@@ -1200,16 +1200,16 @@ void cm_pars_new_state(PCMD_T pCmd_t, int state)
 
 #else  /* Use new DTParser */
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG) && defined _DEBUG
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD) && defined _DEBUG_OLD
 extern int Thread_Alive;
 extern int in_winmain;
 #endif
 
 /*set debug printing on */
-/*#define DEBUGPARS 1   */
-/*#define DEBUGRULS     */
-/*#define DEBUGACT     1*/
-/*#define DEBUGIND      */
+/*#define DEBUG_OLDPARS 1   */
+/*#define DEBUG_OLDRULS     */
+/*#define DEBUG_OLDACT     1*/
+/*#define DEBUG_OLDIND      */
 /*#define SHOWRULES     */
 
 /*
@@ -1238,7 +1238,7 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	short   ws_count=0;             /* consecutive count for white space */
 	unsigned short temp;
 #endif
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 	short windbg_flag=0;
 #endif
 
@@ -1275,7 +1275,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 		int old_state;
 #endif
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG)
+#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		/* open debug window for window environement */
 		if ((Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
 		{
@@ -1348,7 +1348,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 			ws_count = 0;
 					
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: First Char: char = %c %d insert= %d \n",pCmd_t->ParseChar,pCmd_t->ParseChar,pCmd_t->insertflag);
 #endif
 #ifdef PARSER_HACK_FOR_OLD_SONGS
@@ -1388,7 +1388,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 #endif
      
 					cm_pars_new_state(pCmd_t, STATE_BRACKET);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_NORMAL->STATE_BRACKET\n");
 #endif
 				}
@@ -1425,7 +1425,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 //                                                      cm_pars_new_state(pCmd_t, STATE_NORMAL);
 //                                              }
 						
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_COMMAND\n");
 #endif
 						break;
@@ -1433,7 +1433,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 					case ']':
 						
 						cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_NORMAL\n");
 #endif
 						break;
@@ -1446,7 +1446,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 					case ' ':
 					case CR:
 					case LF:
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Dumping white space\n");
 #endif
 						break;
@@ -1464,7 +1464,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 								pCmd_t->ParseChar = temp;
 								cm_pars_proc_char(phTTS, pCmd_t->ParseChar);
 								cm_pars_new_state(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_NORMAL\n");
 #endif
 							}
@@ -1473,7 +1473,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 								/* Parse State Switch: STATE_BRACKET->STATE_TOSS */ 
 								cm_cmd_error_comm(phTTS, CMD_bad_command);
 								cm_pars_new_state(pCmd_t, STATE_TOSS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_TOSS\n");
 #endif
 							}
@@ -1492,7 +1492,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 							
 							/* Parse State Switch: STATE_BRACKET->STATE_PHONEME */                                                  
 							cm_pars_new_state(pCmd_t, STATE_PHONEME);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_BRACKET->STATE_PHONEME\n");
 #endif
 							cm_phon_match(phTTS, pCmd_t->ParseChar);
@@ -1530,7 +1530,7 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 			case STATE_TOSS:
 			    /* 07/30/96 GL.  check the current character to set the STATE_TOSS at right place */
 				if (pCmd_t->ParseChar == ']') cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_loop: Parse State Switch: STATE_TOSS->STATE_NORMAL\n");
 #endif
 				break;
@@ -1577,7 +1577,7 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 	if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
 	{
 		cm_util_flush_init(phTTS);
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: pKsd_t->text_flush or CMD_flush_toss\n");
 #endif
 		return;
@@ -1590,11 +1590,11 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 #endif
 	}
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default case of switch(%c)\n",c);
 #endif
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_proc_char: Default: French, Spanish, German.\n");
 #endif
 
@@ -1706,7 +1706,7 @@ void cm_pars_new_state(PCMD_T pCmd_t, int state)
 	pCmd_t->hold_replay_ignore = 0;
 #endif
 
-#ifdef DEBUGPARS
+#ifdef DEBUG_OLDPARS
 		printf("CMD_PARS: cm_pars_new_state:\n");
 #endif
 	if(state == STATE_PARAM && pCmd_t->parse_state == STATE_PARAM)

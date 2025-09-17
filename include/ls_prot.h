@@ -269,7 +269,7 @@ extern int  ls_task_plain_number_processing(LPTTS_HANDLE_T phTTS, LETTER *llp, L
 extern int  ls_task_part_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp);
 extern int  ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp);
 extern void ls_util_lts_init( PLTS_T pLts_t, PKSD_T pKsd_t);
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 extern void f_fprintf(char *str);
 #endif
 extern void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count);

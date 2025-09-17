@@ -454,7 +454,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 		WAIT_PRINT;
 		printf ("[:syll ");
 #else
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf ("[:syll ");
 #endif
 #ifndef ARM7_NOSWI
@@ -502,7 +502,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 		for (j = 0; pDph_t->phone_struct[j]; j++)
 		{
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			printf ("%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
 #endif
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
@@ -523,7 +523,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 			}
 #endif
 		}
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf (" --> ");
 #endif
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
@@ -542,7 +542,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 #endif
 		while (--k)
 		{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			printf ("%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
 #endif
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
@@ -560,7 +560,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 			}
 #endif
 		}
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf ("]\n");
 #endif
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/

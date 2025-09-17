@@ -181,7 +181,7 @@ const unsigned int arpabet_lang_fonts[] = {
 /*struct  dtpc_language_tables nlt;*/  
 
 /* 
- * #define USADEBUG 1
+ * #define USADEBUG_OLD 1
  */
 
 #if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
@@ -231,7 +231,7 @@ void usa_init(PKSD_T pKsd_t)
 	*  fill structure ...
 	*/
 
-#ifdef USADEBUG
+#ifdef USADEBUG_OLD
 	f_fprintf("In usa init\n");
 #endif
 

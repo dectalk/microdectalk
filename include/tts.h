@@ -515,7 +515,7 @@ MMRESULT WaitForLtsFlush( LPTTS_HANDLE_T, DWORD );
 
 void EmptyVtmPipe(PKSD_T);
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 void WINprintf(char *fmt, ...);
 #endif
 

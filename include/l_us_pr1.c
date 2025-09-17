@@ -529,7 +529,7 @@ int ls_proc_do_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int oflag)
 	pflag = FALSE;				/* Not plural.			*/
 	sflag = FALSE;				/* No user "," seen.	*/
 	ndig  = 0;
-#ifdef LS2DEBUG
+#ifdef LS2DEBUG_OLD
 	printf("In ls_proc_do_number\n");
 
 #endif

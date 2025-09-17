@@ -79,7 +79,7 @@
 #endif
 
 /* GL 04/21/1997  add this for OSF build */
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 #ifdef WIN32_OLD
 #define printf WINprintf
 #endif

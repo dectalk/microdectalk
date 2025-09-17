@@ -65,9 +65,9 @@
  *                              SaveUserDictionary.
  * 027	GL		09/02/98	    block away the new API code from msdos.
  * 028  ETT		10/05/1998      Added Linux code.
- * 029	GL		11/20/1998		BATS#828 use LTS_DEBUG to replace _DEBUG
+ * 029	GL		11/20/1998		BATS#828 use LTS_DEBUG_OLD to replace _DEBUG_OLD
  * 030	GL		12/17/1998		BATS#846 add say_fletter mode to skip control character 
- * 031	MGS		08/22/1999		Change #ifdef LTS_DEBUG to #if LTS_DEBUG because of VMS debugging code
+ * 031	MGS		08/22/1999		Change #ifdef LTS_DEBUG_OLD to #if LTS_DEBUG_OLD because of VMS debugging code
  *								that was turned on by accident
  * 032  NAL		05/05/2000		2-byte phonemes are recognized for multilang phoneme set
  * 033	MGS		06/12/2000		dictionary reduction
@@ -1782,14 +1782,14 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		memcpy((unsigned char *)&(UDICT_DATA[0]), entry->text, entry_size);
 		UDICT_ENTRY=1;
 		UDICT_BYTES=entry_size;
-#ifdef LTS_DEBUG
+#ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256];
 			sprintf(szTemp, "Allocated user dictionary; UDICT_INDEX:%08lx\n",
 				UDICT_INDEX);
 			OutputDebugString(szTemp);
 		}
-#endif // LTS_DEBUG
+#endif // LTS_DEBUG_OLD
 
 		return MMSYSERR_NOERROR;	
 	}
@@ -1863,14 +1863,14 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 
 #endif // defined (WIN32_OLD) && !defined (UNDER_CE)
 
-#ifdef LTS_DEBUG
+#ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256];
 			sprintf(szTemp, "Reallocated user dictionary; UDICT_INDEX:%08lx\n",
 				UDICT_INDEX);
 			OutputDebugString(szTemp);
 		}
-#endif // LTS_DEBUG
+#endif // LTS_DEBUG_OLD
 
 	modifier = 0;
 
@@ -1945,14 +1945,14 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 					      memory block it's occupying and return. */
 	{
 
-#ifdef LTS_DEBUG
+#ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256];
 			sprintf(szTemp, "Freeing user dictionary; UDICT_INDEX:%08lx\n",
 				UDICT_INDEX);
 			OutputDebugString(szTemp);
 		}
-#endif // LTS_DEBUG
+#endif // LTS_DEBUG_OLD
 
 #if (defined WIN32_OLD) && (!defined UNDER_CE)
 		freeLock(UDICT_INDEX);
@@ -1994,14 +1994,14 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 	UDICT_DATA = realloc((unsigned char *)UDICT_DATA, new_size);
 #endif
 
-#ifdef LTS_DEBUG
+#ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256];
 			sprintf(szTemp, "Reallocated user dictionary; UDICT_INDEX:%08lx\n",
 				UDICT_INDEX);
 			OutputDebugString(szTemp);
 		}
-#endif // LTS_DEBUG
+#endif // LTS_DEBUG_OLD
 
 	/* fix up pointers */
 	UDICT_ENTRY--;

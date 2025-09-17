@@ -21,7 +21,7 @@
 
 #include "flavor.h"
 
-#if defined(DEBUG) || defined(WARNINGS)
+#if defined(DEBUG_OLD) || defined(WARNINGS)
 #include <stdio.h>	/* for printf in warning routines */
 #endif
 

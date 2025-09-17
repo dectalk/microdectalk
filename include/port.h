@@ -153,7 +153,7 @@ typedef U32 UINT;
 #endif
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 #define _stricmp strcasecmp
-#define PRINTFDEBUG
+#define PRINTFDEBUG_OLD
 
 #if defined(_WIN64) || defined(_LP64)
 typedef QWORD PTRINT;
@@ -279,7 +279,7 @@ typedef void * PVOID;
 
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 //#define _stricmp strcasecmp
-#define PRINTFDEBUG
+#define PRINTFDEBUG_OLD
 #endif
 
 
@@ -337,7 +337,7 @@ typedef U32 UINT;
 #endif
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 #define _stricmp strcasecmp
-#define PRINTFDEBUG
+#define PRINTFDEBUG_OLD
 #endif
 
 

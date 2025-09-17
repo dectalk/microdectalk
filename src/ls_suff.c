@@ -31,7 +31,7 @@
  * Rev	Who		Date			Description                    
  * ---	-----	-----------		---------------------------------------
  * 001	MGS		02/27/1996 		Reformatted code and added function headers    
- * 002	MGS		03/18/1996		Added LSSUFFDEBUG tag
+ * 002	MGS		03/18/1996		Added LSSUFFDEBUG_OLD tag
  * 003  MGS		03/18/1996		Finished WIN32_OLD code merge, function headers need updating
  * 004	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
  * 005	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
@@ -76,7 +76,7 @@
 //#include "opthread.h"
 #endif
 	
-/* #define LSSUFFDEBUG */
+/* #define LSSUFFDEBUG_OLD */
 
 void ls_suff_append_pron(LPTTS_HANDLE_T phTTS,unsigned char __far *pb);
 extern const unsigned char suffix_table[];
@@ -139,7 +139,7 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 	pKsd_t = phTTS->pKernelShareData;
 	pLts_t = phTTS->pLTSThreadData;
 	
-#ifdef LSSUFFDEBUG
+#ifdef LSSUFFDEBUG_OLD
 		printf("ls_suff_suffix_find; comp_str = %s str_end = %s\n",pLts_t->comp_str,str_end);
 #endif
 
@@ -150,7 +150,7 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 		si = suffix_index[26];
 	else
 		si = suffix_index[ls_lower[*str_end] - 'a'];
-#ifdef LSSUFFDEBUG
+#ifdef LSSUFFDEBUG_OLD
 		printf("suffix_find si = %04X\n",si); 
 #endif
 
@@ -217,11 +217,11 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 						if(*sp == SF_RECURSE)
 						{
 							sp++;
-#ifdef LSSUFFDEBUG
+#ifdef LSSUFFDEBUG_OLD
 								printf("suffix_find recursion bp = %s np = %s save_str = %s\n",bp,np,save_str);
 #endif
 							stat = ls_suff_suffix_find(phTTS,np-1,which_dic);
-#ifdef LSSUFFDEBUG
+#ifdef LSSUFFDEBUG_OLD
 								printf("out of recursion\n");
 #endif
 						}
@@ -313,7 +313,7 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 			} /* while(*sp != SF_END) */
 		} /* if(*sp++ == SF_STRIP) */
 		si = stp->next;
-#ifdef LSSUFFDEBUG
+#ifdef LSSUFFDEBUG_OLD
 			printf("suffix_find new si = %04X\n",si); 
 #endif
 	}/*     while(si != 0xffff)*/
@@ -510,7 +510,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 		fprintf((FILE *)pKsd_t->dbglog,"\n[:form ");
 #endif
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
   printf("\n[:form ");
 #endif
   if (pKsd_t->logflag & LOG_FORM_TYPES)
@@ -546,7 +546,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 		if( pLts_t->fc_struct[j] & fc_mask )
 #endif
 		{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 			printf("%s fc ",form_class_strings[i] );
 #endif
 #ifndef MSDOS
@@ -571,7 +571,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
     }
     else
     {
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
       printf("\n  %d : unknown. \n",j);
 #endif
 #ifndef MSDOS
@@ -596,7 +596,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 	if (j < pLts_t->fc_index)
 #endif
 	{
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
 		printf("/ ");
 #endif
 #ifndef MSDOS
@@ -607,7 +607,7 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 
   }
 
-#ifdef PRINTFDEBUG
+#ifdef PRINTFDEBUG_OLD
   printf("]\n");
 #endif
 #ifndef MSDOS

@@ -175,7 +175,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 			printf ("durxx = mstofr(user_durs[nphon]+4) durxx=%d\n", pDphsettar->durxx);
 #endif
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 			printf ("\tFound user_dur[%s] = %3d frames in PHTIMING\n",
 					phprint (phocur), pDphsettar->durxx);
 #endif
@@ -220,7 +220,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 				/* Note extra compause added if user command [:dv cp __] */
 				if ((struclas & FBOUNDARY) == FCBNEXT)
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 1111 asperation=%d\n", pDph_t->asperation);
 #endif
 
@@ -229,7 +229,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 					else if (pDph_t->asperation < MIN_ASP_COMMA);
 
 					pDph_t->asperation = MIN_ASP_COMMA;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 1111\n");
 #endif
 					dpause = pDph_t->nfcomma + pDph_t->compause + pDph_t->asperation;
@@ -238,14 +238,14 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 				/* Note extra perpause added if user command [:dv pp __] */
 				if (((struclas & FBOUNDARY) & FSENTENDS) IS_PLUS)
 				{
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation 2222 asperation=%d\n", pDph_t->asperation);
 #endif
 					if (pDph_t->asperation > MAX_ASP_PERIOD)
 						pDph_t->asperation = MAX_ASP_PERIOD;
 					else if (pDph_t->asperation < MIN_ASP_PERIOD);
 					pDph_t->asperation = MIN_ASP_PERIOD;
-#ifdef MSDEBUG
+#ifdef MSDEBUG_OLD
 					printf ("asperation is now screwed up 2222\n");
 #endif
 					dpause = pDph_t->nfperiod + pDph_t->perpause + pDph_t->asperation;
@@ -912,7 +912,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 		if ((((struccur & FISBOUND) == FISBOUND) && nphon != 0 || nphon == pDph_t->nallotot - 2))
 		{
 			/* printf("strucc=%o of phon %d at %d",struccur,pDph_t->allophons[nphon],nphon); */
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 			printf (" 2fbound struccur%o, p= %d\n", struccur, pDph_t->allophons[nphon]);
 			printf ("syldur = %d \n ", (syldur * 64) / 10);
 			printf ("vowcnt=%d\n", vowcnt);
@@ -939,7 +939,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 
 			default:
 				adjust = ((pDph_t->timeref - (syldur >> 1)) >> 4);
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 				printf ("WHY HERE??");
 				printf ("vowcnt=%d phon= %d nphon= %d\n", vowcnt, pDph_t->allophons[nphon], nphon);
 #endif
@@ -990,7 +990,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 					  (syldur*64)/10,adjust); */
 					
 
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("set  %d dur %d syldur=%d adj=%d", pDph_t->allophons[endcnt], pDph_t->allodurs[endcnt], (syldur * 64) / 10, adjust);
 #endif
 
@@ -999,7 +999,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 						pDph_t->allodurs[endcnt]=6;
 
 					
-#ifdef DEBUGPHT
+#ifdef DEBUG_OLDPHT
 					printf ("to  %d \n", ((pDph_t->allodurs[endcnt] * NSAMP_FRAME) / 10));
 #endif
 					ncnt++;
@@ -1018,7 +1018,7 @@ void us_phtiming (LPTTS_HANDLE_T phTTS)
 
 		}
 
-#ifdef EABDEBUG
+#ifdef EABDEBUG_OLD
 		printf ("final duration = %d  durxx  \n", ((pDphsettar->durxx * NSAMP_FRAME) + 5) / 10);
 
 #endif

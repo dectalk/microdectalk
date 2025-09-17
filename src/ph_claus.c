@@ -169,7 +169,7 @@ void        init_phclause (PDPH_T pDph_t);
 void send_pars_loop(LPTTS_HANDLE_T phTTS);
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 //matt I don't think we want this
 //#ifndef UNDER_CE
 //#ifdef FRENCH
@@ -346,7 +346,7 @@ else
 	// }
 
 #ifdef FRENCH
-#ifdef PH_DEBUG
+#ifdef PH_DEBUG_OLD
     // Michel : to draw f0 curves with Excel
     if(DT_DBG(PH_DBG,0x10)) {  // [:debug 2010] for Michel
 #ifndef ARM7

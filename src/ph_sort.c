@@ -174,7 +174,7 @@
 /* From PHROM.C */
 //extern short *featb;	   /* Feature assignment to each phonetype */
 
-/* #define DEBUGIND      1 *//* for degbuggin eab */
+/* #define DEBUG_OLDIND      1 *//* for degbuggin eab */
 #define CURRPHONE   pDph_t->nphonetot - 1
 #define NEXTPHONE   pDph_t->nphonetot
 
@@ -1702,7 +1702,7 @@ stzapped:
 #else
                 adjust_index (pKsd_t, (n + 1), -1, 0);	/* eab n+1 to bind forward */
 #endif
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
                 printf ("adj -1 on %d %d \n", curr_in_sym, (n + 1));
 #endif
@@ -1778,7 +1778,7 @@ static void interp_user_f0 (PDPH_T pDph_t, short *psCurr_dur, short *psCurr_f0,
 			else
 			{
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 				printf (
 						   "ERROR in PHSORT: f0 commands for singing and phoneme-targets intermixed\n");
 #endif
@@ -1791,7 +1791,7 @@ static void interp_user_f0 (PDPH_T pDph_t, short *psCurr_dur, short *psCurr_f0,
 		else
 		{
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 			printf (
 					   "ERROR in PHSORT: f0 commands for phonemes and stress/hat pDph_t->symbols intermixed\n");
 #endif
@@ -1868,7 +1868,7 @@ static void insertphone (LPTTS_HANDLE_T phTTS, short loc, short fone)
 		adjust_index (pKsd_t, (loc + 1), 1, 0);
 #endif
 	}
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 	printf ("loc %d pDph_t->nsymbtot %d \n", loc, pDph_t->nsymbtot);
 	printf ("adj +1 inserting %d \n", fone);
 #endif
@@ -1956,7 +1956,7 @@ static void delete_symbol (LPTTS_HANDLE_T phTTS, short msym)
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 	PDPHSETTAR_ST           pDphsettar = pDph_t->pSTphsettar;
 
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 	printf ("adj -1 del sym %d at %d \n ", pDph_t->symbols[msym], msym);
 #endif
 	pDph_t->nsymbtot--;
@@ -1967,7 +1967,7 @@ static void delete_symbol (LPTTS_HANDLE_T phTTS, short msym)
 		pDph_t->user_durs[m] = pDph_t->user_durs[m + 1];	/* If deleted sym has dur or */
 		pDph_t->user_f0[m] = pDph_t->user_f0[m + 1];	/* f0, it will be lost */
 	}
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 	WAIT_PRINT;
 	printf ("\n sym num %d   ", msym);
@@ -2057,7 +2057,7 @@ static void make_phone (PDPH_T pDph_t, short phoname, short n,
 		pDph_t->user_f0[pDph_t->nphonetot] = curr_f0;	/* Move user-specified f0 */
 	}
 
-#ifdef DEBUG_USER_PROSODICS
+#ifdef DEBUG_OLD_USER_PROSODICS
 	if (curr_dur != 0)
 	{
 		printf ("\tFound user_dur[%s] = %3d ms in PHSORT\n",
@@ -2076,7 +2076,7 @@ static void make_phone (PDPH_T pDph_t, short phoname, short n,
 	/* See if there is room for next phoneme */
 	if (pDph_t->nphonetot < NPHON_MAX)
 		pDph_t->nphonetot++;
-#ifdef DEBUGIND
+#ifdef DEBUG_OLDIND
 
 	printf ("tot= %d phoname=%d \n ", pDph_t->nphonetot, phoname);
 #endif
@@ -2161,7 +2161,7 @@ extern short fr_featb[];
 	}
 	else 
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG_OLD
 	printf("OH MY GOD! THEY'VE KILLED JENNY\n");
 #endif
 	return(us_featb[phone]);
