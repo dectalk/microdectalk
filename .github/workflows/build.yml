@@ -85,7 +85,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-appimage
-        path: *.AppImage
+        path: Speak-x86_64.AppImage
 
   release:
     name: "Release"
