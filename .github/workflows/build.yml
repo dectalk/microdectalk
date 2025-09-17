@@ -115,7 +115,10 @@ jobs:
       run: gh release delete "latest" --cleanup-tag -y || true
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: compress artifacts
+      run: zip -rv speak-windows.zip speak-win64.exe speak-win32.exe dic DECtalk.conf
+
     - name: Release
-      run: gh release create -t "latest-dectalk-develop" "latest" *.exe *.AppImage -n "Latest release"
+      run: gh release create -t "latest-dectalk-develop" "latest" *.zip *.AppImage -n "Latest release"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
