@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-win32
-        path: speak32.exe
+        path: speak-win32.exe
 
   build-win64:
     name: "Build for Windows 64-bit"
@@ -59,7 +59,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-win64
-        path: speak64.exe
+        path: speak-win64.exe
 
   build-ubuntu:
     name: "Build for Ubuntu"
@@ -80,12 +80,12 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_native -j3 && mv bin/*/*/speak speak64
+      run: ./premake5 gmake --build-speak=yes && make config=release_native -j3 && mv bin/*/*/speak speak-ubuntu64
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-ubuntu
-        path: speak64
+        path: speak-ubuntu64
 
   release:
     name: "Release"
