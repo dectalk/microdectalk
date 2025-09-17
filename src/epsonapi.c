@@ -847,7 +847,9 @@ int TextToSpeechStart(char *input, short *buffer, int output_format)
 	i=0;
 	while (input[i])
 	{
+#ifdef DEBUG
                 printf("Processing Char: %c\n", input[i]);
+#endif
 		cmd_loop(phTTS,input[i]);
 		if (phTTS->pKernelShareData->halting)
 		{

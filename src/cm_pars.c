@@ -1263,7 +1263,9 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 	short   ws_count=0;             /* consecutive count for white space */
 	unsigned short temp;
 //#endif
+#ifdef DEBUG
         printf("cmd_loop input: %c\n", input);
+#endif
 
 #ifndef ARM7
 //	while (TRUE)

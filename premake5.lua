@@ -44,6 +44,12 @@ project("libdtc")
 	files("src/*.c")
 	removefiles("src/main.c")
 	characterset("MBCS")
+	filter("configurations:Debug")
+		defines({"DICDEBUG", "DEBUG"})
+		symbols("On")
+	filter("configurations:Release")
+		optimize("On")
+	filter({})
 	defines({
 		"_REENTRANT",
 		"NOMME",
@@ -58,7 +64,6 @@ project("libdtc")
 		"ACNA",
 		"DISABLE_AUDIO",
 		"SINGLE_THREADED",
-		"DICDEBUG",
 		"__inline="
 	})
 	filter("system:windows")
