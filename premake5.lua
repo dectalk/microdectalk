@@ -63,8 +63,7 @@ project("libdtc")
 		"TYPING_MODE",
 		"ACNA",
 		"DISABLE_AUDIO",
-		"SINGLE_THREADED",
-		"__inline="
+		"SINGLE_THREADED"
 	})
 	filter("system:windows")
 		files("mman-win32/*.c")

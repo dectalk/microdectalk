@@ -8,6 +8,8 @@
 #endif
 #endif
 
+#define __inline
+
 // On UNIX/Linux based machines, this is the location where DECtalk will assume it was built.
 #ifndef DECTALK_INSTALL_PREFIX
 #define DECTALK_INSTALL_PREFIX "/opt/dectalk"
