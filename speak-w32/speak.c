@@ -153,8 +153,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 		}else if(m == 201){
 			ma_mutex_lock(&mutex);
 			if(arrlen(buffers) > 0){
-				free(buffers[0].data);
-				arrdel(buffers, 0);
+				int i;
+				for(i = 0; i < arrlen(buffers); i++){
+					free(buffers[0].data);
+					arrdel(buffers, 0);
+				}
 			}
 			ma_mutex_unlock(&mutex);
 		}
