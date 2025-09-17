@@ -64,16 +64,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Install packages
-      run: sudo apt-get install libXpm-dev motif-dev libXt-dev
+      run: sudo apt-get install libxpm-dev libmotif-dev libxt-dev
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_native -j3 && mv bin/*/*/speak speak
+      run: ./premake5 gmake --build-speak=yes && make config=release_native -j3 && mv bin/*/*/speak speak64
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-ubuntu
-        path: speak
+        path: speak64
 
   release:
     name: "Release"
@@ -82,7 +82,7 @@ jobs:
     permissions:
       contents: write
 
-    needs: [build-win32, build-win64]
+    needs: [build-win32, build-win64, build-ubuntu]
 
     steps:
     - name: Checkout
@@ -95,11 +95,15 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: build-win64
+    - name: Download from build-ubuntu
+      uses: actions/download-artifact@v4
+      with:
+        name: build-ubuntu
     - name: Delete old release
       run: gh release delete "latest" --cleanup-tag -y || true
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Release
-      run: gh release create -t "latest-dectalk-develop" "latest" *.exe -n "Latest release"
+      run: gh release create -t "latest-dectalk-develop" "latest" *.exe speak64 -n "Latest release"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
