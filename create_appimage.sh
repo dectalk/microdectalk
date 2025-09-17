@@ -27,7 +27,7 @@ ldd appdir/usr/bin/speak | while read a; do
 	fi
 done
 
-strip appdir/usr/lib/* appdir/usr/bin/*
+strip appdir/usr/lib/* appdir/usr/lib/*/* appdir/usr/bin/*
 
 ARCH=x86_64
 export ARCH
