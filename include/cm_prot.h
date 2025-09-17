@@ -230,6 +230,7 @@ preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
                                   int go_until,
                                   pmatch_arrays_t match_array,
                                   preturn_value_t ret_value);
+#define __inline
 __inline void par_copy_index(pindex_data_t dest_index,
 					int		  dest_pos,
 					pindex_data_t src_index,
@@ -241,6 +242,7 @@ __inline void par_copy_index_list(pindex_data_t dest_index,
 						 int		   length);
 __inline int par_is_index_set(pindex_data_t indexes,
 					   int pos);
+#undef __inline
 
 #else
 preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,

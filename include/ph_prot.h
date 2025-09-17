@@ -63,6 +63,8 @@ extern void adjust_index (unsigned int which, int direction, int del);
 extern void adjust_allo (unsigned int which, int direction);
 
 #else
+
+#define __inline
 extern __inline short phone_feature(PDPH_T pDph_t, int phone);	   /* Phonetic features            */
 extern __inline short begtyp(int phone);
 extern __inline short endtyp(int phone);
@@ -70,6 +72,7 @@ extern __inline short ptram(int phone);
 extern __inline short burdr(int phone);
 extern __inline short plocu(int index);
 extern __inline short place(int);
+#undef __inline
 
 extern void *spcget (unsigned short spc_type);
 extern int  spcwrite (PKSD_T pKsd_t, unsigned short __far * spc_data);
