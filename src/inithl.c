@@ -44,7 +44,7 @@
 
 #include "flavor.h"
 
-#if (defined(DEBUG) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 
 #include <stdlib.h>	/* for exit on error */
 #include <process.h>	/* for exit on error */
@@ -652,7 +652,7 @@ Atf3Setf2Range(HLSpeaker *speaker,short f3,short f2Min,short f2Max,
       if(AB>0)
         ALVEOLAR(f2,f3Scaled).AB=AB;
     }
-#ifdef DEBUG		
+#ifdef DEBUG_OLD		
       else{
         printf("Try to write out of alveolar range.");
         exit(1);

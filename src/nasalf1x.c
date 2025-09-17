@@ -46,7 +46,7 @@
 
 #include "flavor.h"
 
-#if (defined(DEBUG) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 
 #include <stdio.h>	/* for printf on error */
 #include <stdlib.h>	/* for exit on error */
@@ -158,7 +158,7 @@ NasalZero(HLFrame *frame,HLSpeaker *speaker,HLState *state,
   *pFNZ = fn * (float) DTsqrt((1.f + MmOverMn) 
                             / (1.f + MmOverMn * fn * fn /(fm * fm)) );
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if(!( (fn > *pFNZ && fm < *pFNZ) 
     || (fn < *pFNZ && fm > *pFNZ))){
 
@@ -251,7 +251,7 @@ InterpolateTable(TableRow TheTable[],short TableLength,
     }
 
   if(Column2Set==NO){
-#ifdef DEBUG
+#ifdef DEBUG_OLD
     printf(" InterpolateTable finished without a value.");
     exit(1);
 #endif
@@ -266,7 +266,7 @@ LinearInterpolate(float x,float x1,float y1,float x2,float y2)
 {
   float Slope,yIntercept;
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if( (x2-x1) == 0.0f ){
     printf(" Cannot linear interpolate equal x values.");
     exit(1);
@@ -356,7 +356,7 @@ NasalFirstFormant(HLFrame *frame,HLSpeaker *speaker,HLState *state,
   if( fabs(Qf1c + Qfno) < FLOAT_EPS )
     {
     *pf1x = (state->f1c + speaker->fno) / 2.0f; /* a guess */
-#ifdef DEBUG
+#ifdef DEBUG_OLD
     printf("Zero division in NasalFirstFormant.\n");
     exit(1);
 #endif
@@ -415,7 +415,7 @@ NasalPole(HLFrame *frame,HLSpeaker *speaker,HLState *state,
   else
     FNPvars.fp = (float)(frame->f2 - 100.f);
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if(FNPvars.fp==FNPvars.fn){
     printf("fp must not equal fn in NasalPole.");
     exit(1);
@@ -444,7 +444,7 @@ NasalPole(HLFrame *frame,HLSpeaker *speaker,HLState *state,
                 (float)FNP_TOL,ITMAX,(float)EPS);
     else{
       *pFNP = 0.5f * (FNPvars.fp + FNPvars.fn); /* rough guess */
-#ifdef DEBUG
+#ifdef DEBUG_OLD
       printf("Unable to bracket nasal pole");
       exit(1);
 #endif
@@ -491,7 +491,7 @@ NOT_FINITE_BRACKETED if not.
   short i;
 
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if(FNPvars->fn>=FNPvars->fp){
     printf("fn must be less than fp in FiniteBracketFNP");
     exit(1);

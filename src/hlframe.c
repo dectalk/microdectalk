@@ -66,7 +66,7 @@
 
 #include "flavor.h"
 
-#if (defined(DEBUG) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 #include <stdio.h>	/* for printf on error */
 #include <stdlib.h>	/* for exit on error */
 #include <process.h>	/* for exit on error */
@@ -327,7 +327,7 @@ FricativeFilters(HLFrame *frame,HLSpeaker *speaker,HLState *state,
 		
 				else
 				{
-#ifdef DEBUG
+#ifdef DEBUG_OLD
 		   if(frame->f2 > (speaker->PalVelar_f2Offset 
 					  + speaker->PalVelar_f2Overf3_Slope * frame->f3))
 				  {
@@ -357,7 +357,7 @@ FricativeFilters(HLFrame *frame,HLSpeaker *speaker,HLState *state,
 	  llframe->NA3F = (short)speaker->LateralA3F;
         break;
       
-#ifdef DEBUG
+#ifdef DEBUG_OLD
       default:
         printf(" Should not reach default (FricativeGains)");
         exit(1);

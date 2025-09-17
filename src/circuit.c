@@ -45,7 +45,7 @@
 #pragma arm section code="CIRCODE", rwdata="CIRRWDATA", rodata="CIRRODATA", zidata="CIRDATA"
 #endif
 
-#if (defined(DEBUG) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 
 #include <stdio.h>	/* for printf on error */
 #include <stdlib.h>	/* for exit on error */
@@ -272,7 +272,7 @@ if( state->Pm > 100.0f)
           &MinGuess, &MaxGuess, BRENT_BRACKET_DEFAULT_FACTOR,
           BRENT_BRACKET_DEFAULT_NTRY);
     if(!BracketReturn){
-#ifdef DEBUG
+#ifdef DEBUG_OLD
       printf("Unable to bracket root of Pm Root Function\n");
       exit(1);
 #endif

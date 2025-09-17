@@ -23,7 +23,7 @@
 #pragma arm section code="BRENTCODE", rwdata="BRENTRWDATA", rodata="BRENTRODATA", zidata="BRENTDATA"
 #endif
 
-#if (defined(DEBUG) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 #include <stdio.h>	/* for printf on error */
 #include <stdlib.h>	/* for exit on error */
 #include <process.h>	/* for exit on error */
@@ -42,7 +42,7 @@ BrentBracket(BrentFunctionType* pF, void* pOtherArgs,
   short j;
   float f1,f2;
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if( fabs(*x1 - *x2) < FLOAT_EPS ){
     (void) printf("Bad initial range in BrentBracket()\n");
     exit(1);
@@ -84,7 +84,7 @@ Brent(BrentFunctionType* pF, void* pOtherArgs,
 	float fb=(*pF)(b,pOtherArgs);
   float fc,p,q,r,s,tol1,xm;
 
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   if(fb*fa > 0.0f){
     (void) printf(" Root must be bracketed in Brent.");
     exit(1);
@@ -168,7 +168,7 @@ Brent(BrentFunctionType* pF, void* pOtherArgs,
 
     fb=(*pF)(b,pOtherArgs);
   }
-#ifdef DEBUG
+#ifdef DEBUG_OLD
   (void) printf("Maximum number of iterations exceeded in Brent.");
   exit(1);
 #endif
