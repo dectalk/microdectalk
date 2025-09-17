@@ -10,7 +10,7 @@ mkdir -p appdir/usr/lib/x86_64-linux-gnu
 
 ln -s usr/lib appdir/lib
 ln -s usr/lib appdir/lib64
-ln -s usr/lib appdir/usr/lib64
+ln -s lib appdir/usr/lib64
 
 cp bin/Native/Release/speak appdir/usr/bin/
 cp resources/speak.desktop appdir/
