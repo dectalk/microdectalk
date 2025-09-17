@@ -109,8 +109,10 @@ short* g_wave = NULL;
 void stop_text(Widget w, void* data, void* ptr){
 	ma_mutex_lock(&speaking);
 	if(arrlen(buffers) > 0){
-		free(buffers[0].data);
-		arrdel(buffers, 0);
+		while(arrlen(buffers) > 0){
+			free(buffers[0].data);
+			arrdel(buffers, 0);
+		}
 	}
 	ma_mutex_unlock(&speaking);
 }
