@@ -74,7 +74,7 @@ jobs:
       with:
         name: build-win64
     - name: Delete old release
-      run: gh release delete "latest-dectalk-develop" --cleanup-tag -y || true
+      run: gh release delete "latest" --cleanup-tag -y || true
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Release
