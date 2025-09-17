@@ -1,0 +1,79 @@
+name: "Build"
+
+concurrency:
+  group: "build"
+  cancel-in-progress: true
+
+jobs:
+  build-win32:
+    name: "Build for Windows 32-bit"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install packages
+      run: sudo apt-get install mingw-w64
+    - name: get premake5
+      run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
+    - name: Build
+      run: premake5 gmake --build-speak=yes && make config=release_win32 -j3 && mv bin/*/*/speak.exe speak32.exe
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-win32
+        path: speak32.exe
+
+  build-win64:
+    name: "Build for Windows 64-bit"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install packages
+      run: sudo apt-get install mingw-w64
+    - name: get premake5
+      run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
+    - name: Build
+      run: premake5 gmake --build-speak=yes && make config=release_win64 -j3 && mv bin/*/*/speak.exe speak64.exe
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-win64
+        path: speak64.exe
+
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    needs: [build-win32, build-win64]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Download from build-win32
+      uses: actions/download-artifact@v4
+      with:
+        name: build-win32
+    - name: Download from build-win64
+      uses: actions/download-artifact@v4
+      with:
+        name: build-win64
+    - name: Delete old release
+      run: gh release delete "latest" --cleanup-tag -y || true
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release
+      run: gh release create -t "vlatest" "latest" *.exe -n "Latest release"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
