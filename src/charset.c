@@ -83,7 +83,6 @@ char *convert_string_for_dapi(char *in, size_t inlen) {
 /* win32 */
 #include <windows.h>
 #include <wchar.h>
-#include <string.h>
 
 void init_charset() {
 	/* do nothing */
