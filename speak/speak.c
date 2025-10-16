@@ -117,7 +117,7 @@ void stop_text(Widget w, void* data, void* ptr){
 	ma_mutex_unlock(&speaking);
 }
 
-short* write_wav(short* iwave, unsigned int length){
+short* write_wav(short* iwave, long length){
 	if(g_wave == NULL){
 		g_wave = malloc(length * 2);
 		memcpy(g_wave, iwave, length * 2);
