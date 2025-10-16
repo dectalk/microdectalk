@@ -3,6 +3,6 @@ gcc src/*.c  -I include \
     -D DICDEBUG \
     -lm -w -g -o say
 
-./say
-aplay output.wav
+#./say
+#aplay output.wav
 #rm output.wav

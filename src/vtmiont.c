@@ -2044,8 +2044,6 @@ int OutputData( LPTTS_HANDLE_T phTTS,
 
 #else
 
-extern int write_wav(short *pBuffer, unsigned int uiSamplesToOutput);
-
 void OutputData( LPTTS_HANDLE_T phTTS,
 		 short * pBuffer,
 		 unsigned int uiSamplesToOutput,
@@ -2054,8 +2052,9 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 		 DWORD NextPhone)
 {
 
-  // override custom output
-  write_wav(pBuffer, uiSamplesToOutput);
+  // load user callback
+  phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput);
+  //write_wav(pBuffer, uiSamplesToOutput);
   return;
 
   DWORD dwSampleNumber;
@@ -2196,7 +2195,7 @@ void OutputData( LPTTS_HANDLE_T phTTS,
   /********************************************************************/
 
   case STATE_OUTPUT_WAVE_FILE:
-        write_wav(pBuffer, uiSamplesToOutput);
+        //write_wav(pBuffer, uiSamplesToOutput);
 
 	//mmStatus = WriteAudioToFile( phTTS,
 	//			 pBuffer,
