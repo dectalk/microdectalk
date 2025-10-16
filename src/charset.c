@@ -16,28 +16,18 @@
 #include <wchar.h>
 iconv_t cd;
 
-void init_charset() { // i hate this but can't be bothered to make it better
-    setlocale(LC_CTYPE, "");
-    cd = iconv_open("Windows-1252//TRANSLIT//IGNORE", nl_langinfo(CODESET));
-    if ((long)cd == -1) {
-      cd = iconv_open("ISO-8859-15//TRANSLIT//IGNORE", nl_langinfo(CODESET));
-      if ((long)cd == -1) {
-        cd = iconv_open("ISO-8859-1//TRANSLIT//IGNORE", nl_langinfo(CODESET));
-        if ((long)cd == -1) {
-          cd = iconv_open("Windows-1252", nl_langinfo(CODESET));
-          if ((long)cd == -1) {
-            cd = iconv_open("ISO-8859-15", nl_langinfo(CODESET));
-            if ((long)cd == -1) {
-              cd = iconv_open("ISO-8859-1", nl_langinfo(CODESET));
-              if ((long)cd == -1) {
-                perror("iconv_open");
-                exit(EXIT_FAILURE);
-              }
-            }
-          }
-        }
-      }
-    }
+void init_charset() {
+	setlocale(LC_CTYPE, "");
+	cd = iconv_open("Windows-1252//TRANSLIT//IGNORE", nl_langinfo(CODESET));
+	if ((long)cd == -1) cd = iconv_open("ISO-8859-15//TRANSLIT//IGNORE", nl_langinfo(CODESET));
+	if ((long)cd == -1) cd = iconv_open("ISO-8859-1//TRANSLIT//IGNORE", nl_langinfo(CODESET));
+	if ((long)cd == -1) cd = iconv_open("Windows-1252", nl_langinfo(CODESET));
+	if ((long)cd == -1) cd = iconv_open("ISO-8859-15", nl_langinfo(CODESET));
+	if ((long)cd == -1) cd = iconv_open("ISO-8859-1", nl_langinfo(CODESET));
+	if ((long)cd == -1) {
+		perror("iconv_open");
+		exit(EXIT_FAILURE);
+	}
 }
 
 char *convert_string_for_dapi(char *in, size_t inlen) {
@@ -91,11 +81,35 @@ char *convert_string_for_dapi(char *in, size_t inlen) {
 
 #if defined(_WIN32)
 /* win32 */
-void init_charset() {
+#include <windows.h>
+#include <wchar.h>
+#include <string.h>
 
+void init_charset() {
+	/* do nothing */
 }
 char *convert_string_for_dapi(char *in, size_t inlen) {
-    return in; // TODO: windows implementation
+	size_t mbbytes = (inlen + 1) * 4; /* wide enough??? i hope??? */
+	size_t wbytes = 0;
+	size_t len;
+
+	wchar_t* wout;
+	char* mbout = malloc(mbbytes);
+
+	wbytes = MultiByteToWideChar(CP_ACP, 0, in, inlen, NULL, 0) * sizeof(wchar_t);
+
+	wout = malloc(wbytes);
+	len = wbytes / sizeof(wchar_t);
+
+	memset(wout, 0, wbytes);
+	memset(mbout, 0, mbbytes);
+
+	MultiByteToWideChar(CP_ACP, 0, in, inlen, wout, len);
+	WideCharToMultiByte(1252, 0, wout, -1, mbout, mbbytes, 0, 0);
+
+	free(wout);
+
+	return mbout;
 }
 #else
 void init_charset() {

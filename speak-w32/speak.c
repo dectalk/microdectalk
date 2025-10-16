@@ -44,7 +44,7 @@ unsigned int wavelen;
 short* wave = NULL;
 int rate = 200;
 
-void write_wav(short* iwave, unsigned int length){
+short* write_wav(short* iwave, long length){
 	if(wave == NULL){
 		wave = malloc(length * 2);
 		memcpy(wave, iwave, length * 2);
@@ -57,6 +57,8 @@ void write_wav(short* iwave, unsigned int length){
 	}
 
 	wavelen += length;
+
+	return NULL;
 }
 
 void data_callback(ma_device* dev, void* out, const void* in, ma_uint32 frame){
@@ -362,7 +364,7 @@ int WINAPI WinMain(HINSTANCE hCurInst, HINSTANCE hPrevInst, LPSTR lpsCmdLine, in
 		return 0;
 	}
 
-	TextToSpeechInit(NULL, NULL);
+	TextToSpeechInit(write_wav, NULL);
 
 	hInst = hCurInst;
 

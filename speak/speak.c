@@ -117,7 +117,7 @@ void stop_text(Widget w, void* data, void* ptr){
 	ma_mutex_unlock(&speaking);
 }
 
-void write_wav(short* iwave, unsigned int length){
+short* write_wav(short* iwave, unsigned int length){
 	if(g_wave == NULL){
 		g_wave = malloc(length * 2);
 		memcpy(g_wave, iwave, length * 2);
@@ -130,6 +130,8 @@ void write_wav(short* iwave, unsigned int length){
 	}
 
 	g_length += length;
+
+	return NULL;
 }
 
 void speak(const char* speak){
@@ -213,7 +215,7 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
-	TextToSpeechInit(NULL, NULL);
+	TextToSpeechInit(write_wav, NULL);
 
 	w_main = XtVaCreateManagedWidget("main", xmMainWindowWidgetClass, top,
 	NULL);
