@@ -79,10 +79,13 @@ extern const unsigned char main_dict[];
  *      Comments:
  *
  * *****************************************************************/
-int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict)
-{
+
+extern void init_iconv();
+int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict) {
 	int return_code;
 	int i;
+
+        init_iconv();
 
 	PKSD_T pKsd_t;
 	memset(&hTTS,0,sizeof(TTS_HANDLE_T));
@@ -221,12 +224,17 @@ int TextToSpeechReset(void)
  *      Comments:
  *
  * *****************************************************************/
+extern char *convert_string_for_dapi(char *in, size_t inlen);
+
 int TextToSpeechStart(char *input, short *buffer, int output_format)
 {
 	int i;
 	int oldrate=0;
 	int oldspeaker=0;
-	
+
+        // convert string with iconv (or other implementation i guess)
+	input = convert_string_for_dapi(input, strlen(input));
+
 	if (phTTS->pKernelShareData->halting)
 	{
 		oldrate=phTTS->pKernelShareData->uiSampleRate;
