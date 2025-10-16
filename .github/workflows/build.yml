@@ -28,12 +28,19 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_win32 -j3 && mv bin/*/*/speak.exe speak-win32.exe
+      run: ./premake5 gmake --build-speak=yes && make config=release_win32 -j3
+    - name: Organize artifacts
+      run: |
+        mkdir -p speak-win32
+        cp bin/*/*/speak.exe speak-win32/
+        cp bin/*/*/libdtc.dll speak-win32/
+        cp -r dic speak-win32/
+        cp -r DECtalk.conf speak-win32/
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-win32
-        path: speak-win32.exe
+        path: speak-win32/
 
   build-win64:
     name: "Build for Windows 64-bit"
@@ -54,12 +61,19 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
-      run: ./premake5 gmake --build-speak=yes && make config=release_win64 -j3 && mv bin/*/*/speak.exe speak-win64.exe
+      run: ./premake5 gmake --build-speak=yes && make config=release_win64 -j3
+    - name: Organize artifacts
+      run: |
+        mkdir -p speak-win64
+        cp bin/*/*/speak.exe speak-win64/
+        cp bin/*/*/libdtc.dll speak-win64/
+        cp -r dic speak-win64/
+        cp -r DECtalk.conf speak-win64/
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-win64
-        path: speak-win64.exe
+        path: speak-win64/
 
   build-appimage:
     name: "Build for AppImage"
@@ -103,10 +117,12 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: build-win32
+        path: speak-win32
     - name: Download from build-win64
       uses: actions/download-artifact@v4
       with:
         name: build-win64
+        path: speak-win64
     - name: Download from build-appimage
       uses: actions/download-artifact@v4
       with:
@@ -116,7 +132,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: compress artifacts
-      run: zip -rv speak-windows.zip speak-win64.exe speak-win32.exe dic DECtalk.conf
+      run: zip -rv speak-windows.zip speak-win32 speak-win64
 
     - name: Release
       run: gh release create -t "latest-dectalk-develop" "latest" *.zip *.AppImage -n "Latest release"
