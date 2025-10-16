@@ -13,6 +13,7 @@ ln -s usr/lib appdir/lib64
 ln -s lib appdir/usr/lib64
 
 cp bin/Native/Release/speak appdir/usr/bin/
+cp bin/Native/Release/libdtc.so appdir/usr/bin/
 cp resources/speak.desktop appdir/
 cp resources/paul.png appdir/
 cp resources/AppRun appdir/
