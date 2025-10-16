@@ -80,12 +80,12 @@ extern const unsigned char main_dict[];
  *
  * *****************************************************************/
 
-extern void init_iconv();
+extern void init_charset();
 int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict) {
 	int return_code;
 	int i;
 
-        init_iconv();
+        init_charset();
 
 	PKSD_T pKsd_t;
 	memset(&hTTS,0,sizeof(TTS_HANDLE_T));
