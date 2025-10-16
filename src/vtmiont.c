@@ -2053,8 +2053,10 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 {
 
   // load user callback
-  phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput);
-  //write_wav(pBuffer, uiSamplesToOutput);
+  if (phTTS->EmbCallbackRoutine != NULL) {
+    phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput);
+  }
+
   return;
 
   DWORD dwSampleNumber;
