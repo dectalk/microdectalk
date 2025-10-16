@@ -79,7 +79,7 @@ extern const unsigned char main_dict[];
  *      Comments:
  *
  * *****************************************************************/
-int TextToSpeechInit(short *(*callback)(short *,long), void *user_dict)
+int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict)
 {
 	int return_code;
 	int i;
@@ -89,7 +89,7 @@ int TextToSpeechInit(short *(*callback)(short *,long), void *user_dict)
 	memset(&Ksd_t,0,sizeof(KSD_T));
 	
 	phTTS=&hTTS;
-	//phTTS->EmbCallbackRoutine=callback;
+	phTTS->EmbCallbackRoutine=callback;
 	phTTS->pKernelShareData=&Ksd_t;
 	pKsd_t=&Ksd_t;
 
