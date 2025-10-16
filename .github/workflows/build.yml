@@ -33,7 +33,7 @@ jobs:
       run: |
         mkdir -p speak-win32
         cp bin/*/*/speak.exe speak-win32/
-        cp bin/*/*/libdtc.dll speak-win32/
+        cp bin/*/*/dtc.dll speak-win32/
         cp -r dic speak-win32/
         cp -r DECtalk.conf speak-win32/
     - name: Upload artifact
@@ -66,7 +66,7 @@ jobs:
       run: |
         mkdir -p speak-win64
         cp bin/*/*/speak.exe speak-win64/
-        cp bin/*/*/libdtc.dll speak-win64/
+        cp bin/*/*/dtc.dll speak-win64/
         cp -r dic speak-win64/
         cp -r DECtalk.conf speak-win64/
     - name: Upload artifact
