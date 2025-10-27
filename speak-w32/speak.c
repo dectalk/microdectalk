@@ -101,6 +101,7 @@ void speak(const char* str){
 	wavelen = 0;
 
 	TextToSpeechStart(sbuf, NULL, WAVE_FORMAT_1M16);
+	TextToSpeechSync();
 
 	buf.data = malloc(wavelen * 2);
 	memcpy(buf.data, wave, wavelen * 2);

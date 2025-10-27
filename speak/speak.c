@@ -152,6 +152,7 @@ void speak(const char* speak){
 	g_length = 0;
 
 	TextToSpeechStart(sbuf, NULL, WAVE_FORMAT_1M16);
+	TextToSpeechSync();
 
 	free(sbuf);
 

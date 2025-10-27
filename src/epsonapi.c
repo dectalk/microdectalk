@@ -254,7 +254,7 @@ int TextToSpeechStart(char *input, short *buffer, int output_format)
         
         //memset(phTTS->pCMDThreadData, 1, sizeof(phTTS->pCMDThreadData));
 	phTTS->pKernelShareData->halting=0;
-	cm_cmd_reset_comm(phTTS->pCMDThreadData, STATE_NORMAL);
+	//cm_cmd_reset_comm(phTTS->pCMDThreadData, STATE_NORMAL);
 	
 	switch(output_format)
 	{
@@ -288,11 +288,17 @@ int TextToSpeechStart(char *input, short *buffer, int output_format)
 		}
 		i++;
 	}
-	cmd_loop(phTTS,0x0B); // force it
+	//cmd_loop(phTTS,0x0B); // force it
 	if (phTTS->pKernelShareData->halting)
 	{
+		cmd_loop(phTTS,0x0B); // force it when halting
 		TextToSpeechInit(g_callback,g_user_dict);
 		return ERR_RESET;
 	}
 	return ERR_NOERROR;
+}
+
+
+int TextToSpeechSync() {
+    cmd_loop(phTTS,0x0B); // sync command
 }
