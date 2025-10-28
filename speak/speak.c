@@ -11,6 +11,14 @@
 #include <Xm/Label.h>
 #include <Xm/Scale.h>
 
+#include <Xm/Protocols.h>
+#include <Xm/MessageB.h> // or whatever widget you're using
+#include <Xm/ScrolledW.h>
+#include <Xm/Notebook.h>
+#include <Xm/ScrolledW.h>
+#include <Xm/Label.h>
+#include <Xm/Text.h>
+
 #include "icons/pau203a.xpm"
 #include "icons/bet203a.xpm"
 #include "icons/har203a.xpm"
@@ -30,8 +38,8 @@
 #include <epsonapi.h>
 
 XtAppContext ctx;
-Widget top;
-Widget w_main, w_form, w_brc, w_text, w_speaking, w_rate, w_wpm, w_play, w_stop;
+Widget top, top_help;
+Widget w_help, w_main, w_form, w_brc, w_text, w_speaking, w_rate, w_wpm, w_play, w_stop;
 
 ma_device_config config;
 ma_device device;
@@ -188,6 +196,92 @@ void data_callback(ma_device* dev, void* out, const void* in, ma_uint32 frame){
 	ma_mutex_unlock(&speaking);
 }
 
+void show_definitions() {
+    Widget shell, label, sw;
+    Arg args[10];
+    int n;
+    XmString xmstr;
+
+    shell = XtVaCreatePopupShell(
+        "paramDefs",
+        transientShellWidgetClass, top,
+        XmNtitle, "Parameter Definitions",
+        XmNdeleteResponse, XmDESTROY,
+	XmNwidth, 400,
+	XmNheight, 500,
+
+        NULL);
+
+    /* Create ScrolledWindow manually */
+    n = 0;
+    XtSetArg(args[n], XmNscrollingPolicy, XmAUTOMATIC); n++;
+    XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmSTATIC); n++;
+    sw = XmCreateScrolledWindow(shell, "sw", args, n);
+
+    /* Create Label widget with multi-line text */
+    xmstr = XmStringCreateLtoR(
+	"ap: Average pitch, in Hz\n"
+	"as: Assertiveness, in %\n"
+	"b4: Fourth formant bandwidth, in Hz\n"
+	"b5: Fifth formant bandwidth, in Hz\n"
+	"bf: Baseline fall, in Hz\n"
+	"br: Breathiness, in decibels (dB)\n"
+	"f4: Fourth formant resonance frequency, in Hz\n"
+	"f5: Fifth formant resonance frequency, in Hz\n"
+	"g1: Gain of cascade formant resonator 1, in dB\n"
+	"g2: Gain of cascade formant resonator 2, in dB\n"
+	"g3: Gain of cascade formant resonator 3, in dB\n"
+	"g4: Gain of cascade formant resonator 4, in dB\n"
+	"g5: Loudness of the voice, in dB\n"
+	"gf: Gain of frication source, in dB\n"
+	"gh: Gain of aspiration source, in dB\n"
+	"gn: Gain of nasalization, in dB\n"
+	"gv: Gain of voicing source, in dB\n"
+	"hr: Hat rise, in Hz\n"
+	"hs: Head size, in %\n"
+	"la: Laryngealization, in %\n"
+	"lx: Lax breathiness, in %\n"
+	"nf: Number of fixed samples of open glottis\n"
+	"pr: Pitch range, in %\n"
+	"qu: Quickness, in %\n"
+	"ri: Richness, in %\n"
+	"sm: Smoothness, in %\n"
+	"sr: Stress rise, in Hz\n"
+	"sx: Sex 1 (male) or 0 (female)",
+        XmFONTLIST_DEFAULT_TAG);
+
+    n = 0;
+    XtSetArg(args[n], XmNlabelString, xmstr); n++;
+    XtSetArg(args[n], XmNalignment, XmALIGNMENT_BEGINNING); n++;
+    label = XmCreateLabel(sw, "paramText", args, n);
+    
+    XmStringFree(xmstr);
+
+    /* Set label as work window */
+    XtVaSetValues(sw, XmNworkWindow, label, NULL);
+
+    XtManageChild(label);
+    XtManageChild(sw);
+    XtPopup(shell, XtGrabNone);
+}
+
+// TODO: finish me
+void show_voice_editor() {
+    top_help = XtVaCreatePopupShell(
+        "w2",
+        transientShellWidgetClass,  // ← CHANGED
+        top,
+        XmNtitle, "Help",
+        XmNdeleteResponse, XmDESTROY,  // optional safety
+        NULL
+    );
+
+    w_help = XtVaCreateManagedWidget("help", xmMainWindowWidgetClass, top_help, NULL);
+
+    XtPopup(top_help, XtGrabNone);
+}
+
+
 int main(int argc, char** argv){
 	Arg args[16];
 	int i;
@@ -215,6 +309,8 @@ int main(int argc, char** argv){
 	if(top == NULL){
 		return 1;
 	}
+
+	show_definitions();
 
 	TextToSpeechInit(write_wav, NULL);
 
@@ -338,3 +434,4 @@ int main(int argc, char** argv){
 	ma_device_uninit(&device);
 	ma_mutex_uninit(&speaking);
 }
+
