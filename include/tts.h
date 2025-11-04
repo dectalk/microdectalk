@@ -485,7 +485,56 @@ typedef struct NOTIFY_LIST
 /*  Define the API interface.                                         */
 /**********************************************************************/
 
-#include "ttsapi.h"
+// #include "ttsapi.h"
+// moved code here to eliminate ttsapi.h
+typedef struct TTS_HANDLE_TAG TTS_HANDLE_T;
+typedef TTS_HANDLE_T * LPTTS_HANDLE_T;
+#define TTS_SILENT                      (0x2)
+typedef struct SPDEFS_TAG {
+        short sex;                /* Sex 1 (male) or 0 (female)                        */
+        short smoothness;         /* Smoothness, in %                                  */
+        short assertiveness;	  /* Assertiveness, in %                               */
+        short average_pitch;	  /* Average pitch, in Hz                              */
+        short pitch_range;        /* Pitch range, in %                                 */
+        short breathiness;        /* Breathiness, in decibels (dB)                     */
+        short richness;           /* Richness, in %                                    */
+        short num_fixed_samp_og;  /* Number of fixed samples of open glottis           */
+        short laryngealization;   /* Laryngealization, in %                            */
+        short head_size;          /* Head size, in %                                   */
+        short formant4_res_freq;  /* Fourth formant resonance frequency, in Hz         */
+        short formant4_bandwidth; /* Fourth formant bandwidth, in Hz                   */
+        short formant5_res_freq;  /* Fifth formant resonance frequency, in Hz          */
+        short formant5_bandwidth; /* Fifth formant bandwidth, in Hz                    */
+        short parallel4_freq;     /* Parallel fourth formant frequency, in Hz          */
+        short parallel5_freq;     /* Parallel fifth formant frequency, in Hz           */
+        short gain_frication;     /* Gain of frication source, in dB                   */
+        short gain_aspiration;    /* Gain of aspiration source, in dB                  */
+        short gain_voicing;	  /* Gain of voicing source, in dB                     */
+        short gain_nasalization;  /* Gain of nasalization, in dB                       */
+        short gain_cfr1;          /* Gain of cascade formant resonator 1, in dB        */
+        short gain_cfr2;          /* Gain of cascade formant resonator 2, in dB        */
+        short gain_cfr3;          /* Gain of cascade formant resonator 3, in dB        */
+        short gain_cfr4;          /* Gain of cascade formant resonator 4, in dB        */
+        short loudness;           /* Loudness, gain input to cascade 1st formant in dB */
+        short spectral_tilt;	  /* (f0-dependent spectral tilt in % of max)frm 75 to 90 for 10to8 */
+        short baseline_fall;	  /* Baseline fall, in Hz                              */
+        short lax_breathiness;    /* Lax breathiness, in %                             */
+        short quickness;          /* Quickness, in %                                   */
+        short hat_rise;           /* Hat rise, in Hz                                   */
+        short stress_rise;        /* Stress rise, in Hz                                */
+        short avg_glot_open;	  /* Glottal speed                                     */
+        short avg_glot_voicd_open;
+        short avg_glot_unv_open;
+        short area_chink;
+        short open_quo;
+        short output_gain_mult;   /* Output gain multiplier for FVTM                   */
+        short junk;
+        short junk1;
+} SPDEFS;
+#define  OWN_AUDIO_DEVICE         0x00000001
+#define  REPORT_OPEN_ERROR        0x00000002
+#define  USE_SAPI5_AUDIO_DEVICE   0x40000000
+#define  DO_NOT_USE_AUDIO_DEVICE  0x80000000
 
 /**********************************************************************/
 /*  Function proto-types for internal DECtalk functions.              */

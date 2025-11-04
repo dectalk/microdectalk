@@ -59,7 +59,7 @@
 #include "dectalkf.h"
 
 #if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#include "ttsapi.h"
+//#include "ttsapi.h"
 #endif
 
 #ifdef ARM7
