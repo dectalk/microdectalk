@@ -475,8 +475,13 @@ const struct dtpc_command command_table[] = {
 	{"define_voice","ad*",2,DCS_DEFINE,cm_cmd_define},
 	{"dv","ad*",2,DCS_DEFINE,cm_cmd_define},
     {"debug","h",1,DCS_DEBUG_OLD,cm_cmd_debug},
+
+// setv and loadv are borked because there's no pipes in DECtalkMini
+#if 0
 	{"setv","d",1,0,cm_cmd_setv},
 	{"loadv","d",1,0,cm_cmd_loadv},
+#endif
+
 	{"gender","a",1,DCS_GENDER,cm_cmd_gender},
 
 	{"preamble","d",1,0,cm_cmd_preamble},
