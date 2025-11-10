@@ -47,69 +47,6 @@
 #define _PORT_H
 
 #include "dectalkf.h"
-
-/*************************************************************************
- *  WINDIC
- *              Hack Job?
- *************************************************************************/
-
-#ifdef WINDIC
-#include <stdio.h>
-
-/*
- * fake out some MSDOS stuff
- */
-#define __far
-#define _far
-#define far
-#define huge
-#define _huge
-#define volatile
-
-#ifdef SEPARATE_PROCESSES
-#undef SEPARATE_PROCESSES
-#endif
-
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-
-#endif  //WINDIC
-
-
-/*
- ************************************************************************
- * defines for MSDOS
- */
-#ifdef MSDOS
-
-#ifdef SEPARATE_PROCESSES
-#undef SEPARATE_PROCESSES
-#endif
-
-typedef unsigned short DT_PIPE_T;
-typedef long S32;
-typedef unsigned long U32;
-typedef int S16;
-typedef unsigned int U16;
-typedef signed char S8;
-typedef unsigned char U8;
-
-#endif
-
-/*
- ************************************************************************
- * defines for DEC OSF/1 AXP & UNIXs
- */
-#if defined (__osf__) || defined (__unix__) || defined (__EMSCRIPTEN__) || defined (__APPLE__)
-
-/*#define ENGLISH_US 1*/
-
-/* GL 04/21/1997  add this for OSF build */
-//#include "opthread.h"
-
 #include <unistd.h>
 #include <stdio.h>
 
@@ -121,225 +58,26 @@ typedef unsigned char U8;
 #define far
 #define huge
 #define _huge
-#if !(defined __unix__ || defined __EMSCRIPTEN__ || defined (__APPLE__)) || 1
 #define volatile
-#endif
 
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
+#include <stdint.h>
 
-#ifdef __osf__
-typedef unsigned long QWORD;
-#endif
-#if defined __unix__ || defined __EMSCRIPTEN__ || defined (__APPLE__) || defined _WIN32
-typedef unsigned long long QWORD;
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#ifndef _DWORD
-#define _DWORD
-typedef U32 DWORD;
-#endif
-typedef U16 USHORT;
+typedef uint16_t DT_PIPE_T;
+typedef int32_t S32;
+typedef uint32_t U32;
+typedef int16_t S16;
+typedef uint16_t U16;
+typedef int8_t S8;
+typedef uint8_t U8;
+typedef uint64_t QWORD;
+typedef uint32_t DWORD;
+typedef uint16_t USHORT;
 typedef void * PVOID;
-#ifndef _UINT
-#define _UINT
-typedef U32 UINT;
-#endif
+typedef uint32_t UINT;
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 #define _stricmp strcasecmp
 #define PRINTFDEBUG_OLD
-
-#if defined(_WIN64) || defined(_LP64)
-typedef QWORD PTRINT;
-#else
-typedef DWORD PTRINT;
-#endif
-
-#endif
-
-/*
- ************************************************************************
- * defines for DEC MIPS
- */
-#ifdef UNIX_AND_MIPS
-
-#include <stdio.h>
-
-/*
- * fake out some MSDOS stuff
- */
-#define __far
-#define _far
-#define far
-#define huge
-#define volatile
-
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
-
-#endif
-
-/*
- ************************************************************************
- *  WINDOWS/NT
- */
-#ifdef WIN32_OLD
-
-#include <windows.h>
-#include <stdio.h>
-
-/*
- * fake out some MSDOS stuff
- */
-
-#define __far
-#define _far
-#define far
-#define huge
-#define volatile
-
-#ifdef SEPARATE_PROCESSES
-#undef SEPARATE_PROCESSES
-#endif
-
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
-typedef unsigned _int64 QWORD, * PQWORD; //tek 04aug97 sapi fixes
-
-typedef HANDLE DT_HANDLE;
-typedef  DT_HANDLE  HTHREAD_T;
-typedef  DT_HANDLE  HEVENT_T;
-typedef  CRITICAL_SECTION  MUTEX_T;
-typedef  MUTEX_T *  HMUTEX_T;
-
-#if !(defined OLEDECTALK) && !(defined SAPI5DECTALK)
-#include "playaudd.h"
-typedef PLAY_AUDIO_T * 	LPAUDIO_HANDLE_T;
-#endif //OLEDECTALK
-
-#endif //WIN32_OLD
-
-// #define __osf__
-
-
-/* vxworks stuff */
-#if defined VXWORKS
-
-/*#define ENGLISH_US 1*/
-
-/* GL 04/21/1997  add this for OSF build */
-//#include "opthread.h"
-
-#include <unistd.h>
-#include <stdio.h>
-
-/*
- * fake out some MSDOS stuff
- */
-#define __far
-#define _far
-#define far
-#define huge
-#define _huge
-
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
-
-typedef unsigned long long QWORD;
-
-/* GL 04/21/1997  add this for OSF build */
-#ifndef _DWORD
-#define _DWORD
-typedef U32 DWORD;
-#endif
-typedef void * PVOID;
-
-#define _inline inline
-
-#define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
-//#define _stricmp strcasecmp
-#define PRINTFDEBUG_OLD
-#endif
-
-
-/* stuff for sparc/Solaris */
-#if defined __sun && defined __sparc
-#ifndef _SPARC_SOLARIS_
-#define _SPARC_SOLARIS_
-#endif
-#ifndef _BIGENDIAN_
-#define _BIGENDIAN_
-#endif
-#endif
-
-#ifdef _SPARC_SOLARIS_
-//#include "opthread.h"
-
-#include <unistd.h>
-#include <stdio.h>
-
-/*
- * fake out some MSDOS stuff
- */
-#define __far
-#define _far
-#define far
-#define huge
-#define _huge
-//#ifndef __unix__
-//#define volatile
-//#endif
-
-typedef unsigned short DT_PIPE_T;
-typedef int S32;
-typedef unsigned int U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
-
-typedef unsigned long long QWORD;
-
-#define _inline 
-#define __inline 
-
-/* GL 04/21/1997  add this for OSF build */
-#ifndef _DWORD
-#define _DWORD
-typedef U32 DWORD;
-#endif
-typedef U16 USHORT;
-typedef void * PVOID;
-#ifndef _UINT
-#define _UINT
-typedef U32 UINT;
-#endif
-#define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
-#define _stricmp strcasecmp
-#define PRINTFDEBUG_OLD
-#endif
-
+typedef uint64_t PTRINT;
 
 /* SWAP_dd_eeeeeee */ 
 /* dd is 16 or 32 bits */
@@ -368,65 +106,6 @@ typedef U32 UINT;
                            ((((U32)(x))&0x000000ff)<<24))
 #define SWAP_32_BIG(x) (x)
 #endif
-
-#ifndef SUN_ULAW
-#define SUN_ULAW        1
-#define SUN_LIN_8       2
-#define SUN_LIN_16      3
-#endif
-
-/*
- ************************************************************************
- *  ARM7TDMI
- */
-#ifdef ARM7
-
-#ifndef ARM7_NOSWI
-#include <stdio.h>
-#endif
-#include <stdlib.h>
-#include <string.h>
-
-/*
- * fake out some MSDOS stuff
- */
-
-#define __far
-#define _far
-#define far
-#define huge
-#define volatile
-
-#ifdef SEPARATE_PROCESSES
-#undef SEPARATE_PROCESSES
-#endif
-
-typedef unsigned short DT_PIPE_T;
-typedef long S32;
-typedef unsigned long U32;
-typedef short S16;
-typedef unsigned short U16;
-typedef signed char S8;
-typedef unsigned char U8;
-typedef unsigned long DWORD;
-//typedef unsigned _int64 QWORD, * PQWORD; //tek 04aug97 sapi fixes
-
-typedef void * DT_HANDLE;
-typedef void * LPVOID;
-typedef void * PVOID;
-typedef long MMRESULT;
-
-//typedef  DT_HANDLE  HTHREAD_T;
-//typedef  DT_HANDLE  HEVENT_T;
-//typedef  CRITICAL_SECTION  MUTEX_T;
-//typedef  MUTEX_T *  HMUTEX_T;
-
-#ifdef EPSON_ARM7
-#include "ltsnames.h"
-#endif
-
-
-#endif //ARM7
 
 /**
  * Emscripten Support!
