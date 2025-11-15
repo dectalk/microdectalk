@@ -641,7 +641,7 @@ restart:if ( *dict_siz > 0 )
 extern const unsigned char main_dict[];
 #define get_long_int(ptr) ((U32) ((((U8 *)(ptr))[3] << 24)  |  (((U8 *)(ptr))[2] << 16)  |  (((U8 *)(ptr))[1] << 8)  | (((U8 *)(ptr))[0])))
 
-int load_dictionary_raw( void **dict_index, void **dict_data, unsigned int *dict_siz,
+int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
                          unsigned int *dict_bytes, char *dict_nam, int bRequired,
                          DT_HANDLE *dicMapObject,	// Handle for mapped object
                          DT_HANDLE *dicFileHandle,	// File Handle
