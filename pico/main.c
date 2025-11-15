@@ -1,74 +1,84 @@
 #include <stdio.h>
 #include <string.h>
 #include "pico/stdlib.h"
-#include "hardware/pwm.h"
-#include "hardware/clocks.h"
+#include "pico/audio_pwm.h"
 #include "pico/stdio_usb.h"
+#include "hardware/clocks.h"
 
 #include "epsonapi.h" // import DECtalk 4.99
 
-// PWM configuration
-#define AUDIO_PIN 28
-#define SAMPLE_RATE 11025
-#define PWM_WRAP 4095  // 12-bit resolution
+// Audio configuration
+#define SAMPLE_RATE 22050
+#define SAMPLES_PER_BUFFER 1024
 
-// Global variables for PWM
-uint slice_num;
+// Global audio pool
+struct audio_buffer_pool *ap;
 
-void init_audio_pwm() {
-    gpio_set_function(AUDIO_PIN, GPIO_FUNC_PWM);
-    slice_num = pwm_gpio_to_slice_num(AUDIO_PIN);
+struct audio_buffer_pool *init_audio() {
+    static audio_format_t audio_format = {
+        .format = AUDIO_BUFFER_FORMAT_PCM_S16,
+        .sample_freq = SAMPLE_RATE,
+        .channel_count = 1,
+    };
+
+    static struct audio_buffer_format producer_format = {
+        .format = &audio_format,
+        .sample_stride = 2
+    };
+
+    struct audio_buffer_pool *producer_pool = audio_new_producer_pool(&producer_format, 3,
+                                                                      SAMPLES_PER_BUFFER);
     
-    // Calculate PWM clock divider
-    float clock_div = (float)clock_get_hz(clk_sys) / (PWM_WRAP * SAMPLE_RATE);
+    // Set up PWM audio on GPIO 28
+    const struct audio_format *output_format;
     
-    pwm_config config = pwm_get_default_config();
-    pwm_config_set_clkdiv(&config, clock_div);
-    pwm_config_set_wrap(&config, PWM_WRAP);
+    // Use default mono config but override the base pin
+    struct audio_pwm_channel_config config = default_mono_channel_config;
+    config.core.base_pin = 28;
     
-    pwm_init(slice_num, &config, true);
-
-    // silence
-    pwm_set_gpio_level(AUDIO_PIN, 0);
-}
-
-#define BUFFER_SIZE 512
-short audio_buffer[BUFFER_SIZE];
-volatile size_t buffer_read_pos = 0;
-volatile size_t buffer_write_pos = 0;
-volatile size_t buffer_count = 0;
-volatile bool tts_active = false;
-volatile bool audio_playing = false;
-
-bool repeating_timer_callback(struct repeating_timer *t) {
-    if (buffer_count > 0) {
-        int16_t sample = audio_buffer[buffer_read_pos];
-        uint16_t pwm_value = (sample + 32768) >> 4;  // Convert to 0-4095 range
-
-        pwm_set_gpio_level(AUDIO_PIN, pwm_value);
-        audio_playing = true;
-
-        buffer_read_pos = (buffer_read_pos + 1) % BUFFER_SIZE;
-        buffer_count--;
-    } else {
-        // Output silence when no data
-        pwm_set_gpio_level(AUDIO_PIN, 0);
-        audio_playing = false;
+    output_format = audio_pwm_setup(&audio_format, -1, &config);
+    if (!output_format) {
+        panic("PicoAudio: Unable to open audio device.\n");
     }
     
-    return true;
+    bool ok = audio_pwm_default_connect(producer_pool, false);
+    assert(ok);
+    audio_pwm_set_enabled(true);
+    
+    printf("Connecting PIO PWM audio via 'blocking give'\n");
+    
+    return producer_pool;
 }
 
 short *write_wav(short *iwave, long length) {
-    for (int i = 0; i < length; i++) {
-        while (buffer_count >= BUFFER_SIZE) {
-            tight_loop_contents();
+    // Process audio in chunks that fit in the buffer
+    int offset = 0;
+    while (offset < length) {
+        struct audio_buffer *buffer = take_audio_buffer(ap, true);
+        int16_t *samples = (int16_t *)buffer->buffer->bytes;
+        
+        int samples_to_copy = length - offset;
+        // Each input sample becomes 2 output samples (original + zero)
+        if (samples_to_copy > buffer->max_sample_count / 2) {
+            samples_to_copy = buffer->max_sample_count / 2;
         }
-
-        audio_buffer[buffer_write_pos] = iwave[i];
-        buffer_write_pos = (buffer_write_pos + 1) % BUFFER_SIZE;
-        buffer_count++;
+        
+        // upsample audio because samplerate is borked
+        for (int i = 0; i < samples_to_copy; i++) {
+            samples[i*2] = iwave[offset + i];
+            if (i < samples_to_copy - 1) {
+                samples[i*2+1] = (iwave[offset+i] + iwave[offset+i+1]) / 2;
+            } else {
+                samples[i*2+1] = iwave[offset+i]; // repeat last sample
+            }
+        }
+        
+        buffer->sample_count = samples_to_copy * 2;
+        give_audio_buffer(ap, buffer);
+        
+        offset += samples_to_copy;
     }
+    
     return iwave;
 }
 
@@ -82,19 +92,11 @@ void print_header() {
 }
 
 void TTSstart(const char *input) {
-    tts_active = true;
     printf("Speaking...\n");
 
     // Start up DECtalk text input
     TextToSpeechStart((char *)input, NULL, WAVE_FORMAT_1M16);
     TextToSpeechSync();
-    
-    tts_active = false;
-    
-    // Keep playing until all audio is output
-    while (buffer_count > 0 || audio_playing) {
-        sleep_ms(10);
-    }
     
     // Small delay to ensure clean finish
     sleep_ms(100);
@@ -104,18 +106,16 @@ char inbuf[128];
 static int chars_rxed = 0;
 
 int main() {
-    // Initialize PWM with silence first
-    init_audio_pwm();
+    // Set system clock to 48MHz for audio clock timing
+    set_sys_clock_48mhz();
     
-    // Start timer for sample playback at 11.025kHz
-    struct repeating_timer timer;
-    add_repeating_timer_us(1000000 / SAMPLE_RATE, repeating_timer_callback, NULL, &timer);
-    
-    // Init USB serial
+    // Now init USB serial at the correct clock speed
     stdio_init_all();
+
+    printf("Initializing audio...\n");
     
-    // Small delay to ensure PWM is stable before starting TTS
-    sleep_ms(100);
+    // Initialize audio using pico-extras
+    ap = init_audio();
     
     printf("Initializing TTS...\n");
     
