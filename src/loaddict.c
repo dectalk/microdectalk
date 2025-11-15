@@ -113,6 +113,7 @@
  *      Comments:
  *
  * *****************************************************************/
+#ifndef NO_FILESYSTEM
 void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
 						unsigned int * dict_bytes, LPVOID *dicMapStartAddr, DT_HANDLE *dicMapObject,
 						DT_HANDLE *dicFileHandle, MEMMAP_T dict_map 
@@ -162,7 +163,14 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 		return;	
 	}	
 }
-
+#else
+void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
+                                                unsigned int * dict_bytes, LPVOID *dicMapStartAddr, DT_HANDLE *dicMapObject,
+                                                DT_HANDLE *dicFileHandle, MEMMAP_T dict_map 
+                                          ) {
+    // dummy stub
+}
+#endif
 /* ******************************************************************
  *      Function Name: load_dictionary()
  *
@@ -192,6 +200,8 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
  *      Comments:
  *
  * *****************************************************************/
+#ifndef NO_FILESYSTEM // if has a filesystem
+
 #ifdef WIN32_OLD
 void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
 
@@ -625,4 +635,67 @@ restart:if ( *dict_siz > 0 )
 #endif
 	return( MMSYSERR_NOERROR );
 }
-/*********************************** end of loaddict.c ****************************/
+
+#else // if has no filesystem
+
+extern const unsigned char main_dict[];
+#define get_long_int(ptr) ((U32) ((((U8 *)(ptr))[3] << 24)  |  (((U8 *)(ptr))[2] << 16)  |  (((U8 *)(ptr))[1] << 8)  | (((U8 *)(ptr))[0])))
+
+int load_dictionary_raw( void **dict_index, void **dict_data, unsigned int *dict_siz,
+                         unsigned int *dict_bytes, char *dict_nam, int bRequired,
+                         DT_HANDLE *dicMapObject,	// Handle for mapped object
+                         DT_HANDLE *dicFileHandle,	// File Handle
+                         LPVOID *dicMapStartAddr,	// Starting address of mapped view
+                         MEMMAP_T dict_map) {
+        S32 *dict_index_buffer;
+        unsigned char *dict_data_buffer;
+        int entries, bytes, size, pointer_list_size;
+        int status;
+
+        /*
+        * set error return values
+        */
+        if ( *dict_siz > 0 ) {
+            return( MMSYSERR_ERROR );
+        }
+
+	*dict_siz = 0;
+        *dict_bytes = 0;
+        dict_index_buffer = NULL;
+        dict_data_buffer = NULL;
+
+        if ( !main_dict ) {
+            if ( bRequired ) {
+                fprintf(stderr,"Failed to open dictionary file %s\n",dict_nam);
+                return ( MMSYSERR_INVALPARAM );
+            }
+            return( MMSYSERR_NOERROR ); 
+        }
+
+        /* Read in file header */
+        entries = get_long_int(main_dict);
+
+	/* tek 30jan97 bail with no error if the dictionary has no entries */
+        if (entries == 0) {
+            return (MMSYSERR_NOERROR);
+        }
+
+	pointer_list_size = ( entries * sizeof(S32) );
+        bytes = get_long_int(&main_dict[4]);
+
+	/* Compute & allocate required memory for both parts of dictionary */
+        /* Allocated 4 (8 on alpha) extra bytes to store the size of the dictionary in bytes.  JAW 7/7/98 */
+        size = pointer_list_size + bytes;
+
+        dict_index_buffer = (int *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+        dict_data_buffer = (unsigned char *)(pointer_list_size + ((QWORD)dict_index_buffer)); //start
+
+        /* write output parameters */
+        *dict_index = dict_index_buffer;
+        *dict_data = dict_data_buffer;
+        *dict_siz = entries;
+        *dict_bytes = bytes;
+        return( MMSYSERR_NOERROR );
+}
+
+#endif
