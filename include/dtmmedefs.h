@@ -92,6 +92,8 @@
 **--
 */
 
+#include <stdint.h>
+
 #ifndef H_MMBASIC
 #define H_MMBASIC 1
 
@@ -149,7 +151,7 @@ typedef Uint32      	    DWORD;
 #if defined __unix__ || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifndef _DWORD
 #define _DWORD
-typedef Uint32      	    DWORD;
+typedef uint32_t      	    DWORD;
 #endif
 #endif
 #ifdef VXWORKS
@@ -202,7 +204,7 @@ typedef float               FLOAT;
 #ifndef _UINT
 #define _UINT
 
-typedef Uint32        	    UINT;
+typedef uint32_t        	    UINT;
 #endif
 #endif
 

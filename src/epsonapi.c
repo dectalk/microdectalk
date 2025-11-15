@@ -80,12 +80,17 @@ extern const unsigned char main_dict[];
  *
  * *****************************************************************/
 
+#ifndef NO_FILESYSTEM
 extern void init_charset();
+#endif
+
 int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict) {
 	int return_code;
 	int i;
 
+#ifndef NO_FILESYSTEM
         init_charset();
+#endif
 
 	PKSD_T pKsd_t;
 	memset(&hTTS,0,sizeof(TTS_HANDLE_T));
@@ -224,7 +229,9 @@ int TextToSpeechReset(void)
  *      Comments:
  *
  * *****************************************************************/
+#ifndef NO_FILESYSTEM
 extern char *convert_string_for_dapi(char *in, size_t inlen);
+#endif
 
 int TextToSpeechStart(char *input, short *buffer, int output_format)
 {
@@ -233,7 +240,9 @@ int TextToSpeechStart(char *input, short *buffer, int output_format)
 	int oldspeaker=0;
 
         // convert string with iconv (or other implementation i guess)
+#ifndef NO_FILESYSTEM
 	input = convert_string_for_dapi(input, strlen(input));
+#endif
 
 	if (phTTS->pKernelShareData->halting)
 	{

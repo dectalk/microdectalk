@@ -1,3 +1,5 @@
+#ifndef NO_FILESYSTEM
+
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
@@ -117,6 +119,8 @@ void init_charset() {
 char *convert_string_for_dapi(char *in, size_t inlen) {
     return in; // TODO: non-windows non-iconv implementation
 }
+
+#endif
 
 #endif
 

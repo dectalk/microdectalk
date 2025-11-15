@@ -1496,8 +1496,7 @@ int LTSLibMain( DT_HANDLE hInst,
 #endif
 
 	
-int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name)
-{
+int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name) {
 	FILE *config_file = NULL;
 	char line[1000];
 	char *home_dir;
@@ -1509,6 +1508,8 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	main_dict_name[0]='\0';
 	foreign_dict_name[0]='\0';
 	user_dict_name[0]='\0';
+
+#ifndef NO_FILESYSTEM
 
 #if defined (__unix__) || defined (__APPLE__)
 	if (config_file==NULL)
@@ -1803,6 +1804,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	{
 		fclose(config_file);
 	}
+#endif
 	return(ret_value);
 }
 #endif
