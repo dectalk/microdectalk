@@ -20,11 +20,11 @@ int input_len = 0;
 int cursor_x = 0;
 int cursor_y = 0;
 
-const char keyboard[4][13] = {
-    "abcdefghijkl",
-    "mnopqrstuvwx",
-    "yz 1234567890",
-    ".,!?-'\"\x7F"  // \x7F is DEL, used as backspace marker
+const char keyboard[4][16] = {
+    "abcdefghijklmno",
+    "pqrstuvwxyz    ",
+    "1234567890.,!? ",
+    "-'\":<>()[]\x7F  "  // \x7F is DEL, used as backspace marker
 };
 
 void draw_screen() {
@@ -48,11 +48,11 @@ void draw_screen() {
     tte_write(input_text);
     
     // Keyboard - build each row with cursor highlight
-    char line_buf[64];
+    char line_buf[80];
     
     for (int y = 0; y < 4; y++) {
         int buf_pos = 0;
-        for (int x = 0; x < 12; x++) {
+        for (int x = 0; x < 15; x++) {
             char c = keyboard[y][x];
             if (c == 0) break;
             
@@ -133,7 +133,7 @@ void vblank_isr() {
         
         if (vblanks_since_chunk >= 90) {
             setup_next_chunk();
-             vblanks_since_chunk = 0;
+            vblanks_since_chunk = 0;
         }
     }
 }
@@ -153,7 +153,7 @@ short *write_wav(short *iwave, long length) {
     }
     return iwave;
 }
- 
+
 void stop_audio() {
     if (!audio_playing) return;
     
@@ -238,6 +238,15 @@ int main(void) {
     
     TextToSpeechInit(write_wav, NULL);
     
+    // Enable phoneme mode by default
+    TextToSpeechStart("[:phoneme on]", NULL, WAVE_FORMAT_1M16);
+    TextToSpeechSync();
+    
+    // Reset audio state after init
+    audio_length = 0;
+    total_samples_received = 0;
+    play_position = 0;
+    
     draw_screen();
     
     while (1) {
@@ -249,7 +258,7 @@ int main(void) {
             cursor_y = (cursor_y - 1 + 4) % 4;
             // Clamp cursor_x to valid range for new row
             int row_len = 0;
-            while (keyboard[cursor_y][row_len] != 0 && row_len < 12) row_len++;
+            while (keyboard[cursor_y][row_len] != 0 && keyboard[cursor_y][row_len] != ' ' && row_len < 15) row_len++;
             if (cursor_x >= row_len) cursor_x = row_len - 1;
             draw_screen();
         }
@@ -257,7 +266,7 @@ int main(void) {
             cursor_y = (cursor_y + 1) % 4;
             // Clamp cursor_x to valid range for new row
             int row_len = 0;
-            while (keyboard[cursor_y][row_len] != 0 && row_len < 12) row_len++;
+            while (keyboard[cursor_y][row_len] != 0 && keyboard[cursor_y][row_len] != ' ' && row_len < 15) row_len++;
             if (cursor_x >= row_len) cursor_x = row_len - 1;
             draw_screen();
         }
@@ -266,7 +275,7 @@ int main(void) {
             if (cursor_x < 0) {
                 // Get length of current row
                 int row_len = 0;
-                while (keyboard[cursor_y][row_len] != 0 && row_len < 12) row_len++;
+                while (keyboard[cursor_y][row_len] != 0 && keyboard[cursor_y][row_len] != ' ' && row_len < 15) row_len++;
                 cursor_x = row_len - 1;
             }
             draw_screen();
@@ -275,7 +284,7 @@ int main(void) {
             cursor_x++;
             // Get length of current row
             int row_len = 0;
-            while (keyboard[cursor_y][row_len] != 0 && row_len < 12) row_len++;
+            while (keyboard[cursor_y][row_len] != 0 && keyboard[cursor_y][row_len] != ' ' && row_len < 15) row_len++;
             if (cursor_x >= row_len) cursor_x = 0;
             draw_screen();
         }
@@ -285,7 +294,7 @@ int main(void) {
             char c = keyboard[cursor_y][cursor_x];
             if (c == '\x7F') {
                 backspace_input();
-            } else if (c != 0) {
+            } else if (c != 0 && c != ' ') {
                 add_char_to_input(c);
             }
         }
