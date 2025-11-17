@@ -36,4 +36,4 @@ see the [android-develop](https://github.com/dectalk/DECtalkMini/tree/android-de
 
 to compile for rpi pico, install the pico SDK and use cmake in the pico folder
 
-to compile for gameboy advance, install gba-dev from pacman following [this guide] (https://devkitpro.org/wiki/Getting_Started) and use make in the gba folder
+to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the gba folder
