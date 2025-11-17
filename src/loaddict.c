@@ -691,7 +691,11 @@ int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz
         /* Allocated 4 (8 on alpha) extra bytes to store the size of the dictionary in bytes.  JAW 7/7/98 */
         size = pointer_list_size + bytes;
 
+#ifndef GBA_FIXES
         dict_index_buffer = (int *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+#else
+        dict_index_buffer = (S32 *) &main_dict[8];
+#endif
         dict_data_buffer = (unsigned char *)(pointer_list_size + ((QWORD)dict_index_buffer)); //start
 
         /* write output parameters */

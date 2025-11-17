@@ -202,12 +202,16 @@ BOOL PlayTones( LPTTS_HANDLE_T phTTS,
   DWORD dwDurationInFrames;
   PKSD_T pKsd_t = phTTS->pKernelShareData;
 
+#ifndef GBA_FIXES
+
 #ifdef SOFTWARE_VOLUME
   if (pKsd_t->iSwVolume < 0) {
     // Convert dB to power
     Amp_0 *= pow(10, (pKsd_t->iSwVolume/10.0));
     Amp_1 *= pow(10, (pKsd_t->iSwVolume/10.0));
   }
+#endif
+
 #endif
 
   /********************************************************************/

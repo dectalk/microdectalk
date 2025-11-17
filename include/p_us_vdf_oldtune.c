@@ -1,7 +1,11 @@
 /*
  * Manual tuning file
  */
+
+#ifndef GBA_FIXES
 #include <samprate.h>
+#endif
+
 const short paul_8_tune[SPDEF] =
 {
 	0,				/* SEX */
