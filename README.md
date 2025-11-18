@@ -2,6 +2,8 @@ A version of dectalk intended for portability between platforms
 supports windows, unix-like operating systems (such as Linux, MacOS, BSD, and others), and Android
 depending on the platform, it's nearly identical to the main [DECtalk](https://github.com/dectalk/dectalk) repo with the exception of loadv and setv commands and minor platform-specific fixes
 
+try it out [Here](https://bytesizedfox.dev)
+
 dependencies for gui:
 ```
 libXpm-devel
