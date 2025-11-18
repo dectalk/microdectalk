@@ -1,6 +1,6 @@
 emcc main.c ../src/*.c -I ../include -o DECtalkMini.js \
   -s WASM=1 \
-  -s EXPORTED_FUNCTIONS='["_tts_init","_tts_speak","_tts_get_buffer","_tts_get_buffer_length","_tts_reset","_tts_get_last_phone","_malloc","_free"]' \
+  -s EXPORTED_FUNCTIONS='["_tts_init","_tts_speak","_tts_get_buffer","_tts_get_buffer_length","_tts_reset","_malloc","_free"]' \
   -s EXPORTED_RUNTIME_METHODS='["cwrap","ccall","getValue","setValue","UTF8ToString","stringToUTF8","HEAP16"]' \
   -s ALLOW_MEMORY_GROWTH=1 \
   -s INITIAL_MEMORY=33554432 \

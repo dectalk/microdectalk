@@ -2,7 +2,6 @@
 #include "epsonapi.h"
 #include <emscripten.h>
 #include <string.h>
-#include <stdio.h>
 
 #define MAX_BUFFER_SIZE 65536
 static short audio_buffer[MAX_BUFFER_SIZE];
@@ -11,20 +10,22 @@ static int sample_rate = 11025;
 
 extern int last_phoneme;
 
-// Declare JS function that will be called from C
-EM_JS(void, js_phone_callback, (int phone), {
+// JavaScript callback that we'll call
+EM_JS(void, js_audio_callback, (short* data, int length, int phoneme, int buffer_position), {
     if (window.onPhoneCallback) {
-        window.onPhoneCallback(phone);
+        window.onPhoneCallback(phoneme);
     }
 });
 
 EMSCRIPTEN_KEEPALIVE
 short* audio_callback(short *data, long length) {
-    //printf("last_phone value: %d\n", last_phoneme);  // Should be 0-48
-    // Call JavaScript callback with current phone value
-    js_phone_callback(last_phoneme & 0x00FF);
+    // Get current phoneme and pass it to JavaScript along with audio data
+    int current_phoneme = last_phoneme & 0x00FF;
     
-    // Copy samples from callback into our buffer
+    // Call JavaScript callback with phoneme info
+    js_audio_callback(data, length, current_phoneme, buffer_index);
+    
+    // Copy samples to buffer
     for (int i = 0; i < length && buffer_index < MAX_BUFFER_SIZE; i++) {
         audio_buffer[buffer_index++] = data[i];
     }
@@ -56,11 +57,6 @@ short* tts_get_buffer() {
 EMSCRIPTEN_KEEPALIVE
 int tts_get_buffer_length() {
     return buffer_index;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int tts_get_last_phone() {
-    return last_phoneme;
 }
 
 EMSCRIPTEN_KEEPALIVE

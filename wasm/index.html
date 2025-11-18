@@ -86,7 +86,7 @@
 
     <script>
         let Module = null;
-        let tts_init, tts_speak, tts_get_buffer, tts_get_buffer_length, tts_reset, tts_get_last_phone;
+        let tts_init, tts_speak, tts_get_buffer, tts_get_buffer_length, tts_reset;
         let audioContext = null;
         let currentSource = null;
         let currentAudioBuffer = null;
@@ -142,13 +142,13 @@
             });
         }
         
-        window.onPhoneCallback = function(phone) {
-            const currentSampleCount = Module.cwrap('tts_get_buffer_length', 'number', [])();
+        window.onPhoneCallback = function(phoneme) {
+            const currentSampleCount = tts_get_buffer_length();
             const timeInSeconds = currentSampleCount / currentSampleRate;
-            const phonemeName = phonemes[phone] || 'UNKNOWN';
+            const phonemeName = phonemes[phoneme] || 'UNKNOWN';
             
             phonemeTimeline.push({
-                phone: phone,
+                phone: phoneme,
                 phonemeName: phonemeName,
                 time: timeInSeconds
             });
@@ -172,7 +172,6 @@
                 tts_get_buffer = Module.cwrap('tts_get_buffer', 'number', []);
                 tts_get_buffer_length = Module.cwrap('tts_get_buffer_length', 'number', []);
                 tts_reset = Module.cwrap('tts_reset', 'number', []);
-                tts_get_last_phone = Module.cwrap('tts_get_last_phone', 'number', []);
                 
                 tts_init();
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
