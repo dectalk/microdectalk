@@ -116,15 +116,15 @@
             "SIL": "sil.svg", "IY": "ax_i_ii.svg", "IH": "ax_i_ii.svg", "EY": "ei.svg", "EH": "e.svg",
             "AE": "ax_i_ii.svg", "AA": "a_aa_uh.svg", "AY": "a_aa_uh.svg", "AW": "a_aa_uh.svg", "AH": "a_aa_uh.svg",
             "AO": "o.svg", "OW": "o.svg", "OY": "ei.svg", "UH": "a_aa_uh.svg", "UW": "o.svg", "RR": "n_k_g_ng_y_r.svg",
-            "YU": "n_k_g_ng_y_r.svg", "AX": "ax_i_ii.svg", "IX": "ax_i_ii.svg", "IR": "n_k_g_ng_y_r.svg",
-            "ER": "n_k_g_ng_y_r.svg", "AR": "n_k_g_ng_y_r.svg", "OR": "o.svg", "UR": "w_oo_uu_u.svg",
+            "YU": "o.svg", "AX": "ax_i_ii.svg", "IX": "ax_i_ii.svg", "IR": "n_k_g_ng_y_r.svg",
+            "ER": "n_k_g_ng_y_r.svg", "AR": "n_k_g_ng_y_r.svg", "OR": "n_k_g_ng_y_r.svg", "UR": "n_k_g_ng_y_r.svg",
             "W": "w_oo_uu_u.svg", "Y": "n_k_g_ng_y_r.svg", "R": "n_k_g_ng_y_r.svg", "LL": "l.svg",
             "HX": "ax_i_ii.svg", "RX": "n_k_g_ng_y_r.svg", "LX": "l.svg", "M": "p_b_m.svg", "N": "n_k_g_ng_y_r.svg",
             "NX": "n_k_g_ng_y_r.svg", "EL": "l.svg", "D_DENTALIZED": "t_d_s_z.svg", "EN": "n_k_g_ng_y_r.svg",
             "F": "f_v.svg", "V": "f_v.svg", "TH": "th_dh.svg", "DH": "th_dh.svg", "S": "t_d_s_z.svg",
             "Z": "t_d_s_z.svg", "SH": "sh_zh_ch_jh.svg", "ZH": "sh_zh_ch_jh.svg", "P": "p_b_m.svg",
             "B": "p_b_m.svg", "T": "t_d_s_z.svg", "D": "t_d_s_z.svg", "K": "n_k_g_ng_y_r.svg",
-            "G": "n_k_g_ng_y_r.svg", "DX": "t_d_s_z.svg", "TX": "t_d_s_z.svg", "Q": "sil.svg",
+            "G": "n_k_g_ng_y_r.svg", "DX": "t_d_s_z.svg", "TX": "t_d_s_z.svg", "Q": "e.svg",
             "CH": "sh_zh_ch_jh.svg", "JH": "sh_zh_ch_jh.svg", "DF": "t_d_s_z.svg"
         };
         
@@ -143,15 +143,20 @@
         }
         
         window.onPhoneCallback = function(phoneme) {
-            const currentSampleCount = tts_get_buffer_length();
-            const timeInSeconds = currentSampleCount / currentSampleRate;
+            // Use buffer position BEFORE adding new samples for accurate timing
+            const samplePosition = tts_get_buffer_length();
+            const timeInSeconds = samplePosition / currentSampleRate;
             const phonemeName = phonemes[phoneme] || 'UNKNOWN';
             
-            phonemeTimeline.push({
-                phone: phoneme,
-                phonemeName: phonemeName,
-                time: timeInSeconds
-            });
+            // Only add if phoneme changed
+            if (phonemeTimeline.length === 0 || phonemeTimeline[phonemeTimeline.length - 1].phone !== phoneme) {
+                phonemeTimeline.push({
+                    phone: phoneme,
+                    phonemeName: phonemeName,
+                    time: timeInSeconds,
+                    sample: samplePosition
+                });
+            }
         };
         
         async function loadWASM() {
@@ -384,23 +389,21 @@
                 });
                 
                 const duration = currentAudioBuffer.length / currentAudioBuffer.sampleRate;
-                const fps = 30;
-                const frameDuration = 1000 / fps;
-                const totalFrames = Math.ceil(duration * fps);
                 
                 btnExportGif.textContent = 'Rendering...';
                 
-                for (let frame = 0; frame < totalFrames; frame++) {
-                    const timeInSeconds = frame / fps;
-                    
-                    let currentPhoneme = 'SIL';
-                    for (let i = 0; i < phonemeTimeline.length; i++) {
-                        if (phonemeTimeline[i].time <= timeInSeconds) {
-                            currentPhoneme = phonemeTimeline[i].phonemeName;
-                        } else {
-                            break;
-                        }
-                    }
+                console.log('Audio length:', currentAudioBuffer.length, 'samples at', currentAudioBuffer.sampleRate, 'Hz');
+                console.log('Duration:', duration, 'seconds');
+                console.log('Phoneme timeline entries:', phonemeTimeline.length);
+                console.log('First phoneme:', phonemeTimeline[0]);
+                console.log('Last phoneme:', phonemeTimeline[phonemeTimeline.length - 1]);
+                
+                // One frame per phoneme with exact duration
+                for (let i = 0; i < phonemeTimeline.length; i++) {
+                    const currentPhoneme = phonemeTimeline[i].phonemeName;
+                    const currentTime = phonemeTimeline[i].time;
+                    const nextTime = i < phonemeTimeline.length - 1 ? phonemeTimeline[i + 1].time : duration;
+                    const phonemeDurationMs = Math.round((nextTime - currentTime) * 1000);
                     
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -419,7 +422,31 @@
                     ctx.textAlign = 'center';
                     ctx.fillText(currentPhoneme, canvas.width / 2, canvas.height - 30);
                     
-                    gif.addFrame(ctx, {copy: true, delay: frameDuration});
+                    gif.addFrame(ctx, {copy: true, delay: phonemeDurationMs});
+                }
+                
+                // Add 1 second of padding frames (30 frames at 33ms each)
+                const lastPhoneme = phonemeTimeline[phonemeTimeline.length - 1].phonemeName;
+                const lastImageName = imageMap[lastPhoneme];
+                
+                for (let pad = 0; pad < 30; pad++) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    if (lastImageName && preloadedImages[lastImageName]) {
+                        const img = preloadedImages[lastImageName];
+                        const imgSize = 300;
+                        const x = (canvas.width - imgSize) / 2;
+                        const y = (canvas.height - imgSize) / 2;
+                        ctx.drawImage(img, x, y, imgSize, imgSize);
+                    }
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 32px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(lastPhoneme, canvas.width / 2, canvas.height - 30);
+                    
+                    gif.addFrame(ctx, {copy: true, delay: 33});
                 }
                 
                 btnExportGif.textContent = 'Encoding...';

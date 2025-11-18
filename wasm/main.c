@@ -3,7 +3,7 @@
 #include <emscripten.h>
 #include <string.h>
 
-#define MAX_BUFFER_SIZE 65536
+#define MAX_BUFFER_SIZE 65536 * 20
 static short audio_buffer[MAX_BUFFER_SIZE];
 static int buffer_index = 0;
 static int sample_rate = 11025;
