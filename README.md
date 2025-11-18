@@ -39,4 +39,7 @@ to compile for rpi pico, install the pico SDK and use cmake in the pico folder
 
 to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the gba folder
 
+for webassembly go into the wasm folder, make sure you have the emscripten sdk in your home folder and activated and run bash compile.sh, launch it in a webserver for CORS compatability
+
 note unsupported: if your device isn't on this list, try native anyways, most platforms with a compiler should be able to compile this
+
