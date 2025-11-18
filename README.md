@@ -1,5 +1,6 @@
-A smaller version of dectalk intended for portability between platforms
+A version of dectalk intended for portability between platforms
 supports windows, unix-like operating systems (such as Linux, MacOS, BSD, and others), and Android
+depending on the platform, it's nearly identical to the main [DECtalk](https://github.com/dectalk/dectalk) repo with the exception of loadv and setv commands and minor platform-specific fixes
 
 dependencies for gui:
 ```
@@ -37,3 +38,5 @@ see the [android-develop](https://github.com/dectalk/DECtalkMini/tree/android-de
 to compile for rpi pico, install the pico SDK and use cmake in the pico folder
 
 to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the gba folder
+
+note unsupported: if your device isn't on this list, try native anyways, most platforms with a compiler should be able to compile this

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DECtalk WASM</title>
+    <style>
+        body {
+            font-family: system-ui;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+        }
+        select, input {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:disabled {
+            opacity: 0.5;
+        }
+        #mouth-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #mouth-image {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #ccc;
+        }
+        #last-phone-display {
+            font-family: monospace;
+            font-size: 16px;
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>DECtalkMini</h1>
+    
+    <div class="control-group">
+        <label for="text-input">Text to Synthesize</label>
+        <textarea id="text-input">The Quick Brown Fox Jumps Over The Lazy Dog</textarea>
+    </div>
+    
+    <div class="control-group">
+        <label for="sample-rate">Sample Rate</label>
+        <select id="sample-rate">
+            <option value="0x0001">11 kHz</option>
+            <option value="0x0002">8 kHz</option>
+        </select>
+    </div>
+    
+    <div class="button-group">
+        <button id="btn-speak" disabled>Synthesize & Play</button>
+        <button id="btn-stop" disabled>Stop</button>
+        <button id="btn-download" disabled>Download WAV</button>
+    </div>
+    
+    <div class="control-group">
+        <label>Current Phoneme</label>
+        <input type="text" id="last-phone-display" readonly>
+    </div>
+    
+    <div id="mouth-display">
+        <img id="mouth-image" src="" alt="Mouth position">
+    </div>
+
+    <script>
+        let Module = null;
+        let tts_init, tts_speak, tts_get_buffer, tts_get_buffer_length, tts_reset, tts_get_last_phone;
+        let audioContext = null;
+        let currentSource = null;
+        let currentAudioBuffer = null;
+        let currentSampleRate = 11025;
+        let phonemeTimeline = [];
+        let playbackStartTime = 0;
+        let animationFrameId = null;
+        let preloadedImages = {};
+        
+        const textInput = document.getElementById('text-input');
+        const sampleRateSelect = document.getElementById('sample-rate');
+        const btnSpeak = document.getElementById('btn-speak');
+        const btnStop = document.getElementById('btn-stop');
+        const btnDownload = document.getElementById('btn-download');
+        const lastPhoneDisplay = document.getElementById('last-phone-display');
+        const mouthImage = document.getElementById('mouth-image');
+        
+        const phonemes = [
+            "SIL", "IY", "IH", "EY", "EH", "AE", "AA", "AY", "AW", "AH", "AO", "OW", "OY", "UH", "UW", 
+            "RR", "YU", "AX", "IX", "IR", "ER", "AR", "OR", "UR", "W", "Y", "R", "LL", "HX", "RX", "LX", 
+            "M", "N", "NX", "EL", "D_DENTALIZED", "EN", "F", "V", "TH", "DH", "S", "Z", "SH", "ZH", "P", 
+            "B", "T", "D", "K", "G", "DX", "TX", "Q", "CH", "JH", "DF"
+        ];
+        
+        const imageMap = {
+            "SIL": "sil.svg", "IY": "ax_i_ii.svg", "IH": "ax_i_ii.svg", "EY": "ei.svg", "EH": "e.svg",
+            "AE": "ax_i_ii.svg", "AA": "a_aa_uh.svg", "AY": "a_aa_uh.svg", "AW": "a_aa_uh.svg", "AH": "a_aa_uh.svg",
+            "AO": "o.svg", "OW": "o.svg", "OY": "ei.svg", "UH": "a_aa_uh.svg", "UW": "o.svg", "RR": "n_k_g_ng_y_r.svg",
+            "YU": "n_k_g_ng_y_r.svg", "AX": "ax_i_ii.svg", "IX": "ax_i_ii.svg", "IR": "n_k_g_ng_y_r.svg",
+            "ER": "n_k_g_ng_y_r.svg", "AR": "n_k_g_ng_y_r.svg", "OR": "o.svg", "UR": "w_oo_uu_u.svg",
+            "W": "w_oo_uu_u.svg", "Y": "n_k_g_ng_y_r.svg", "R": "n_k_g_ng_y_r.svg", "LL": "l.svg",
+            "HX": "ax_i_ii.svg", "RX": "n_k_g_ng_y_r.svg", "LX": "l.svg", "M": "p_b_m.svg", "N": "n_k_g_ng_y_r.svg",
+            "NX": "n_k_g_ng_y_r.svg", "EL": "l.svg", "D_DENTALIZED": "t_d_s_z.svg", "EN": "n_k_g_ng_y_r.svg",
+            "F": "f_v.svg", "V": "f_v.svg", "TH": "th_dh.svg", "DH": "th_dh.svg", "S": "t_d_s_z.svg",
+            "Z": "t_d_s_z.svg", "SH": "sh_zh_ch_jh.svg", "ZH": "sh_zh_ch_jh.svg", "P": "p_b_m.svg",
+            "B": "p_b_m.svg", "T": "t_d_s_z.svg", "D": "t_d_s_z.svg", "K": "n_k_g_ng_y_r.svg",
+            "G": "n_k_g_ng_y_r.svg", "DX": "t_d_s_z.svg", "TX": "t_d_s_z.svg", "Q": "sil.svg",
+            "CH": "sh_zh_ch_jh.svg", "JH": "sh_zh_ch_jh.svg", "DF": "t_d_s_z.svg"
+        };
+        
+        function preloadImages() {
+            const uniqueImages = [...new Set(Object.values(imageMap))];
+            uniqueImages.forEach(filename => {
+                const img = new Image();
+                img.onload = () => {
+                    preloadedImages[filename] = img;
+                    if (filename === "sil.svg") {
+                        mouthImage.src = img.src;
+                    }
+                };
+                img.src = "/img/" + filename;
+            });
+        }
+        
+        window.onPhoneCallback = function(phone) {
+            const currentSampleCount = Module.cwrap('tts_get_buffer_length', 'number', [])();
+            const timeInSeconds = currentSampleCount / currentSampleRate;
+            const phonemeName = phonemes[phone] || 'UNKNOWN';
+            
+            phonemeTimeline.push({
+                phone: phone,
+                phonemeName: phonemeName,
+                time: timeInSeconds
+            });
+        };
+        
+        async function loadWASM() {
+            try {
+                if (typeof DECtalkMini === 'undefined') {
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = './DECtalkMini.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                
+                Module = await DECtalkMini();
+                tts_init = Module.cwrap('tts_init', 'number', []);
+                tts_speak = Module.cwrap('tts_speak', 'number', ['string', 'number']);
+                tts_get_buffer = Module.cwrap('tts_get_buffer', 'number', []);
+                tts_get_buffer_length = Module.cwrap('tts_get_buffer_length', 'number', []);
+                tts_reset = Module.cwrap('tts_reset', 'number', []);
+                tts_get_last_phone = Module.cwrap('tts_get_last_phone', 'number', []);
+                
+                tts_init();
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                btnSpeak.disabled = false;
+                
+            } catch (err) {
+                alert('Failed to load WASM module: ' + err.message);
+            }
+        }
+        
+        function synthesize() {
+            try {
+                phonemeTimeline = [];
+                const text = textInput.value.trim();
+                if (!text) {
+                    alert('Please enter some text');
+                    return null;
+                }
+                
+                const format = parseInt(sampleRateSelect.value);
+                currentSampleRate = (format === 0x0001) ? 11025 : 8000;
+                
+                const result = tts_speak(text, format);
+                if (result !== 0) {
+                    alert('TTS error code: ' + result);
+                    return null;
+                }
+                
+                const bufferPtr = tts_get_buffer();
+                const length = tts_get_buffer_length();
+                
+                if (length === 0) {
+                    alert('No audio data generated');
+                    return null;
+                }
+                
+                const samples = new Int16Array(Module.HEAP16.buffer, bufferPtr, length);
+                const samplesCopy = new Int16Array(samples);
+                
+                const audioBuffer = audioContext.createBuffer(1, length, currentSampleRate);
+                const channelData = audioBuffer.getChannelData(0);
+                
+                for (let i = 0; i < length; i++) {
+                    channelData[i] = samplesCopy[i] / 32768.0;
+                }
+                
+                return audioBuffer;
+                
+            } catch (err) {
+                alert('Synthesis error: ' + err.message);
+                return null;
+            }
+        }
+        
+        function playAudio(audioBuffer) {
+            stopAudio();
+            
+            currentSource = audioContext.createBufferSource();
+            currentSource.buffer = audioBuffer;
+            currentSource.connect(audioContext.destination);
+            
+            playbackStartTime = audioContext.currentTime;
+            
+            currentSource.onended = function() {
+                btnStop.disabled = true;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+            };
+            
+            currentSource.start();
+            btnStop.disabled = false;
+            updatePhonemeDisplay();
+        }
+        
+        function updatePhonemeDisplay() {
+            if (!currentSource) return;
+            
+            const currentTime = audioContext.currentTime - playbackStartTime;
+            let currentPhoneme = '';
+            
+            for (let i = 0; i < phonemeTimeline.length; i++) {
+                if (phonemeTimeline[i].time <= currentTime) {
+                    currentPhoneme = phonemeTimeline[i].phonemeName;
+                } else {
+                    break;
+                }
+            }
+            
+            lastPhoneDisplay.value = currentPhoneme;
+            
+            if (currentPhoneme && imageMap[currentPhoneme] && preloadedImages[imageMap[currentPhoneme]]) {
+                mouthImage.src = preloadedImages[imageMap[currentPhoneme]].src;
+            }
+            
+            animationFrameId = requestAnimationFrame(updatePhonemeDisplay);
+        }
+        
+        function stopAudio() {
+            if (currentSource) {
+                try {
+                    currentSource.stop();
+                } catch (e) {}
+                currentSource = null;
+            }
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            btnStop.disabled = true;
+        }
+        
+        function audioBufferToWav(buffer) {
+            const numChannels = 1;
+            const sampleRate = buffer.sampleRate;
+            const data = buffer.getChannelData(0);
+            const dataLength = data.length * 2;
+            const bufferLength = 44 + dataLength;
+            
+            const arrayBuffer = new ArrayBuffer(bufferLength);
+            const view = new DataView(arrayBuffer);
+            
+            const writeString = function(offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+            
+            writeString(0, 'RIFF');
+            view.setUint32(4, bufferLength - 8, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, dataLength, true);
+            
+            let offset = 44;
+            for (let i = 0; i < data.length; i++) {
+                const sample = Math.max(-1, Math.min(1, data[i]));
+                view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                offset += 2;
+            }
+            
+            return arrayBuffer;
+        }
+        
+        btnSpeak.addEventListener('click', function() {
+            const audioBuffer = synthesize();
+            if (audioBuffer) {
+                currentAudioBuffer = audioBuffer;
+                playAudio(audioBuffer);
+                btnDownload.disabled = false;
+            }
+        });
+        
+        btnStop.addEventListener('click', stopAudio);
+        
+        btnDownload.addEventListener('click', function() {
+            if (!currentAudioBuffer) return;
+            
+            const wav = audioBufferToWav(currentAudioBuffer);
+            const blob = new Blob([wav], { type: 'audio/wav' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'output.wav';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        preloadImages();
+        loadWASM();
+    </script>
+</body>
+</html>

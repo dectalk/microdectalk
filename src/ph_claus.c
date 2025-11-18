@@ -192,6 +192,7 @@ void affichetab4 (PDPH_T pDph_t);
 #endif
 void printParameters (PDPH_T pDph_t);
 
+short last_phoneme;
 
 // called by function kltask in ph_task.c for each clause read from the pipe.
 // input phone and special marks (WBOUND, PERIOD, etc.) are in symbols[],
@@ -367,6 +368,7 @@ else
 #ifndef EPSON_ARM7
 	while (TRUE)
 	{
+            last_phoneme = pDph_t->allophons[pDph_t->nphone];
 #endif
 #ifdef EPSON_ARM7
 		send_pars_loop(phTTS);
