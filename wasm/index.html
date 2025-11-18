@@ -72,6 +72,7 @@
         <button id="btn-speak" disabled>Synthesize & Play</button>
         <button id="btn-stop" disabled>Stop</button>
         <button id="btn-download" disabled>Download WAV</button>
+        <button id="btn-export-gif" disabled>Export GIF</button>
     </div>
     
     <div class="control-group">
@@ -100,6 +101,7 @@
         const btnSpeak = document.getElementById('btn-speak');
         const btnStop = document.getElementById('btn-stop');
         const btnDownload = document.getElementById('btn-download');
+        const btnExportGif = document.getElementById('btn-export-gif');
         const lastPhoneDisplay = document.getElementById('last-phone-display');
         const mouthImage = document.getElementById('mouth-image');
         
@@ -330,6 +332,7 @@
                 currentAudioBuffer = audioBuffer;
                 playAudio(audioBuffer);
                 btnDownload.disabled = false;
+                btnExportGif.disabled = false;
             }
         });
         
@@ -346,6 +349,106 @@
             a.download = 'output.wav';
             a.click();
             URL.revokeObjectURL(url);
+        });
+        
+        btnExportGif.addEventListener('click', async function() {
+            if (!currentAudioBuffer || phonemeTimeline.length === 0) return;
+            
+            try {
+                btnExportGif.disabled = true;
+                btnExportGif.textContent = 'Loading...';
+                
+                // Load GIF.js library dynamically
+                if (typeof GIF === 'undefined') {
+                    await new Promise(function(resolve, reject) {
+                        const script = document.createElement('script');
+                        script.src = './gif.js';
+                        script.onload = resolve;
+                        script.onerror = function() {
+                            reject(new Error('Failed to load GIF.js library'));
+                        };
+                        document.head.appendChild(script);
+                    });
+                }
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 400;
+                const ctx = canvas.getContext('2d');
+                
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: canvas.width,
+                    height: canvas.height,
+                    workerScript: './gif.worker.js'
+                });
+                
+                const duration = currentAudioBuffer.length / currentAudioBuffer.sampleRate;
+                const fps = 30;
+                const frameDuration = 1000 / fps;
+                const totalFrames = Math.ceil(duration * fps);
+                
+                btnExportGif.textContent = 'Rendering...';
+                
+                for (let frame = 0; frame < totalFrames; frame++) {
+                    const timeInSeconds = frame / fps;
+                    
+                    let currentPhoneme = 'SIL';
+                    for (let i = 0; i < phonemeTimeline.length; i++) {
+                        if (phonemeTimeline[i].time <= timeInSeconds) {
+                            currentPhoneme = phonemeTimeline[i].phonemeName;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    const imageName = imageMap[currentPhoneme];
+                    if (imageName && preloadedImages[imageName]) {
+                        const img = preloadedImages[imageName];
+                        const imgSize = 300;
+                        const x = (canvas.width - imgSize) / 2;
+                        const y = (canvas.height - imgSize) / 2;
+                        ctx.drawImage(img, x, y, imgSize, imgSize);
+                    }
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 32px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(currentPhoneme, canvas.width / 2, canvas.height - 30);
+                    
+                    gif.addFrame(ctx, {copy: true, delay: frameDuration});
+                }
+                
+                btnExportGif.textContent = 'Encoding...';
+                
+                gif.on('finished', function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'dectalk_animation.gif';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    btnExportGif.disabled = false;
+                    btnExportGif.textContent = 'Export GIF';
+                });
+                
+                gif.on('progress', function(progress) {
+                    const percent = Math.round(progress * 100);
+                    btnExportGif.textContent = 'Encoding ' + percent + '%';
+                });
+                
+                gif.render();
+                
+            } catch (err) {
+                alert('GIF export error: ' + err.message);
+                btnExportGif.disabled = false;
+                btnExportGif.textContent = 'Export GIF';
+            }
         });
         
         preloadImages();
