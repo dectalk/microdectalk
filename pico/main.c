@@ -102,7 +102,7 @@ void TTSstart(const char *input) {
     sleep_ms(100);
 }
 
-char inbuf[128];
+char inbuf[2048];
 static int chars_rxed = 0;
 
 int main() {
@@ -177,7 +177,7 @@ int main() {
         }
         
         // Add character to buffer
-        if (chars_rxed < 127) {
+        if (chars_rxed < 2047) {
             inbuf[chars_rxed] = ch;
             chars_rxed++;
             putchar(ch);  // Echo character
@@ -185,8 +185,8 @@ int main() {
         }
         
         // Handle buffer full
-        if (chars_rxed >= 127) {
-            inbuf[127] = '\0';
+        if (chars_rxed >= 2047) {
+            inbuf[2047] = '\0';
             printf("\n");
             TTSstart(inbuf);
             chars_rxed = 0;

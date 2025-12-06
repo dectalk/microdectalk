@@ -692,7 +692,7 @@ int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz
         size = pointer_list_size + bytes;
 
 #ifndef GBA_FIXES
-        dict_index_buffer = (int *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+        dict_index_buffer = (long *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
 #else
         dict_index_buffer = (S32 *) &main_dict[8];
 #endif

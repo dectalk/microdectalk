@@ -1,1 +1,1 @@
-PICO_SDK_FETCH_FROM_GIT=1 PICO_EXTRAS_FETCH_FROM_GIT=1 cmake -DCMAKE_TOOLCHAIN_FILE=../pico_arm_gcc_toolchain.cmake .. -DCMAKE_C_FLAGS="-mcpu=cortex-m0plus -mthumb"  -DCMAKE_CXX_FLAGS="-mcpu=cortex-m0plus -mthumb" -DCMAKE_ASM_FLAGS="-mcpu=cortex-m0plus -mthumb"
+PICO_SDK_FETCH_FROM_GIT=1 PICO_EXTRAS_FETCH_FROM_GIT=1 cmake .. -DCMAKE_C_FLAGS="-mcpu=cortex-m0plus -mthumb"  -DCMAKE_CXX_FLAGS="-mcpu=cortex-m0plus -mthumb" -DCMAKE_ASM_FLAGS="-mcpu=cortex-m0plus -mthumb"
