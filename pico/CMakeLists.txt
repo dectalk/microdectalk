@@ -40,6 +40,9 @@ DISABLE_AUDIO=1
 SINGLE_THREADED=1
 NO_FILESYSTEM=1
 __unix__=1
+PICO_AUDIO_I2S_MONO_OUTPUT=1 # mono output on I2S
+PICO_AUDIO_I2S_MONO_INPUT=1 # required for output
+AUDIO_HALF_FREQ=1 # fix frequency for PWM
 )
 
 # Link necessary libraries
@@ -56,7 +59,7 @@ pico_add_extra_outputs(${PROJECT})
 
 # Enable USB and UART output
 pico_enable_stdio_usb(${PROJECT} 1)  # Enable USB serial
-pico_enable_stdio_uart(${PROJECT} 0) # Disable UART serial
+pico_enable_stdio_uart(${PROJECT} 1) # Enable UART serial
 
 # Specify include directories for the project
 
