@@ -24,7 +24,7 @@ jobs:
     - name: Disable man-db update
       run: sudo rm -f /var/lib/man-db/auto-update
     - name: Install packages
-      run: sudo apt-get install mingw-w64
+      run: sudo apt-get update && sudo apt-get install mingw-w64
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
@@ -57,7 +57,7 @@ jobs:
     - name: Disable man-db update
       run: sudo rm -f /var/lib/man-db/auto-update
     - name: Install packages
-      run: sudo apt-get install mingw-w64
+      run: sudo apt-get update && sudo apt-get install mingw-w64
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
@@ -90,7 +90,7 @@ jobs:
     - name: Disable man-db update
       run: sudo rm -f /var/lib/man-db/auto-update
     - name: Install packages
-      run: sudo apt-get install libxpm-dev libmotif-dev libxt-dev
+      run: sudo apt-get update && sudo apt-get install libxpm-dev libmotif-dev libxt-dev
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build
