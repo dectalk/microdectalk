@@ -6,11 +6,7 @@ chmod +x appimagetool
 
 rm -rf appdir
 mkdir -p appdir/usr/bin
-mkdir -p appdir/usr/lib/x86_64-linux-gnu
-
-ln -s usr/lib appdir/lib
-ln -s usr/lib appdir/lib64
-ln -s lib appdir/usr/lib64
+mkdir -p appdir/usr/lib
 
 cp bin/Native/Release/speak appdir/usr/bin/
 cp bin/Native/Release/libdtc.so appdir/usr/bin/
@@ -21,14 +17,13 @@ cp DECtalk.conf appdir/
 cp -rf dic appdir/
 chmod +x appdir/AppRun
 
-ldd appdir/usr/bin/speak | while read a; do
-	path=`echo "$a" | grep -oE '/[^ ]+'`
-	if [ ! "x$path" = "x" ]; then
-		cp $path appdir/$path
+ldd appdir/usr/bin/speak | grep "=>" | awk '{print $3}' | while read a; do
+	if [ -f "$a" ]; then
+		cp "$a" appdir/usr/lib/
 	fi
 done
 
-strip appdir/usr/lib/* appdir/usr/lib/*/* appdir/usr/bin/*
+strip appdir/usr/lib/* appdir/usr/bin/*
 
 ARCH=x86_64
 export ARCH
