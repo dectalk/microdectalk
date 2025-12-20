@@ -17,7 +17,7 @@ cp DECtalk.conf appdir/
 cp -rf dic appdir/
 chmod +x appdir/AppRun
 
-ldd appdir/usr/bin/speak | grep "=>" | awk '{print $3}' | while read a; do
+ldd appdir/usr/bin/speak | -E grep "=>|ld-" | awk '{print $3}' | while read a; do
 	if [ -f "$a" ]; then
 		cp "$a" appdir/usr/lib/
 	fi
