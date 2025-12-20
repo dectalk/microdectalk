@@ -28,6 +28,7 @@ ldd appdir/usr/bin/speak | grep "ld-" | awk '{print $1}' | while read a; do
 	fi
 done
 
+chmod +x appdir/usr/lib/*
 strip appdir/usr/lib/* appdir/usr/bin/*
 
 ARCH=x86_64
