@@ -81,7 +81,7 @@ struct audio_buffer_pool *init_audio() {
 }
 
 // buffer callback
-short *write_wav(short *iwave, long length) {
+short *write_wav(short *iwave, long length, int phoneme) {
     struct audio_buffer *buffer = take_audio_buffer(audio_pool, true);
     memcpy(buffer->buffer->bytes, iwave, length*2);
     buffer->sample_count = length; //buffer->max_sample_count;

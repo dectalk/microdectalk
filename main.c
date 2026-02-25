@@ -29,7 +29,7 @@ void init_wav(const char *name) {
   total_samples = 0;
 }
 
-short *write_wav(short *iwave, long length) {
+short *write_wav(short *iwave, long length, int phoneme) {
   fwrite(iwave, sizeof(short), length, outfile);
   total_samples += length;
 }

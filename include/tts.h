@@ -316,7 +316,7 @@ struct TTS_HANDLE_TAG
   void * pTTS_Buffer;
 
   // epsonapi callback
-  short *(*EmbCallbackRoutine)(short *, long);
+  short *(*EmbCallbackRoutine)(short *, long, int); // audio, length, phoneme
 
 #ifdef ARM7
 #ifndef EPSON_ARM7

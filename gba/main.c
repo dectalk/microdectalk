@@ -138,7 +138,7 @@ void vblank_isr() {
     }
 }
 
-short *write_wav(short *iwave, long length) {
+short *write_wav(short *iwave, long length, int phoneme) {
     for (int i = 0; i < length; i++) {
         if (audio_length >= MAX_SAMPLES - 100) {
             while (audio_length < MAX_SAMPLES && (audio_length % 32) != 0) {

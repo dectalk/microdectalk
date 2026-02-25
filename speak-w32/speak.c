@@ -44,7 +44,7 @@ unsigned int wavelen;
 short* wave = NULL;
 int rate = 200;
 
-short* write_wav(short* iwave, long length){
+short* write_wav(short* iwave, long length, int phoneme){
 	if(wave == NULL){
 		wave = malloc(length * 2);
 		memcpy(wave, iwave, length * 2);

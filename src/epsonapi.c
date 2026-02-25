@@ -50,7 +50,7 @@ KSD_T Ksd_t;
 typedef unsigned char U8;
 
 char *g_user_dict;
-short *(*g_callback)(short *,long);
+short *(*g_callback)(short *,long, int); // audio, length, phoneme
 
 #define get_long_int(ptr) ((U32)\
                        ((((U8 *)(ptr))[3] << 24)  | \
@@ -84,7 +84,7 @@ extern const unsigned char main_dict[];
 extern void init_charset();
 #endif
 
-int TextToSpeechInit(short *(*callback)(short *, long), void *user_dict) {
+int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
 	int return_code;
 	int i;
 

@@ -2044,6 +2044,8 @@ int OutputData( LPTTS_HANDLE_T phTTS,
 
 #else
 
+extern int last_phoneme;
+
 void OutputData( LPTTS_HANDLE_T phTTS,
 		 short * pBuffer,
 		 unsigned int uiSamplesToOutput,
@@ -2054,11 +2056,12 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 
   // load user callback
   if (phTTS->EmbCallbackRoutine != NULL) {
-    phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput);
+    phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput, last_phoneme & PVALUE ); // audio, length, phoneme
   }
 
   return;
 
+  // REMOVE ME - EVERYTHING BELOW IN THIS FUNCTION
   DWORD dwSampleNumber;
   MMRESULT mmStatus;
   /* MVP MI Added PKSD_T element */
