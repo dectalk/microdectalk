@@ -23,7 +23,7 @@
 #define PTS_DONE		0
 #define PTS_OUTPUT		5
 
-extern int TextToSpeechStart(char *input,short *buffer,int output_format);
+extern int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
 extern int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
 extern int TextToSpeechReset(void);
 extern int TextToSpeechSync();

@@ -233,7 +233,7 @@ int TextToSpeechReset(void)
 extern char *convert_string_for_dapi(char *in, size_t inlen);
 #endif
 
-int TextToSpeechStart(char *input, short *buffer, int output_format)
+int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
 {
 	int i;
 	int oldrate=0;
