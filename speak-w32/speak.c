@@ -12,7 +12,7 @@
 
 HINSTANCE hInst;
 HWND* btns = NULL;
-HWND text, start, stop, ratebar;
+HWND root, text, start, stop, ratebar;
 HBRUSH person_brush, black_brush;
 COLORREF person_color;
 ma_device_config config;
@@ -328,16 +328,18 @@ BOOL InitWindow(int nCmdShow) {
 		return FALSE;
 	}
 
-	for(i = 0; i < 9; i++){
-		HWND hBtn = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, BTNSZ, BTNSZ, hWnd, (HMENU)(LONG_PTR)(i + 100), hInst, NULL);
-		arrput(btns, hBtn);
-	}
+	root = hWnd;
 
 	InitCommonControls();
 
-	start = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)200, hInst, NULL);
-	stop = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 0, 0, 32, 32, hWnd, (HMENU)201, hInst, NULL);
-	ratebar = CreateWindow(TRACKBAR_CLASS, "", WS_VISIBLE | WS_CHILD, 0, 0, 128 + 32, 16, hWnd, 0, hInst, NULL);
+	for(i = 0; i < 9; i++){
+		HWND hBtn = CreateWindow("BUTTON", people[i], WS_VISIBLE | WS_CHILD | BS_OWNERDRAW | WS_TABSTOP | (i == 0 ? WS_GROUP : 0), 0, 0, BTNSZ, BTNSZ, hWnd, (HMENU)(LONG_PTR)(i + 100), hInst, NULL);
+		arrput(btns, hBtn);
+	}
+
+	start = CreateWindow("BUTTON", "Start", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW | WS_TABSTOP, 0, 0, 32, 32, hWnd, (HMENU)200, hInst, NULL);
+	stop = CreateWindow("BUTTON", "Stop", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW | WS_TABSTOP, 0, 0, 32, 32, hWnd, (HMENU)201, hInst, NULL);
+	ratebar = CreateWindow(TRACKBAR_CLASS, "Speed", WS_VISIBLE | WS_CHILD | WS_TABSTOP | WS_GROUP, 0, 0, 128 + 32, 16, hWnd, 0, hInst, NULL);
 	SendMessage(ratebar, TBM_SETRANGE, TRUE, MAKELPARAM(75, 600));
 	SendMessage(ratebar, TBM_SETPOS, TRUE, 200);
 
@@ -379,7 +381,7 @@ int WINAPI WinMain(HINSTANCE hCurInst, HINSTANCE hPrevInst, LPSTR lpsCmdLine, in
 	while((bret = GetMessage(&msg, NULL, 0, 0)) != 0) {
 		if(bret == -1) {
 			break;
-		} else {
+		} else if(IsDialogMessage(root, &msg) == 0) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
