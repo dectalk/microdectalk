@@ -8,8 +8,9 @@
         "request": "launch",
         "name": "DECtalk for NodeJS",
         "preLaunchTask": "npm: build:dev - node",
-        "program": "/Users/leondro/.nvm/versions/node/v24.14.0/bin/node",
+        "program": "/usr/bin/env",
         "args": [
+            "node",
             "${workspaceFolder}/node/src/index.js"
         ]
     }]

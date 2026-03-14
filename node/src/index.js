@@ -29,7 +29,6 @@ const say = (text) => {
 
   const sampleRate = format ? 11025 : 8000
   const bufferLength = 44 + dataLength;
-  const audioData = Buffer.concat([...audioBuffer]);
 
   // Generate a WAV header
   const header = Buffer.from([
@@ -46,7 +45,7 @@ const say = (text) => {
     ...toBytes(dataLength)      // data size
   ])
 
-  return Buffer.concat([header, audioData])
+  return Buffer.concat([header, ...audioBuffer])
 }
 
 const buffer = say("This is a message from Node J S");
