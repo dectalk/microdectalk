@@ -14,8 +14,8 @@ project(${PROJECT} C CXX ASM)
 # Initialize the Pico SDK
 pico_sdk_init()
 
-FILE(GLOB dtkSrc ../src/*.c)
-list(REMOVE_ITEM dtkSrc "${CMAKE_CURRENT_LIST_DIR}/../src/main.c")
+FILE(GLOB dtkSrc ../../src/*.c)
+list(REMOVE_ITEM dtkSrc "${CMAKE_CURRENT_LIST_DIR}/../../src/main.c")
 
 # Add executable and list all source files
 add_executable(${PROJECT}
@@ -63,4 +63,4 @@ pico_enable_stdio_uart(${PROJECT} 1) # Enable UART serial
 
 # Specify include directories for the project
 
-target_include_directories(${PROJECT} PUBLIC ../include ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${PROJECT} PUBLIC ../../include ${CMAKE_CURRENT_LIST_DIR})

@@ -4,7 +4,7 @@ ARCH            = x86_64
 # Platform-specific objects
 PLATFORM_OBJS   = hda_player.o hda_discovery.o uefi_c_shims.o dectalk_efi.o
 
-# DECtalk engine objects (pulled from ../src via VPATH)
+# DECtalk engine objects (pulled from ../../src via VPATH)
 ENGINE_OBJS     = acxf1c.o brent.o charset.o circuit.o cm_char.o cm_cmd.o \
                   cm_copt.o cm_main.o cm_pars.o cm_phon.o cm_text.o cm_util.o \
                   cmd_init.o crypt2.o dbgwins.o decstd97.o dtmmio.o epsonapi.o \
@@ -26,7 +26,7 @@ OBJS            = $(PLATFORM_OBJS) $(ENGINE_OBJS)
 TARGET          = HdaPlayer.efi
 
 # Pull source from local dir and engine src
-VPATH           = ../src
+VPATH           = ../../src
 
 EFIINC          = /usr/include/efi
 EFIINCS         = -I$(EFIINC) -I$(EFIINC)/$(ARCH) -I$(EFIINC)/protocol
@@ -39,7 +39,7 @@ CFLAGS          = $(EFIINCS) -fno-stack-protector -fpic \
                   -fshort-wchar -mno-red-zone -Wall \
                   -fno-asynchronous-unwind-tables \
                   -DEFI_FUNCTION_WRAPPER -O2 \
-                  -I. -Iuefi_compat -I../include -include uefi_shim.h
+                  -I. -Iuefi_compat -I../../include -include uefi_shim.h
 
 # DECtalk engine specific defines
 $(ENGINE_OBJS): CFLAGS += -fpermissive -w -D_REENTRANT=1 -DNOMME=1 -DLTSSIM=1 -DTTSSIM=1 -DANSI=1 -DBLD_DECTALK_DLL=1 -DENGLISH=1 -DENGLISH_US=1 -DACCESS32=1 -DTYPING_MODE=1 -DACNA=1 -DDISABLE_AUDIO=1 -DSINGLE_THREADED=1 -DNO_FILESYSTEM=1 -D__unix__=1

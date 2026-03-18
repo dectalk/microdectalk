@@ -1,4 +1,4 @@
-emcc main.c ../src/*.c -I ../include -o DECtalkMini.js \
+emcc main.c ../../src/*.c -I ../../include -o DECtalkMini.js \
   -s WASM=1 \
   -s EXPORTED_FUNCTIONS='["_tts_init","_tts_speak","_tts_get_buffer","_tts_get_buffer_length","_tts_reset","_malloc","_free"]' \
   -s EXPORTED_RUNTIME_METHODS='["cwrap","ccall","getValue","setValue","UTF8ToString","stringToUTF8","HEAP16"]' \

@@ -28,8 +28,8 @@ LIBTONC := $(DEVKITPRO)/libtonc
 #---------------------------------------------------------------------------------
 TARGET		:= $(notdir $(CURDIR))
 BUILD		:= build
-SOURCES		:= ../src ./
-INCLUDES	:= ../include
+SOURCES		:= ../../src ./
+INCLUDES	:= ../../include
 DATA		:=
 MUSIC		:=
 GRAPHICS	:= graphics
@@ -100,10 +100,6 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-#CFILES := $(notdir $(filter-out ../src/main.c, \
-#              $(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c)))) main.c
-
-#CFILES := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c))) main.c
 
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))

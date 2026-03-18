@@ -18,7 +18,7 @@ EM_JS(void, js_audio_callback, (short* data, int length, int phoneme, int buffer
 });
 
 EMSCRIPTEN_KEEPALIVE
-short* audio_callback(short *data, long length) {
+short* audio_callback(short *data, long length, int phoneme) {
     // Get current phoneme and pass it to JavaScript along with audio data
     int current_phoneme = last_phoneme & 0x00FF;
     
