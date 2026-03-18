@@ -27,6 +27,10 @@ extern int TextToSpeechStart(char *input,short *buffer_deprecated,int output_for
 extern int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
 extern int TextToSpeechReset(void);
 extern int TextToSpeechSync();
+extern int TextToSpeechChangeVoice(char *cvoice);
+extern void TextToSpeechSetRate(int rate);
+extern int TextToSpeechSetVoiceParam(char *cmd, int value);
+extern short TextToSpeechGetSpdefValue(int index);
 
 #endif //_EPSONAPI_H
 

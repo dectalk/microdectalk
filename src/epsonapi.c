@@ -36,6 +36,8 @@ extern int ph_main(LPTTS_HANDLE_T phTTS);
 extern int lts_main(LPTTS_HANDLE_T phTTS);
 extern int cmd_main(LPTTS_HANDLE_T phTTS);
 extern void SetSampleRate( LPTTS_HANDLE_T phTTS, unsigned int uiSampRate );
+extern void usevoice (LPTTS_HANDLE_T phTTS, int voice);
+extern const unsigned char *define_options[];
 //#ifndef EPSON_ARM7
 extern short cur_packet_number;
 extern short max_packet_number;
@@ -310,4 +312,74 @@ int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
 
 int TextToSpeechSync() {
     cmd_loop(phTTS,0x0B); // sync command
+    return ERR_NOERROR;
+}
+
+int TextToSpeechChangeVoice(char *cvoice)
+{
+	short new_voice;
+
+	if (cvoice == NULL || *cvoice == 0)
+	{
+		return ERR_ERROR;
+	}
+
+	if (strcmp(cvoice, "np") == 0)
+		new_voice = 0;
+	else if (strcmp(cvoice, "nb") == 0)
+		new_voice = 1;
+	else if (strcmp(cvoice, "nh") == 0)
+		new_voice = 2;
+	else if (strcmp(cvoice, "nf") == 0)
+		new_voice = 3;
+	else if (strcmp(cvoice, "nd") == 0)
+		new_voice = 4;
+	else if (strcmp(cvoice, "nk") == 0)
+		new_voice = 5;
+	else if (strcmp(cvoice, "nu") == 0)
+		new_voice = 6;
+	else if (strcmp(cvoice, "nr") == 0)
+		new_voice = 7;
+	else if (strcmp(cvoice, "nw") == 0)
+		new_voice = 8;
+	else
+		return ERR_ERROR;
+
+	usevoice(phTTS, new_voice);
+	return ERR_NOERROR;
+}
+
+void TextToSpeechSetRate(int rate)
+{
+	unsigned short pipe_value[2];
+
+	pipe_value[0] = (1 << PSNEXTRA) + RATE;
+	pipe_value[1] = rate;
+	lts_loop(phTTS, pipe_value);
+}
+
+int TextToSpeechSetVoiceParam(char *cmd, int value)
+{
+	unsigned short pipe_value[3];
+	int option;
+
+	option = cm_util_string_match(define_options, (unsigned char *)cmd);
+	if (option == NO_STRING_MATCH)
+	{
+		return ERR_ERROR;
+	}
+
+	pipe_value[0] = (2 << PSNEXTRA) + NEW_PARAM;
+	pipe_value[1] = option - 1;
+	pipe_value[2] = value;
+	lts_loop(phTTS, pipe_value);
+	return ERR_NOERROR;
+}
+
+short TextToSpeechGetSpdefValue(int index)
+{
+	PDPH_T pDph_t;
+
+	pDph_t = phTTS->pPHThreadData;
+	return pDph_t->curspdef[index];
 }

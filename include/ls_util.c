@@ -1050,8 +1050,13 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
 /*
  *  peek at the pipe words, handle ...
  */
+#ifdef HANG_FIXES
+	if (TRUE)
+	{
+#else
 	while(TRUE)
 	{
+#endif
 //		read_pipe(linp,&(pLts_t->nitem.i_word[0]), 1);
 		// fake the read_pipe
 		pLts_t->nitem.i_word[0]=local_buf[0];

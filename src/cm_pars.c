@@ -1663,7 +1663,7 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 	/* GL 03/25/1997 BATS#314 force SYNC after 0xb */
 	if(c == 0xb)
 	{
-#ifdef OLD_INTONATION_AND_TIMING
+#if defined(OLD_INTONATION_AND_TIMING) && !defined(HANG_FIXES)
 		/* Add short silence before sync, fixes unspoken k phoneme */
 		pipe_value = BREATH_BREAK;
 		lts_loop(phTTS,&pipe_value);
