@@ -35,7 +35,11 @@ premake5 gmake --build-speak=yes
 make config=release_win64
 ```
 
-see the [android-develop](https://github.com/dectalk/DECtalkMini/tree/android-develop) branch for the android source
+to compile for android, open `platforms/android` in Android Studio or run:
+```
+cd platforms/android
+./gradlew assembleDebug
+```
 
 to compile for rpi pico, install the pico SDK and use cmake in the platforms/pico folder
 
