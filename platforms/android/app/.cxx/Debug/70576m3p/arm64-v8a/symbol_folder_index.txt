@@ -1,0 +1,1 @@
+/home/user/DECtalkMini/platforms/android/app/build/intermediates/cxx/Debug/70576m3p/obj/arm64-v8a

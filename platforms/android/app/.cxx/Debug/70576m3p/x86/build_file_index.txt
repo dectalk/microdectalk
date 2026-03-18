@@ -1,0 +1,1 @@
+/home/user/DECtalkMini/platforms/android/app/src/main/cpp/CMakeLists.txt

@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "/home/user/DECtalkMini/platforms/android/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/user/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/user/DECtalkMini/platforms/android/app/.cxx/Debug/70576m3p/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/user/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/user/DECtalkMini/platforms/android/app/.cxx/Debug/70576m3p/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "epsonapi::@6890427a1f51a3e7e1df": {
+      "artifactName": "epsonapi",
+      "abi": "x86",
+      "output": "/home/user/DECtalkMini/platforms/android/app/build/intermediates/cxx/Debug/70576m3p/obj/x86/libepsonapi.so",
+      "runtimeFiles": []
+    }
+  }
+}
