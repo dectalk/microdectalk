@@ -315,7 +315,7 @@ int TextToSpeechSync() {
     return ERR_NOERROR;
 }
 
-int TextToSpeechChangeVoice(char *cvoice)
+int TextToSpeechChangeVoice(const char *cvoice)
 {
 	short new_voice;
 
@@ -358,7 +358,7 @@ void TextToSpeechSetRate(int rate)
 	lts_loop(phTTS, pipe_value);
 }
 
-int TextToSpeechSetVoiceParam(char *cmd, int value)
+int TextToSpeechSetVoiceParam(const char *cmd, int value)
 {
 	unsigned short pipe_value[3];
 	int option;
