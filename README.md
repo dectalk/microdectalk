@@ -37,11 +37,12 @@ make config=release_win64
 
 see the [android-develop](https://github.com/dectalk/DECtalkMini/tree/android-develop) branch for the android source
 
-to compile for rpi pico, install the pico SDK and use cmake in the pico folder
+to compile for rpi pico, install the pico SDK and use cmake in the platforms/pico folder
 
-to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the gba folder
+to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the platforms/gba folder
 
-for webassembly go into the wasm folder, make sure you have the emscripten sdk in your home folder and activated and run bash compile.sh, launch it in a webserver for CORS compatability
+for webassembly go into the platforms/wasm folder, make sure you have the emscripten sdk in your home folder and activated and run bash compile.sh, launch it in a webserver for CORS compatability
+
+to compile for uefi, install gnu-efi and run make in the platforms/uefi folder (creates HdaPlayer.efi)
 
 note unsupported: if your device isn't on this list, try native anyways, most platforms with a compiler should be able to compile this
-
