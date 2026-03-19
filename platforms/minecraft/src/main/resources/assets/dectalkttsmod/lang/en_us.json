@@ -1,0 +1,6 @@
+{
+  "key.dectalkttsmod.toggle": "Toggle DECtalkMini TTS",
+  "key.dectalkttsmod.clear": "Clear DECtalkMini TTS Queue",
+  "options.enableDECtalkMini": "DECtalkMini TTS",
+  "options.enableDECtalkMiniTooltip": "Reads player chat messages aloud using DECtalkMini TTS"
+}

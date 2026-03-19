@@ -1,0 +1,11 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT"
+
+[[mods]]
+modId="dectalkttsmod"
+displayTest="MATCH_VERSION"
+version="1.0"
+displayName="DECtalkMini TTS Mod"
+description="Text-to-speech for Minecraft chat using DECtalk"
+authors="ByteSizedFox"

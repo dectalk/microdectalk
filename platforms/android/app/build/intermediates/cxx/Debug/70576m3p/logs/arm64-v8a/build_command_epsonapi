@@ -1,4 +1,0 @@
-/home/user/Android/Sdk/cmake/3.22.1/bin/ninja \
-  -C \
-  /home/user/DECtalkMini/platforms/android/app/.cxx/Debug/70576m3p/arm64-v8a \
-  epsonapi

@@ -1,0 +1,156 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+}
+
+group = mod_group_id
+version = mod_version
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+// Task to build native JNI libraries
+task buildNatives {
+    doLast {
+        def nativeSrcDir = file('src/main/native')
+
+        if (!nativeSrcDir.exists()) {
+            logger.warn("Native source directory not found: ${nativeSrcDir}")
+            return
+        }
+
+        def buildScript = 'build.sh'
+        def scriptFile = new File(nativeSrcDir, buildScript)
+
+        if (!scriptFile.exists()) {
+            logger.warn("Build script not found: ${scriptFile}")
+            return
+        }
+
+        logger.lifecycle("Building native libraries...")
+
+        try {
+            exec {
+                workingDir nativeSrcDir
+                commandLine 'bash', buildScript
+            }
+            logger.lifecycle("Native libraries built successfully")
+        } catch (Exception e) {
+            logger.error("Failed to build native libraries: ${e.message}")
+            logger.warn("Mod will be built without native libraries")
+        }
+    }
+}
+
+// Make processResources depend on buildNatives so natives are built before packaging
+tasks.named('processResources', ProcessResources).configure {
+    dependsOn buildNatives
+
+    var replaceProperties = [
+            minecraft_version: minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version,
+            forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id,
+            mod_name: mod_name,
+            mod_license: mod_license,
+            mod_version: mod_version,
+            mod_authors: mod_authors,
+            mod_description: mod_description
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                "Specification-Title": mod_id,
+                "Specification-Vendor": mod_authors,
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.jar.archiveVersion,
+                "Implementation-Vendor": mod_authors,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+    options.fork = true
+    options.forkOptions.javaHome = file('/usr/lib/jvm/java-25-openjdk')
+}
+
+// Optional: Clean task to remove built natives
+task cleanNatives(type: Delete) {
+    delete fileTree('src/main/resources/natives') {
+        include '**/*.so'
+        include '**/*.dll'
+        include '**/*.dylib'
+    }
+}
+
+clean.dependsOn cleanNatives

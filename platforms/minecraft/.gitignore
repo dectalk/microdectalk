@@ -1,0 +1,10 @@
+/.gradle/
+/.gradle-home/
+/.idea/
+/build/
+/run/
+/run-data/
+/src/generated/
+/src/main/resources/natives/**/*.dll
+/src/main/resources/natives/**/*.so
+/src/main/resources/natives/**/*.dylib
