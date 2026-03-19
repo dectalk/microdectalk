@@ -41,6 +41,13 @@ cd platforms/android
 ./gradlew assembleDebug
 ```
 
+to compile for minecraft, install a linux JDK/runtime setup that matches `platforms/minecraft/gradle.properties`, make sure MinGW is installed if you want the bundled Windows natives too, then run:
+```
+cd platforms/minecraft
+./gradlew assemble
+```
+and check build/libs
+
 to compile for rpi pico, install the pico SDK and use cmake in the platforms/pico folder
 
 to compile for gameboy advance, install gba-dev from pacman following [this guide](https://devkitpro.org/wiki/Getting_Started) and use make in the platforms/gba folder
