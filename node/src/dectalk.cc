@@ -9,10 +9,9 @@ bool callbackWasSet = false;
 
 short* audio_callback(short *data, long length, int phoneme) {
   Napi::Env env = callback.Env();
-
   Napi::Buffer<short> array = Napi::Buffer<short>::New(env, data, length);
-
-  callback.Call({ array });
+  if (callbackWasSet) callback.Call({ array });
+  return data;
 }
 
 Napi::Value setCallback(const Napi::CallbackInfo& info) {
