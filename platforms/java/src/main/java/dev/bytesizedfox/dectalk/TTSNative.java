@@ -1,4 +1,4 @@
-package dev.bytesizedfox.dectalkttsmod;
+package dev.bytesizedfox.dectalk;
 
 public class TTSNative {
     private static boolean loaded = false;
@@ -6,7 +6,7 @@ public class TTSNative {
     static {
         try {
             // Load both the TTS library and JNI wrapper
-            NativeLoader.loadLibrary("tts_jni");
+            NativeLoader.load("libdtc");
             loaded = true;
         } catch (Exception e) {
             System.err.println("Failed to load TTS native libraries: " + e.getMessage());

@@ -28,7 +28,7 @@ short *audio_callback(short *iwave, long length, int phoneme) {
     return NULL;
 }
 
-JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_init
+JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_init
   (JNIEnv *env, jclass cls) {
     total_size = 0;
     halting = 0;
@@ -36,7 +36,7 @@ JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_init
     return JNI_TRUE;
 }
 
-JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_speak
+JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_speak
   (JNIEnv *env, jclass cls, jstring text) {
     const char *native_text = (*env)->GetStringUTFChars(env, text, NULL);
     
@@ -51,24 +51,24 @@ JNIEXPORT jboolean JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_speak
     return JNI_TRUE;
 }
 
-JNIEXPORT void JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_sync
+JNIEXPORT void JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_sync
   (JNIEnv *env, jclass cls) {
     TextToSpeechSync();
 }
 
-JNIEXPORT void JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_reset
+JNIEXPORT void JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_reset
   (JNIEnv *env, jclass cls) {
     halting = 1;
     TextToSpeechStart("", NULL, WAVE_FORMAT_1M16);
     total_size = 0;
 }
 
-JNIEXPORT jint JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_getAvailableSamples
+JNIEXPORT jint JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_getAvailableSamples
   (JNIEnv *env, jclass cls) {
     return total_size;
 }
 
-JNIEXPORT jint JNICALL Java_dev_bytesizedfox_dectalkttsmod_TTSNative_readSamples
+JNIEXPORT jint JNICALL Java_dev_bytesizedfox_dectalk_TTSNative_readSamples
   (JNIEnv *env, jclass cls, jshortArray output, jint count) {
     int samples_to_read = (count < total_size) ? count : total_size;
     

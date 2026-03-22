@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(libdtc LANGUAGES C)
+project(dtc LANGUAGES C)
 
 set(JDK_8_VERSION "jdk8u462-ga")
-set(OPUS_VERSION "v1.5.2")
 
 if (WIN32)
     set(JNI_MD_URL "https://raw.githubusercontent.com/openjdk/jdk8u/refs/tags/${JDK_8_VERSION}/jdk/src/windows/javavm/export/jni_md.h")
@@ -38,17 +37,17 @@ if(WIN32)
     list(APPEND DTC_SOURCES ${DTC_WIN32_SOURCES})
 endif()
 
-add_library(libdtc SHARED
+add_library(dtc SHARED
         ${DTC_SOURCES}
         src/TTSNative.c
 )
 
-target_include_directories(libdtc PRIVATE
+target_include_directories(dtc PRIVATE
         ../../../include
         ${CMAKE_BINARY_DIR}/jni_headers
 )
 
-target_compile_definitions(libdtc PRIVATE
+target_compile_definitions(dtc PRIVATE
     _REENTRANT=1
     NOMME=1
     LTSSIM=1
@@ -67,7 +66,7 @@ target_compile_definitions(libdtc PRIVATE
 
 if(WIN32)
     # Matches the Premake script, though it is unusual to define __unix__ on Windows.
-    target_compile_definitions(libdtc PRIVATE __unix__)
+    target_compile_definitions(dtc PRIVATE __unix__)
 endif()
 
 message(STATUS "C compiler executable: ${CMAKE_C_COMPILER}")
