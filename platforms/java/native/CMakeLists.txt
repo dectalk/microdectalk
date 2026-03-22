@@ -62,6 +62,7 @@ target_compile_definitions(dtc PRIVATE
     DISABLE_AUDIO=1
     SINGLE_THREADED=1
     NO_FILESYSTEM=1
+    _MBCS
 )
 
 if(WIN32)

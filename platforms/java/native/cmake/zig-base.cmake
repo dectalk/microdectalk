@@ -34,6 +34,7 @@ string(APPEND BASE_COMPILER_FLAGS " -fno-unwind-tables")
 string(APPEND BASE_COMPILER_FLAGS " -fno-asynchronous-unwind-tables")
 string(APPEND BASE_COMPILER_FLAGS " -fvisibility=hidden")
 string(APPEND BASE_COMPILER_FLAGS " -Wno-error=date-time")
+string(APPEND BASE_COMPILER_FLAGS " -Wno-pointer-sign")
 
 
 set(BASE_LINKER_FLAGS "")

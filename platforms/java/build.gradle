@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'eclipse'
+    id 'net.linguica.maven-settings' version '0.5'
 }
 
 group = 'dev.bytesizedfox.dectalk'
@@ -11,6 +12,12 @@ version = '1.0.0'
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.named('sourcesJar', Jar) {
+    exclude 'natives/**'
 }
 
 def generatedResourcesDir = layout.buildDirectory.dir("generated-resources")
@@ -30,9 +37,19 @@ publishing {
             pom {
                 name = 'libdtc'
                 description = 'DECtalk Wrapper for Java'
-                url = 'https://github.com/Azim/DECtalkMini/'
+                url = 'https://github.com/dectalk/DECtalkMini/tree/dectalk-develop/platforms/java'
             }
         }
+    }
+    repositories {
+        maven {
+            name = 'hytalemodding.dev'
+            def releaseUrl = "https://maven.hytalemodding.dev/releases"
+            def snapshotUrl = "https://maven.hytalemodding.dev/snapshots"
+
+            url = uri(version.toString().endsWith("SNAPSHOT") ? snapshotUrl : releaseUrl)
+        }
+        
     }
 }
 
