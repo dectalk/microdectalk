@@ -1,5 +1,6 @@
 #include "epsonapi.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -144,10 +145,10 @@ int main(int argc, char *argv[]) {
         int c;
         while ((c = getchar()) != EOF) {
             char arr[] = {c, 0};
-            TextToSpeechStart((const char *)arr, NULL, WAVE_FORMAT_1M16);
+            TextToSpeechStart((char *)arr, NULL, WAVE_FORMAT_1M16);
         }
     } else {
-        TextToSpeechStart(text, NULL, WAVE_FORMAT_1M16);
+        TextToSpeechStart((char*)text, NULL, WAVE_FORMAT_1M16);
     }
 
     TextToSpeechSync();
