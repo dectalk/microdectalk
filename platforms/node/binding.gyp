@@ -6,10 +6,10 @@
       "cflags_cc!": [ "-fno-exceptions" ],
       "sources": [
         "src/dectalk.cc",
-        "<!@(node -p \"require('fs').readdirSync('../src').map(f=>'../src/'+f).join(' ')\")"
+        "<!@(node -p \"require('fs').readdirSync('../../src').map(f=>'../../src/'+f).join(' ')\")"
       ],
       "include_dirs": [
-        "../include",
+        "../../include",
         "<!@(node -p \"require('node-addon-api').include\")"
       ],
       'defines': [
