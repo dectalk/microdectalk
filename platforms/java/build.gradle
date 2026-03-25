@@ -1,0 +1,169 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'eclipse'
+    id 'net.linguica.maven-settings' version '0.5'
+}
+
+group = 'dev.bytesizedfox.dectalk'
+archivesBaseName = 'libdtc'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.named('sourcesJar', Jar) {
+    exclude 'natives/**'
+}
+
+def generatedResourcesDir = layout.buildDirectory.dir("generated-resources")
+
+sourceSets {
+    main {
+        resources {
+            srcDir generatedResourcesDir
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = 'libdtc'
+                description = 'DECtalk Wrapper for Java'
+                url = 'https://github.com/dectalk/DECtalkMini/tree/dectalk-develop/platforms/java'
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'hytalemodding.dev'
+            def releaseUrl = "https://maven.hytalemodding.dev/releases"
+            def snapshotUrl = "https://maven.hytalemodding.dev/snapshots"
+
+            url = uri(version.toString().endsWith("SNAPSHOT") ? snapshotUrl : releaseUrl)
+        }
+        
+    }
+}
+
+def platforms = [
+        [
+                name  : 'windows-x64',
+                file  : 'zig-x86_64-windows-gnu.cmake',
+                res   : 'windows-x64',
+                libExt: 'dll'
+        ],
+        [
+                name  : 'windows-arm64',
+                file  : 'zig-aarch64-windows-gnu.cmake',
+                res   : 'windows-aarch64',
+                libExt: 'dll'
+        ],
+        [
+                name  : 'linux-x64',
+                file  : 'zig-x86_64-linux-gnu.cmake',
+                res   : 'linux-x64',
+                libExt: 'so'
+        ],
+        [
+                name  : 'linux-arm64',
+                file  : 'zig-aarch64-linux-gnu.cmake',
+                res   : 'linux-aarch64',
+                libExt: 'so'
+        ],
+        [
+                name  : 'macos-x64',
+                file  : 'zig-x86_64-macos.cmake',
+                res   : 'mac-x64',
+                libExt: 'dylib'
+        ],
+        [
+                name  : 'macos-arm64',
+                file  : 'zig-aarch64-macos.cmake',
+                res   : 'mac-aarch64',
+                libExt: 'dylib'
+        ],
+]
+
+platforms.each { target ->
+    def safeName = target.name.capitalize().replace('-', '')
+    def configureTask = "configureNatives${safeName}"
+    def buildTask = "buildNatives${safeName}"
+    def copyTask = "copyNatives${safeName}"
+
+    def buildDir = layout.projectDirectory.dir("native/build/${target.res}")
+    
+    def cmakeListsPath = "../../CMakeLists.txt"
+    def cmakePlatformPath = "../../cmake/${target.file}"
+    def resourceDir = generatedResourcesDir.get().dir("natives/${target.res}")
+    def cSourcesDir = layout.projectDirectory.dir('native/src')
+    def outputName = "libdtc.${target.libExt}"
+
+    tasks.register(configureTask, Exec) {
+        group = 'natives'
+        description = "CMake configure for ${target.name}"
+        workingDir = buildDir
+
+        inputs.file(buildDir.file(cmakeListsPath))
+        inputs.file(buildDir.file(cmakePlatformPath))
+        inputs.dir(cSourcesDir)
+        outputs.dir(buildDir)
+
+        doFirst {
+            def dir = buildDir.asFile
+            if (dir.exists()) {
+                logger.lifecycle("Cleaning ${dir}")
+                project.delete(fileTree(dir: dir))
+            }
+            dir.mkdirs()
+        }
+
+        commandLine 'cmake',
+                "-DCMAKE_TOOLCHAIN_FILE=${cmakePlatformPath}",
+                '-DCMAKE_BUILD_TYPE=Release',
+                '-G', 'Ninja',
+                '../..'
+    }
+
+    tasks.register(buildTask, Exec) {
+        group = 'natives'
+        description = "Build natives for ${target.name}"
+        workingDir = buildDir
+        dependsOn configureTask
+
+        inputs.dir(buildDir)
+        outputs.dir(buildDir)
+
+        commandLine 'cmake', '--build', '.', '--config', 'Release'
+    }
+
+    tasks.register(copyTask, Copy) {
+        group = 'natives'
+        description = "Copy ${target.name} natives into resources"
+        dependsOn buildTask
+
+        from buildDir.file(outputName)
+        into resourceDir
+    }
+}
+
+tasks.register('buildAndCopyAllNatives') {
+    group = 'natives'
+    description = 'Build & copy all native libraries for every platform/arch'
+    dependsOn platforms.collect { "copyNatives${it.name.capitalize().replace('-', '')}" }
+}
+
+tasks.named('processResources') {
+    dependsOn 'buildAndCopyAllNatives'
+}
+
+tasks.named("clean", Delete).configure {
+    delete("native/build")
+}
