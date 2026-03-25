@@ -1,20 +1,38 @@
 {
-  "name": "hello_world",
-  "version": "0.0.0",
-  "description": "Node.js Addons Example #1",
-  "main": "src/index.js",
-  "private": true,
+  "name": "@dectalk/node",
+  "version": "1.0.0",
+  "description": "DECtalk for NodeJS",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "bindings": "~1.5.0",
+    "esbuild": "^0.27.4",
     "node-addon-api": "^8.1.0"
   },
   "scripts": {
     "build": "node-gyp build",
-    "build:dev": "node-gyp build --debug"
+    "build:js": "node esbuild.js",
+    "build:dev": "node-gyp build --debug",
+    "tsc": "tsc"
   },
   "gypfile": true,
   "devDependencies": {
+    "@types/bindings": "^1.5.5",
     "@types/node": "^25.5.0",
-    "node-api-headers": "^1.8.0"
+    "node-api-headers": "^1.8.0",
+    "typescript": "^6.0.2"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./types/index.mjs.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./types/index.cjs.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
   }
 }
