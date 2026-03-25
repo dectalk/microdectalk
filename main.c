@@ -3,8 +3,22 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+
+#ifdef _WIN32
+  #include <windows.h>
+  #include <io.h>
+  #include <fcntl.h>
+  #define isatty _isatty
+  #define fileno _fileno
+  #define dup    _dup
+  #define dup2   _dup2
+  #define STDIN_FILENO  0
+  #define STDOUT_FILENO 1
+  #define STDERR_FILENO 2
+#else
+  #include <unistd.h>
+#endif
 
 uint32_t header_raw[11] = {
     0x46464952, // RIFF
@@ -72,11 +86,18 @@ int main(int argc, char *argv[]) {
     const char *output_file = NULL;
     const char *text = NULL;
 
-    // detect cool unix pipes
-    if (!isatty(STDIN_FILENO)) {
+#ifdef _WIN32
+    // On Windows, stdout is text mode by default which will corrupt binary WAV data.
+    // Switch both stdin and stdout to binary mode immediately.
+    _setmode(_fileno(stdin),  _O_BINARY);
+    _setmode(_fileno(stdout), _O_BINARY);
+#endif
+
+    // detect cool unix pipes (works on Windows too via _isatty/_fileno aliases above)
+    if (!isatty(fileno(stdin))) {
         pipeIn = true;
     }
-    if (!isatty(STDOUT_FILENO)) {
+    if (!isatty(fileno(stdout))) {
         pipeOut = true;
     }
 
@@ -102,11 +123,18 @@ int main(int argc, char *argv[]) {
         usage(argv[0]);
     }
 
-    // magic unix stderr redirect
+    // redirect stdout to stderr for pipe output so diagnostic prints don't corrupt WAV stream
     if (pipeOut) {
+#ifdef _WIN32
+        // Windows: reopen stdout as stderr, save original stdout fd for WAV output
+        int stdout_fd = dup(STDOUT_FILENO);
+        dup2(STDERR_FILENO, STDOUT_FILENO);
+        outfile = _fdopen(stdout_fd, "wb");
+#else
         int stdout_fd = dup(STDOUT_FILENO);
         dup2(STDERR_FILENO, STDOUT_FILENO);
         outfile = fdopen(stdout_fd, "wb");
+#endif
     }
 
     init_wav(output_file);
