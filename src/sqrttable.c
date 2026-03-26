@@ -25,10 +25,6 @@
 
 #include <math.h>
 
-#ifdef ARM7
-#pragma arm section code="SQRTCODE", rodata="SQRTRODATA"
-#endif
-
 // sqrt values up to 0-4000
 const float sqrttable[]= {
 0.00000000f, 1.00000000f, 1.41421356f, 1.73205081f, 

@@ -40,67 +40,8 @@
 #include "port.h"
 #include "dectalkf.h"
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
-#endif
 
-#ifdef ARM7
-#include "stdlib.h"
-#include "string.h"
-#endif
-
-
-#ifdef MSDOS
-#ifdef SPANISH_SP
-#include "spa_def.h"
-#include "spa_type.tab"
-#include "spa_phon.tab"
-#include "spa_err.tab"
-
-#endif // SPANISH_SP
-
-#ifdef SPANISH_LA
-#include "la_def.h"
-#include "la_type.tab"
-#include "la_phon.tab"
-#include "la_err.tab"
-#endif
-
-#ifdef GERMAN
-#include "ger_def.h"
-#include "ger_type.tab"
-#include "ger_phon.tab"
-#include "ger_err.tab"
-#endif
-
-#ifdef ENGLISH_US
-#include "usa_def.h"
-
-/*
- *  include the tables here ... this allows me to determine
- *  the size and types without a lot of work ...
- */
-
-#include        "usa_type.tab"
-#include        "usa_phon.tab"
-#include        "usa_err.tab"
-#endif
-
-#ifdef ENGLISH_UK
-#include		"uk_def.h"
-#include        "uk_type.tab"
-#include        "uk_phon.tab"
-#include        "uk_err.tab"
-#endif
-
-#ifdef FRENCH
-#include		"fr_def.h"
-#include        "fr_type.tab"
-#include        "fr_phon.tab"
-#include        "fr_err.tab"
-#endif
-
-#else // MSDOS
 #include "spa_def.h"
 #include "spa_type.tab"
 #include "spa_phon.tab"
@@ -173,8 +114,6 @@ const unsigned int arpabet_lang_fonts[] = {
 	PFFR 
 };
 
-#endif // MSDOS
-
 /* MVP : The below variable "nlt" is now made local to usa_init function and
  * dynamically allocated to support multiple instances of speech object.
  */
@@ -184,15 +123,9 @@ const unsigned int arpabet_lang_fonts[] = {
  * #define USADEBUG_OLD 1
  */
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern void default_lang( PKSD_T , unsigned int, unsigned int);
-#endif
 
 void default_lang(PKSD_T, unsigned int, unsigned int); // NAL warning removal
-
-#ifdef ARM7
-struct dtpc_language_tables nlt;
-#endif
 
 /* ******************************************************************
  *  Function: usa_init()
@@ -215,9 +148,6 @@ void usa_init(PKSD_T pKsd_t)
 	/* nlt is allocated here ,It will be made free in DeleteTextToSpeechObject routine
 	* in API sub-system.
 	*/
-#ifdef ARM7
-	pnlt=&nlt;
-#else
 	if( (pnlt = (struct dtpc_language_tables*) 
        malloc(sizeof(struct dtpc_language_tables)))== NULL)
     {
@@ -225,7 +155,6 @@ void usa_init(PKSD_T pKsd_t)
 		   //      Error",MB_OK);
 		return;// (MMSYSERR_NOMEM);
 	}
-#endif // ARM7
 
 	/*
 	*  fill structure ...

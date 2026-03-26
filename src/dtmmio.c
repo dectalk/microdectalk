@@ -723,10 +723,7 @@ DTKmmioOpen(
 	     fileName = (char *)
 		 malloc(sizeof(char) * (strlen(template)+1) );
 	     strcpy(fileName, template);
-#ifdef VXWORKS
-#else
 		 (void)mktemp(fileName);
-#endif
 	     if ( fileName[0] == '\0' ) {
 		 free(fileName);
 		 DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
@@ -999,10 +996,8 @@ DTKmmioRename(
 	case EACCES:
 	case EROFS:
 	case ENOSPC:
-#ifndef VXWORKS
 #ifndef _WIN32
 	case EDQUOT:
-#endif
 #endif
 	case EPERM:
 	    return MMIOERR_CANNOTWRITE;

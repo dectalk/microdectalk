@@ -48,28 +48,9 @@
 /*  Include files.                                                    */
 /**********************************************************************/
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#endif
-
 #include <math.h>
-#ifdef VXWORKS
-#include <string.h>
-#include <stdlib.h>
-#else
-#ifdef ARM7
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#define TRUE 1
-#define FALSE 0
-#else
-  #if !defined (__APPLE__)
-    #include <malloc.h>
-  #endif
-#endif
-#endif
-#if defined (__APPLE__)
+#if !defined (__APPLE__)
+#include <malloc.h>
 #include <stdlib.h>
 #endif
 #include "dectalkf.h"
@@ -84,24 +65,13 @@
 #define  TWO_PI_EQUIVALENT  2 * M_PI
 #endif
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#if defined __osf__
-#include "dtmmedefs.h"
-#endif
-//#include "opthread.h"
-#endif
 /**********************************************************************/
 /*  Symbol definitions.                                               */
 /**********************************************************************/
 
 #define  RISE_TIME       0.002
 
-#ifdef	UNDER_CE
-#define  MAX_TONE_BLOCK   4096
-#else	
 #define  MAX_TONE_BLOCK   1024
-#endif
 #define  TONE_SYMBOL    0x7FFF
 
 /**********************************************************************/
@@ -170,11 +140,6 @@ static double Tone( double, double * );
 /**********************************************************************/
 /**********************************************************************/
 
-#ifdef ARM7
-short gToneBuffer[MAX_TONE_BLOCK];
-double gRiseBuffer[24]; // RISE_TIME * 11025 +1
-#endif
-
 BOOL PlayTones( LPTTS_HANDLE_T phTTS,
                 double DurationInMsec,
                 double Freq_0,
@@ -237,11 +202,7 @@ BOOL PlayTones( LPTTS_HANDLE_T phTTS,
   /********************************************************************/
   /*  Allocate the tone audio buffer.                                 */
   /********************************************************************/
-#ifdef ARM7
-  pToneBuffer=gToneBuffer;
-#else
   pToneBuffer = (short *)malloc( MAX_TONE_BLOCK * sizeof(short));
-#endif
   if ( pToneBuffer == NULL )
   {
     return( TRUE );
@@ -250,11 +211,7 @@ BOOL PlayTones( LPTTS_HANDLE_T phTTS,
   /********************************************************************/
   /*  Allocate the rise gain buffer.                                  */
   /********************************************************************/
-#ifdef ARM7
-  pRiseBuffer=gRiseBuffer;
-#else
   pRiseBuffer = (double *)malloc( iRiseSamples * sizeof(double));
-#endif
 
   if ( pRiseBuffer == NULL )
   {
@@ -370,10 +327,8 @@ BOOL PlayTones( LPTTS_HANDLE_T phTTS,
   /*  Free the rise gain buffer and the tone audio buffer.            */
   /********************************************************************/
   
-#ifndef ARM7
   free( pRiseBuffer );
   free( pToneBuffer );
-#endif
 
   return( FALSE );
 }
