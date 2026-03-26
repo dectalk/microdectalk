@@ -79,23 +79,11 @@
  
 #include "dectalkf.h"
 #include "cm_def.h"
-#ifdef ARM7
-#include "string.h"
-#endif
 /* GL 04/21/1997  add this for OSF build */
-#ifdef __osf__
-#include "opthread.h"
-#endif
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#include "opthread.h"
 extern void usa_init(PKSD_T);
-#endif
 void usa_init(PKSD_T); // CAB Capitalize name because lower case is not a type in ce
-
-#ifdef MSDOS
-#include "hardw.h"
-#endif
 
 #include "cm_util.h"
 
@@ -131,9 +119,6 @@ void cm_util_initialize(LPTTS_HANDLE_T phTTS)
 	memset(pCmd_t->esc_seq,0,sizeof(INPUT_SEQ));
 	pCmd_t->esc_seq->type = 0;
 #endif
-#ifdef MSDOS
-	pCmd_t->tone_wait = 0;
-#endif
 	pKsd_t->phoneme_mode = PHONEME_OFF | PHONEME_SPEAK;
 	pKsd_t->pitch_delta = 35;
 	pCmd_t->insertflag=0;
@@ -142,17 +127,13 @@ void cm_util_initialize(LPTTS_HANDLE_T phTTS)
 	pKsd_t->gender_switch = 0;
 
 	/* mfg 05/18/1998 initialize dbglog file pointer */
-#ifndef ARM7_NOSWI
 	pKsd_t->dbglog = 0;
-#endif
     /* GL 02/28/1997  set MODE_LATIN based on the compiler switch */
     /* only for MSDOS build. DECtalk software switch is in ttsapi.c */
-#ifdef MSDOS
 #ifdef SPANISH_LA
     pKsd_t->modeflag = MODE_CITATION | MODE_LATIN;
 #else
     pKsd_t->modeflag = MODE_CITATION;
-#endif
 #endif
 	/* Initialize setv[] */
 	for (i=0; i<10;i++)
@@ -179,11 +160,9 @@ void cm_util_initialize(LPTTS_HANDLE_T phTTS)
 	memset(pCmd_t->dict_hit_buf,0,PAR_MAX_INPUT_ARRAY);
 
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	memset(pCmd_t->input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 	memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 	memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
 #endif
 	pCmd_t->prevword=&(pCmd_t->clausebuf[1]);
     pCmd_t->prev_word_index=0;
@@ -241,11 +220,9 @@ void cm_util_flush_init(LPTTS_HANDLE_T phTTS)
 	memset(pCmd_t->dict_hit_buf,0,PAR_MAX_INPUT_ARRAY);
 
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	memset(pCmd_t->input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 	memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 	memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
 #endif
 	pCmd_t->prevword=&(pCmd_t->clausebuf[1]);
     pCmd_t->prev_word_index=0;
@@ -280,13 +257,10 @@ void cm_util_init_type(PKSD_T pKsd_t)
 f_fprintf("cmdtype: In init type\n");
 #endif
 
-
-#ifndef MSDOS
 	 /* 6/15/99 GL, BATS#896 don't do this initialization for MSDOS */
 	 pKsd_t->loaded_languages = 0;
 
 	 usa_init(pKsd_t);
-#endif
 
 }
 /*
@@ -304,26 +278,6 @@ f_fprintf("cmdtype: In init type\n");
  *
  */
 
-#ifdef DTEX
-void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode)
-{
-	/* push a string into the input buffer.. */
-	int pipe_value;
-	unsigned short i;
-	for (i=0;instr[i] != '\0'; i++)
-	{
-		if (mode == 0)
-			put_ring(pKsd_t->in_ring,&instr[i]);
-		/* GL 11/26/1996 send the string to pipe to maintain the sync. */
-		else
-		{
-			pipe_value = (PFASCII<<PSFONT)+instr[i];
-			cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-		}
-	}	
-
-}
-#else
 void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode)
 {
 	/* push a string into the input buffer.. */
@@ -339,11 +293,8 @@ void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode)
 	}
 
 }
-#endif
 
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_  || defined __EMSCRIPTEN__ || defined ARM7 || defined (__APPLE__)
 /*
  *      Function Name: cm_util_dtpc_tones() 
  *
@@ -384,9 +335,7 @@ int cm_util_dtpc_tones( LPTTS_HANDLE_T phTTS,
 	return( CMD_flushing );                        
   }
 
-#ifndef ARM7
   //WaitForLtsFlush( phTTS, 0xFFFFFFFF );
-#endif
   /********************************************************************/
   /*  The packet format here is different than the DTC07. The ramp    */
   /*  duration has been eliminated. The tone generation software      */
@@ -421,202 +370,11 @@ int cm_util_dtpc_tones( LPTTS_HANDLE_T phTTS,
   pipe[4] = 1000;
   pipe[5] = 0;
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   vtm_loop(phTTS,pipe);
-#endif
 
   return( CMD_success );
 }
-#endif /* (WIN32_OLD) || (__osf__) || (__unix__)*/
 
-#ifdef MSDOS
-/*
- *      Function Name: cm_util_dtpc_tones()
- *
- *      Description: send a tone packet to the spc ... this assumes that the spc has
- *      already been synced ...
- *
- *      Arguments: LPTTS_HANDLE_T phTTS, unsigned int key, unsigned int freq, unsigned int dur
- *
- *      Return Value: int
- *
- *      Comments:
- *
- */
-
-int cm_util_dtpc_tones(LPTTS_HANDLE_T phTTS, unsigned int key, unsigned int freq, unsigned int dur)
-{   
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	
-	int     i,j;
-	unsigned int _far *tone;
-	unsigned int packet_dur, pipe_value;
-	unsigned short on_time, off_time;
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-	{
-		return(CMD_flushing);
-	}
-#ifdef DTEX
-	/* 
-	 * need to make sure that the DSP is alive and well here.. if
-	 * it's asleep, we have to wake it up..
-	 */
-	if (pKsd_t->spc_waking)
-	{
-		sleep(5); /* give it time to complete. */
-	}
-	if (pKsd_t->spc_sleeping)
-	{
-		/*
-		 * have to re-init everything..
-		 * this should eventually generate a speakerdef packet
-		 * for the DSP; when PH pushes it out the DSP will 
-		 * get fired up, and when the speakerdef packet gets
-		 * to the DSP driver the waking flag will clear..
-		 */
-		pipe_value = LAST_VOICE;
-		cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-		pipe_value = 0xb; /* sync */
-		cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);             
-		/* now, sit and sleep until we're back on line.. */
-		while(pKsd_t->spc_waking || pKsd_t->spc_sleeping)
-			sleep(2);
-	}
-#endif /*DTEX*/
-					
-								 
-	/* hard-limit the duration to 30 seconds to make sure we don't */
-	/* get in trouble with overflow later.. */
-	if (dur>30000)
-	{
-		dur = 30000;
-	}
-	/*								  
-	 * comma causes a pause. I think this did not work correctly 
-	 * prior to 30nov95, because the pause was overlapped with the 
-	 * sending of tones (it just delayed the packets). It now does 
-	 * the sleep to sync up with any tones that have been 
-	 * sent, then returns. 
-	 */
-	if(key == ',')
-	{
-		/* finish up any tones in process.. */
-		sleep(pCmd_t->tone_wait+200); /* pause is 200 ticks, 2 seconds. */
-		/* we no longer have any tones to wait for.. */
-		pCmd_t->tone_wait = 0;  
-		pCmd_t->dtmf_start_clock = 0; /* reset the correction factor.. */
-		/* get back to work. */
-		return(CMD_success);
-	}
-	if(key == '-')
-	{
-		return(CMD_success);
-	}
-	if(key)
-	{
-		for(j=0;j<sizeof(tlikmap);j++)
-		{
-			if(key == (unsigned int)tlikmap[j])
-			{
-				break;
-			}
-		}
-		if(j == sizeof(tlikmap))
-		{
-			return(CMD_bad_value);
-		}
-		tone = (unsigned int _far *)spcget(SPC_type_tone);
-		for (i=0; i<NWDTMF; ++i)
-		{
-			tone[i] = tliproto[i];
-		}
-		tone[0] = tlitone0[j];          /* [F1] */
-		tone[1] = tlitone1[j];          /* [F2] */
-
-		spcwrite(tone);
-
-		/*
-		 * calculate the wait delay..           
-		 * being extremely careful about overflow.. 
-		 * this is a very general was to do it, and is perhaps
-		 * stupid for the particular case we have here (constant 
-		 * durations). But, what the heck. 
-		 * the 'or' terms are to make sure we don't end up too 
-		 * short due to truncation.. 
-		 */
-#ifdef DTPC2
-		on_time = ((tone[5]/25)<<2)|1;
-#else
-		on_time = (tone[5]/100)|1;
-#endif
-		off_time = (tone[9]/100)|1;  
-
-		pCmd_t->tone_wait = pCmd_t->tone_wait + (on_time+off_time);
-
-		return(CMD_success);
-	}   /* if(key) */
-	else 
-	{
-		pCmd_t->tone_wait = dur/10;
-		/*
-		 * messy stuff here. 
-		 * for the DTPC1 case , we don't do anything different. 
-		 * for DTPC2 (and probably anything beyond that) the 
-		 * of the NON field in the tone packet is different: for 
-		 * DTPC1 it was the tone "on" time in samples; for DTPC2 
-		 * it is the tone on time * 16 samples. This was done to 
-		 * allow tines longer than 3.2 seconds (32767 samples).
-		 * Unfortunately, this makes the longest possible tone be 
-		 * more than 64K samples, so all the sample-based math that 
-		 * calculated the time-to-wait-before-reset becomes overflow 
-		 * city.. Rather than make a complete mess of the code with 
-		 * #ifdefs, I just rewrote the whole mess. (...tek 30nov95)
-		 */
-#ifndef DTPC2
-		while(dur)
-		{
-			packet_dur = (dur > 3000) ? 3000 : dur;
-			tone = (unsigned int _far *)spcget(SPC_type_tone);
-			for (i=0; i<NWDTMF; ++i)
-			{
-				tone[i] = tliproto[i];
-			}
-			tone[0] = freq;
-			tone[1] = 0;
-			tone[5] = packet_dur*10;
-			tone[9] = 0;
-			dur -= packet_dur;
-#ifdef SW_VOLUME
-			/* tek 10aug99 use the packet writer that adjusts the volume */
-			write_tone_pkt(tone);
-#else /*SW_VOLUME*/
-			spcwrite(tone);
-#endif /*SW_VOLUME*/
-		}
-		return(CMD_success);
-#else /*DTPC2*/
-		tone = (unsigned int _far *)spcget(SPC_type_tone);
-		for (i=0; i<NWDTMF; ++i)
-		{
-			tone[i] = tliproto[i];
-		}
-		tone[0] = freq;
-		tone[1] = 0;
-		tone[5] = (unsigned int)(((unsigned long)packet_dur*10)>>4);
-		tone[9] = 0;
-#ifdef SW_VOLUME
-			/* tek 10aug99 use the packet writer that adjusts the volume */
-			write_tone_pkt(tone);
-#else /*SW_VOLUME*/
-			spcwrite(tone);
-#endif /*SW_VOLUME*/
-		return(CMD_success);
-#endif /*DTPC2*/
-	}
-}                             
-#endif /* MSDOS */
 /*
  *      Function Name: cm_util_dtpc_tones_reset()       
  *
@@ -634,22 +392,6 @@ int cm_util_dtpc_tones(LPTTS_HANDLE_T phTTS, unsigned int key, unsigned int freq
 
 int cm_util_dtpc_tones_reset(LPTTS_HANDLE_T phTTS)
 {   
-#ifdef MSDOS
-	unsigned int pipe_value; 
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-	{
-		return(CMD_flushing);                   
-	}
-	sleep(pCmd_t->tone_wait);
-	RESET_DSP;
-	RUN_DSP;
-	pipe_value = LAST_VOICE;
-	cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-	pCmd_t->tone_wait = 0; 
-#endif
 	return(CMD_success);
 }
 /*
@@ -673,19 +415,11 @@ void cm_util_type_out(LPTTS_HANDLE_T phTTS, unsigned int c)
 	DT_PIPE_T phone;
 
 	phone = LAST_VOICE;
-#ifdef EPSON_ARM7
-	fill_TTP_buffer(phTTS,&phone,1);
-#else
 	ph_loop(phTTS,&phone);
-#endif
 	for(tp = (unsigned char _far *)pKsd_t->typing_table[c];*tp;tp++)
 	{
 		phone = pKsd_t->reverse_ascky[(*tp) & 0xff];
-#ifdef EPSON_ARM7
-		fill_TTP_buffer(phTTS,&phone,1);
-#else
 		ph_loop(phTTS,&phone);
-#endif
 	}
 	switch (pKsd_t->lang_curr)
 	{
@@ -708,11 +442,7 @@ void cm_util_type_out(LPTTS_HANDLE_T phTTS, unsigned int c)
 		phone = (PFFR<<PSFONT) | COMMA;
 		break;
 	}
-#ifdef EPSON_ARM7
-	fill_TTP_buffer(phTTS,&phone,1);
-#else
 	ph_loop(phTTS,&phone);
-#endif
 }
 /*
  *      Function Name: cm_util_string_match()   

@@ -58,13 +58,7 @@
 
 #include "dectalkf.h"
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#include "ttsapi.h"
-#endif
-
-#ifdef ARM7
-#include "tts.h"
-#endif
 
 extern int      cm_cmd_rate(LPTTS_HANDLE_T phTTS);      		/* set the speaking rate */
 extern int      cm_cmd_name(LPTTS_HANDLE_T phTTS);              /* change the voice */
@@ -104,29 +98,17 @@ extern int      cm_cmd_debug(LPTTS_HANDLE_T phTTS);             /* debug command
 extern int      cm_cmd_gender(LPTTS_HANDLE_T phTTS);            /* gender command */
 extern int      cm_cmd_gender(LPTTS_HANDLE_T phTTS);            /* gender command */
 
-#ifdef DBGV_ON
-extern int      cm_cmd_dbgv(LPTTS_HANDLE_T phTTS);              /* dbgv command */
-#endif
-
 extern int      cm_cmd_setv(LPTTS_HANDLE_T phTTS);              /* send a stored set of changes */
 extern int      cm_cmd_loadv(LPTTS_HANDLE_T phTTS);             /* load changes to setv */  
 extern int      cm_cmd_vs(LPTTS_HANDLE_T phTTS);                /* special entry for :vs */
 
-#ifdef DTEX
-extern int      cm_cmd_power(LPTTS_HANDLE_T phTTS);          /* battery and power related stuff */
-#endif /*DTEX*/
 extern int      cm_cmd_version(LPTTS_HANDLE_T phTTS);        /* say/return version.*/
 extern int      cm_cmd_samples_per_frame(LPTTS_HANDLE_T phTTS);  /* samples per frame (speed) in the vtm */
-#ifdef DTEX
-extern int      cm_cmd_tsr(LPTTS_HANDLE_T phTTS);            /* [:tsr modes.. */
-#endif /*DTEX*/
 
-#ifndef MSDOS
 extern  int OpenLogFile(LPTTS_HANDLE_T phTTS);
 extern  void CloseLogFile(LPTTS_HANDLE_T phTTS);
 void StereoVolumeControl( LPTTS_HANDLE_T,int, int, BOOL, BOOL );
 void SetStereoVolume( LPTTS_HANDLE_T,int, int );
-#endif
 
 extern void cm_util_flush_init(LPTTS_HANDLE_T phTTS);
 extern void cm_util_initialize(LPTTS_HANDLE_T phTTS);
@@ -145,11 +127,7 @@ extern int 	cm_util_string_match(const unsigned char *sa[],unsigned char *s);
 extern unsigned long get_clock(void);                                   
 extern int 	cm_pars_icommand(PCMD_T pCmd_t);
 
-#ifdef MSDOS
-extern void _far cm_pars_loop(void);
-#else
 extern void _far cm_pars_loop(LPTTS_HANDLE_T phTTS);
-#endif
 
 #ifdef VOCAL
 void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c, 
@@ -183,13 +161,8 @@ extern void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c);
 extern int 	cm_cmd_sync(LPTTS_HANDLE_T phTTS); 
 extern void cm_text_getclause(LPTTS_HANDLE_T phTTS);
 
-#ifdef MSDOS
-extern int 	OutputCharacter( unsigned char c );
-#else
 extern void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c );
-#endif
 
-#if defined (WIN32_OLD) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern  void save_index(PKSD_T pKsd_t,unsigned int sym,unsigned int type,unsigned int value,unsigned int how);
 /* 
  * MVP : This function is used only in PH subsystem
@@ -203,17 +176,8 @@ extern  void flush_done(PKSD_T pKsd_t);
 extern  void set_gpio( int );
 extern  void clr_gpio( int );
 
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
-extern  int putseq(struct SEQ_struct __far *sp);
-#endif
-
 extern  int putn(unsigned int n);
 extern  int puthex(unsigned int n);
-
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ || defined (__APPLE__)
-extern  int putstring(char *str);
-#endif
-#endif //defined (WIN32_OLD) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 #ifdef NEW_BINARY_PARSER
 preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
@@ -289,16 +253,10 @@ int par_dict_dlook(PKSD_T pKsd_t,
 int par_dict_where_to_look(struct dic_entry far *pent,
 			   			   char *word);
 
-#ifndef EPSON_ARM7
 int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
 void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-#endif
 
 void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-
-#ifdef EPSON_ARM7
-extern void fill_TTP_buffer(LPTTS_HANDLE_T phTTS,short *phone,int count);
-#endif
 
 
 #endif // CMPROTH
