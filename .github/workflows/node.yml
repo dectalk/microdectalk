@@ -38,4 +38,5 @@ jobs:
       - name: Install dependencies
         run: |
           cd platforms/node
+          node copyFiles.js
           npm ci
