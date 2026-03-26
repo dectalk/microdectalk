@@ -109,7 +109,6 @@
 #undef LSWMAIN_DIC
 
 #include <stdlib.h>
-#include <libgen.h>
 
 #ifdef __linux
 #include <linux/limits.h>
@@ -127,6 +126,7 @@ struct share_data       *kernel_share;
 
 #ifdef __linux__
 #include <unistd.h>
+#include <libgen.h>
 #endif
 
 int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name);
