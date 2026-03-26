@@ -4653,19 +4653,6 @@ int find_next_marker(PLTS_T pLts_t,int pos)
 
 #include "proverbs.h"
 
-//#define stricmp strcasecmp
-// portable version of stricmp - ByteSizedFox
-#include <ctype.h>
-static int stricmp(const char *a, const char *b) {
-    while (*a && *b) {
-        int diff = tolower((unsigned char)*a) - tolower((unsigned char)*b);
-        if (diff != 0) return diff;
-        a++;
-        b++;
-    }
-    return tolower((unsigned char)*a) - tolower((unsigned char)*b);
-}
-
 int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *word_end)
 {
 	PLTS_T  pLts_t;
@@ -4698,7 +4685,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	while (high>=low)
 	{
 		mid=(high+low)>>1;
-		value=stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;
@@ -4718,7 +4705,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	if (!found)
 	{
 		mid=high;
-		value=stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;
@@ -4727,7 +4714,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	if (!found)
 	{
 		mid=low;
-		value=stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;

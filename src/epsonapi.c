@@ -31,6 +31,8 @@ extern int send_pars_loop(LPTTS_HANDLE_T phTTS);
 		
 #include "epsonapi.h"
 
+int _stricmp(const char *a, const char *b);
+
 extern int vtm_main(LPTTS_HANDLE_T phTTS);
 extern int ph_main(LPTTS_HANDLE_T phTTS);
 extern int lts_main(LPTTS_HANDLE_T phTTS);
@@ -379,4 +381,16 @@ short TextToSpeechGetSpdefValue(int index)
 
 	pDph_t = phTTS->pPHThreadData;
 	return pDph_t->curspdef[index];
+}
+
+// put here for portability
+#include <ctype.h>
+int _stricmp(const char *a, const char *b) {
+    while (*a && *b) {
+        int diff = tolower((unsigned char)*a) - tolower((unsigned char)*b);
+        if (diff != 0) return diff;
+        a++;
+        b++;
+    }
+    return tolower((unsigned char)*a) - tolower((unsigned char)*b);
 }

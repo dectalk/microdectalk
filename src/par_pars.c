@@ -2833,6 +2833,18 @@ int par_look_ahead_dictionary(unsigned char *current_rule,
  *	Comments:
  *
  * ******************************************************************/
+
+// FIXME: this portable version of the function was lazily copied, please replace later -ByteSizedFox
+static int _stricmp(const char *a, const char *b) {
+    while (*a && *b) {
+        int diff = tolower((unsigned char)*a) - tolower((unsigned char)*b);
+        if (diff != 0) return diff;
+        a++;
+        b++;
+    }
+    return tolower((unsigned char)*a) - tolower((unsigned char)*b);
+}
+
 short par_search_for_word(unsigned char *input,
 						  unsigned char *output,
 						  short dict_num,
