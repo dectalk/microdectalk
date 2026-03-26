@@ -50,7 +50,7 @@
 
 #include <math.h>
 // #if !defined (__APPLE__)
-#include <malloc.h>
+//#include <malloc.h> // should be in stdlib.h no longer needed
 #include <stdlib.h>
 // #endif
 #include "dectalkf.h"
