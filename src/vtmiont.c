@@ -1805,6 +1805,10 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 		 DWORD dwDuration,
 		 DWORD NextPhone)
 {
+	DWORD dwSampleNumber;
+	MMRESULT mmStatus;
+	PKSD_T pKsd_t;
+	PVTM_T pVtm_t;
 
   // load user callback
   if (phTTS->EmbCallbackRoutine != NULL) {
@@ -1814,11 +1818,9 @@ void OutputData( LPTTS_HANDLE_T phTTS,
   return;
 
   // REMOVE ME - EVERYTHING BELOW IN THIS FUNCTION
-  DWORD dwSampleNumber;
-  MMRESULT mmStatus;
   /* MVP MI Added PKSD_T element */
-  PKSD_T pKsd_t = phTTS->pKernelShareData;
-  PVTM_T pVtm_t = phTTS->pVTMThreadData; // tek 08jan98 we now need this.
+  pKsd_t = phTTS->pKernelShareData;
+  pVtm_t = phTTS->pVTMThreadData; // tek 08jan98 we now need this.
 
   // tek 20aug98
   // if we're doing a TTS_SILENT ConvertToPhonemes, just drop this on the

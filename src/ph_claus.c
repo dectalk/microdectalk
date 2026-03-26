@@ -697,7 +697,7 @@ static void send_pars (LPTTS_HANDLE_T phTTS)
 
 		fflush (stdout);
 #else
-		spcwrite (pKsd_t, pDph_t->delaypars);
+		spcwrite (pKsd_t, (unsigned short*)pDph_t->delaypars);
 		pDph_t->delaypars = (short far *) spcget (SPC_type_voice);
 #endif	// SEPARATE_PROCESSES
 

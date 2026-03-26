@@ -532,7 +532,7 @@ if (pDph_t->pSTphsettar)
      
      // tek 13aug96 have to free the last delaypars
      if(pDph_t->delaypars)
-     spcfree(pDph_t->delaypars);
+     spcfree((unsigned short*)pDph_t->delaypars);
      
      if (pDph_t)
      free (pDph_t);

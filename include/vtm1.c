@@ -363,7 +363,7 @@ void speech_waveform_generator(LPTTS_HANDLE_T phTTS)
   /********************************************************************/
   /********************************************************************/
 
-  variabpars = &(pVtm_t->parambuff[1]);
+  variabpars = (short*)&(pVtm_t->parambuff[1]);
 
   /*EAB If we just loaded a speaker def zero all vocal tract gains
 		so that this looks like a silence packet (last packet of previous frame
@@ -1562,7 +1562,7 @@ void read_speaker_definition(LPTTS_HANDLE_T phTTS)
   pVtm_t->vtdTuneResults.c1max = 0;        /* maximum value within filter of casade 3 */
 
 
-  spdeftochip = &(pVtm_t->parambuff[1]);
+  spdeftochip = (short*)&(pVtm_t->parambuff[1]);
 
   /********************************************************************/
   /*  Constants used in random number generation.                     */

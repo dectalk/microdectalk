@@ -81,6 +81,7 @@
 #ifndef NO_FILESYSTEM
 #ifdef _WIN32
 #include "mman-win32/mman.h"
+#include <io.h>
 #else
 #include <sys/mman.h>
 #endif

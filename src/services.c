@@ -280,7 +280,7 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 	pKsd_t->spc_pkt_save = spc_pkt;
 
 	free( last_pkt );
-	vtm_loop(phTTS,buf);
+	vtm_loop(phTTS,(short*)buf);
 
   }
 //#ifdef WIN32_OLD

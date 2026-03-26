@@ -526,7 +526,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 	k = 0;
 	while (true)
 	{
-		len = syl_find_affix (pDph_t, &(pDph_t->phone_struct[j]));
+		len = syl_find_affix (pDph_t, (int*)&(pDph_t->phone_struct[j]));
 		if (len == 0)
 			break;
 		while (len-- && j)
@@ -549,7 +549,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 			/* 
 			 *  Find vowel ...
 			 */
-			len = syl_find_vowel (&(pDph_t->phone_struct[j]));
+			len = syl_find_vowel ((int*)&(pDph_t->phone_struct[j]));
 			if (len)
 			{
 				while (len-- && j)
@@ -572,7 +572,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 			/* 
 			 *  head cons ...
 			 */
-			len = syl_find_cons( &(pDph_t->phone_struct[j]));
+			len = syl_find_cons( (int*)&(pDph_t->phone_struct[j]));
 
 			if (len)
 			{
