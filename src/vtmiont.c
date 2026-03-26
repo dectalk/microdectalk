@@ -97,10 +97,6 @@
  //#define HLSYN
 #include "dectalkf.h"
 
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//#include "playaudd.h"
-#endif
-
 #ifdef HLSYN
 #include "hlsynapi.h"
 #endif
@@ -111,26 +107,7 @@
 #endif // SAPI_GROUP_H_TIMING
 // Must be defined above..
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#endif
-
-#ifndef ARM7
-//#include "opthread.h"
-#endif
-
-#if defined VXWORKS || defined ARM7
 #include <stdlib.h>
-#include <string.h>
-#else
-  #if !defined (__APPLE__)
-    #include <malloc.h>
-  #endif
-#endif
-
-#if defined (__APPLE__)
-#include <stdlib.h>
-#endif
 
 #include "port.h"
 #include "defs.h"
@@ -156,22 +133,11 @@
 #endif //ACCESS32
 #endif //OLEDECTALK
 
-#ifdef UNDER_CE
-#include "cemm.h"
-#endif //UNDER_CE
-
 #ifdef TYPING_MODE
 // this magic number is different depending on the brain-damaged audio driver
 // you're stuck with.
-#ifdef UNDER_CE
-#define MIN_TYPING_FRAMES (0x1f)// tek frames to queue before starting audio
-								// this number seems to be magic for some audio 
-								// drivers.  this interacts with the calculation
-								// for uiStartupWriteLength as well.
-#else //UNDER_CE
 
 #define MIN_TYPING_FRAMES (0xF)	// tek frames to queue before starting audio
-#endif //UNDER_CE
 //DWORD MIN_TYPING_FRAMES=5;
 #define	TYPING_QUEUE_SLEEP_TIME (3)	// this is the time that the VTM thread
 									// falls asleep for after queueing the 
@@ -290,11 +256,9 @@ extern BOOL PlayTones( LPTTS_HANDLE_T,
 			   double
 			   );
 
-#ifndef ARM7
 extern MMRESULT WriteAudioToFile( LPTTS_HANDLE_T, LPSAMPLE_T, UINT );
 
 extern void QueueToMemory( LPTTS_HANDLE_T, LPSAMPLE_T, DWORD );
-#endif
 
 extern void PutIndexMarkInBuffer( LPTTS_HANDLE_T, DWORD, DWORD );
 
@@ -307,29 +271,16 @@ extern void PutPhonemeInBuffer( LPTTS_HANDLE_T phTTS,
 /*  Function Prototypes.                                              */
 /**********************************************************************/
 
-#ifdef ARM7
-int OutputData( LPTTS_HANDLE_T,
-		 short *,
-		 unsigned int,
-		 DWORD,
-		 DWORD,
-		 DWORD);
-#else
 void OutputData( LPTTS_HANDLE_T,
 		 short *,
 		 unsigned int,
 		 DWORD,
 		 DWORD,
 		 DWORD);
-#endif
 
 // tek 07jan98 this now exists for DAPI too. (bats546)
 // tek 13nov97 new prototype. new function.
 void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDuration, DWORD dwNextPhoneme);
-
-#ifdef SAPI5DECTALK
-extern void SendSapi5VisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDuration,DWORD NextPhone);
-#endif
 
 extern int QueueSapiAudioData(LPTTS_HANDLE_T phTTS,
 		  			short * pBuffer,
@@ -337,9 +288,7 @@ extern int QueueSapiAudioData(LPTTS_HANDLE_T phTTS,
 extern int OutputSapiAudioData(LPTTS_HANDLE_T phTTS,
 		  			short * pBuffer,
 					unsigned int uiSamplesToOutput);
-#ifndef ARM7
 extern void SendEventToSapi(LPTTS_HANDLE_T phTTS,int uiMsg, void *in_Mark,LPARAM lParam);
-#endif
 
 #ifdef HLSYN
 extern void initDefaultSpeakerValues(LPTTS_HANDLE_T phTTS,TSpeakerDef *speakerDef);
@@ -356,12 +305,6 @@ extern void changeSpeakerValues(LPTTS_HANDLE_T phTTS,TSpeakerDef *speakerDef, cu
 /**********************************************************************/
 /*  Global Variables.                                                 */
 /**********************************************************************/
-#ifdef ARM7
-#pragma arm section rwdata="VTMIORWDATA", zidata="VTMIODATA"
-#ifndef EPSON_ARM7
-VTM_T Vtm_t;
-#endif
-#endif
 
 //char * phprint( int a){};
 
@@ -374,22 +317,12 @@ char szTemp[256]="";
 /**********************************************************************/
 /*  Start of the VTM thread.                                          */
 /**********************************************************************/
-#ifdef WIN32_OLD
-DWORD __stdcall vtm_main( LPTTS_HANDLE_T phTTS )
-#elif defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 DWORD vtm_main( LPTTS_HANDLE_T phTTS )
-#else
-DWORD vtm_main( LPTTS_HANDLE_T phTTS )
-#endif
 {
 #ifndef SINGLE_THREAD
 /* ********************* NOT USED **********************************/
 #if 0
 #ifdef OLEDECTALK	//tek 04aug97
-  PMARK_DATA pMarkData;
-#endif
-
-#ifdef SAPI5DECTALK
   PMARK_DATA pMarkData;
 #endif
 
@@ -429,18 +362,8 @@ DWORD vtm_main( LPTTS_HANDLE_T phTTS )
   /********************************************************************/
   // MVP: 03/20/96 All mallocs are replace with callocs to
   // initialize all the elements to Zero.
-#ifdef ARM7
-#ifdef EPSON_ARM7
-  pVtm_t=phTTS->pVTMThreadData;
-  memset(pVtm_t,0,sizeof(VTM_T));
-#else
-  memset(&Vtm_t,0,sizeof(VTM_T));
-  pVtm_t=&Vtm_t;
-#endif
-#else
   if((pVtm_t = (PVTM_T) calloc(1,sizeof(VTM_T))) == NULL)
 	return(MMSYSERR_NOMEM);
-#endif // ARM7
   /* MVP : Associate VTM Thread specific data handle with current speech object */
   phTTS->pVTMThreadData = pVtm_t;
 
@@ -506,7 +429,6 @@ int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 
 	{
 	  		/* display debug switch manual once */
-#ifndef ARM7_NOSWI
 	if (pKsd_t->debug_switch == 0x1fff)
 	{
 		printf("VTM debug switch description:\n");
@@ -520,7 +442,6 @@ int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 		/* reset to 0 again */
 		pKsd_t->debug_switch = 0;
 	}
-#endif
 
 	// tek 18nov97 we may need to adjust PH's priority here; if the
 	// input pipe has gone nearly dry, we want to make sure that PH is at least
@@ -1262,14 +1183,7 @@ typedef struct tagLLFrame {
 // }
 //	
 
-#ifdef SAPI5DECTALK
-	if (phTTS->OutputIsText==0 && phTTS->SkippingForward==0)
-	{
-#endif
      speech_waveform_generator(phTTS);
-#ifdef SAPI5DECTALK
-	}
-#endif
 #ifdef PH_DEBUG_OLD
 	if(DT_DBG(PH_DBG,0x100))
 	{
@@ -1303,14 +1217,7 @@ typedef struct tagLLFrame {
 
 #endif
 #else // HLSYN
-#ifdef SAPI5DECTALK
-	if (phTTS->OutputIsText==0 && phTTS->SkippingForward==0)
-	{
-#endif
 		speech_waveform_generator(phTTS);
-#ifdef SAPI5DECTALK
-	}
-#endif
 
 #endif // HLSYN
 
@@ -1324,7 +1231,6 @@ typedef struct tagLLFrame {
 			  (DWORD)pVtm_t->parambuff[OUT_DU+1],
 			  (DWORD)pVtm_t->parambuff[OUT_PH2+1]
 			  );
-#ifndef SAPI5DECTALK
 #ifdef TYPING_MODE
 	      phTTS->wTypingFrameCount++;
 #ifdef VTM_DEBUG_OLD
@@ -1417,7 +1323,6 @@ typedef struct tagLLFrame {
 	//	}
 #endif // OLEDECTALK tek 18nov97
 #endif // TYPING_MODE
-#endif // SAPI5DECTALK
 	  //  }
 	//  else
 //	    {
@@ -1430,13 +1335,6 @@ typedef struct tagLLFrame {
 	      /*  queued sample count is incremented (The queued sample     */
 	      /*  count is incremented in the OutputData() function).       */
 	      /**************************************************************/
-#ifdef ARM7
-//		  return 1; // reset has been called, fall back to start
-#else
-//			OP_LockMutex( phTTS->pcsQueuedSampleCount );
-//			phTTS->dwQueuedSampleCount = (unsigned int)4294967295;
-//			OP_UnlockMutex( phTTS->pcsQueuedSampleCount );
-#endif
 	    }
 	  
 	  break;
@@ -1484,11 +1382,6 @@ typedef struct tagLLFrame {
 			(double)pVtm_t->parambuff[5],
 			pVtm_t->SampleRate))
 	{
-#ifndef ARM7
-	  //TextToSpeechErrorHandler( phTTS,
-	//				(WPARAM)0,
-	//				(LPARAM)MMSYSERR_NOMEM );
-#endif
 	}
 	  }
 	  else
@@ -1503,13 +1396,9 @@ typedef struct tagLLFrame {
 	/*  count is incremented in the OutputData() function).       */
 	/**************************************************************/
 
-#ifdef ARM7
-		  return 1; // reset has been called, fall back to start
-#else
 	//OP_LockMutex( phTTS->pcsQueuedSampleCount );
 	phTTS->dwQueuedSampleCount = 4294967295;
 	//OP_UnlockMutex( phTTS->pcsQueuedSampleCount );
-#endif
 	  }
 
 	  break;
@@ -1548,9 +1437,6 @@ typedef struct tagLLFrame {
 	/******************************************************************/
 
 	case SPC_type_sync:
-#ifdef ARM7
-		return 0; // doesn't do anything from here on
-#else
 	  if ( ! pKsd_t->halting )
 	  {
 	switch ( phTTS->dwOutputState )
@@ -1621,7 +1507,6 @@ typedef struct tagLLFrame {
 	  break;
 	}
 	  }
-#endif // ARM7
 	  break;
 
 	/******************************************************************/
@@ -1633,16 +1518,6 @@ typedef struct tagLLFrame {
 	  {
 		  pVtm_t->parambuff[i-1]=input[i];
 	  }
-#ifdef ARM7
-#ifndef EPSON_ARM7
-	  // return the index mark using the callback now
-	  if (phTTS->EmbCallbackRoutine(input[1],3)==NULL) // index returned
-	  {
-		phTTS->pKernelShareData->halting=1;
-	  }
-#endif
-	  return 0;
-#else
 	  /* MGS BATS #409 07/18/97 */
 	  if ( ! pKsd_t->halting )
 	  {
@@ -1722,52 +1597,6 @@ typedef struct tagLLFrame {
 	}
 
 #endif //OLEDECTALK
-#ifdef SAPI5DECTALK
-	switch(pVtm_t->control)
-	{
-	case (SPC_type_index|SPC_subtype_bookmark):
-	case (SPC_type_index|SPC_subtype_wordpos):
-	case (SPC_type_index|SPC_subtype_start):
-	case (SPC_type_index|SPC_subtype_stop):
-	case (SPC_type_index|SPC_subtype_sentence):
-	case (SPC_type_index|SPC_subtype_volume):
-		pVtm_t->pMarkData = NULL;	// just for safety
-							// the sync thread will toss
-							// these packets with null ptrs
-							// which is about the only way 
-							// we can handle a malloc fail.
-		pVtm_t->pMarkData = malloc(sizeof(MARK_DATA));
-		if (pVtm_t->pMarkData)
-		{
-		  pVtm_t->pMarkData->qTimeStamp = pVtm_t->dwSampleNumber;
-		  // glue together the two halves of the index value.
-		  pVtm_t->pMarkData->dwMarkValue  =  (LPARAM)( (pVtm_t->dwSyncParams[1]<<16) | (pVtm_t->dwSyncParams[2]&0xFFFF));
-		  pVtm_t->pMarkData->dwMarkType = pVtm_t->control;
-#ifdef VTM_DEBUG_OLD  //tek15aug97
-			{
-				char szTemp[256]="";
-				sprintf(szTemp,"vtmiont mark adr:%08lx Val:%08lx typ:%08lx samp:%lu at %lu\n",
-					pMarkData,
-					pMarkData->dwMarkValue,
-					pMarkData->dwMarkType,
-					(DWORD) qwTemp,
-					timeGetTime());
-				OutputDebugString(szTemp);
-			}
-#endif //VTM_DEBUG_OLD
-
-		}
-
- 		// finally, send the pointer to this struct off to 
-		// be processed.
-		pVtm_t->dwSampleNumber = (DWORD)(pVtm_t->pMarkData);
- 		break;
-	default:
-		// just leave it alone.
-		break;
-	}
-
-#endif //SAPI5DECTALK
 
 	switch ( phTTS->dwOutputState )
 	{
@@ -1874,51 +1703,13 @@ typedef struct tagLLFrame {
 
 	  break;
 	case STATE_OUTPUT_SAPI5:
-#ifdef SAPI5DECTALK
-		if (!pKsd_t->halting)
-		{
-			if (pVtm_t->dwSampleNumber!=0 || pVtm_t->control == SPC_type_index)
-			{
-				if  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_bookmark))
-				{
-					Report_TTS_Status(phTTS,phTTS->uiID_Bookmark_Message,pVtm_t->dwSampleNumber,(LPARAM)pVtm_t->dwSyncParams[1]);
-					free((void *)(pVtm_t->dwSampleNumber));
-				}
-				else if  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_wordpos))
-				{
-					SendEventToSapi(phTTS,phTTS->uiID_Wordpos_Message,pVtm_t->dwSampleNumber,(LPARAM)pVtm_t->dwSyncParams[1]);
-					free((void *)(pVtm_t->dwSampleNumber));
-				}
-				//	else if  (control ==  (SPC_type_index	| SPC_subtype_start))
-				//		Report_TTS_Status(phTTS,phTTS->uiID_Start_Message,dwSampleNumber,(LPARAM)dwSyncParams[1]);
-				else if  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_stop))
-				{
-					Report_TTS_Status(phTTS,phTTS->uiID_Stop_Message,pVtm_t->dwSampleNumber,(LPARAM)pVtm_t->dwSyncParams[1]);
-					free((void *)(pVtm_t->dwSampleNumber));
-				}
-				else if  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_start))
-				{
-					SendEventToSapi(phTTS,phTTS->uiID_Sentence_Message,pVtm_t->dwSampleNumber,(LPARAM)pVtm_t->dwSyncParams[1]);
-					free((void *)(pVtm_t->dwSampleNumber));
-				}
-				else if  (pVtm_t->control ==  (SPC_type_index	| SPC_subtype_volume))
-				{
-					SendEventToSapi(phTTS,(SPC_type_index | SPC_subtype_volume),pVtm_t->dwSampleNumber,(LPARAM)pVtm_t->dwSyncParams[1]);
-					free((void *)(pVtm_t->dwSampleNumber));
-				}
-				else
-					Report_TTS_Status(phTTS,phTTS->uiID_Index_Message,(WPARAM)pVtm_t->dwSyncParams[2],(LPARAM)pVtm_t->dwSyncParams[1]);
-			}
-		}
-#endif
-		break;
+	  break;
 
 
 	default:
 	  break;
 	}
 	  }
-#endif // ARM7
 		  break;
 
 	/******************************************************************/
@@ -1967,12 +1758,6 @@ typedef struct tagLLFrame {
 	/******************************************************************/
 	/*  Fix reset hang problem. WIH 3/28/95.                          */
 	/******************************************************************/
-#ifndef ARM7
-	//if ( (phTTS->bMemoryReset) && (phTTS->pTTS_Buffer != NULL) )
-	//{
-	  //SendBuffer( phTTS );
-	//}
-#endif
   }
   return 0;
 }
@@ -2011,39 +1796,6 @@ typedef struct tagLLFrame {
 /*                                                                    */
 /**********************************************************************/
 /**********************************************************************/
-#ifdef ARM7
-int OutputData( LPTTS_HANDLE_T phTTS,
-		 short * pBuffer,
-		 unsigned int uiSamplesToOutput,
-		 DWORD dwPhoneme,
-		 DWORD dwDuration,
-		 DWORD NextPhone)
-{
-	short *temp;
-
-	// call the callback now
-	memcpy(phTTS->output_buffer,pBuffer,uiSamplesToOutput*2);
-#ifndef EPSON_ARM7
-	temp=phTTS->EmbCallbackRoutine(phTTS->output_buffer,0);     
-	if (temp==NULL)
-	{
-		phTTS->pKernelShareData->halting=1;
-		phTTS->output_buffer=pBuffer;
-	}
-	else
-	{
-		phTTS->output_buffer=temp;
-	}
-#endif
-#ifdef EPSON_ARM7
-	phTTS->PTS_return_code=4; //PTS_BUFFER_FILLED
-#endif
-	// set the value of the next buffer
-	return 0;
-}
-
-#else
-
 extern int last_phoneme;
 
 void OutputData( LPTTS_HANDLE_T phTTS,
@@ -2067,10 +1819,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
   /* MVP MI Added PKSD_T element */
   PKSD_T pKsd_t = phTTS->pKernelShareData;
   PVTM_T pVtm_t = phTTS->pVTMThreadData; // tek 08jan98 we now need this.
-#ifdef __ipaq__
-  short *newbuffer;
-  int i;
-#endif
 
   // tek 20aug98
   // if we're doing a TTS_SILENT ConvertToPhonemes, just drop this on the
@@ -2095,21 +1843,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
   /********************************************************************/
 
   case STATE_OUTPUT_AUDIO:
-#ifdef __ipaq__
-       /* HACK ALERT */
-       /* this code is her to convert from 11025 Hz mono to
-          22050 Hz Stereo for the ipaq.  This code will probably
-          have to be removed when the ipaq linux kernel is fixed. */
-       newbuffer=malloc(sizeof(short)*(uiSamplesToOutput*4+1));
-       for (i=0;i<uiSamplesToOutput;i++)
-       {
-               newbuffer[i<<2]=pBuffer[i];
-               newbuffer[(i<<2)+1]=pBuffer[i];
-               newbuffer[(i<<2)+2]=pBuffer[i];
-               newbuffer[(i<<2)+3]=pBuffer[i];
-       }
-       uiSamplesToOutput<<=2;
-#endif
 
 #ifdef VTM_DEBUG_OLD
 	if ( dwPhoneme != pKsd_t->dwLastPhoneme )
@@ -2155,15 +1888,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 #endif
 	  //  phTTS->pAudioHandle->bPipesNotEmpty = FALSE;
 	  //}
-#ifdef __ipaq__
-      PA_Queue( phTTS->pAudioHandle,
-               (LPAUDIO_T)newbuffer,
-               uiSamplesToOutput << 1 );
-#else
-	//PA_Queue( phTTS->pAudioHandle,
-	//	  (LPAUDIO_T)pBuffer,
-	//	  uiSamplesToOutput << 1 );
-#endif
 	
 	//OP_LockMutex( phTTS->pcsQueuedSampleCount );
 	// tek 19mar98 bats 608/608/620
@@ -2183,9 +1907,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 	phTTS->dwQueuedSampleCount += (DWORD)uiSamplesToOutput << 1; 
 #endif //OLEDECTALK
       //OP_UnlockMutex( phTTS->pcsQueuedSampleCount );
-#ifdef __ipaq__
-     free(newbuffer);
-#endif
 	break;
 
   /********************************************************************/
@@ -2239,32 +1960,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 
   case STATE_OUTPUT_SAPI5:
 
-#ifdef SAPI5DECTALK
-// tek 07jan98 this now exists for DAPI too (bats 546)
-	if ( dwPhoneme != pKsd_t->dwLastPhoneme )
-	  {
-	    // tek 08jan98 minor nit; this needs to be in milliseconds,
-	    // not frames. 
-	    dwDuration = 
-	      ( 1000* dwDuration * pVtm_t->uiNumberOfSamplesPerFrame) 
-	      / pKsd_t->uiSampleRate;
-		/* fixed bug uncovered by removing the debug window for release builds MGS */
-		if (dwPhoneme==32767) // Should be TONE_SYMBOL
-		{
-			SendSapi5VisualNotification(phTTS, 0, dwDuration,NextPhone);
-		}
-		else
-		{
-			SendSapi5VisualNotification(phTTS, dwPhoneme, dwDuration,NextPhone);
-		}
-	  } // if new phoneme
-
-	if (phTTS->OutputIsText==0)
-	{
-	  OutputSapiAudioData(phTTS, pBuffer, uiSamplesToOutput);
-	}
-#endif
-
 	break;
 
 
@@ -2275,7 +1970,6 @@ void OutputData( LPTTS_HANDLE_T phTTS,
 
   return;
 }
-#endif // #ifdef ARM7
 /**********************************************************************/
 /**********************************************************************/
 /*                                                                    */
@@ -2345,7 +2039,6 @@ void InitializeVTM(LPTTS_HANDLE_T phTTS)
 // tek 07jan97 this now exists for DAPi too (bats 546)
 // tek 27aug97 routine to handle sending the visual marks.
 // tek 20feb98 two different variants depending on whether we're using bookmark timing.
-#ifndef ARM7
 #ifndef USE_BOOKMARKS_FOR_SYNC
 
 void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDuration, DWORD dwNextPhoneme)
@@ -2423,13 +2116,6 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 		dwSyncParams[0]=SPC_type_visual;
 		dwSyncParams[1]=0;
 #if 0
-#ifdef __osf__
-		dwSyncParams[2]=(DWORD)((((long)(pvdPacket)) & 0xFFFFFFFF00000000) >> 32);
-		dwSyncParams[3]=(DWORD)(((long)(pvdPacket)) & 0x00000000FFFFFFFF);
-#else
-		dwSyncParams[2]=0;
-		dwSyncParams[3]=(DWORD)pvdPacket;
-#endif
 #else
 		dwSyncParams[2]=(DWORD)((((QWORD)(PTRINT)(pvdPacket)) & 0xFFFFFFFF00000000) >> 32);
 		dwSyncParams[3]=(DWORD)(((QWORD)(PTRINT)(pvdPacket)) & 0x00000000FFFFFFFF);
@@ -2543,13 +2229,8 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 			  DWORD dwSyncParams[4];
 			  dwSyncParams[0]=SPC_type_visual;
 			  dwSyncParams[1]=0;
-#ifdef __osf__
-		dwSyncParams[2]=(DWORD)((((long)(pvdPacket)) & 0xFFFFFFFF00000000) >> 32);
-		dwSyncParams[3]=(DWORD)(((long)(pvdPacket)) & 0x00000000FFFFFFFF);
-#else
 		dwSyncParams[2]=0;
 		dwSyncParams[3]=(DWORD)pvdPacket;
-#endif
 			  //write_pipe(pKsd_t->sync_pipe, dwSyncParams,4);
 			  
 			  // free the allocs if the bookmark failed
@@ -2564,114 +2245,14 @@ void SendVisualNotification(LPTTS_HANDLE_T phTTS, DWORD dwPhoneme, DWORD dwDurat
 	} // if (pvdPacket)
 }
 #endif //USE_BOOKMARKS_FOR_SYNC
-#endif // ARM7
 
 #ifdef HLSYN
-#ifdef EPSON_ARM7
-typedef struct SPEAKER_DEF_T {
-	short sex;                /* Sex 1 (male) or 0 (female)                        */
-	short smoothness;         /* Smoothness, in %                                  */
-	short assertiveness;      /* Assertiveness, in %                               */
-	short average_pitch;      /* Average pitch, in Hz                              */
-	short pitch_range;        /* Pitch range, in %                                 */
-	short breathiness;        /* Breathiness, in decibels (dB)                     */
-	short richness;           /* Richness, in %                                    */
-	short num_fixed_samp_og;  /* Number of fixed samples of open glottis           */
-	short laryngealization;   /* Laryngealization, in %                            */
-	short head_size;          /* Head size, in %                                   */
-	short formant4_res_freq;  /* Fourth formant resonance frequency, in Hz         */
-	short formant4_bandwidth; /* Fourth formant bandwidth, in Hz                   */
-	short formant5_res_freq;  /* Fifth formant resonance frequency, in Hz          */
-	short formant5_bandwidth; /* Fifth formant bandwidth, in Hz                    */
-	short parallel4_freq;     /* Parallel fourth formant frequency, in Hz          */
-	short parallel5_freq;     /* Parallel fifth formant frequency, in Hz           */
-	short gain_frication;     /* Gain of frication source, in dB                   */
-	short gain_aspiration;    /* Gain of aspiration source, in dB                  */
-	short gain_voicing;       /* Gain of voicing source, in dB                     */
-	short gain_nasalization;  /* Gain of nasalization, in dB                       */
-	short gain_cfr1;          /* Gain of cascade formant resonator 1, in dB        */
-	short gain_cfr2;          /* Gain of cascade formant resonator 2, in dB        */
-	short gain_cfr3;          /* Gain of cascade formant resonator 3, in dB        */
-	short gain_cfr4;          /* Gain of cascade formant resonator 4, in dB        */
-	short loudness;           /* Loudness, gain input to cascade 1st formant in dB */
-	short spectral_tilt;      /* (f0-dependent spectral tilt in % of max)frm 75 to 90 for 10to8 */
-	short baseline_fall;      /* Baseline fall, in Hz                              */
-	short lax_breathiness;    /* Lax breathiness, in %                             */
-	short quickness;          /* Quickness, in %                                   */
-	short hat_rise;           /* Hat rise, in Hz                                   */
-	short stress_rise;        /* Stress rise, in Hz                                */
-	short avg_glot_open;      /* Glottal speed                                     */
-	short avg_glot_voicd_open;
-	short avg_glot_unv_open;
-	short area_chink;
-	short open_quo;
-	short output_gain_mult;   /* Output gain multiplier for FVTM                   */
-	short HL_B1m;
-	short HL_B2m;
-	short HL_B3m;
-	short HL_B4m;
-	short HL_B5m;
-	short HL_B2F;
-	short HL_B3F;
-	short HL_B4F;
-	short HL_B5F;
-	short HL_F6;
-	short HL_B6F;
-	short stress_step;
-	short unstress_pressure;
-	short stress_pressure;
-	short nom_sub_pressure;
-	short nom_fricative_opening;
-	short nom_glot_stop_area;
-	short vot_speed;
-	short endofphrase_spread;
-	short HL_num_formants;
-	short HL_f1_hi_shift;
-	short HL_acd_f1_break;
-
-} SPEAKER_DEF_T;
-
-#endif
 /* change speaker values  here */
 void changeSpeakerValues(LPTTS_HANDLE_T phTTS, TSpeakerDef *speakerDef, currentSpeaker SpeakerName)
 {
 	PVTM_T pVtm_t = phTTS->pVTMThreadData;
 
 	
-#ifdef EPSON_ARM7
-		PDPH_T pDph_t = phTTS->pPHThreadData;
-		SPEAKER_DEF_T *speaker_def_ptr=(SPEAKER_DEF_T *)pDph_t->voidef[SpeakerName];
-//			speakerDef->speaker.NewtonInterpTimeStep = .01f;
-			speakerDef->speaker.OQm = pVtm_t->NOM_Open_Quo;
-			speakerDef->speaker.TLm = pVtm_t->Tiltm;
-
-			//speakerDef->speaker.OQm = 50;		
-
-			speakerDef->speaker.B1m = speaker_def_ptr->HL_B1m;
-			speakerDef->speaker.B2m=  speaker_def_ptr->HL_B2m;
-			speakerDef->speaker.B3m=  speaker_def_ptr->HL_B3m;
-			speakerDef->speaker.B4m=  speaker_def_ptr->HL_B4m;
-			speakerDef->speaker.B5m=  speaker_def_ptr->HL_B5m;
-			speakerDef->speaker.B2F = speaker_def_ptr->HL_B2F;
-			speakerDef->speaker.B3F=  speaker_def_ptr->HL_B3F;
-			speakerDef->speaker.B4F=  speaker_def_ptr->HL_B4F;
-			speakerDef->speaker.B5F=  speaker_def_ptr->HL_B5F;
-			speakerDef->speaker.F5 =  speaker_def_ptr->formant5_res_freq;
-			speakerDef->speaker.F6  = speaker_def_ptr->HL_F6;
-			speakerDef->speaker.B6F = speaker_def_ptr->HL_B6F;		
-			pVtm_t->STRESS_STEP = speaker_def_ptr->stress_step; // step must add to total in 8 steps or less
-			pVtm_t->UNSTRESS_PRESSURE = speaker_def_ptr->unstress_pressure;
-			pVtm_t->STRESS_PRESSURE = speaker_def_ptr->stress_pressure;
-			pVtm_t->NOM_Sub_Pressure = speaker_def_ptr->nom_sub_pressure;
-	
-			pVtm_t->NOM_Fricative_Opening = speaker_def_ptr->nom_fricative_opening;
-			pVtm_t->NOM_Glot_Stop_Area = speaker_def_ptr->nom_glot_stop_area;
-			pVtm_t->VOT_speed = speaker_def_ptr->vot_speed;
-			pVtm_t->EndOfPhrase_Spread =speaker_def_ptr->endofphrase_spread;
-			
-			speakerDef->speaker.f1HiShift = speaker_def_ptr->HL_f1_hi_shift;
-			speakerDef->speaker.acd_f1Break = speaker_def_ptr->HL_acd_f1_break;
-#else
 	switch(SpeakerName){
 
 
@@ -3157,7 +2738,6 @@ void changeSpeakerValues(LPTTS_HANDLE_T phTTS, TSpeakerDef *speakerDef, currentS
 			break;
 
 	}
-#endif
 
 }
 
