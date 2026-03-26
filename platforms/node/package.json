@@ -1,6 +1,6 @@
 {
   "name": "@dectalk/node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DECtalk for NodeJS",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -11,6 +11,7 @@
     "node-addon-api": "^8.1.0"
   },
   "scripts": {
+    "copyFiles": "node copyFiles",
     "build": "node-gyp build",
     "build:js": "node esbuild.js",
     "build:dev": "node-gyp build --debug",
