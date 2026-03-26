@@ -39,8 +39,6 @@
 
 #include "dectalkf.h"
 
-
-
 #if (defined(ENGLISH_US) || defined(GERMAN) || defined(SPANISH)) && defined(OLD_INTONATION_AND_TIMING)
 #include "ph_drwt01.c"
 #else

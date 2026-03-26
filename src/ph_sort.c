@@ -215,7 +215,7 @@ static void get_stress_of_conson (LPTTS_HANDLE_T phTTS, short msym, short compou
 static void add_feature (PDPH_T pDph_t, long feaname, short location);
 
 static void get_next_bound_type (LPTTS_HANDLE_T phTTS, short msym);
-__inline short phone_feature(PDPH_T pDph_t, int phone);
+short phone_feature(PDPH_T pDph_t, int phone);
 
 extern const short *all_featb[];
 // HELPME
@@ -2102,7 +2102,7 @@ static void add_feature (PDPH_T pDph_t, long feaname, short location)
 }
 /* * * * * * * * * * * * * * * * end of ph_sort.c**** * * * * * * * * * * * * * * * * */
 
-__inline short phone_feature(PDPH_T pDph_t, int phone)
+short phone_feature(PDPH_T pDph_t, int phone)
 {
 	return(all_featb[phone>>8][phone &0xFF]);
 /* *****************************************************************/

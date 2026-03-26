@@ -86,6 +86,7 @@ void usage(const char *prog) {
 int main(int argc, char *argv[]) {
     const char *output_file = NULL;
     const char *text = NULL;
+    int i;
 
 #ifdef _WIN32
     // On Windows, stdout is text mode by default which will corrupt binary WAV data.
@@ -103,7 +104,7 @@ int main(int argc, char *argv[]) {
     }
 
     // parse args, gross
-    for (int i = 1; i < argc; i++) {
+    for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-p") == 0) {
             pipeOut = true;
         } else if (!output_file && !pipeOut) {
@@ -144,7 +145,9 @@ int main(int argc, char *argv[]) {
     if (pipeIn) {
         int c;
         while ((c = getchar()) != EOF) {
-            char arr[] = {c, 0};
+            char arr[2];
+	    arr[0] = c;
+	    arr[1] = 0;
             TextToSpeechStart((char *)arr, NULL, WAVE_FORMAT_1M16);
         }
     } else {

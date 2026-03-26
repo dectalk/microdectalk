@@ -9,8 +9,7 @@
 #define USE_ICONV
 #define REALLOC_SIZE 4096
 
-/* DO NOT CHECK FOR __unix__! that is used as solution to most macros */
-#if !defined(_WIN32) && defined(USE_ICONV)
+#if defined(__unix__) && defined(USE_ICONV)
 /* unix */
 #include <langinfo.h>
 #include <iconv.h>

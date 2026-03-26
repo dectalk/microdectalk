@@ -127,6 +127,7 @@ Later edit history of old ph_drwt0.c
 
  
 //#define NWSNOAA
+
 #if (defined NWSNOAA) || (defined ENGLISH_UK)
 
 /*    Extend f0 contour one frame to obtain next value for period T0	 */
@@ -181,8 +182,8 @@ Later edit history of old ph_drwt0.c
  *		 an interval of constant f0.Bats 349
  */
 
-
 #include "ph_def.h"
+#include "ph_prot.h"
 #define ENDDROP
 #define TWOPI	4096			/* For getcosine() function below */
 #define PI	2048
@@ -272,7 +273,6 @@ static void set_tglst(PDPH_T pDph_t);
 #endif 			
 
 			int	oarcnt=0;
-
 
 void pht0draw(LPTTS_HANDLE_T phTTS) 
 {

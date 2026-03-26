@@ -87,6 +87,7 @@
 /* #include "phdefs.h" */
 /* #include "phinst.h" *//* MVP : new instance header file */
 #include "ph_def.h"
+#include "ph_prot.h"
 
 						 /* #define DEBUG_OLDALLO 1 *//* debugiing eab */
 /****************************************************************************/

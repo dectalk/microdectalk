@@ -759,7 +759,7 @@ DTKmmioOpen(
         if ( fd < 0 ) {
 	    switch(errno) {
 	        case ENOMEM:
-#ifndef _WIN32
+#ifdef ENOSR
 	        case ENOSR:
 #endif
 	    	    DTKmmioOpenSetError(MMIOERR_OUTOFMEMORY);
@@ -1008,7 +1008,7 @@ DTKmmioRename(
 	case EACCES:
 	case EROFS:
 	case ENOSPC:
-#ifndef _WIN32
+#ifdef EDQUOT
 	case EDQUOT:
 #endif
 	case EPERM:

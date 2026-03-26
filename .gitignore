@@ -8,6 +8,10 @@ out/
 toolchain
 say
 /wip
+/say.exe
+/OUTPUT.WAV
+/output.wav
+/dtc.lib
 
 # Nintendo DS
 .DS_Store
