@@ -65,4 +65,3 @@
 #define IS_DIGIT(c)				(ls_char_feat[c] & CFEAT_digit)
 
 #endif
-          
