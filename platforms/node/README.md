@@ -2,6 +2,16 @@
 
 A native NodeJS package -- it should run anywhere NodeJS and node-gyp runs.
 
+## Building `/platforms/node`
+
+```sh
+# Copy the source files into the folder
+node copyFiles.js
+
+# Install
+npm ci
+```
+
 ## Example
 
 ```ts
