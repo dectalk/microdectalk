@@ -140,7 +140,6 @@ extern void default_lang( PKSD_T pKsd_t,unsigned int lang_code, unsigned int rea
 //extern ls_task_main ();
 
 
-/* GL 04/21/1997  change this for OSF build */
 /*int lts_main(LPTTS_HANDLE_T phTTS )*/
 int lts_main(LPTTS_HANDLE_T phTTS)
 {

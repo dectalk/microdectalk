@@ -665,7 +665,6 @@ extern struct share_data far *kernel_share;
 
 //int printf(VOID_FP,);
 
-/* GL 04/21/1997  add this for OSF build */
 #define _DEF_PIPES
 //#include "opthread.h"
 

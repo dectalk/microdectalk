@@ -82,12 +82,8 @@
 
 	/*xxxx eab changed to free up bit for flush done*/
 
-#ifdef MSDOS			// NAL warning removal
-#define MODE_ready          0x1000                          /* module ready for next phase */
-#else
 #define MODE_ready          0xc000                    /*       module ready for next phase */
 #define READY_boot          0x0000                                                  
-#endif
 #define READY_kernel        0x0001                          
 #define FLUSH_DONE          0x2000                  /*xxx needed to interlock module*/
 #define MODE_error          0xf000
@@ -148,9 +144,6 @@
 #define         CMD_spc_to_text         0x0100          /*   set to text mode */
 #define         CMD_spc_to_digit                0x0200          /*   set to digital mode */
 #define         CMD_spc_rate                    0x0400          /*   change spc data rate */
-#ifdef DTEX
-#define	CMD_console				0xA000	/* drop into console mode. */
-#endif /*DTEX*/
 #define CMD_error                               0xf000                  /* severe error */    
 #define		ERROR_dtpc2_expected		0x0010			/* expected a DTPC2!*/
 #define 	ERROR_dtpc1_expected		0x0011			/*    "     " dtpc1 */
@@ -272,11 +265,7 @@ struct  dma_start_task          {
 
 struct  dma_set_dic                     {
 			unsigned int far                *dic_start;
-#ifdef MSDOS
-			long                                            dic_entries;
-#else
 			S32												dic_entries;
-#endif			
 			int                                             type;
 
             unsigned int                                    lang;

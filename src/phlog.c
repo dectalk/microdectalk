@@ -60,7 +60,6 @@
 #include "dectalkf.h"
 #include		"port.h"
 
-/* GL 04/21/1997  add this for OSF build */
 #include "tts.h"
 
 #include        "defs.h"
@@ -239,7 +238,6 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
  * LPTTS_HANDLE_T phTTS; phTTS = TextToSpeechGetHandle(); */
 
 
-/* GL 04/21/1997  change this for OSF build */
 	WAIT_PRINT;
 
 

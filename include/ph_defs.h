@@ -176,7 +176,7 @@
 /* The following stuff is all unique to modules named ph*.c */
  
  
-#ifdef MSDOS
+#ifndef NULL
 #define NULL    ((void *)0)
 #endif
  
@@ -323,7 +323,6 @@
 
 /* 6. Various constants  */
 
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #if PC_SAMPLE_RATE == 10000
 #define NSAMP_FRAME     64			   /* # of samples per output frame 10 KHz. */
 #else
@@ -342,38 +341,11 @@
 #define INDEX_PARS       2			   /* # of words in an index mark block */
 #define TONE_PARS        5			   /* # of words in a tone packet */
 
-#elif defined MSDOS
-#define NSAMP_FRAME     64			   /* # of samples per output frame 10 KHz. */
-#define VOICE_PARS      18			   /* # of words in a voice block.         */
-#define SPDEF_PARS      SPDEF+1			   /* # of words in a speaker definition.  */
-
-#else  // !msdos !osf !linux
-#define NSAMP_FRAME     71 			   /* # of samples per output frame 11 KHz. */
-#ifdef NEW_VTM
-
-#define VOICE_PARS		40			   /* EAB found looking for BAT3 667 this should
-				                      not really cause a problem
-						      at the moment BUT IT COULD BE NASTY LATER!*/
-#else //!NEW_VTM
-#define VOICE_PARS      21			   /* # of words in a voice block.         */
-#endif //NEW_VTM
-#define SPDEF_PARS      SPDEF+1			   /* # of words in a speaker definition.  */
-#define SYNC_PARS        0			   /* There are no sync parameters. */
-#define INDEX_PARS       2			   /* # of words in an index mark block */
-#define TONE_PARS        5			   /* # of words in a tone packet */
-
-#endif // 6. Various Constants
-
-
-#ifdef ARM7
-#define NPHON_MAX       150			   /* Size of phone[] and struc[] arrays.  */
-#else
 #ifdef TOMBUCHLER
 #define NPHON_MAX       2800			   /* Size of phone[] and struc[] arrays.  */
 #else 
 #define NPHON_MAX       300
 #endif //tombuchler
-#endif //arm7
 #define MALLINE 9					   /* # of parameters in a line of locus code(phrom.c)     */
 
 
@@ -688,17 +660,12 @@ typedef struct
 }
 SPD_CHIP;
 
-#ifdef  MSDOS
-#define ZAPF    2500				   /* Magic f  value to zap b constant of diff eqn  */
-#define ZAPB    2048				   /* Magic bw value to zap c constant of diff eqn */
-#else
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
 #define ZAPF	6000				   /* Magic f  value to zap b constant of diff eqn    */
 #define ZAPB	6000				   /* Magic bw value to zap c constant of diff eqn */
 #elif PC_SAMPLE_RATE == 22050
 #define ZAPF	12000				   /* Magic f  value to zap b constant of diff eqn    */
 #define ZAPB	12000				   /* Magic bw value to zap c constant of diff eqn */
-#endif
 #endif
 
 #define F2max   2500				   /* Limit to keep SPC from overloading */
@@ -743,21 +710,6 @@ IQUEUE;
  *  math function prototypes ...
  */
 
-#ifdef MSDOS
-
-S32                     klrmul (S32, S32);
-S32                     kllmul (S32, S32 *);
-S32                     klrdiv (S32, S32);
-S32                     klldiv (S32, S32 *);
-short                   muldv ();
-short                   mlsh1 ();
-short                   mlsh2 ();
-short                   mlsh3 ();
-short                   frac1mul ();
-short                   frac4mul ();
-
-#else
-
 /* !! These definitions need to be checked to make sure they are right */
 
 #define klrmul(x,y)     ((x) * (y))
@@ -771,8 +723,6 @@ short                   frac4mul ();
 
 #define  frac4mul(x,y)  (((S32)(x)*(S32)(y))>>12)
 #define  frac1mul(x,y)  (((S32)(x)*(S32)(y))>>15)
-
-#endif								   /* #ifdef MSDOS */
 
 /* moved from phmain.c */
 #define isbound(ph)     ((ph)>=WBOUND  && (ph)<=VPSTART)

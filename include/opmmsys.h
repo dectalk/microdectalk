@@ -49,22 +49,6 @@ extern "C" {
 /*  Multimedia include files and type definitions for Digital UNIX.   */
 /**********************************************************************/
 
-/* TQL 05/21/1997  change this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//#include "opthread.h"
-#endif
-
-#ifdef __osf__
-
-#include <mme/mmsystem.h>
-#include <mme/mme_api.h>
-
-#define  MME_THREAD_SAFE
-#define  USE_MME_SERVER
-#define  OS_SIXTY_FOUR_BIT
-
-#endif
-
 #if ( __WORDSIZE == 64 )
 #define  OS_SIXTY_FOUR_BIT
 #endif
@@ -79,44 +63,6 @@ extern "C" {
 #ifndef OS_SIXTY_FOUR_BIT
 #define OS_SIXTY_FOUR_BIT
 #endif
-#endif
-
-/**********************************************************************/
-/*  Multimedia include files and type definitions for OpenVMS.        */
-/**********************************************************************/
-
-#ifdef __VMS
-
-#include <mmsystem.h>
-#include <mme_api.h>
-
-#define  MME_THREAD_SAFE
-#define  USE_MME_SERVER
-
-#endif
-
-/**********************************************************************/
-/*  Allow WIN32_OLD (the old way) in addition to WIN32_OLD.                  */
-/**********************************************************************/
-
-#ifdef WIN32_OLD
-#ifndef WIN32_OLD
-#define WIN32_OLD
-#endif
-#endif
-
-/**********************************************************************/
-/*  Multimedia include files and type definitions for Windows 95 and  */
-/*  Windows NT.                                                       */
-/**********************************************************************/
-
-#ifdef WIN32_OLD
-
-#include <windows.h>
-#include <mmreg.h>
-
-#define  WAVE_FORMAT_08M08  WAVE_FORMAT_MULAW
-
 #endif
 
 /**********************************************************************/

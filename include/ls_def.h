@@ -114,7 +114,6 @@
 #endif
 
 
-/* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG_OLD
 #define WINprintf printf
 #endif

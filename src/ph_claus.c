@@ -376,7 +376,6 @@ else
 
 			if (pDph_t->nphone != -1)  
 
-/* GL 04/21/1997  add this for OSF build */
 //#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 					check_index (phTTS, pDph_t->nphone+1);
 			pDph_t->nphone++;

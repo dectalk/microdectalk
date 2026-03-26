@@ -117,10 +117,7 @@
 	/* extern short remaining_stresses_til(short, short); */
 	/* extern short promote_last_2(short); */
 /* MVP added declaration of set_index_allo (defined in services.c)  */
-#ifndef MSDOS
 	extern void set_index_allo (PKSD_T pKsd_t, unsigned int nphone, unsigned int nallo);
-
-#endif
 
 /* Static function declarations MVP */
 static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
@@ -1462,11 +1459,7 @@ void phalloph (LPTTS_HANDLE_T phTTS)
 			printf ("adjusting in alloph,n= %d n+del=%d  \n", n, n + ph_delcnt);
 
 #endif
-#ifdef MSDOS
-				adjust_allo (n + ph_delcnt, -1);
-#else
 				adjust_allo (pKsd_t, n + ph_delcnt, -1);
-#endif
 
 			if (curr_indur != 0)
 			{
@@ -1692,11 +1685,7 @@ static void make_out_phonol (LPTTS_HANDLE_T phTTS, short n,
 #endif                               
 
     /*printf("nallotot %d n %d curr_outph %d curr_outstruc %d curr_indur %d curr_inf0 %d\n",pDph_t->nallotot,n,curr_outph,curr_outstruc,curr_indur,curr_inf0); */
-#ifdef MSDOS
-	set_index_allo (n, pDph_t->nallotot);	/* At minimum do set_index eab */
-#else
 	set_index_allo (pKsd_t, n, pDph_t->nallotot);	/* At minimum do set_index eab */
-#endif
 
 #ifdef DEBUG_OLDALLO
 

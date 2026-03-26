@@ -50,20 +50,6 @@
 #include "dectalkf.h"
 #include "tts.h"
 
-#ifdef MSDOS
-extern int vol_up (int count);
-extern int vol_down (int count);
-extern int vol_set (int count);
-#endif
-
-
-#ifdef MSDOS
-extern void check_index (unsigned int which_phone);
-extern void adjust_index (unsigned int which, int direction, int del);
-extern void adjust_allo (unsigned int which, int direction);
-
-#else
-
 #define __inline
 extern __inline short phone_feature(PDPH_T pDph_t, int phone);	   /* Phonetic features            */
 extern __inline short begtyp(int phone);
@@ -81,52 +67,21 @@ extern void check_index (LPTTS_HANDLE_T phTTS, unsigned int which_phone);
 extern void adjust_index (PKSD_T pKsd_t, unsigned int which, int direction, int del);
 extern void adjust_allo (PKSD_T pKsd_t, unsigned int which, int direction);
 extern void send_index(int how, int value );
-#endif
 
-#ifdef DTEX
 extern void start_flush (int serial_mode);
-#else
-extern void start_flush (int serial_mode);
-#endif
 
-#ifdef MSDOS
-extern int reset_spc (void);
-#endif 
+       extern void default_lang (PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
+extern void flush_done (PKSD_T pKsd_t);
 
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-        extern void default_lang (unsigned int lang_code, unsigned int ready_code);
-		extern void flush_done (void);
-#else
-        extern void default_lang (PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
-		extern void flush_done (PKSD_T pKsd_t);
-#endif
-
-#ifndef EPSON_ARM7
 extern int  putseq (SEQ __far * sp);
 extern int  putn (unsigned int n);
 extern int  puthex (unsigned int n);
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined (__APPLE__)
-extern int  putstring (unsigned char *str);
-#endif
-#endif
 
-#ifdef MSDOS
-extern unsigned int     getc (void);
-extern void             putc (unsigned int c);
-
-#endif
 /* MVP Added prototype of dologphoneme here as it is used only in PH sub-system */
 
-#ifdef MSDOS
-extern void dologphoneme (short phone, short dur, short f0);
-extern void logclaus (short *sym, short nsym, short *ud, short *uf0);
-extern void logitem (register short *buf);
-#else
 extern void dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0);
 extern void logclaus (LPTTS_HANDLE_T phTTS, short *sym, short nsym, short *ud, short *uf0);
 extern void logitem (LPTTS_HANDLE_T phTTS, register short *buf);
-#endif 
 extern void phalloph (LPTTS_HANDLE_T phTTS);
 extern void fr_phalloph (LPTTS_HANDLE_T phTTS);
 
@@ -145,15 +100,7 @@ extern int              firstfeature (short FEA1, short FEA2, short nseg);
 
 extern void logscrewup (short phocur, short *inputscrewup);
 
-#ifdef MSDOS
-extern int main (unsigned int data_seg, unsigned int stack_start);
-#endif
-
-#ifdef MSDOS
-void far kltask (void);
-#else
 void far kltask (LPTTS_HANDLE_T phTTS);
-#endif
 
 extern int deadstop (int value, int low, int high);
 extern int mstofr (int nms);

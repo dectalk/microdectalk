@@ -85,20 +85,10 @@
 /* The MAX_SPEAKERS count include one additonal slot to store last speaker params */
 
 
-#ifdef EPSON_ARM7
 #define MAX_SPEAKERS 10
-#else
-#define MAX_SPEAKERS 10
-#endif
 
 /* Extern declarations for speaker param arrays */
 /* All are defined in phvdefi.c */
-#ifdef EPSON_ARM7
-extern const short            paul_8[SPDEF];
-extern const short            paul[SPDEF];
-extern const short            us_paul_8_tune[];
-extern const short            default_tune[SPDEF];
-#else
 extern const short            paul_8[SPDEF];
 extern const short            betty_8[SPDEF];
 extern const short            harry_8[SPDEF];
@@ -286,8 +276,6 @@ extern const short            ursula_tune[];
 extern const short            rita_tune[];
 extern const short            wendy_tune[];
 extern const short            dennis_tune[];
-#endif
-
 #endif
 
 
@@ -543,10 +531,8 @@ typedef struct DPH_TAG
 	short					hatpos;
 	short					sinstart;
 	short					spdefglspeed;
-#ifndef MSDOS
 	/* MGS 10/14/1997 BATS #470 fixed crash due to reset */
 	LPTTS_HANDLE_T		phTTS;
-#endif
 
 	short                   durfon;
 	short                   nallotot;
@@ -714,15 +700,5 @@ typedef struct DPH_TAG
 } DPH_T;
 
 typedef struct DPH_TAG *PDPH_T;
-
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-struct TTS_HANDLE_TAG
-{
-	PKSD_T                  pKernelShareData;
-	PDPH_T                  pPHThreadData;
-};
-typedef struct TTS_HANDLE_TAG *LPTTS_HANDLE_T;
-#endif // MSDOS
 
 #endif	// _PH_DATA_H

@@ -73,7 +73,6 @@ static void get_stress_of_conson (LPTTS_HANDLE_T phTTS, short msym, short compou
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 	
 	short                   m, mcl = 0, cl = 0, sy = 0, stresslevel = 0;
-/* GL 04/21/1997  change this for the OSF build */
 	extern short            us_phcluster (short f, short s);
 
 	stresslevel = FNOSTRESS;

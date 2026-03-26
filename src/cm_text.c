@@ -537,7 +537,6 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
       	}
 		/* GL 02/08/1997,  catch record line by line if in email mode */
       	/* GL 02/11/1997   fix the hight-light mode by catching 0xd, 0x20 as new-line*/
-/* GL 04/21/1997  add this for OSF build */
 		if (pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa)
 		{
 			pCmd_t->done=1;

@@ -2019,7 +2019,6 @@ void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
     phTTS = TextToSpeechGetHandle();
   */
   
-  /* GL 04/21/1997  add this for OSF build */
   /* ToggleLogfileMutex( MUTEX_RESERVE ); */
   //OP_LockMutex( phTTS->pcsLogFile );
   
@@ -2030,7 +2029,6 @@ void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
 	//			  0L );
   }
 
-  /* GL 04/21/1997  change this for OSF build */
   /* ToggleLogfileMutex( MUTEX_RELEASE );*/
   //OP_UnlockMutex( phTTS->pcsLogFile );
 

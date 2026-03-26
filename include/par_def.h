@@ -53,20 +53,10 @@
 #define PAR_DEFH 1
 
 #define PAR_MAX_MATCH_ARRAY			30
-#ifdef WIN32_OLD
-#ifdef PRINTFDEBUG_OLD
-#define printf WINprintf
-#endif
-#define PAR_MAX_INPUT_ARRAY			500
-#define PAR_MAX_OUTPUT_ARRAY		500
-#define PAR_MAX_RULE_LENGTH			300
-#define PAR_ROLLING_STOP_VALUE      300
-#else
 #define PAR_MAX_INPUT_ARRAY			300
 #define PAR_MAX_OUTPUT_ARRAY		300
 #define PAR_MAX_RULE_LENGTH			200
 #define PAR_ROLLING_STOP_VALUE      200
-#endif
 
 #define PAR_MAX_ARRAYS				10 
 #define PAR_MAX_RETURN_LEVEL		10

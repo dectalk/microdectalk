@@ -76,7 +76,6 @@
 void ls_suff_append_pron(LPTTS_HANDLE_T phTTS,unsigned char __far *pb);
 extern const unsigned char suffix_table[];
 
-/* GL 04/21/1997  change this for OSF build */
 extern const U32 suffix_index[];
 
 /*
@@ -118,7 +117,6 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 	unsigned char   _far *sp;                       /* suffix string seach */
 	unsigned char   _far *np;                       /* replacement string save */
 	unsigned char   _far *sbp;                      /* saved base pointer to recurse */
-	/* GL 04/21/1997  add this for OSF build */
 	U32     i,stat=0;
 	U32		si;
 

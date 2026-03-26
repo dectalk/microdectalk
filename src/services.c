@@ -280,7 +280,6 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 	pKsd_t->spc_pkt_save = spc_pkt;
 
 	free( last_pkt );
-	/* GL 04/21/1997  change this for OSF build */
 	vtm_loop(phTTS,buf);
 
   }
@@ -1053,7 +1052,6 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
 
   dwStereoVolume = ( dwRightChannelVolume << 16 ) | dwLeftChannelVolume;
 
-/* GL 04/21/1997  change this for OSF build */
 #ifndef SOFTWARE_VOLUME
   //PA_SetVolume( phTTS->pAudioHandle, dwStereoVolume );
 #else

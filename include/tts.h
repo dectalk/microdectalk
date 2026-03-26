@@ -265,13 +265,7 @@ struct TTS_HANDLE_TAG
 #endif /* TYPING_MODE */
 #endif /* ACI_LICENSE */
 
-#ifdef SAPI5DECTALK
-		void *CTTSEngObj;
-		int OutputIsText;
-		volatile int SkippingForward;
-#endif
   /* bats 385 */
-#ifndef ARM7
   volatile BOOL	bInReset; /* volatile cuz we use it for interprocess comm */
   volatile char *szPhonemeBuffer;		// where ConvertToPhonemes puts the phonemes
 								// uses NULL status to tell not to do it
@@ -282,7 +276,6 @@ struct TTS_HANDLE_TAG
   //HEVENT_T hTuneStopEvent;
   //int a32_lic;
   //int bisau;
-#endif
 
   char dictionary_file_name[500];
   int last_syl;
