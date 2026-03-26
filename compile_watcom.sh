@@ -7,12 +7,17 @@ fi
 
 if [ "$TARGET" = "dos4g" ]; then
 	ARGS="-DNO_FILESYSTEM"
+	FILES=""
+elif [ "$TARGET" = "nt" ]; then
+	ARGS=""
+	FILES="src/mman-win32/mman.c"
 else
 	ARGS=""
+	FILES=""
 fi
 
 OBJS=""
-for i in src/*.c; do
+for i in src/*.c $FILES; do
 	OUT="`echo $i | cut -d. -f1`.o"
 	OBJS="$OBJS +$OUT"
 

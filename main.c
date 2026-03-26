@@ -7,16 +7,29 @@
 #include <string.h>
 
 #ifdef _WIN32
-  #include <windows.h>
   #include <io.h>
   #include <fcntl.h>
+#ifndef isatty
   #define isatty _isatty
+#endif
+#ifndef fileno
   #define fileno _fileno
+#endif
+#ifndef dup
   #define dup    _dup
+#endif
+#ifndef dup2
   #define dup2   _dup2
+#endif
+#ifndef STDIN_FILENO
   #define STDIN_FILENO  0
+#endif
+#ifndef STDOUT_FILENO
   #define STDOUT_FILENO 1
+#endif
+#ifndef STDERR_FILENO
   #define STDERR_FILENO 2
+#endif
 #else
   #include <unistd.h>
 #endif
