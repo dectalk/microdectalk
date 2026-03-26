@@ -376,28 +376,11 @@ static short syl_find_affix (PDPH_T pDph_t, int *ph)
 	return (0);
 }
 
-#ifndef MSDOS
-
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <mmsystem.h>
-#endif
-
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-/* GL 04/21/1997  change to be the same as the latest OSF code */
-/*#include "dtmmedefs.h"*/
-//#include "opthread.h"
-#endif
-
 #include "tts.h"
 
 /* LPTTS_HANDLE_T TextToSpeechGetHandle(void); */
 
-#ifndef ARM7
 void TextToSpeechErrorHandler (LPTTS_HANDLE_T, UINT, MMRESULT);
-#endif
-
-#endif
 /*
  *      Function Name: logsyllable()      
  *
@@ -414,26 +397,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 {
 	int                     i, j, k;
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
-#ifndef ARM7
 	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
-#endif
-
-#ifndef MSDOS
-/* 
- * LPTTS_HANDLE_T phTTS;
- * 
- * phTTS = TextToSpeechGetHandle(); 
- */
-#endif
-
-#ifdef WIN32_OLD
-	//EnterCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/* GL 04/21/1997  change this as the latest OSF code */
-	/*ToggleLogfileMutex (MUTEX_RESERVE);*/
-	//OP_LockMutex( phTTS->pcsLogFile );
-#endif
 
 	for (i = 1; i < pDph_t->nsymbtot; i++)
 	{
@@ -450,21 +414,11 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 		pDph_t->phone_struct[j+1]=0;
 		i += j - 1;
 		k = ph_syllab (pDph_t, j);
-#ifdef MSDOS
-		WAIT_PRINT;
-		printf ("[:syll ");
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf ("[:syll ");
 #endif
-#ifndef ARM7_NOSWI
-		
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,"[:syll ");
-#endif
-#endif		
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_SYLLABLES)
 		{
 			if (fprintf (phTTS->pLogFile, "[:syll ") < 0)
@@ -474,30 +428,6 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 				//						  0L);
 			}
 		}
-#endif
-#endif
-
-#ifdef MSDOS
-
-		/* 
-		 * the table pKsd_t->ascky should be change 
-		 * when a [:lang ] commad is engountered 
-		 */
-		for (j = 0; pDph_t->phone_struct[j]; j++)
-		{
-		printf ("%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);	
-		}
-
-		printf (" --> ");
-
-		while (--k)
-		{
-		printf ("%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
-		}
-		printf ("]\n");
-		SIGNAL_PRINT;
-#else //#ifdef MSDOS
-#ifndef ARM7_NOSWI
 
 		for (j = 0; pDph_t->phone_struct[j]; j++)
 		{
@@ -508,7 +438,6 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 				fprintf(pKsd_t->dbglog,"%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
 
-#ifndef ARM7
 			if (pKsd_t->logflag & LOG_SYLLABLES)
 			{
 
@@ -521,14 +450,12 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 					//						  0L);
 				}
 			}
-#endif
 		}
 #ifdef PRINTFDEBUG_OLD
 		printf (" --> ");
 #endif
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 				fprintf(pKsd_t->dbglog, " --> ");
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_SYLLABLES)
 		{
 
@@ -539,7 +466,6 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 				//						  0L);
 			}
 		}
-#endif
 		while (--k)
 		{
 #ifdef PRINTFDEBUG_OLD
@@ -547,7 +473,6 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 #endif
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 				fprintf(pKsd_t->dbglog,"%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
-#ifndef ARM7
 			if (pKsd_t->logflag & LOG_SYLLABLES)
 			{
 				if (fprintf (phTTS->pLogFile,
@@ -558,14 +483,12 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 					//						  0L);
 				}
 			}
-#endif
 		}
 #ifdef PRINTFDEBUG_OLD
 		printf ("]\n");
 #endif
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,"]\n");
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_SYLLABLES)
 		{
 			if (fprintf (phTTS->pLogFile, "]\n") < 0)
@@ -575,19 +498,7 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
 				//						  0L);
 			}
 		}
-#endif
-#endif
-#endif // #ifdef MSDOS
-
 	}
-#ifdef WIN32_OLD
-	//LeaveCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/* GL 04/21/1997  change this as the latest OSF code */
-	/* ToggleLogfileMutex (MUTEX_RELEASE);*/
-	//OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
 
 }
 /*
@@ -615,11 +526,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 	k = 0;
 	while (true)
 	{
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		len = syl_find_affix (pDph_t, &(pDph_t->phone_struct[j]));
-#else
-        len = syl_find_affix (pDph_t, &(pDph_t->phone_struct[j])); // NAL warning removal
-#endif
 		if (len == 0)
 			break;
 		while (len-- && j)
@@ -642,11 +549,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 			/* 
 			 *  Find vowel ...
 			 */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 			len = syl_find_vowel (&(pDph_t->phone_struct[j]));
-#else
-                        len = syl_find_vowel ( &(pDph_t->phone_struct[j])); // NAL warning removal
-#endif
 			if (len)
 			{
 				while (len-- && j)
@@ -669,19 +572,7 @@ static int ph_syllab (PDPH_T pDph_t, int j)
 			/* 
 			 *  head cons ...
 			 */
-
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-
-
 			len = syl_find_cons( &(pDph_t->phone_struct[j]));
-
-
-#else
-
-            len = syl_find_cons( &(pDph_t->phone_struct[j])); // NAL warning removal
-
-#endif
 
 			if (len)
 			{
@@ -776,10 +667,7 @@ static void syl_clause_init (PDPH_T pDph_t)
 static void speak_syllable (LPTTS_HANDLE_T phTTS)
 {
 /* GL 04/21/1997  change this as the latest OSF code */
-#ifndef MSDOS
-//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	DT_PIPE_T               pipe_item[1];
-#endif
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 
 	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
@@ -798,16 +686,13 @@ static void speak_syllable (LPTTS_HANDLE_T phTTS)
 		syl_clause_init (pDph_t);
 	}
 
-/* GL 04/21/1997  change this as the latest OSF code */
 /* write forced clause boundary symbol to VTM */
-#ifndef  MSDOS
 	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
 	{
 //#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	pipe_item[0] = SPC_type_force;
 	vtm_loop(phTTS,pipe_item);
 	}
-#endif
 
 }
 

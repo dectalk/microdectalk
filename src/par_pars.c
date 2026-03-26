@@ -135,16 +135,8 @@
 
 #ifndef PARSER_STANDALONE_DEBUG_OLD
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#include "tts.h"
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include "tts.h"
 #include <stdlib.h>
-#endif
 
 #endif /* PARSER_STANDALONE_DEBUG_OLD */
  
@@ -153,11 +145,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-#include "dbgwins.h"
-#define printf WINprintf
-#endif
 
 
 struct kernel_share
@@ -212,9 +199,7 @@ extern dict_pointers_t dict_point[];
 extern S16 dict_index_table[];
 extern unsigned char dict_data_table[];
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern void cm_util_flush_init(LPTTS_HANDLE_T);
-#endif
 
 /* from par_char.c */
 extern unsigned short parser_char_types[];
@@ -1054,10 +1039,8 @@ preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
 					if (DT_DBG(CMD_DBG,0x010))
 					{
 
-#ifndef MSDOS
 					if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 						fprintf(pKsd_t->dbglog,"Rule hit:R%d\n",current_rule->rule_number);
-#endif	
 					printf("Rule hit:R%d\n",current_rule->rule_number);
 					}
 #endif // PARSER_STANDALONE_DEBUG_OLD

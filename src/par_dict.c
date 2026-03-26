@@ -69,8 +69,8 @@
 #include <stdio.h> // NAL warning removal
 #include <string.h>
 
-#if defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#include "stdlib.h"
+#if defined __EMSCRIPTEN__ || defined (__APPLE__)
+#include <stdlib.h>
 #endif
 
 extern void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char *pp);
@@ -101,9 +101,7 @@ struct  dic_entry
 extern unsigned short parser_char_types[];
 extern unsigned char par_lower[];
 extern unsigned char par_upper[];
-#ifndef ARM7_NOSWI
 void WINprintf(char *fmt, ...); // NAL warning removal
-#endif
 /* function declaration */
 // * 015	MGS		10/14/1999	BATS#876 fix for UK phone numbers (part of it) 
 int _far par_dict_lookup(LPTTS_HANDLE_T phTTS,  unsigned char *word, int in_flag);
@@ -126,10 +124,6 @@ int par_dict_udlook(long UDICT_ENTRY,
                    long uindex,unsigned char *word);
 int par_dict_where_to_ulook(char far *pent,
                             unsigned char *word);
-
-#ifdef SAPI5DECTALK
-extern int ls_sapi_find_word(LPTTS_HANDLE_T phTTS, unsigned char *, short);
-#endif
 
 
 /*
@@ -281,24 +275,6 @@ int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, unsigned char *word, int in_flag)
 		return(MISS);
 	}
 
-#ifdef SAPI5DECTALK
-	a=MISS;
-	b=MISS;
-	// return the search result HIT/MISS from SAPI lexicon search 
-	if( (a=ls_sapi_find_word(pKsd_t->phTTS, word, 1) == HIT)||
-		(flag == 1 && (b=ls_sapi_find_word(pKsd_t->phTTS, temp_word, 1) == HIT)) )
-	{
-		if (a==MISS && b!=MISS)
-		{
-			return(ABBREV);
-		}
-		else
-		{
-			return HIT;
-		}
-	}
-#endif
-
 
 
 
@@ -311,13 +287,9 @@ int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, unsigned char *word, int in_flag)
 		// debug switch
 		if (DT_DBG(CMD_DBG,0x020))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		// mfg added for dbglog.txt suport
 				fprintf(pKsd_t->dbglog,"\n(%s)(PUHIT)",word);
-#endif
 			printf("\n(%s)(PUHIT)",word);		
-#endif
 		}
 		//printf("%s UHIT\n",word);
 		if (a==MISS && b!=MISS)
@@ -336,13 +308,9 @@ int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, unsigned char *word, int in_flag)
 		// debug switch 
 		if (DT_DBG(CMD_DBG,0x020))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		// mfg added for dbglog.txt suport
 				fprintf(pKsd_t->dbglog,"\n(%s)(PFHIT)",word);
-#endif
 			printf("\n(%s)(PFHIT)",word);		
-#endif
 		}
 		//printf("%s UHIT\n",word);
 		if (a==MISS && b!=MISS)
@@ -361,13 +329,9 @@ int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, unsigned char *word, int in_flag)
 		// debug switch
 		if (DT_DBG(CMD_DBG,0x020))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		// mfg added for dbglog.txt suport
 				fprintf(pKsd_t->dbglog,"\n(%s)(PHIT)",word);
-#endif
 			printf("\n(%s)(PHIT)",word);
-#endif
 		}
 		   //printf("%s HIT\n",word);
 
@@ -381,13 +345,9 @@ int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, unsigned char *word, int in_flag)
 	// debug switch
 	if (DT_DBG(CMD_DBG,0x020))
 	{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		// mfg added for dbglog.txt suport
 			fprintf(pKsd_t->dbglog,"\n(%s)(PMISS)",word);
-#endif
 		printf("\n(%s)(PMISS)",word);
-#endif
 	}
 	//printf("%s %d %x MISS\n",word,strlen(word),word[0]);
 	return(MISS);

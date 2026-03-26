@@ -94,12 +94,10 @@
 #ifdef HLSYN
 #include "p_us_vdf_tunehl.c"
 #include "p_fr_vdf_tunehl.c"
-#ifndef EPSON_ARM7
 #include "p_uk_vdf_tunehl.c"
 #include "p_sp_vdf_tunehl.c"
 #include "p_la_vdf_tunehl.c"
 #include "p_gr_vdf_tunehl.c"
-#endif
 #else
 #ifdef CHANGES_AFTER_V43
 #include "p_us_vdf_tuneint.c"
@@ -158,60 +156,8 @@ const short			default_tune[SPDEF] =
 	0,
 	0,
 	0,
-#ifndef MSDOS
 	0
-#endif
 };
-
-
-#ifdef EPSON_ARM7
-const short			fr_default_tune[SPDEF] =
-{
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	/*65-60+*/7-    7,		
-	/*68-71+*/15-  16,		
-	/*68-71+*/19-  16,		
-	/*60-65+*/1-   -1,		
-	/*49-65+*/19-   4,		
-	/*64-66+*/-8- -11,	
-	/*86-70+*/-7-  11,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-	0,		
-#ifndef MSDOS
-	0,		
-#endif
-};
-
-
-#endif
-
 
 #ifndef HLSYN
 

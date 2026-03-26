@@ -175,10 +175,6 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
 
 void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
 
-#ifdef UNDER_CE
-#pragma optimize("",off)
-#endif
-
 int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
 					 unsigned int *dict_bytes, char *dict_nam, int bRequired,
 					 DT_HANDLE *dicMapObject,	// Handle for mapped object
@@ -201,10 +197,6 @@ int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz
 
 #ifdef DBGDIC
 	struct dic_entry far *ent;
-#endif
-
-#ifdef UNDER_CE
-	unsigned short wdict_nam[128];
 #endif
 
 	/*

@@ -1697,11 +1697,7 @@ stzapped:
             }
             if ((pDph_t->nphonetot == snphonetot))	/* eab */
             {
-#ifdef MSDOS
-                adjust_index ((n + 1), -1, 0);	/* eab n+1 to bind forward */
-#else
                 adjust_index (pKsd_t, (n + 1), -1, 0);	/* eab n+1 to bind forward */
-#endif
 #ifdef DEBUG_OLDIND
 
                 printf ("adj -1 on %d %d \n", curr_in_sym, (n + 1));
@@ -1862,11 +1858,7 @@ static void insertphone (LPTTS_HANDLE_T phTTS, short loc, short fone)
 	pDph_t->user_f0[loc] = 0;
 	pDph_t->nsymbtot++;
 	if (fone != S1) {				/* KSB - Fixed for index marks */
-#ifdef MSDOS
-		adjust_index ((loc + 1), 1, 0);
-#else
 		adjust_index (pKsd_t, (loc + 1), 1, 0);
-#endif
 	}
 #ifdef DEBUG_OLDIND
 	printf ("loc %d pDph_t->nsymbtot %d \n", loc, pDph_t->nsymbtot);
@@ -1974,15 +1966,11 @@ static void delete_symbol (LPTTS_HANDLE_T phTTS, short msym)
 	printf ("now %d  \n\n ", pDph_t->symbols[msym]);
 	SIGNAL_PRINT;
 #endif
-#ifdef MSDOS
-	adjust_index (msym + 1, -1, 1);
-#else
 	adjust_index (pKsd_t, msym + 1, -1, 1);
 	/* 
 	 * plus one because index may be pointing at this
 	 * very one in which case it promotes forward (i.e. stays the same) 
 	 */
-#endif
 }
  
 

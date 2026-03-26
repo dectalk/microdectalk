@@ -310,13 +310,8 @@ ls_util_lts_init (pLts_t, pKsd_t);
 #define LINUX_DICT_TAG "US_dict:"
 #define LINUX_FDICT_TAG "US_fdict:"
 #define LINUX_UDICT_TAG "US_udict:"
-#if defined VXWORKS || defined _SPARC_SOLARIS_
 #define DEF_LINUX_MAIN_DICT "dtalk_us.dic"
 #define DEF_LINUX_FOREIGN_DICT "dtalk_fl_us.dic"
-#else
-#define DEF_LINUX_MAIN_DICT "dtalk_us.dic"
-#define DEF_LINUX_FOREIGN_DICT "dtalk_fl_us.dic"
-#endif
 #define DEMO_DICT_NAME "dtalk_us.dic"
 #define DEMO_FDICT_NAME "dtalk_fl_us.dic"
 #endif

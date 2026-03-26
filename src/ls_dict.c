@@ -97,10 +97,6 @@
 
 #include <stdlib.h>
 
-#ifdef SAPI5DECTALK
-extern int ls_sapi_find_word(LPTTS_HANDLE_T phTTS, unsigned char *, short);
-#endif
-
 /*
  *  find a word in the dictionary ...
  */
@@ -431,12 +427,6 @@ int ls_dict_blook(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int type)
 	if(i == 1 && (ls_lower[pLts_t->comp_str[0]] == 'a'))
 		/* Must be |gls_lower| when we do German later */
 		return(MISS);
-#endif
-
-
-#ifdef SAPI5DECTALK
-    if(ls_sapi_find_word(phTTS, pLts_t->comp_str, 0) == HIT)
-		return  HIT;
 #endif
 
 

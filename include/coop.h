@@ -352,13 +352,8 @@
 
 CHAR gszLicenseKeyValueName[] = "Licenses";
 
-#ifdef SAPI5DECTALK
-CHAR gszLicenseKey[] = 
-      "Software\\" COMPANY "\\" PRODUCT  "\\sapi5";
-#else
 CHAR gszLicenseKey[] = 
       "Software\\" COMPANY "\\" PRODUCT  "\\" VERSION;
-#endif // SAPI5DECTALK
 #endif // LICENINC_C
 
 /***********************************************************************************/
@@ -388,19 +383,12 @@ LPTSTR szCurrentUsersDECtalk =
 
 
 #else //UNDER_CE 
-#ifdef SAPI5DECTALK
-LPSTR szLocalMachineDECtalk =
-	"SOFTWARE\\" COMPANY "\\" PRODUCT "\\sapi5\\" DECTALK_LANGUAGE;
-LPSTR szCurrentUsersDECtalk =
-    "Software\\" COMPANY "\\" CURRENT_USER_PRODUCT "\\sapi5\\" DECTALK_LANGUAGE;
-#else
 
 LPSTR szLocalMachineDECtalk =
 	"SOFTWARE\\" COMPANY "\\" PRODUCT "\\" VERSION "\\" DECTALK_LANGUAGE;
 
 LPSTR szCurrentUsersDECtalk =
     "Software\\" COMPANY "\\" CURRENT_USER_PRODUCT "\\" DECTALK_LANGUAGE;
-#endif // SAPI5DECTALK
 #endif //UNDER_CE
 
 
@@ -462,13 +450,8 @@ TCHAR szLicenseKey[] =
       TEXT("Software\\") TEXT(COMPANY) TEXT("\\") TEXT(PRODUCT) TEXT("\\") TEXT(VERSION);
 
 #else	// UNDER_CE
-#ifdef SAPI5DECTALK
-CHAR szLicenseKey[] = 
-      "Software\\" COMPANY "\\" PRODUCT "\\sapi5";
-#else
 CHAR szLicenseKey[] = 
       "Software\\" COMPANY "\\" PRODUCT "\\" VERSION;
-#endif //SAPI5DECTALK
 #endif // UNDER_CE
 #endif /* UPDATERG_C  */
 
