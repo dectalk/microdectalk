@@ -115,7 +115,7 @@
 **  MODIFICATION HISTORY:
 **
 *****************************************************************************/
-#if defined __osf__
+#if 0
 #include "lmf.h"
 #include <stdio.h>
 #include <sys/file.h>

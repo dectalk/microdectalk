@@ -24,10 +24,6 @@
 
 #include <math.h>
 
-#ifdef ARM7
-#pragma arm section code="LOGCODE", rodata="LOGRODATA"
-#endif
-
 // base-10 logarithm in the range of log[10] x =.001 to log[10] x = 10
 const float log10table[]={
 -3.00000000f, -2.00000000f, -1.69897000f, -1.52287875f, 

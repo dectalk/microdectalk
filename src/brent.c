@@ -19,10 +19,6 @@
 
 #include "flavor.h"
 
-#ifdef ARM7
-#pragma arm section code="BRENTCODE", rwdata="BRENTRWDATA", rodata="BRENTRODATA", zidata="BRENTDATA"
-#endif
-
 #if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 #include <stdio.h>	/* for printf on error */
 #include <stdlib.h>	/* for exit on error */

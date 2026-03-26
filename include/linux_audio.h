@@ -36,15 +36,12 @@
  * 006	MGS		06/19/2001	Solaris Port BATS#972
  ***********************************************************************/
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifndef LINUX_AUDIO_H
 #define LINUX_AUDIO_H
 
 #include "dectalkf.h"
-#ifndef VXWORKS
-  #if !defined (__APPLE__)
-    #include <malloc.h>
-  #endif
+#if !defined (__APPLE__)
+#include <malloc.h>
 #endif
 #include <stdlib.h>
 #include <stdio.h>
@@ -53,10 +50,8 @@
 //#include "playaudd.h"
 #include "playaud.h"
 
-#ifndef VXWORKS
 typedef unsigned short  UINT16;
 typedef unsigned int    UINT32;
-#endif
 typedef UINT32          MMVERSION;
 typedef int             HWAVE16;
 typedef unsigned long	HWAVE;
@@ -501,5 +496,4 @@ BOOL16 DriverCallback(void (*dwCallBack)(void *, unsigned int,  unsigned int, lo
 
 #undef _DEBUG_OLD
 
-#endif
 #endif

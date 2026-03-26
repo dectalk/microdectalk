@@ -45,20 +45,10 @@
  */
 
 #include "dectalkf.h"
-#ifdef WIN32_OLD
-#include <windows.h>
-#endif
 
-#ifdef ARM7
-#include "stdlib.h"
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /*#include "dtmmedefs.h"*/
 //#include "opthread.h"
 #include <stdlib.h>
-#endif 
 
 
 #include "cm_def.h"
@@ -131,11 +121,9 @@ void FreeCMDThreadMemory(PCMD_T pCmd_t)
 #endif
 
 	/* Free the cm pointer */
-#ifndef ARM7
 	if(pCmd_t->cm)
 		free(pCmd_t->cm);
 	pCmd_t->cm = NULL;
-#endif
 
 	/* Free the structure pointer */
 	if(pCmd_t)

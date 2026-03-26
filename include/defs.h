@@ -34,7 +34,6 @@
 #ifndef	DEFSH
 #define	DEFSH	1
 
-#ifndef MSDOS
 #define far
 #define _far
 #define _huge
@@ -42,7 +41,6 @@
 //#define FAR
 #define volatile
 #define register	/* this should really be cased on a per machine basis - tfm */
-#endif
 
 #define	HUNGARY	1
 #define	true	1

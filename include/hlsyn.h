@@ -383,15 +383,9 @@ typedef struct HLSpeakerTag {
   float Lhp;
 } HLSpeaker;
 #endif
-#ifdef EPSON_ARM7
-extern  const TableRow	f1LOverATable[MAXF1LOVERA];
-extern const float anfnTable_fno;
-extern  const TableRow	anfnTable[MAXANFN];
-#else
 extern  TableRow	f1LOverATable[MAXF1LOVERA];
 extern float anfnTable_fno;
 extern  TableRow	anfnTable[MAXANFN];
-#endif
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -92,18 +92,12 @@
 #ifndef DTMMIODEF_H
 #define DTMMIODEF_H
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //#ifndef H_MMBASIC <-- this is the exclusion for dtmmedefs.h?!
 //#define H_MMBASIC
 //#endif
 #include "port.h"
-#endif
 
 //#ifndef  H_MMBASIC
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
-#include <mme/mmsystem.h>
-#include <mme/mme_api.h>
-#endif
 
 #include "dtmmedefs.h"
 
@@ -115,8 +109,7 @@
 #define DTKmmioFOURCC( ch0, ch1, ch2, ch3 ) \
 ( (DWORD)(BYTE)(ch0) | ( (DWORD)(BYTE)(ch1) << 8 ) |    \
   ( (DWORD)(BYTE)(ch2) << 16 ) | ( (DWORD)(BYTE)(ch3) << 24 ) )
-     
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
+ 
   /*  All this commented out    */
 /* MMIO error return values */
 #define MMIOERR_BASE            256
@@ -136,15 +129,7 @@
 
 /* MMIO data types */
 typedef DWORD FOURCC;         /* a four character code */
-#ifdef _WIN32
-#ifdef _WIN64
-typedef QWORD HMMIO;          /* a handle to an open file */
-#else
-typedef DWORD HMMIO;          /* a handle to an open file */
-#endif
-#else
-typedef long HMMIO;          /* a handle to an open file */
-#endif
+typedef size_t HMMIO;          /* a handle to an open file */
 typedef LPSTR HPSTR;          /* a huge version of LPSTR */
 
 typedef MMRESULT MMIOPROC
@@ -349,10 +334,6 @@ typedef PCMWAVEFORMAT       *PPCMWAVEFORMAT;
 typedef PCMWAVEFORMAT      *NPPCMWAVEFORMAT;
 typedef PCMWAVEFORMAT      *LPPCMWAVEFORMAT;
 
-#endif  /*  All this commented out    */
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-
 /* Jie Lee for linux build */
 HMMIO APIENTRY DTKmmioOpen( LPSTR, MMIOINFO *, DWORD);
 
@@ -389,6 +370,5 @@ MMRESULT APIENTRY DTKmmioDescend( HMMIO hmmio,
 
 MMRESULT APIENTRY DTKmmioAscend(HMMIO hmmio, LPMMCKINFO lpck, UINT uFlags);
 MMRESULT APIENTRY DTKmmioCreateChunk(HMMIO hmmio, LPMMCKINFO lpck, UINT uFlags);
-#endif /* __unix__ */
 #endif  /*  #ifndef DTMMIODEF_H */
 

@@ -16,10 +16,6 @@
 #define ERR_RESET		2	// Start returned early due to reset
 #define ERR_INDEX		3	// Data in callback is index
 
-#ifdef EPSON_ARM7
-#define ERR_PHONEME_BUF_TOO_SHORT 4 //phoneme buffer is full and there is more to go in it
-#endif
-
 #define PTS_DONE		0
 #define PTS_OUTPUT		5
 

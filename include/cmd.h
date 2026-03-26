@@ -193,15 +193,8 @@
 #define SPD_CHINK	35
 #define SPD_OQ  	36
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define SPD_OS		37
 #define SPD_NM		38
 #define SPDEF		39
-#endif
-
-#ifdef MSDOS
-#define	SPDEF		32
-#endif
 
 #endif /* CMDH */

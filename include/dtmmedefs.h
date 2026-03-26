@@ -129,46 +129,19 @@
 typedef char                Int8;
 typedef short               Int16;
 typedef int                 Int32;
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined _WIN64 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 typedef long long                Int64;
-#else
-typedef long                Int64;
-#endif
 typedef unsigned char       Uint8;
 typedef unsigned short      Uint16;
 typedef unsigned int        Uint32;
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined _WIN64 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 typedef unsigned long long  Uint64; 
-#else     
-typedef unsigned long       Uint64; 
-#endif
 
 typedef char                Char8;
 typedef short               Char16;
-#ifdef  __osf__
-typedef Uint32      	    DWORD;
-#endif
-#if defined __unix__ || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifndef _DWORD
 #define _DWORD
 typedef uint32_t      	    DWORD;
 #endif
-#endif
-#ifdef VXWORKS
-#ifndef _DWORD
-#define _DWORD
-typedef Uint32      	    DWORD;
-#endif
-#endif
-/* Windows specific data types */
-#ifdef WIN32_OLD
-typedef Uint32      	    DWORD;
-#endif
-#ifdef VXWORKS
-//typedef int BOOL;
-#else
 typedef unsigned char 		    BOOL;
-#endif
 
 #ifndef TRUE
 #define TRUE	1
@@ -178,10 +151,8 @@ typedef unsigned char 		    BOOL;
 #define FALSE	0
 #endif
 
-#if !defined VXWORKS && !defined _SPARC_SOLARIS_
 #ifndef NULL
 #define NULL  ((void *)0)
-#endif
 #endif
 
 typedef Uint8       	    BYTE;
@@ -192,20 +163,13 @@ typedef Uint16      	    WORD;
 #endif
 
 typedef Int32               INT;
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 typedef long                LONG;
-#else
-typedef Int64               LONG;
-#endif
 
 typedef float               FLOAT;
 
-#ifndef VXWORKS
 #ifndef _UINT
 #define _UINT
-
 typedef uint32_t        	    UINT;
-#endif
 #endif
 
 typedef Char8 		    CHAR;
@@ -224,9 +188,7 @@ typedef WORD                *LPWORD;
 typedef LONG                *LPLONG;
 typedef DWORD               *PDWORD;
 typedef DWORD               *LPDWORD;
-#ifndef VXWORKS
 typedef void		    VOID;
-#endif
 typedef void                *LPVOID;
 
 typedef LONG                SIZE;
@@ -237,12 +199,8 @@ typedef LONG                LPARAM;
 typedef UINT                MMRESULT;
 
 /* Handle is 32 bit UINT */
-#ifdef VXWORKS
-typedef LONG *DT_HANDLE;                
-#else
 typedef LONG *DT_HANDLE;
-typedef DT_HANDLE HANDLE;                
-#endif
+typedef DT_HANDLE HANDLE;  
 
 typedef Char16 WCHAR;    /* wc,   16-bit UNICODE character */
 

@@ -99,23 +99,13 @@
 #define NEW_BINARY_PARSER
 #define GERMAN_COMPOUND_NOUNS
 
-#ifndef ARM7
 #ifdef _DEBUG_OLD
 #define PH_DEBUG_OLD
-#endif
-#endif
-
-#ifdef EPSON_ARM7
-#include "ltsnames.h"
 #endif
 
 //#define FAKE_HLSYN
 //#define HLSYN
 //#ifndef SAPI5DECTALK
-
-#ifdef EPSON_ARM7
-#define HLSYN
-#endif
 
 #ifdef ACCESS_SOLUTIONS
 #undef HLSYN
@@ -137,30 +127,8 @@
 
 //#define UPGRADES1999
 
-#ifndef SAPI5DECTALK
-// Turn on ACCESS32, TYPING_MODE, and SLOWTALK
-#ifndef ARM7
-#ifndef ACCESS32
-#define ACCESS32
-#endif
-
-#ifndef TYPING_MODE
-#define TYPING_MODE
-#endif
-#endif
-
-#ifndef SLOWTALK
-#define SLOWTALK
-#endif
-
-#endif	// SAPI5DECTALK
-
 
 #define NEW_PHONES
-
-#if defined ALPHA || defined __osf__ 
-#define FP_VTM
-#endif
 
 //#define TONGUE_BODY_AREA
 
@@ -191,9 +159,7 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
    so the default if nothing defined is the base level _vdef.c version
 */
 
-#ifndef MSDOS
 #define AD_BASE //Turns on advanced development build
-#endif
 
 #ifdef AD_BASE
 //#define NEW_VOCAL_TRACT
@@ -218,13 +184,6 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
 	// problems 
 //#define TOMBUCHLER
 //#define TESTING
-
-#if defined UNDER_CE
-/* THIS MUST BE LEFT DEFINED FOR ARM7 AND CE !!!!!!!!!!!!!!!!!!! */
-
-#define LOWCOMPUTE_MITSU //MFG 05/06/02 needed for windoe ce to lower computes
-			//Note EAB May 9,2000 Now everything should have LowCompute
-#endif
 
 
 /* TK 12/30/98, new switch for voice compression */ 

@@ -35,8 +35,6 @@
 /*#ifndef  R186_REG_DEFS */
 /*#define  R186_REG_DEFS   1  */
 
-#ifndef DTEX /* express doesn't have a 186.. */
-
 extern   unsigned int r186_io_base;
 
 /*
@@ -138,5 +136,4 @@ extern   unsigned int r186_io_base;
 #define  R186_INT_2       (r186_io_base + 0x3C)
 #define  R186_INT_3       (r186_io_base + 0x3E)
 
-#endif /*DTEX*/
 #endif

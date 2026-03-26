@@ -41,9 +41,6 @@
  */
 
 #include "flavor.h"
-#ifdef ARM7
-#pragma arm section code="CIRCODE", rwdata="CIRRWDATA", rodata="CIRRODATA", zidata="CIRDATA"
-#endif
 
 #if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
 

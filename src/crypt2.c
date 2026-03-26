@@ -27,22 +27,9 @@
 
 /* if the key is meaningless, then the key should be a fairly large prime; */
 /* larger than maybe 20000, but small enough to fit in 24 bits. */
-#ifndef __osf__
 #include <stdio.h>
 
-#ifndef UNDER_CE
 #include <time.h>
-#else
-
-#ifndef WIN32_OLD_WCE_EMULATION
-#if	((UNDER_CE == 300) || (UNDER_CE == 211))
-long time(long *); //added prototype to support windows CE mfg 09/22/00
-#else
-#include <time.h>
-#endif
-#endif
-
-#endif //UNDER_CE
 
 
 
@@ -400,5 +387,3 @@ unsigned long rot32(unsigned long num, unsigned long rot)
 	temp2 = num>>(32-rot);
 	return(temp1|temp2);
 }
-
-#endif //__osf__
