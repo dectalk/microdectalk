@@ -70,11 +70,6 @@
 #include "ls_def.h"
 
 #if defined (ENGLISH) || defined (GERMAN)
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//#include "opthread.h"
-#endif
 	
 /* #define LSSUFFDEBUG_OLD */
 
@@ -272,13 +267,9 @@ int ls_suff_suffix_find(LPTTS_HANDLE_T phTTS,unsigned char      __far *str_end,s
 							/* debug switch */
 							if (DT_DBG(LTS_DBG,0x004))
 							{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
                            	if(pKsd_t->dbglog)
 							fprintf((FILE *)pKsd_t->dbglog,"\nHITS(%s)",pLts_t->comp_str); /*mfg 04/24/98 added debug log support*/
-#endif
 							printf("\nHITS(%s)",pLts_t->comp_str);
-#endif
 							}
 #ifdef GERMAN
 							/* GL 04/28/98, send "g" for -en, -er, -es, -e */
@@ -362,7 +353,6 @@ void ls_suff_append_pron(LPTTS_HANDLE_T phTTS,unsigned char __far *pb)
 }
 #endif /* if deifned (ENGLISH) || defined (GERMAN) */
 
-#ifndef ARM7
 char *form_class_strings[] = {
 	"adj",
 	"adv",
@@ -397,7 +387,6 @@ char *form_class_strings[] = {
 	"cont",
 	"homo",
 };
-#endif
 /*
  *      Function Name:  
  *              ls_suff_printf_fc
@@ -411,60 +400,9 @@ char *form_class_strings[] = {
  *      Comments:
  *
  */
-#ifdef MSDOS
-void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
-{
-	int     i,j;
-	S32    fc_mask;
-	PLTS_T pLts_t;
-	pLts_t= phTTS->pLTSThreadData;
-
-	WAIT_PRINT;
-	printf("\n[:form");
-	for(j=1;j<=pLts_t->fc_index;j++)
-	{
-		if(pLts_t->fc_struct[j])
-		{
-			printf("\n  %d :",j);
-			fc_mask = 1;
-			for(i=0;i<32;i++)
-			{
-				if(pLts_t->fc_struct[j] & fc_mask)
-					printf("%s fc ",form_class_strings[i]);
-				fc_mask = fc_mask*2;
-			}
-		}
-		else
-		{
-			printf("\n  %d : unknown. \n",j);
-		}
-	}
-	printf("]\n");
-	SIGNAL_PRINT;
-}
-            
-            
-#else
-
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <mmsystem.h>
-#endif
-
-#if defined (__osf__) 
-/* GL 04/21/1997  change this as the latest OSF code */
-#include <mmsystem.h>
-#endif
 
 #include "tts.h"
 /*LPTTS_HANDLE_T TextToSpeechGetHandle(void);*/
-
-
-#ifndef ARM7
-#ifndef LDS_BUILD
-//void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
-#endif
-#endif
 
 /*
  *      Function Name: ls_suff_print_fc()      
@@ -480,7 +418,6 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
  */
 void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 {
-#ifndef ARM7
   int i,j;
   S32 fc_mask;
   PLTS_T  pLts_t;
@@ -494,21 +431,9 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 #else
   if (pLts_t->fc_index == 0) return;
 #endif
-
-#ifdef WIN32_OLD
-  EnterCriticalSection( phTTS->pcsLogFile );
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /* GL 04/21/1997  change this as the latest OSF code */
-  /* ToggleLogfileMutex( MUTEX_RESERVE ); */
-  //OP_LockMutex( phTTS->pcsLogFile );
-#endif
 	
-  
-#ifndef MSDOS
   if (pKsd_t->dbglog)	/*mfg 04/28/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"\n[:form ");
-#endif
 
 #ifdef PRINTFDEBUG_OLD
   printf("\n[:form ");
@@ -549,10 +474,8 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 #ifdef PRINTFDEBUG_OLD
 			printf("%s fc ",form_class_strings[i] );
 #endif
-#ifndef MSDOS
 			if (pKsd_t->dbglog)	/*mfg 04/28/98 added debug support*/
 				fprintf((FILE *)pKsd_t->dbglog," %s fc ",form_class_strings[i] );
-#endif
 
 			if (pKsd_t->logflag & LOG_FORM_TYPES)
 			{
@@ -574,10 +497,8 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 #ifdef PRINTFDEBUG_OLD
       printf("\n  %d : unknown. \n",j);
 #endif
-#ifndef MSDOS
 	  if (pKsd_t->dbglog)	/*mfg 04/28/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"\n  %d : unknown. \n",j);
-#endif
 	  if (pKsd_t->logflag & LOG_FORM_TYPES)
 	  {
 		if ( fprintf( phTTS->pLogFile, "\n  %d : unknown. \n",j) < 0 )
@@ -599,10 +520,8 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 #ifdef PRINTFDEBUG_OLD
 		printf("/ ");
 #endif
-#ifndef MSDOS
 		if (pKsd_t->dbglog)	/*mfg 04/28/98 added debug support*/
 			fprintf((FILE *)pKsd_t->dbglog,"/ ");
-#endif
 	}
 
   }
@@ -610,10 +529,8 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 #ifdef PRINTFDEBUG_OLD
   printf("]\n");
 #endif
-#ifndef MSDOS
 	if (pKsd_t->dbglog)	/*mfg 04/28/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"]\n");
-#endif
 
   if (pKsd_t->logflag & LOG_FORM_TYPES)
   {
@@ -627,16 +544,4 @@ void ls_suff_print_fc(LPTTS_HANDLE_T phTTS)
 	}
   }
 
-#ifdef WIN32_OLD
-  LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /* GL 04/21/1997  change this as the latest OSF code */
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-  //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
-#endif // ARM7
-
 }
-#endif          

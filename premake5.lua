@@ -66,8 +66,7 @@ project("libdtc")
 		"SINGLE_THREADED"
 	})
 	filter("system:windows")
-		files("mman-win32/*.c")
-		defines("__unix__")
+		files("src/mman-win32/*.c")
 	filter({})
 
 project("say")

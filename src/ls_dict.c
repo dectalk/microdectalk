@@ -93,16 +93,9 @@
 #include "dectalkf.h"
 #include "ls_def.h"
 
-#ifndef ARM7
 #include "mmalloc.h" // tek 18jun98 
-#else
-#include "stdlib.h"
-#include "string.h"
-#endif
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
-#endif
 
 #ifdef SAPI5DECTALK
 extern int ls_sapi_find_word(LPTTS_HANDLE_T phTTS, unsigned char *, short);
@@ -535,9 +528,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 			/* debug switch */
 			if (DT_DBG(LTS_DBG,0x010))
 			{
-#ifndef ARM7_NOSWI
 				printf("ls_dict_find_word:  up \n");
-#endif
 			}
 
 #ifdef DICDEBUG
@@ -551,9 +542,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 			/* debug switch */
 			if (DT_DBG(LTS_DBG,0x010))
 			{
-#ifndef ARM7_NOSWI
 				printf("ls_dict_find_word:  down \n");
-#endif
 			}
 #ifdef DICDEBUG
 			printf("LSDIC.C; ls_dict_find_word;  down \n");
@@ -575,9 +564,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_find_word:  crawling, stat=%x\n",stat);
-#endif
 		}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_find_word;  crawling, stat=%x \n",stat);
@@ -616,9 +603,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_find_word:  miss \n");
-#endif
 	}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_find_word;  miss. \n");
@@ -658,9 +643,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_find_word:  cap:%x\n",cap);
-#endif
 	}
 #ifdef DICDEBUG
 	printf("LSDIC.C; ls_dict_find_word;  cap:%x \n",cap);
@@ -678,9 +661,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_find_word:  capit. homograph reverse");
-#endif
 	}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_find_word;  capit. homograph reverse \n");
@@ -715,9 +696,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_find_word:  HIT complete.\n");
-#endif
 	}
 #ifdef DICDEBUG
 	printf("LSDIC.C; ls_dict_find_word;  HIT complete. \n");
@@ -783,9 +762,7 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_find_word:  HIT");
-#endif
 	}
 #ifdef DICDEBUG
 	printf("*");
@@ -854,9 +831,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_dlook:  limit. LOOK_HIGHER\n");
-#endif
 		}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_dlook;  limit, LOOK_HIGHER \n");
@@ -869,9 +844,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_dlook:  limit. LOOK_LOWER\n");
-#endif
 		}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_dlook;  limit. LOOK_LOWER \n");
@@ -900,12 +873,10 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_dlook:");
 		for (i=0;(*ppent)->text[i];i++)
 		printf("%c",(*ppent)->text[i]);
 		printf("\n");
-#endif
 	}
 #ifdef DICDEBUG
 	printf("LSDIC.C; ls_dict_dlook;");
@@ -930,9 +901,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_dlook:  short string. LOOK_LOWER\n");
-#endif
 	}
 #ifdef DICDEBUG
 			printf("LSDIC.C; ls_dict_dlook;  short string, LOOK_LOWER\n");
@@ -980,9 +949,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_dlook:  limit. LOOK_HIGHT\n");
-#endif
 		}
 #ifdef DICDEBUG
 			printf("LSDIC.C; ls_dict_dlook;  Limit, LOOK_HIGHER \n");
@@ -994,9 +961,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_dlook:  limit. LOOK_LOWER\n");
-#endif
 		}
 #ifdef DICDEBUG
 			printf("LSDIC.C; ls_dict_dlook;  Limit. LOOK_LOWER \n");
@@ -1035,9 +1000,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_find_word:  HIT\n");
-#endif
 		}
 #ifdef DICDEBUG
 		printf("*");
@@ -1049,9 +1012,7 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_dlook:  long string. LOOK_HIGHER\n");
-#endif
 	}
 #ifdef DICDEBUG
 	printf("LSDIC.C; ls_dict_dlook;  long string, LOOK_HIGHER \n");
@@ -1105,9 +1066,7 @@ int ls_dict_where_to_look(LPTTS_HANDLE_T phTTS, struct dic_entry far *pent)
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_where_to_look:  w-t-l match. LOOK_HIGHER\n");
-#endif
 		}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_where_to_look;  w-t-l match: LOOK_HIGHER \n");
@@ -1119,9 +1078,7 @@ int ls_dict_where_to_look(LPTTS_HANDLE_T phTTS, struct dic_entry far *pent)
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x010))
 		{
-#ifndef ARM7_NOSWI
 			printf("ls_dict_where_to_look:  w-t-l. LOOK_HIGHER\n");
-#endif
 		}
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_where_to_look;  w-t-l: LOOK_HIGHER \n");
@@ -1131,9 +1088,7 @@ int ls_dict_where_to_look(LPTTS_HANDLE_T phTTS, struct dic_entry far *pent)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x010))
 	{
-#ifndef ARM7_NOSWI
 		printf("ls_dict_where_to_look:  w-t-l. LOOK_LOWER\n");
-#endif
 	}
 #ifdef DICDEBUG
 	printf("LSDIC.C; ls_dict_where_to_look;  w-t-l: LOOK_LOWER \n");
@@ -1253,21 +1208,12 @@ int ls_dict_user_dict_look(LPTTS_HANDLE_T phTTS, long uindex, short abbr, short 
 	pLts_t = phTTS->pLTSThreadData;
 
         /* add for WIN95.  6/03/96.  by MGS */
-#ifdef MSDOS
-		if (abbr == 0)
-        	ent = UDICT_HEAD[uindex];
-		else if (abbr==2)
-        	ent = FDICT_HEAD[uindex];
-        else
-        	ent = ADICT_HEAD[uindex];
-#else
 		if (abbr == 0)
 			ent = ((struct dic_entry *) UDICT_ACCESS(uindex))->text;
 		else if (abbr==2)
 			ent = ((struct dic_entry *) FDICT_ACCESS(uindex))->text;
 		else
 			ent = ((struct dic_entry *) ADICT_ACCESS(uindex))->text;
-#endif // MSDOS
 	/*	pLts_t->hit_type=HIT; */
 #ifdef DICDEBUG
 		printf("LSDIC.C; ls_dict_user_dict_look;  %d in lk\n",uindex);
@@ -1381,8 +1327,6 @@ int ls_dict_where_to_ulook(PLTS_T pLts_t,char far *ent)
 /* All of the lexical functions I wrote won't be compiled for MSDOS.  The reason for this is
    because the functions are only used for the API, which isn't supported under MSDOS.
    JAW 7/7/98 */
-#ifndef MSDOS
-#ifndef ARM7_NOSWI
 /**********************************************************
  *  Function: DictionaryHit()
  *  By      : Jason Warlikowski
@@ -1462,7 +1406,6 @@ long DictionaryHit(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 	return -1;
 }
 
-#ifndef ARM7
 /* ******************************************************************
  *  Function: DumpDictionary()
  *  By      : Jason Warlikowski                                                            
@@ -1528,8 +1471,6 @@ MMRESULT DumpDictionary(LPTTS_HANDLE_T phTTS, char *filename)
 	fclose(outfile);
 	return MMSYSERR_NOERROR;
 }
-
-#endif // ARM7
 
 /* *******************************************************************
  *  Function: UserDictionaryHit()
@@ -1607,7 +1548,6 @@ long UserDictionaryHit(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 	return -1;
 }
 
-#ifndef ARM7
 /* *******************************************************************
  *  Function: DumpUserDictionary()
  *  By      : Jason Warlikowski                                                           
@@ -1661,7 +1601,6 @@ MMRESULT DumpUserDictionary(LPTTS_HANDLE_T phTTS, char *filename)
 	fclose(outfile);
 	return MMSYSERR_NOERROR;
 }
-#endif // ARM7
 
 /********************************************************************
  *  Function: UserDictionaryHead()
@@ -1764,17 +1703,9 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		entry_size = GetUserEntrySize(entry);
 		dict_bytes = 4 + entry_size; /* 4 bytes for dict_bytes, 4 bytes for the pointer */
 
-#if (defined WIN32_OLD) && (!defined UNDER_CE)
-		if (!(UDICT_INDEX = (S32 *) mallocLock(4)))
-#else
 		if (!(UDICT_INDEX_ASSIGN = (S32 *) malloc(4)))
-#endif
 			return MMSYSERR_NOMEM;
-#if (defined WIN32_OLD) && (!defined UNDER_CE)
-		if (!(UDICT_DATA = (unsigned char *) mallocLock(entry_size)))
-#else
 		if (!(UDICT_DATA = (unsigned char *) malloc(entry_size)))
-#endif
 			return MMSYSERR_NOMEM;
 
 		UDICT_INDEX[0]=-4;
@@ -1840,18 +1771,6 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 
 	/* reallocate the dictionary */
 
-#if defined (WIN32_OLD) && !defined (UNDER_CE)
-	//tek 18jun98 this is inconsistent; use reallocLock.
-	if ((UDICT_INDEX = reallocLock(UDICT_INDEX, (UDICT_ENTRY+1) * sizeof(S32))) == NULL)
-	{
-		return MMSYSERR_NOMEM;
-	}
-	if ((UDICT_DATA = reallocLock(UDICT_DATA, new_size)) == NULL)
-	{
-		return MMSYSERR_NOMEM;
-	}
-
-#else
 	if ((UDICT_INDEX_ASSIGN = realloc(UDICT_INDEX, (UDICT_ENTRY+1) * sizeof(S32))) == NULL)
 	{
 		return MMSYSERR_NOMEM;
@@ -1860,8 +1779,6 @@ MMRESULT AddUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 	{
 		return MMSYSERR_NOMEM;
 	}
-
-#endif // defined (WIN32_OLD) && !defined (UNDER_CE)
 
 #ifdef LTS_DEBUG_OLD
 		{
@@ -1954,13 +1871,8 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 		}
 #endif // LTS_DEBUG_OLD
 
-#if (defined WIN32_OLD) && (!defined UNDER_CE)
-		freeLock(UDICT_INDEX);
-		freeLock(UDICT_DATA);
-#else
 		free(UDICT_INDEX);
 		free((unsigned char *)UDICT_DATA);
-#endif
 		UDICT_INDEX_ASSIGN = NULL;
 		UDICT_DATA=NULL;
 		UDICT_ENTRY = 0;
@@ -1985,14 +1897,8 @@ MMRESULT DeleteUserEntry(LPTTS_HANDLE_T phTTS, struct dic_entry *entry)
 
 	/* reallocate the dictionary */
 
-#if defined (WIN32_OLD) && !defined (UNDER_CE)
-	// tek 18jun98 must be reallocLock..
-	UDICT_INDEX = reallocLock(UDICT_INDEX, (UDICT_ENTRY-1) * sizeof(S32));
-	UDICT_DATA = reallocLock(UDICT_DATA, new_size);
-#else
 	UDICT_INDEX_ASSIGN = realloc(UDICT_INDEX, (UDICT_ENTRY-1) * sizeof(S32));
 	UDICT_DATA = realloc((unsigned char *)UDICT_DATA, new_size);
-#endif
 
 #ifdef LTS_DEBUG_OLD
 		{
@@ -2131,7 +2037,6 @@ int GetUserEntry(LPTTS_HANDLE_T phTTS, char *gr_ph, int index)
 	return strlen(gr_ph) + 1; /* returns the starting index of the phoneme */
 }
 
-#ifndef ARM7
 /* ******************************************************************
  *  Function: SaveUserDictionary()
  *  By      : Jason Warlikowski  
@@ -2191,6 +2096,3 @@ MMRESULT SaveUserDictionary(LPTTS_HANDLE_T phTTS, char *filename)
 	fclose(outfile);
 	return MMSYSERR_NOERROR;
 }
-#endif // #ifndef ARM7
-#endif // #ifndef ARM7_NOSWI
-#endif // #ifndef MSDOS

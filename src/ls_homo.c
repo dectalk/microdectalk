@@ -409,13 +409,9 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 				/* debug switch */
 				if (DT_DBG(LTS_DBG,0x020))
 				{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 					if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\nHOMO:(%d)",i);
-#endif    
 			   		printf("\nHOMO:(%d)",i);
-#endif
 				}
 #ifdef HDEBUG_OLD
 				printf(" got context at %d \n",i);
@@ -495,15 +491,9 @@ struct dic_entry far *ls_homo_homo(LPTTS_HANDLE_T phTTS,long index)
 }
 
 
-#ifdef __osf__
-int ls_homo_sapi_homo(LPTTS_HANDLE_T phTTS, unsigned  int fc1, unsigned  int fc2)
-{
-	unsigned  int TEMPfc;
-#else
 int ls_homo_sapi_homo(LPTTS_HANDLE_T phTTS, unsigned long fc1, unsigned long fc2)
 {
 	unsigned long TEMPfc;
-#endif
 	int i=0;
 
 	PLTS_T	pLts_t;
@@ -543,13 +533,9 @@ int ls_homo_sapi_homo(LPTTS_HANDLE_T phTTS, unsigned long fc1, unsigned long fc2
 				/* debug switch */
 				if (DT_DBG(LTS_DBG,0x020))
 				{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 					if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\nHOMO:(%d)",i);
-#endif    
 			   		printf("\nHOMO:(%d)",i);
-#endif
 				}
 #ifdef HDEBUG_OLD
 				printf(" got context at %d \n",i);

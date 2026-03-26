@@ -69,11 +69,9 @@
 extern "C" {
 #endif
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   //#define HANDLE int
 #define HGLOBAL DT_HANDLE
 #define GMEM_MOVEABLE 0x0002
-#endif
 
 /**********************************************************************/
 /*  The follwing macro definitions can be used to make code portable  */
@@ -87,61 +85,9 @@ extern "C" {
 /*                                                                    */
 /*  The SERVER_BUFFER macros are for allocating buffers.              */
 /**********************************************************************/
-
-#ifdef  USE_MME_SERVER  /* Digital UNIX or OpenVMS */
-#define  ALLOCATE_SERVER_MEM( SizeInBytes )     mallocLock( SizeInBytes )
-#define  FREE_SERVER_MEM( SizeInBytes )         freeLock( SizeInBytes )
-
-#define  ALLOCATE_SERVER_BUFFER( SizeInBytes )  mmeAllocBuffer( SizeInBytes )
-#define  FREE_SERVER_BUFFER( SizeInBytes )      mmeFreeBuffer( SizeInBytes )
-
-#else  /* Windows NT or Windows 95 */
-
-#define  ALLOCATE_SERVER_MEM( SizeInBytes )     malloc( SizeInBytes )
-#define  FREE_SERVER_MEM( SizeInBytes )         free( SizeInBytes )
-
-#if defined UNDER_CE || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
  
 #define  ALLOCATE_SERVER_BUFFER( SizeInBytes )  malloc( SizeInBytes )
 #define  FREE_SERVER_BUFFER( SizeInBytes )      free( SizeInBytes )
-
-#else
-
-#define  ALLOCATE_SERVER_BUFFER( SizeInBytes )  mallocLock( SizeInBytes )
-#define  FREE_SERVER_BUFFER( SizeInBytes )      freeLock( SizeInBytes )
-
-#endif  // UNDER_CE
-
-#endif
-
-#if defined UNDER_CE || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
-
-#define  ALLOCATE_LOCKED_MEMORY( SizeInBytes )  malloc( SizeInBytes )
-#define  FREE_LOCKED_MEMORY( SizeInBytes )      free( SizeInBytes )
-
-#else
-
-/**********************************************************************/
-/*  General multimedia memory allocation. mallocLock() and FreeLock() */
-/*  are defined differently for Windows NT and UNIX (or VMS).         */
-/**********************************************************************/
-
-#define  ALLOCATE_LOCKED_MEMORY( SizeInBytes )  mallocLock( SizeInBytes )
-#define  FREE_LOCKED_MEMORY( SizeInBytes )      freeLock( SizeInBytes )
-
-/**********************************************************************/
-/*  Function prototypes.                                              */
-/**********************************************************************/
-
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ || defined (__APPLE__)
-void * mallocLock( unsigned int uiSize );
-#ifndef MSDOS
-void * reallocLock( void * pMem, size_t size );
-#endif
-unsigned int freeLock( void * pMemory );
-#endif
-
-#endif
 
 #ifdef __cplusplus
 }  /* End extern "C" */
