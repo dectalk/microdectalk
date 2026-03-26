@@ -9,7 +9,7 @@ if [ "$TARGET" = "dos4g" ]; then
 	ARGS="-DNO_FILESYSTEM"
 	FILES=""
 elif [ "$TARGET" = "nt_dll" ]; then
-	ARGS=""
+	ARGS="-DBLD_DECTALK_DLL"
 	FILES="src/mman-win32/mman.c"
 else
 	ARGS=""
@@ -26,7 +26,7 @@ for i in src/*.c $FILES; do
         if [ -f "$OUT" ]; then
                 continue
         fi
-        owcc -Wc-fx -c -b$TARGET $ARGS -Iinclude -Isrc -D_REENTRANT -DNOMME -DLTSSIM -DTTSSIM -DANSI -DBLD_DECTALK_DLL -DENGLISH -DENGLISH_US -DACCESS32 -DTYPING_MODE -DACNA -DDISABLE_AUDIO -DSINGLE_THREADED -o $OUT $i
+        owcc -Wc-fx -c -b$TARGET $ARGS -Iinclude -Isrc -D_REENTRANT -DNOMME -DLTSSIM -DTTSSIM -DANSI  -DENGLISH -DENGLISH_US -DACCESS32 -DTYPING_MODE -DACNA -DDISABLE_AUDIO -DSINGLE_THREADED -o $OUT $i
 done
 
 if [ "$TARGET" = "nt_dll" ]; then

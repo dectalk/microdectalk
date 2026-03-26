@@ -19,12 +19,14 @@
 #define PTS_DONE		0
 #define PTS_OUTPUT		5
 
+#ifndef DT_EXTERN
 #if defined(BLD_DECTALK_DLL) && defined(_WIN32)
 #define DT_EXTERN extern __declspec(dllexport)
 #elif defined(_WIN32)
 #define DT_EXTERN extern __declspec(dllimport)
 #else
 #define DT_EXTERN extern
+#endif
 #endif
 
 DT_EXTERN int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
