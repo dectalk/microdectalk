@@ -326,15 +326,7 @@ struct dgt_packet {
 #define LANG_italian            0x0007
 #define LANG_none               0xffff
 
-#ifndef ARM7
 #define MAX_languages           7
-#else
-#ifdef EPSON_ARM7
-#define MAX_languages           7
-#else
-#define MAX_languages           7
-#endif
-#endif
 
 #define LANG_lts_ready          0x1
 #define LANG_ph_ready           0x2

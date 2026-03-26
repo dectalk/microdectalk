@@ -1885,9 +1885,6 @@ int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
 	pCmd_t->clausebuf[pCmd_t->input_counter]=PAR_INDEX_DUMMY_CHAR;
 	/* put the index into the index buffer */
 	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index,pipe_value,sizeof(index_data_t));
-#if defined ARM7 && defined ACCESS_SOLUTIONS
-	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index,pipe_value,sizeof(index_data_t));
-#endif
 	/* add 1 for the counter updating */
 	pCmd_t->input_counter++;
 	pCmd_t->index_counter++;
