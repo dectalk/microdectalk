@@ -192,6 +192,8 @@
 #ifndef mktemp
 #define mktemp _mktemp
 #endif
+#elif !defined(__EMSCRIPTEN__)
+#include <unistd.h>
 #endif
 
 #define LOWORD(word)	(word & 0xff)
