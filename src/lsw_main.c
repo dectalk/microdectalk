@@ -380,9 +380,10 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	{
 		char p[PATH_MAX] = {};
 #if defined(_WIN32)
-		ssize_t count = 2;
+		ssize_t count = 3;
 		p[0] = '.';
 		p[1] = '/';
+		p[2] = 'h';
 		p[3] = 0;
 #elif defined(__APPLE__)
 		char ep[PATH_MAX] = {};
@@ -412,10 +413,11 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 	{
 		char p[PATH_MAX] = {};
 #if defined(_WIN32)
-		ssize_t count = 2;
+		ssize_t count = 3;
 		p[0] = '.';
 		p[1] = '/';
-		p[2] = 0;
+		p[2] = 'h';
+		p[3] = 0;
 #elif defined(__APPLE__)
 		char ep[PATH_MAX] = {};
 		uint32_t size = sizeof(ep);
@@ -468,10 +470,11 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 				if (exe_path && (main_dict_name[0] != '/')) {
 					char p[PATH_MAX] = {};
 #if defined(_WIN32)
-					ssize_t count = 2;
+					ssize_t count = 3;
 					p[0] = '.';
 					p[1] = '/';
-					p[2] = 0;
+					p[2] = 'h';
+					p[3] = 0;
 #elif defined(__APPLE__)
 					char ep[PATH_MAX] = {};
 					uint32_t size = sizeof(ep);
@@ -505,10 +508,11 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 		if (exe_path && (main_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {};
 #if defined(_WIN32)
-			ssize_t count = 2;
+			ssize_t count = 3;
 			p[0] = '.';
 			p[1] = '/';
-			p[2] = 0;
+			p[2] = 'h';
+			p[3] = 0;
 #elif defined(__APPLE__)
 			char ep[PATH_MAX] = {};
 			uint32_t size = sizeof(ep);
@@ -585,10 +589,11 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 		if (exe_path && (foreign_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {};
 #if defined(_WIN32)
-			ssize_t count = 2;
+			ssize_t count = 3;
 			p[0] = '.';
 			p[1] = '/';
-			p[2] = 0;
+			p[2] = 'h';
+			p[3] = 0;
 #elif defined(__APPLE__)
 			char ep[PATH_MAX] = {};
 			uint32_t size = sizeof(ep);
