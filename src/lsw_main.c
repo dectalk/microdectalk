@@ -124,10 +124,64 @@
 struct share_data       *kernel_share;
 #endif
 
-#ifdef __linux__
+#if !defined(_WIN32)
 #include <unistd.h>
-#include <libgen.h>
 #endif
+
+static size_t
+dt_dirname_r(const char *path, char *buf, size_t buflen)
+{
+        const char *endp;
+        size_t len;
+
+        /*
+         * If `path' is a null pointer or points to an empty string,
+         * return a pointer to the string ".".
+         */
+        if (path == NULL || *path == '\0') {
+                path = ".";
+                len = 1;
+                goto out;
+        }
+
+        /* Strip trailing slashes, if any. */
+        endp = path + strlen(path) - 1;
+        while (endp != path && *endp == '/')
+                endp--;
+
+        /* Find the start of the dir */
+        while (endp > path && *endp != '/')
+                endp--;
+
+        if (endp == path) {
+                path = *endp == '/' ? "/" : ".";
+                len = 1;
+                goto out;
+        }
+
+        do
+                endp--;
+        while (endp > path && *endp == '/');
+
+        len = endp - path + 1;
+out:
+        if (buf != NULL && buflen != 0) {
+                buflen = buflen - 1;
+		if(buflen > len) buflen = len;
+                if (buf != path)
+                        memcpy(buf, path, buflen);
+                buf[buflen] = '\0';
+        }
+        return len;
+}
+
+char *
+dt_dirname(char *path)
+{
+        static char result[PATH_MAX];
+        (void)dt_dirname_r(path, result, sizeof(result));
+        return result;
+}
 
 int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name);
 void default_lang(PKSD_T, unsigned int, unsigned int); // NAL warning removal
@@ -403,7 +457,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 		if (count != -1) {
 			char *cfg;
-			cfg = dirname(p);
+			cfg = dt_dirname(p);
 			strcat(cfg,"/");
 			strcat(cfg,"DECtalk.conf");
 			config_file=fopen(cfg,"r");
@@ -436,7 +490,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 		if (count != -1) {
 			char *cfg;
-			cfg = dirname(p);
+			cfg = dt_dirname(p);
 			strcat(cfg,"/../");
 			strcat(cfg,"DECtalk.conf");
 			config_file=fopen(cfg,"r");
@@ -493,7 +547,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 					if (count != -1) {
 						char *dict;
-						dict = dirname(p);
+						dict = dt_dirname(p);
 						strcat(dict,"/");
 						if (parent)
 							strcat(dict,"../");
@@ -531,7 +585,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 			if (count != -1) {
 				char *dict;
-				dict = dirname(p);
+				dict = dt_dirname(p);
 				strcat(dict,"/");
 				if (parent)
 					strcat(dict,"../");
@@ -574,7 +628,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 					if (count != -1) {
 						char *dict;
-						dict = dirname(p);
+						dict = dt_dirname(p);
 						strcat(dict,"/");
 						if (parent)
 							strcat(dict,"../");
@@ -612,7 +666,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 #endif
 			if (count != -1) {
 				char *dict;
-				dict = dirname(p);
+				dict = dt_dirname(p);
 				strcat(dict,"/");
 				if (parent)
 					strcat(dict,"../");
