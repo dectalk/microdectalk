@@ -124,7 +124,11 @@
 struct share_data       *kernel_share;
 #endif
 
-#if !defined(_WIN32)
+#if defined(_WIN32)
+#ifndef PATH_MAX
+#define PATH_MAX 260
+#endif
+#else
 #include <unistd.h>
 #endif
 
