@@ -1,24 +1,27 @@
 import bindings from "bindings";
-import fs from "node:fs"
 
-/** @type {ILibDectalk} */
-const libdectalk = bindings("dectalk");
-
-const toBytes = (number) => {
-  return [0xff & number,
-  0xff & (number >> 8),
-  0xff & (number >> 16),
-  0xff & (number >> 24)]
+interface ILibDectalk {
+  setCallback: (callback: (buffer: Buffer) => void) => void;
+  say: (text: string, mode: 0 | 1) => number;
 }
 
-/** @type {(text: string) => Promise<Buffer>} */
-const say = (text) => {
+const libdectalk: ILibDectalk = bindings("dectalk");
+
+const toBytes = (n: number) => {
+  return [
+    0xff & n,
+    0xff & (n >> 8),
+    0xff & (n >> 16),
+    0xff & (n >> 24)
+  ]
+}
+
+const say = (text: string): Buffer<ArrayBuffer> => {
   const format = 1;
-  const audioBuffer = [];
+  const audioBuffer: Buffer<ArrayBuffer>[] = [];
   let dataLength = 0;
 
-  /** @type {(chunkData: Buffer) => void} */
-  const callback = (chunkData) => {
+  const callback = (chunkData: Buffer) => {
     // copy the buffer immediately before its destroyed
     audioBuffer.push(Buffer.from(chunkData));
     dataLength += chunkData.byteLength;
@@ -48,9 +51,4 @@ const say = (text) => {
   return Buffer.concat([header, ...audioBuffer])
 }
 
-const buffer = say("This is a message from Node J S");
-fs.writeFileSync("first.wav", buffer);
-
-const buffer2 = say("This is a second message from Node J S");
-fs.writeFileSync("second.wav", buffer2);
-console.log("end of programme");
+module.exports = say;
