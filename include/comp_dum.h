@@ -307,4 +307,3 @@ const int noun_index_table = 0; // NAL warning removal
 
 
 const unsigned char noun_data_table = 0; // NAL warning removal
- 
