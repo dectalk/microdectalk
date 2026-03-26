@@ -57,16 +57,7 @@
 
 #include "dectalkf.h"
 
-#ifdef EPSON_ARM7
-#include "ltsnames.h"
-#endif
-
 #include "tts.h"    /* For the declarartion of LPTTS_HANDLE_T */
-
-#ifdef WIN32_OLD
-#include "dbgwins.h"
-#include <windows.h>
-#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -81,9 +72,6 @@
 #ifdef ACNA 
 #include "ls_acna.h"
 #endif
-#endif
-#ifdef EPSON_ARM7
-#include "ls_acna.h"
 #endif
 #include "ls_data.h"
 
@@ -125,20 +113,10 @@
 #endif
 #endif
 
-#ifdef ARM7
-#define printf error_func_printf
-#define WINprintf error_func_WINprintf
-#endif
-
 
 /* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG_OLD
-#ifdef WIN32_OLD
-#define printf WINprintf
-#endif
-#if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define WINprintf printf
-#endif
 #endif
 
 #endif /* #ifndef LS_DEFH */

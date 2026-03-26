@@ -67,7 +67,6 @@ const unsigned char german_ascky[] =  {
 	'-',    '*',    '#',    ' ',    '(',    ')',    ';',    ',',
 	'.',    '?',    '!',    '+',    '^',    '&',	'>'
 };
-#ifndef VMS
 const unsigned int german_ascky_rev[] = {
 
 /* 0x00 */
@@ -126,7 +125,6 @@ const unsigned int german_ascky_rev[] = {
 	PGR(GR_CH),        PGR(GR_Y1),       PGR(GR_Z),                 NULL_ASCKY,
 	PGR(GR_Q),         NULL_ASCKY,     PGR(BLOCK_RULES),       NULL_ASCKY
 };
-#endif
 const unsigned char   german_arpa[] = {
 
 	'_',    ' ',           /* 0  =  _ */            

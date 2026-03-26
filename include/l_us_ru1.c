@@ -233,7 +233,7 @@ void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int def_lang, i
 
 			if (rsflag != FALSE)
 				ssflag = TRUE;
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 			if (tflag != FALSE) 
 			{
 				gp2 = &pLts_t->graph[0];
@@ -686,7 +686,7 @@ GRAPH *ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH *gp1, int def_lang, int se
 			goto fail;
 		}
 			
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 		rline = lswtab[rulep+5];	/* Line number of rule.	*/
 		++lswtab[rulep+6];			/* Usage count of rule.	*/
 #endif

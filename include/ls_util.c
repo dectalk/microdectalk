@@ -164,54 +164,33 @@ extern char *form_class_strings[];
 void ls_util_dump_cword(LETTER word[], char *message)
 {
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	FILE *fp;
-#endif	/* defined (WIN32) || defined (__osf__) || defined (__unix__) */
 	LETTER *llp;
 	llp=&word[0];
 
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 	printf("%s -- ", message);
 #endif	//	PRINTFDEBUG_OLD
 	fp=fopen("output.log", "a");
 	fprintf(fp,"%s -- ",message);
-#else
-    printf("%s -- ", message);
-#endif	// defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif // ARM7_NOSWI
 
 	while (llp->l_ch!=EOS)
 	{                          
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
 #endif	// PRINTFDEBUG_OLD
 		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
-#else
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif
 		++llp;
 	}          
 	
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif	// PRINTFDEBUG_OLD
 	fprintf(fp,"\n");
 	fclose(fp);
-#else
     printf ("\n");
 	printf ("\r");
-#endif	// defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif
 }
 
 /* ******************************************************************
@@ -235,48 +214,30 @@ void ls_util_dump_cword(LETTER word[], char *message)
 void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
 {       
 
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	FILE *fp;
 	fp=fopen("output.log","a");
 	fprintf(fp,"%s -- ",message);
 #ifdef PRINTFDEBUG_OLD
     printf ("%s -- ", message);
 #endif	// PRINTFDEBUG_OLD
-#else
     printf ("%s -- ", message);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif // ARM7_NOSWI
 
 	while (llp!=rlp)
 	{
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
 #endif	// PRINTFDEBUG_OLD
 		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
-#else
 		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif // ARM7_NOSWI
 		++llp;
 	}      
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif	// PRINTFDEBUG_OLD
 	fprintf(fp,"\n");
 	fclose(fp);
-#else
    printf ("\n");
    printf ("\r");
-#endif	// defined (WIN32) || defined (__osf__) || defined (__unix__)
-#endif // ARM7_NOSWI
 }       
 
 /* ******************************************************************
@@ -305,19 +266,13 @@ void ls_util_dump_lsp_endp(short type, PHONE *lsp, PHONE *endp, char *message)
 {
 PHONE *pp1;       
 
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	FILE *fp;
 	fp=fopen("output.log","a");
 	fprintf(fp,"%s -- ",message);
 #ifdef PRINTFDEBUG_OLD
     printf ("%s -- ", message);
 #endif	// PRINTFDEBUG_OLD
-#else
     printf ("%s -- ", message);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-#endif // ARM7_NOSWI
 
     pp1 = lsp;
 	while (pp1 != endp)
@@ -325,48 +280,30 @@ PHONE *pp1;
 		switch(type)
 		{
 		  case 0:
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 				printf("(%d)",pp1->p_stress);
 #endif	// PRINTFDEBUG_OLD
 				fprintf(fp,"(%d)",pp1->p_stress);
-#else
 				printf("(%d)",pp1->p_stress);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-#endif // ARM7_NOSWI
 				break;          	    
 		  case 1:
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 				printf("(%d)",pp1->p_sphone);
 #endif
 				fprintf(fp,"(%d)",pp1->p_sphone);
-#else
 				printf("(%d)",pp1->p_sphone);
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-#endif // ARM7_NOSWI
 				break;          	    
         }
         
 		pp1 = pp1->p_fp;
 	}      
-/* GL 04/21/1997  change this for OSF build */
-#ifndef ARM7_NOSWI
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif
 	fprintf(fp,"\n");
 	fclose(fp);
-#else
    printf ("\n");
    printf ("\r");
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-#endif // ARM7_NOSWI
 }
     
 /* ******************************************************************
@@ -708,22 +645,15 @@ void ls_util_send_phone_list(LPTTS_HANDLE_T phTTS, const char *pp)
  * *****************************************************************/
 void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 {
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	short buf[1];
 	short buf2[4];
-#else
-	DT_PIPE_T   buf[1];
-	DT_PIPE_T buf2[4];
-#endif
 	PLTS_T  pLts_t;
 	PKSD_T  pKsd_t;
 	PDPH_T  pDph_t;
-#ifndef EPSON_ARM7
 	int pause;
-#endif
 
 /* GL 09/24/1997  add LDS_BUILD flag for LDS run */
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	lds_sendphone(ph);
 	return;
 #endif
@@ -776,21 +706,13 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 	if (DT_DBG(LTS_DBG,0x040))
 	{
 #ifdef NEW_LTS
-#ifndef MSDOS
 		if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"\nFC(%d)(%08x)",pLts_t->cur_word_index,pLts_t->word_info[pLts_t->cur_word_index].form_class);
-#endif
 		printf("\nFC(%d)(%08x)",pLts_t->cur_word_index,pLts_t->word_info[pLts_t->cur_word_index].form_class);
 #else
-#ifndef ARM7_NOSWI
-#ifndef ARM7
-#ifndef MSDOS
 		if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"\nFC(%d)(%08x)",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
-#endif // MSDOS
-#endif // ARM7
 		printf("\nFC(%d)(%08x)",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
-#endif // ARM7_NOSWI
 #endif // NEW_LTS
 	}
 	/* MGS 10/17/1997, send word class */
@@ -811,7 +733,6 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 	//	printf("\nin lts FC(%d)(%08x)\n",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
 		ls_util_write_pipe(pKsd_t,&buf2[0],3);
 
-#ifndef EPSON_ARM7
 		if(pLts_t->length > pLts_t->fc_index +3 )
 		{
 			if (pLts_t->pro_markers[pLts_t->fc_index] & PRO_REQ_BREAK)
@@ -838,7 +759,6 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 				
 			}
 		}
-#endif
 
 	}
 #endif // NEW_LTS
@@ -1064,20 +984,16 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
 		/* debug switch */
 		if (DT_DBG(LTS_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
 			printf("\nLTS input:%c(%x)",pLts_t->nitem.i_word[0],pLts_t->nitem.i_word[0]);
-#endif
 		}
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		/* GL 12/02/1996, pass RESET to PH pipe */
 		if(((pLts_t->nitem.i_word[0]) & (PFONT|PVALUE)) == RESET)
 		{
 			ls_util_write_pipe(pKsd_t,&(pLts_t->nitem.i_word[0]),1);
 					return 0;
         }
-#endif // defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
         
 #ifdef SPANISH
    		if(pLts_t->got_quote && pLts_t->nitem.i_word[0] == ((PFASCII<<PSFONT)+','))
@@ -1112,9 +1028,7 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
 		        /* debug switch */
 		        if (DT_DBG(LTS_DBG,0x001))
 		        {
-#ifndef ARM7_NOSWI
 			       printf("\nLTS input:%c[%x]",lts_sync[i],lts_sync[i]);
-#endif
 				}
 				if(pKsd_t->halting)
 				{
@@ -1191,9 +1105,7 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
 		    /* debug switch */
 		    if (DT_DBG(LTS_DBG,0x001))
 		    {
-#ifndef ARM7_NOSWI
 			       printf("\nLTS input:*%c[%x]",pLts_t->nitem.i_word[i],pLts_t->nitem.i_word[i]);
-#endif
 			}
 			if(pKsd_t->halting)
 			{
@@ -1298,13 +1210,9 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
 	/* debug switch */
 	if (DT_DBG(LTS_DBG,0x002)) 
     {
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)			/*mfg 04/24/98 added debug support*/
 		fprintf((FILE *)pKsd_t->dbglog,"(%d)\n",flag);
-#endif
 		printf("(%d)\n",flag);
-#endif
 	}
 	
 /* debug switch */
@@ -1316,8 +1224,6 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
 		  {				
 		    ls_util_dump_llp_rlp(llp,rlp,"Abbr Miss-hit:\n");
 		    
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		    if (pKsd_t->dbglog)		/*see if dbglog.txt is open*/
 		      {
 			fprintf((FILE *)pKsd_t->dbglog,"Abbr Miss-hit:\n");		/*mfg 04/16/1998 dttest logging*/
@@ -1328,15 +1234,11 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
 			    ++llp;
 			  }
 		      }
-#endif
-#endif
 		}
 		else
 		  {
 		    ls_util_dump_llp_rlp(llp,rlp,"Word Miss-hit:\n");
 		    
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 				if (pKsd_t->dbglog)		/*see if dbglog.txt is open*/
 				{	
 				fprintf((FILE *)pKsd_t->dbglog,"Word Miss-hit:\n");		/*mfg 04/16/1998 dttest logging*/	
@@ -1346,8 +1248,6 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
 					++llp;
 					}
 				}
-#endif
-#endif
 			}
 		}
 	}
@@ -1508,23 +1408,15 @@ void ls_util_lts_init( PLTS_T pLts_t, PKSD_T pKsd_t)
  *      Comments:
  *
  * *****************************************************************/
-#ifndef EPSON_ARM7
 #ifdef _DEBUG_OLD
 void f_fprintf(char *str)
 {
-#ifdef MSDOS
-	printf("%s",str);
-#else
-#ifndef ARM7_NOSWI
    FILE *dbgfp;
 
    dbgfp = fopen("debug.log", "a");
    fprintf(dbgfp, str);
    fclose(dbgfp);
-#endif // ARM7_NOSWI
-#endif // MSDOS
 }
-#endif
 #endif
 /* ******************************************************************
  *      Function Name:  ls_util_write_pipe()
@@ -1545,19 +1437,12 @@ void f_fprintf(char *str)
  * *****************************************************************/
 void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 {
-#ifndef EPSON_ARM7
 	int i;
 	short wcbyte0,wcbyte1;
-#endif
 		//tek 20aug98 we need phTTS to get at the phoneme-logging stuff
-#ifndef MSDOS
 		LPTTS_HANDLE_T phTTS = pKsd_t->phTTS;
-#else
-		LPTTS_HANDLE_T phTTS; 
-#endif //MSDOS
 
 		//gl  02sep98 these API codes for non-msdos only
-#if !defined MSDOS 
 #ifdef LTS_DEBUG_OLD
 		{
 			char szTemp[256]="l_u_w_p: ";
@@ -1572,7 +1457,6 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 #endif //LTS_DEBUG_OLD
 		// tek 20aug98 decide if we need to log and act accordingly
 		// the pointer isn't null, we're logging.
-#ifndef ARM7
 		if (phTTS->szPhonemeBuffer)
 		{
 			// loop and possibly log each..
@@ -1628,15 +1512,12 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 				}
 			}
 		}
-#endif // ARM7
-#endif // #if !(defined) MSDOS
 
 		/* debug switch */
 		/* GL 03/21/1997  dump the data before write_pipe */
 		/* MFG 04/12/1998 added phonme tranlation for debug 0x4200 */
 		if (DT_DBG(LTS_DBG,0x200) & ((*phone & 0xff) < PHO_SYM_TOT))
 		{
-#ifndef ARM7_NOSWI
 			if (pKsd_t->phoneme_mode & PHONEME_ASCKY) 
                printf("%c",pKsd_t->ascky[(*phone & 0xff)]);
 			else
@@ -1644,24 +1525,18 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 				switch(*phone & 0x1fff)
 				{
 				case BREATH_BREAK:
-#ifndef MSDOS
 					 if (pKsd_t->dbglog)
 					 fprintf((FILE *)pKsd_t->dbglog,"\n[breath_break]");
-#endif
 					 printf("[breath_break]");
 					 break;
 				case SYNC:
-#ifndef MSDOS
 					 if (pKsd_t->dbglog)
 					 fprintf((FILE *)pKsd_t->dbglog,"\n[sync]");
-#endif
 					 printf("[sync]");
 					 break;
 				case WORD_CLASS:
-#ifndef MSDOS
 				//	 if (pKsd_t->dbglog)
 				//mfg_debug	 fprintf((FILE *)pKsd_t->dbglog,"\n");
-#endif
 					wcbyte0 = phone[2];
 					wcbyte1 = phone[1];
 					for(i=0;i<32;i++)		
@@ -1670,10 +1545,8 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 						{	
 							if ((wcbyte0 & 0001) == 1)	//check byte 0 in word class		
 							{
-#ifndef MSDOS
 							if (pKsd_t->dbglog)
 							fprintf((FILE *)pKsd_t->dbglog,"[%s]",form_class_strings[i]);
-#endif
 							printf("[%s]",form_class_strings[i]);
 							}
 							wcbyte0 = wcbyte0 >> 1;
@@ -1682,10 +1555,8 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 						{
 							if ((wcbyte1 & 0001) == 1)	//check byte 1 in word class		
 							{
-#ifndef MSDOS
 							if (pKsd_t->dbglog)
 							fprintf((FILE *)pKsd_t->dbglog,"[%s]",form_class_strings[i]);
-#endif
 							printf("[%s]",form_class_strings[i]);
 							}
 							wcbyte1 = wcbyte1 >> 1;
@@ -1693,106 +1564,72 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 					}
 									break;
 				case RATE:			printf("[rate]");
-#ifndef MSDOS
 				  if (pKsd_t->dbglog)
 				    fprintf((FILE *)pKsd_t->dbglog,"\n[rate]");
-#endif
 									break;
 				case CPAUSE:		printf("[cpause]");
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[cpause]");
-#endif
 									break;
 				case PPAUSE:		printf("[ppause]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[ppause]");
-#endif
 									break;
 				case LAST_VOICE:	printf("[last_voice]");		
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[last_voice]");
-#endif
 									break;
 				case LTS_SYNC:		printf("[lts_sync]");		
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[lts_sync]");
-#endif
 									break;
 				case NEW_SPEAKER:	printf("[new_speaker]");	
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[new_speaker]");
-#endif
 									break;
 				case NEW_PARAM:		printf("[new_param]");		
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[new_param]");
-#endif
 									break;
 				case SAVE:			printf("[save]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[save]");
-#endif
 									break;
 				case INDEX:			printf("[index]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[index]");
-#endif
 									break;
 				case INDEX_REPLY:	printf("[index_reply]");	
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[index_reply]");
-#endif
 									break;
 				case KILL_TASK:		printf("[kill_task]");		
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[kill_task]");
-#endif
 									break;
 				case FLUSH_SYNC:	printf("[flush_sync]");		
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[flush_sync]");
-#endif
 									break;
 				case PITCH_CHANGE:	printf("[pitch_change]");	
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[pitch_change]");
-#endif
 									break;
 				case LATIN:			printf("[latin]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[latin]");
-#endif
 									break;
-				case PAPAUSE:		printf("[papause]");		
-#ifndef MSDOS
+				case PAPAUSE:		printf("[papause]");	
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[papause]");
-#endif
 									break;
 				case CNTRLK:		printf("[cntrlk]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[cntrlk]");
-#endif
 									break;
 				case RESET:			printf("[reset]");			
-#ifndef MSDOS
 									if (pKsd_t->dbglog)
 									fprintf((FILE *)pKsd_t->dbglog,"\n[reset]");
-#endif
 									break;
 //#ifdef _WIN32
 				case INDEX_BOOKMARK:printf("[index_bookmark]");	
@@ -1825,7 +1662,6 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 									break;
 //#endif
 				default:
-#ifndef MSDOS
 				if (pKsd_t->dbglog)
 				{
 					if ((int)(pKsd_t->arpabet[(*phone & 0xff)*2]) != 32) /// filter out spaces
@@ -1834,14 +1670,12 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 								pKsd_t->arpabet[(*phone & 0xff)*2 + 1]);
 					}
 				}
-#endif
 				printf("%c%c",pKsd_t->arpabet[(*phone & 0xff)*2],pKsd_t->arpabet[(*phone & 0xff)*2 + 1]);			
 			} // switch
 		} // else
 
 			if ((*phone & 0xff) == 111)
 			   printf("\n"); 
-#endif // #ifndef ARM7_NOSWI
 		}
 		/* debug switch */  
 		if (DT_DBG(LTS_DBG,0x800))
@@ -1852,11 +1686,7 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 			return;
 		}
 
-#ifdef EPSON_ARM7
-		fill_TTP_buffer(phTTS,phone,count);
-#else
 		ph_loop(phTTS,phone);
-#endif
         return;
 }
 

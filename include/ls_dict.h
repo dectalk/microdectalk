@@ -61,13 +61,6 @@
 
 #include "ls_def.h"     
 
-/* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32_OLD
-#pragma pack(push,enter_ls_dict,1)
-#endif
-#ifdef MSDOS
-#pragma pack(1)
-#endif
 
 /**********************************************************************/
 /*  DICTIONARY MEMORY MAP Type Definitions.                                                 */
@@ -75,11 +68,7 @@
 
 typedef DWORD MEMMAP_T;
 
-#if defined(WIN32_OLD_WCE_EMULATION) || defined VXWORKS
-#define MEMMAP_ON	0 //turn memory mapping off for sh3 not supported mfg hack fix later
-#else
 #define MEMMAP_ON	1
-#endif
 #define MEMMAP_OFF	0
 
 
@@ -90,14 +79,6 @@ struct  suff_rule
 	U32				fc;
 	unsigned char	rule[256];
 };    
-
-/* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32_OLD
-#pragma pack(pop,enter_ls_dict,1)
-#endif
-#ifdef MSDOS
-#pragma pack()
-#endif
 
 /*
  *  dtpc dictionary defines ...
@@ -190,10 +171,6 @@ struct  dic_entry
 /* GL 09/25/1997 use array structure for dictionary entry */
 /*               also add UK_english code */
 
-#if defined ARM7 && !defined EPSON_ARM7
-#define DICT_LANG 0
-#else
-
 #ifdef ENGLISH_US
 #define DICT_LANG LANG_english
 #endif
@@ -211,7 +188,6 @@ struct  dic_entry
 #endif
 #ifdef FRENCH
 #define DICT_LANG LANG_french
-#endif
 #endif
 
 #define DICT_INDEX       ((U32 *)pKsd_t->fdic_index[DICT_LANG])

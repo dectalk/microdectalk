@@ -36,7 +36,7 @@
  * 006 	CAB		10/18/2000		Changed copyright info
  */
 
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 extern int rflag;
 extern int tflag;
 extern int xflag;

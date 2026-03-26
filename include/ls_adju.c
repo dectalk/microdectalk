@@ -461,14 +461,14 @@ void ls_adju_stress(LPTTS_HANDLE_T phTTS,PHONE *fpp, PHONE *lpp, int pstype,int 
 	if ((pLts_t->sylp[0]->p_flag&PFRFUSE) != 0) 
 	{
 		pLts_t->psyl = 0;
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 		if (rflag != FALSE)
 			printf("Begin at sylable 1\n");
 #endif
 		while (pLts_t->psyl<pLts_t->nsyl-1 && (pLts_t->sylp[pLts_t->psyl]->p_flag&PFRFUSE)!=0) 
 		{
 			++pLts_t->psyl;
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 			if (rflag != FALSE)
 				printf("Prefix, shift right\n");
 #endif
@@ -476,12 +476,12 @@ void ls_adju_stress(LPTTS_HANDLE_T phTTS,PHONE *fpp, PHONE *lpp, int pstype,int 
 		while (pLts_t->psyl<pLts_t->nsyl-1 && ls_adju_unstressed(pLts_t,pLts_t->psyl)!=FALSE) 
 		{
 			++pLts_t->psyl;
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 			if (rflag != FALSE)
 				printf("Impossible, shift right\n");
 #endif
 		}
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 		if (rflag != FALSE)
 			printf("Primary on sylable %d\n", pLts_t->psyl+1);
 #endif
@@ -509,7 +509,7 @@ void ls_adju_stress(LPTTS_HANDLE_T phTTS,PHONE *fpp, PHONE *lpp, int pstype,int 
 	}
 	/* Revert to default rules. No or all refusing suffix.		*/
 	ls_adju_bestdefault(pLts_t);
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	if (rflag != FALSE)
 		printf("Best default on sylable %d\n", pLts_t->psyl+1);
 #endif
