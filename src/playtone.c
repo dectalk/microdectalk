@@ -49,10 +49,10 @@
 /**********************************************************************/
 
 #include <math.h>
-#if !defined (__APPLE__)
+// #if !defined (__APPLE__)
 #include <malloc.h>
 #include <stdlib.h>
-#endif
+// #endif
 #include "dectalkf.h"
 #include "kernel.h"	   /* For PKSD_T definition */
 #include "tts.h"	   /* For TTS_HANDLE_T definition  */
