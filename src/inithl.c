@@ -103,7 +103,6 @@ InitializeHLSynthesizer(HLFrame *oldframe, HLSpeaker *speaker,
     The an,fn table
   *****/
 
-#ifndef EPSON_ARM7
   anfnTable_fno = 500.f;		/* Hz */
   anfnTable[0].ANFN_AN = 0.f;	/* sq mm */
   anfnTable[1].ANFN_AN = 10.f;	/* sq mm */
@@ -124,7 +123,6 @@ InitializeHLSynthesizer(HLFrame *oldframe, HLSpeaker *speaker,
   anfnTable[6].ANFN_FN = 840.f;	/* Hz */
   anfnTable[7].ANFN_FN = 870.f;	/* Hz */
   anfnTable[8].ANFN_FN = 900.f;	/* Hz */
-#endif
   /*****
     The f1,LOverA table
   *****/
@@ -132,7 +130,6 @@ InitializeHLSynthesizer(HLFrame *oldframe, HLSpeaker *speaker,
   speaker->fm_f1BreakPoint = 250.f;	/* Hz */
   speaker->BNZ_f1BreakPoint = 700.f;	/* Hz */
 #ifndef FAKE_HLSYN
-#ifndef EPSON_ARM7
   f1LOverATable[0].F1LOVERA_F1 = 180.f;	/* Hz */
   f1LOverATable[1].F1LOVERA_F1 = 200.f;	/* Hz */
   f1LOverATable[2].F1LOVERA_F1 = 250.f;	/* Hz */
@@ -156,7 +153,6 @@ InitializeHLSynthesizer(HLFrame *oldframe, HLSpeaker *speaker,
   f1LOverATable[8].F1LOVERA_LOVERA = 2.5f;	/* 1/cm */
   f1LOverATable[9].F1LOVERA_LOVERA = 2.f;		/* 1/cm */
   f1LOverATable[10].F1LOVERA_LOVERA = 1.8f;	/* 1/cm */
-#endif
 #endif //fakehlsyn
 //  NasalBandwidth = 200.f;	/* Hz */
   speaker->BNP_B1_anLow = 10.f;	/* mm^2 */

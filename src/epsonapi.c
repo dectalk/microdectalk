@@ -60,9 +60,6 @@ short *(*g_callback)(short *,long, int); // audio, length, phoneme
                         (((U8 *)(ptr))[1] << 8)  | \
                         (((U8 *)(ptr))[0])))
 
-#if defined ARM7 && !defined WIN32_OLD_TEST
-__align(8) 
-#endif
 extern const unsigned char main_dict[];
 
 #define PC_SAMPLE_RATE 11025

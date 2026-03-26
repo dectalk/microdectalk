@@ -61,8 +61,8 @@
 #include "dectalkf.h"
 #include "cm_def.h"
 
-#if defined(ARM7) || defined (__APPLE__)
-#include "string.h"
+#if defined (__APPLE__)
+#include <string.h>
 #endif
 
 extern unsigned char par_lower[];
@@ -523,11 +523,7 @@ void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c)
 	 */
 
 	(pCmd_t->p_count) += 1;
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	CURR_DEFAULT = FALSE;
-#else
-	CURR_DEFAULT = false;
-#endif
 	switch (FORMAT_PARAM) 
 	{
 		/*
@@ -818,9 +814,6 @@ void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type)
 {
 	DT_PIPE_T pipe_value[3];
 	unsigned char _far *es;
-#ifdef MSDOS
-	SEQ     seq;
-#endif
     PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
@@ -829,23 +822,14 @@ void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type)
 	switch(pCmd_t->error_mode)
 	{
 		case ERROR_ignore:
-#ifndef MSDOS
 			/* ETT 11/04/98 BATS#345 
 				if we are not in [:log text on] and 
 				the file is still open then close */
 			if((pKsd_t->logflag & LOG_TEXT) != LOG_TEXT)
 				if(phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE)
 					CloseLogFile(phTTS);		
-#endif
 			break;
 		case ERROR_text:
-#ifdef MSDOS
-			WAIT_PRINT;
-			/* 09/09/1996 SIK Changed %s to %Fs */
-			/* GL 11/06/1997 for BATS#345 write to file for [:error text] command */
-			printf("\n[:error %Fs]",es);
-			SIGNAL_PRINT;
-#else   
 		/* ETT: 11/04/98 BATS#345
 			we need to check if we are in [:log text on]
 			if we are not then open log file 
@@ -853,7 +837,6 @@ void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type)
 			hear. and don't close log.txt until
 			[:log text off] or [:error *]
 		*/
-#ifndef ARM7
 			if((pKsd_t->logflag & LOG_TEXT) != LOG_TEXT){	
 				OpenLogFile(phTTS);
 				if (( phTTS->dwDeviceOptions & DO_NOT_USE_AUDIO_DEVICE ) == 0 )
@@ -862,18 +845,12 @@ void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type)
 					phTTS->dwOutputState = STATE_OUTPUT_NULL;
 			}
 			if (fprintf (phTTS->pLogFile,
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 				 "\n[:error %s]", es) < 0)
-#else
-				 "\n[:error %Fs]", es) < 0)
-#endif
 			{
 				//TextToSpeechErrorHandler (phTTS,
 				//						  ERROR_WRITING_FILE,
 				//						  0L);
 			} 
-#endif // ARM7
-#endif //MSDOS
 			break;                  
 		case    ERROR_speak:
 			cm_cmd_sync(phTTS);
@@ -885,27 +862,23 @@ void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type)
 			pipe_value[0] = (PFASCII<<PSFONT) + 0xb;
 			lts_loop(phTTS,pipe_value);
 
-#ifndef MSDOS
 			/* ETT 11/04/98 BATS#345 
 				if we are not in [:log text on] and 
 				the file is still open then close */
 			if((pKsd_t->logflag & LOG_TEXT) != LOG_TEXT)
 				if(phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE)
 					CloseLogFile(phTTS);		
-#endif
 			break;
 		case ERROR_tone:
 			cm_cmd_sync(phTTS);
 			cm_util_dtpc_tones(phTTS,0,697,100);
 			cm_util_dtpc_tones_reset(phTTS);
-#ifndef MSDOS
 			/* ETT 11/04/98 BATS#345 
 				if we are not in [:log text on] and 
 				the file is still open then close */
 			if((pKsd_t->logflag & LOG_TEXT) != LOG_TEXT)
 				if(phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE)
 					CloseLogFile(phTTS);		
-#endif
 			break;
 	};
 }

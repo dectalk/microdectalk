@@ -75,37 +75,9 @@
 #include <math.h>	/* for log10 */
 #include "hlsyn.h"
 #ifndef FAKE_HLSYN_notyet
-#ifdef EPSON_ARM7
-const TableRow	f1LOverATable[MAXF1LOVERA]={
-{  180.f	/* Hz */,1000.f		/* 1/cm */},
-{  200.f	/* Hz */,25.f		/* 1/cm */},
-{  250.f	/* Hz */,20.f		/* 1/cm */},
-{  300.f	/* Hz */,10.f		/* 1/cm */},
-{  350.f	/* Hz */,7.f		/* 1/cm */},
-{  400.f	/* Hz */,5.f		/* 1/cm */},
-{  450.f	/* Hz */,4.f		/* 1/cm */},
-{  500.f	/* Hz */,3.f		/* 1/cm */},
-{  600.f	/* Hz */,2.5f		/* 1/cm */},
-{  700.f	/* Hz */,2.f		/* 1/cm */},
-{  800.f	/* Hz */,1.8f		/* 1/cm */}
-};
-
-const float anfnTable_fno = 500.f;		/* Hz */
-const TableRow	anfnTable[MAXANFN]={
-	{   0.f	/* sq mm */,500.f	/* Hz */},
-	{  10.f	/* sq mm */,580.f	/* Hz */},
-	{  20.f	/* sq mm */,660.f	/* Hz */},
-	{  30.f	/* sq mm */,730.f	/* Hz */},
-	{  40.f	/* sq mm */,780.f	/* Hz */},
-	{  50.f	/* sq mm */,810.f	/* Hz */},
-	{  60.f	/* sq mm */,840.f	/* Hz */},
-	{  70.f	/* sq mm */,870.f	/* Hz */},
-	{  80.f	/* sq mm */,900.f	/* Hz */}};
-#else
 TableRow	f1LOverATable[MAXF1LOVERA];
 float anfnTable_fno;
 TableRow	anfnTable[MAXANFN];
-#endif
 #endif //fake_hlsyn
 /*****
     External function declarations

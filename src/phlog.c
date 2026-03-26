@@ -60,14 +60,8 @@
 #include "dectalkf.h"
 #include		"port.h"
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#endif
-
 /* GL 04/21/1997  add this for OSF build */
-#ifndef MSDOS
 #include "tts.h"
-#endif
 
 #include        "defs.h"
 #include        "dectalk.h"
@@ -91,20 +85,10 @@ extern unsigned char german_arpa[];
 extern unsigned char uk_arpa[];
 extern unsigned char french_arpa[];
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-#define printf WINprintf
-#endif
 
-
-#ifdef MSDOS
-void dologphoneme (short phone, short dur, short f0);
-#else
 void dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0);
-#endif
 
-#if !defined MSDOS
 unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short);
-#endif
 
 /*
  * Phoneme names, for logging.
@@ -158,89 +142,32 @@ char                   *logspnames[] =
  * the clause has been reached.
  */
 
-#ifndef MSDOS
-
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <mmsystem.h>
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//#include "opthread.h"
-#endif
-
-//void  TextToSpeechErrorHandler (LPTTS_HANDLE_T, UINT, MMRESULT);
-
-#endif
-
-#ifdef MSDOS
-void 
-logclaus (short *sym,
-		  short nsym,
-		  short *ud,
-		  short *uf0)
-#else
 void 
 logclaus (LPTTS_HANDLE_T phTTS,
 		  short *sym,
 		  short nsym,
 		  short *ud,
 		  short *uf0)
-#endif
 {
 	register int            i,cnt;
 	struct spc_packet _far *spc_pkt;
 	PKSD_T                  pKsd_t;
 
-#ifdef MSDOS
-	pKsd_t = kernel_share;
-#else
 	pKsd_t = phTTS->pKernelShareData;
-#endif
 
-#ifndef MSDOS
-/* 
- * LPTTS_HANDLE_T phTTS;
- * 
- * phTTS = TextToSpeechGetHandle(); */
-#endif
-
-#ifdef MSDOS
-	WAIT_PRINT;
-#endif
 	cnt=0;
 
 	for (i = 1; i < nsym; ++i)
 	{
 		cnt++;
-#ifdef WIN32_OLD
-		EnterCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-		/* GL 04/21/1997  change this as the latest OSF code */
-		/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-		//OP_LockMutex( phTTS->pcsLogFile );
-#endif
 
-#ifdef MSDOS
-		if ((spc_pkt = (struct spc_packet _far *) pKsd_t->index_pending.head) != NULL_SPC_PACKET)
-#else
 		if ((spc_pkt = (struct spc_packet _far *) pKsd_t->spc_pkt_save) != NULL_SPC_PACKET)
-#endif
 		{
 			while (spc_pkt != NULL_SPC_PACKET)
 			{
 				cnt += 6;
 				if ((*spc_pkt).data[0] == (U16) i)
 				{
-#ifdef MSDOS
-					printf ("[:i %d]", (*spc_pkt).data[2]);
-#else
-#ifdef PRINTDEBUG_OLD
-					printf ("[:i %d]", (*spc_pkt).data[2]);
-#endif
-#ifndef ARM7
 					if (pKsd_t->logflag & LOG_PHONEMES)
 					{
 					   	if (fprintf(phTTS->pLogFile, "[:i %d]", (*spc_pkt).data[2]) < 0)
@@ -250,37 +177,18 @@ logclaus (LPTTS_HANDLE_T phTTS,
 						//						  0L);
 						}
 					}
-#endif
-#endif
 				}
 				spc_pkt = (struct spc_packet _far *) (*spc_pkt).link;
 			}
 		}
 
-#ifdef WIN32_OLD
-		LeaveCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-		/* GL 04/21/1997  change this as the latest OSF code */
-		/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-		//OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
-#ifdef MSDOS
-		dologphoneme (sym[i], ud[i], uf0[i]);
-#else
 		dologphoneme (phTTS, sym[i], ud[i], uf0[i]);
-#endif
 		/* GL 11/06/1997 BATS#486 change display to 72 character from 35 */
 		if (cnt >= 72)
 		{
-#ifdef MSDOS
-			printf("\n");
-#else
 #ifdef PRINTFDEBUG_OLD
 			printf ("\n");
 #endif
-#ifndef ARM7
 			if (pKsd_t->logflag & LOG_PHONEMES)
 			{
 				if (fprintf (phTTS->pLogFile, "\n") < 0)
@@ -290,20 +198,13 @@ logclaus (LPTTS_HANDLE_T phTTS,
 					//						  0L);
 				}
 			}
-#endif
-#endif
 			cnt=0;
 		}
 	}
 
-#ifdef MSDOS
-	printf("\n");
-	SIGNAL_PRINT;
-#else
 #ifdef PRINTFDEBUG_OLD
 	printf ("\n");
 #endif
-#ifndef ARM7
 	if (pKsd_t->logflag & LOG_PHONEMES)
 	{
 		if (fprintf (phTTS->pLogFile, "\n") < 0)
@@ -313,8 +214,6 @@ logclaus (LPTTS_HANDLE_T phTTS,
 			//						  0L);
 		}
 	}
-#endif
-#endif
 
 	return;
 	
@@ -328,58 +227,30 @@ logclaus (LPTTS_HANDLE_T phTTS,
  * phonemes (rate, pauses, etc.) are logged.
  */
 
-#ifdef MSDOS
-void 
-logitem (register short buf[])
-#else
 void 
 logitem (LPTTS_HANDLE_T phTTS, register short buf[])
-#endif
 {
 	register char          *cp;
 	char                    oc;
-#ifndef MSDOS
 	PKSD_T                  pKsd_t;
 
 	pKsd_t = phTTS->pKernelShareData;
 /* 
  * LPTTS_HANDLE_T phTTS; phTTS = TextToSpeechGetHandle(); */
-#endif
 
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	WAIT_PRINT;
-#endif
-
-#ifdef WIN32_OLD
-	EnterCriticalSection (phTTS->pcsLogFile);
-#endif
-
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/* GL 04/21/1997  change this as the latest OSF code */
-	/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-	//OP_LockMutex( phTTS->pcsLogFile );
-#endif
 
 
 	switch (buf[0])
 	{
 	case RATE:
-
-#ifdef MSDOS
-		printf (":ra %d\n", buf[1]);
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (":ra %d\n", buf[1]);
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":ra %d\n", buf[1]);
-#endif
-#endif		
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":ra %d\n", buf[1]) < 0)
@@ -389,26 +260,14 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case CPAUSE:
-
-
-#ifdef MSDOS
-		printf (":cp %d\n", buf[1]);
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (":cp %d\n", buf[1]);
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":cp %d\n", buf[1]);
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":cp %d\n", buf[1]) < 0)
@@ -418,26 +277,14 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case PPAUSE:
-
-
-#ifdef MSDOS
-		printf (":pp %d\n", buf[1]);
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (":pp %d\n", buf[1]);
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":pp %d\n", buf[1]);
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":pp %d\n", buf[1]) < 0)
@@ -447,27 +294,17 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case NEW_SPEAKER:
 
 		oc = "pbhfdkurwv"[buf[1]];
 
-#ifdef MSDOS
-		printf (":n%c\n", oc);
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (":n%c\n", oc);
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":n%c\n", oc);
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":n%c\n", oc) < 0)
@@ -477,25 +314,14 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case SPECIALWORD:
-
-#ifdef MSDOS
-		printf (" sp ");
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (" sp ");
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog," sp ");
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, " sp ") < 0)
@@ -505,27 +331,17 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case NEW_PARAM:
 
 		cp = logspnames[buf[1]];
 
-#ifdef MSDOS
-		printf (":dv %s %d\n", cp, buf[2]);
-#else
 #ifdef PRINTFDEBG
 		printf (":dv %s %d\n", cp, buf[2]);
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":dv %s %d\n", cp, buf[2]);
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":dv %s %d\n", cp, buf[2]) < 0)
@@ -535,26 +351,14 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 
 	case SAVE:
-
-
-#ifdef MSDOS
-		printf (":dv save\n");
-#else
 #ifdef PRINTFDEBUG_OLD
 		printf (":dv save\n");
 #endif
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			fprintf(pKsd_t->dbglog,":dv save\n");
-#endif
-#endif
-#ifndef ARM7
 		if (pKsd_t->logflag & LOG_PHONEMES)
 		{
 			if (fprintf (phTTS->pLogFile, ":dv save\n") < 0)
@@ -564,59 +368,20 @@ logitem (LPTTS_HANDLE_T phTTS, register short buf[])
 				//						  0L);
 			}
 		}
-#endif
-#endif
 		break;
 	}
-
-#ifdef WIN32_OLD
-	//LeaveCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-		/* GL 04/21/1997  change this as the latest OSF code */
-		/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-		//OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
-
-#ifdef MSDOS
-	SIGNAL_PRINT;
-#endif
 }
 
-#ifdef MSDOS
-void 
-dologphoneme (short phone, short dur, short f0)
-#else
 void 
 dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
-#endif
 {
 	unsigned char _far     *arpa;
 	unsigned char _far     *ascky;
 	PKSD_T                  pKsd_t;
 	short tmp;
 
-#ifdef MSDOS
-	pKsd_t = kernel_share;
-#else
 	pKsd_t = phTTS->pKernelShareData;
-#endif
 
-#ifndef MSDOS
-	/* 
-	 * LPTTS_HANDLE_T phTTS; phTTS = TextToSpeechGetHandle(); */
-#endif
-
-#ifdef WIN32_OLD
-	//EnterCriticalSection (phTTS->pcsLogFile);
-#endif
-
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/* GL 04/21/1997  change this as the latest OSF code */
-	/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-	//OP_LockMutex( phTTS->pcsLogFile );
-#endif
 	ascky = (char _far *) pKsd_t->ascky;
 	arpa = (unsigned char _far *) pKsd_t->arpabet;
 
@@ -628,59 +393,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 		}
 	tmp = phone >> 8;
 	phone &= PVALUE;
-#ifdef MSDOS
-	if (pKsd_t->phoneme_mode & PHONEME_ASCKY)
-	{
-		if (dur != 0 || f0 != 0)
-		{
-			if (ascky[phone] == '_')
-			{
-				printf ("%c<0,0>", ascky[phone]);
-			}
-			else
-			{
-				printf ("%c<%d,%d>", ascky[phone], dur, f0);
-			}
-		}
-		else
-		{
-			printf ("%c ", ascky[phone]);
-		}
-	}
-	else
-	{
-		if (arpa[phone * 2 + 1] == ' ')
-		{
-			if (dur != 0 || f0 != 0)
-			{
-			    if (arpa[phone * 2] == '_')
-				{
-					printf ("%c<0,0>", arpa[phone * 2]);
-				}
-				else
-				{
-					printf ("%c<%d,%d>", arpa[phone * 2], dur, f0);
-				}
-			}
-			else
-			{
-				printf ("%c ", arpa[phone * 2]);
-			}
-		}
-		else
-		{
-			if (dur != 0 || f0 != 0)
-			{
-				printf ("%c%c<%d,%d>", arpa[phone * 2], arpa[phone * 2 + 1], dur, f0);
-			}
-			else
-			{
-				printf ("%c%c", arpa[phone * 2], arpa[phone * 2 + 1]);
-			}
-		}
-	}
-#else // MSDOS
-#ifndef ARM7_NOSWI
 	if (pKsd_t->phoneme_mode & PHONEME_ASCKY)
 	{
 		if (dur != 0 || f0 != 0)
@@ -698,7 +410,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 				else
 					fprintf(pKsd_t->dbglog,"%c<%d,%d>\n", ascky[phone], dur, f0);
 			}
-#ifndef ARM7
 			if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 			{
 
@@ -710,7 +421,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 					//						  0L);
 				}
 			}
-#endif
 		}
 		else
 		{
@@ -720,7 +430,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 #endif
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 					fprintf(pKsd_t->dbglog,"%c", ascky[phone]);
-#ifndef ARM7
 			if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 			{
 				if (fprintf (phTTS->pLogFile, "%c", ascky[phone]) < 0)
@@ -730,7 +439,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 					//						  0L);
 				}
 			}
-#endif
 		}
 
 	}
@@ -760,7 +468,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 						fprintf (pKsd_t->dbglog,"%c<%d,%d>\n", arpa[phone * 2], dur, f0);
 				}
 
-#ifndef ARM7
 				if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 				{
 					if (fprintf (phTTS->pLogFile, "%c<%d,%d>", arpa[phone * 2], dur, f0) < 0)
@@ -770,7 +477,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 						//						  0L);
 					}
 				}
-#endif
 			}
 			else
 			{
@@ -783,7 +489,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 					fprintf(pKsd_t->dbglog,"%c ", arpa[phone * 2]);
 
-#ifndef ARM7
 				if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 				{
 					/* GL 03/21/1997 for BATS#305 need to send "%c " intead of "%c" only */
@@ -794,7 +499,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 						//						  0L);
 					}
 				}
-#endif
 			}
 		}
 		else
@@ -807,7 +511,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 					fprintf(pKsd_t->dbglog,"%c%c<%d,%d>\n", arpa[phone * 2], arpa[phone * 2 + 1], dur, f0);
 				
-#ifndef ARM7
 				if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 				{
 					if (fprintf (phTTS->pLogFile, "%c%c<%d,%d>", arpa[phone * 2], arpa[phone * 2 + 1], dur, f0) < 0)
@@ -817,7 +520,6 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 						//						  0L);
 					}
 				}
-#endif
 			}
 			else
 			{
@@ -828,8 +530,7 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 					fprintf(pKsd_t->dbglog,"%c%c", arpa[phone * 2], arpa[phone * 2 + 1]);
-				
-#ifndef ARM7
+
 				if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 				{
 					if (fprintf (phTTS->pLogFile, "%c%c", arpa[phone * 2], arpa[phone * 2 + 1]) < 0)
@@ -839,33 +540,16 @@ dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0)
 						//						  0L);
 					}
 				}
-#endif
 			}
 		}
 	}
-#endif
-#endif // MSDOS
-
-#ifdef WIN32_OLD
-	//LeaveCriticalSection (phTTS->pcsLogFile);
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/* GL 04/21/1997  change this as the latest OSF code */
-	/* ToggleLogfileMutex (MUTEX_RESERVE);*/
-	//OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
 }
 
 unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 {
-#ifndef ARM7_NOSWI
 	PKSD_T                  pKsd_t;
 
-#ifdef MSDOS
-	pKsd_t = kernel_share;
-#else
 	pKsd_t = phTTS->pKernelShareData;
-#endif
 
 	
 	switch(tmp)
@@ -886,7 +570,6 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 
 	case PFUK:
 		printf("uk_");
-#ifndef ARM7
 		if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 		{
 			if (fprintf (phTTS->pLogFile, "uk_") < 0)
@@ -896,14 +579,12 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 				//	0L);
 			}
 		}
-#endif
 		return uk_arpa;
 		break;
 
 
 	case PFSP:
 		printf("sp_");
-#ifndef ARM7
 		if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 		{
 			if (fprintf (phTTS->pLogFile, "sp_") < 0)
@@ -913,14 +594,12 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 				//	0L);
 			}
 		}
-#endif
 		return spanish_arpa;
 		break;
 
 
 	case PFLA:
 		printf("la_");
-#ifndef ARM7
 		if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 		{
 			if (fprintf (phTTS->pLogFile, "la_") < 0)
@@ -930,13 +609,11 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 				//	0L);
 			}
 		}
-#endif
 		return la_arpa;
 		break;
 
 	case PFGR:
 		printf("gr_");
-#ifndef ARM7
 		if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 		{
 			if (fprintf (phTTS->pLogFile, "gr_") < 0)
@@ -946,13 +623,11 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 				//	0L);
 			}
 		}
-#endif
 		return german_arpa;
 		break;
 
 	case PFFR:
 		printf("fr_");
-#ifndef ARM7
 		if ((pKsd_t->logflag & LOG_OUTPHON) || (pKsd_t->logflag & LOG_PHONEMES))
 		{
 			if (fprintf (phTTS->pLogFile, "fr_") < 0)
@@ -962,7 +637,6 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 				//	0L);
 			}
 		}
-#endif
 		return french_arpa;
 		break;
 
@@ -970,9 +644,6 @@ unsigned char _far * PrintLangBit(LPTTS_HANDLE_T phTTS, short tmp)
 		return pKsd_t->arpabet;
 		break;
 	}
-#else
-return NULL;
-#endif
 }
 
 /************************************end of phlog.c***************************/

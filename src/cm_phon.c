@@ -145,14 +145,12 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 	unsigned char _far *arpa;
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-#ifndef MSDOS
 	if (pCmd_t->international_phon_lang>=0)
 	{
 		size=arpabet_sizes[pCmd_t->international_phon_lang];
 		arpa=arpabet_arrays[pCmd_t->international_phon_lang];
 	}
 	else
-#endif
 	{
 		size = (int)pKsd_t->arpa_size;
 		arpa = ( unsigned char _far *)pKsd_t->arpabet;
@@ -168,7 +166,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 	{
 		if(ph1 == arpa[i] && ph2 == arpa[i+1])
 	  	{
-#ifndef MSDOS
 			if (pCmd_t->international_phon_lang>=0)
 			{
 #ifdef PARSER_HACK_FOR_OLD_SONGS
@@ -181,7 +178,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 				pCmd_t->international_flag=-1;
 			}
 			else
-#endif
 			{
 #ifdef PARSER_HACK_FOR_OLD_SONGS
 				if (!pCmd_t->hold_phonemes)
@@ -197,7 +193,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 	{
 		if(ph1 == arpa[i] && arpa[i+1] == ' ')
 		{
-#ifndef MSDOS
 			if (pCmd_t->international_phon_lang>=0)
 			{
 #ifdef PARSER_HACK_FOR_OLD_SONGS
@@ -210,7 +205,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 				pCmd_t->international_flag=-1;
 			}
 			else
-#endif
 			{
 #ifdef PARSER_HACK_FOR_OLD_SONGS
 				if (!pCmd_t->hold_phonemes)
@@ -226,7 +220,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 		 * If the first char (ph1) is 'l' use the phoneme for 'll'
 		 * This should fix compatibility with old dectalk songs */
 		if (ph1 == 'l' && arpa[i] == 'l' && arpa[i+1] == 'l') {
-#ifndef MSDOS
 			if (pCmd_t->international_phon_lang>=0)
 			{
 				if (!pCmd_t->hold_phonemes)
@@ -235,7 +228,6 @@ int cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2
 				pCmd_t->international_flag=-1;
 			}
 			else
-#endif
 			{
 				if (!pCmd_t->hold_phonemes)
 					PUSH_PHONE = i/2;
@@ -370,10 +362,8 @@ void cm_phon_flush(LPTTS_HANDLE_T phTTS)
 	unsigned short temp2;
 	
 
-#ifndef MSDOS
 	unsigned int i; // NAL warning removal
 	DT_PIPE_T pipe_values[NPARAM];
-#endif
 	
 	if(pCmd_t->param_index && (pKsd_t->phoneme_mode & PHONEME_SPEAK))
 	{
@@ -469,15 +459,11 @@ void cm_phon_flush(LPTTS_HANDLE_T phTTS)
 				break;
 			}
 		}
-#ifdef MSDOS
-                cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,pCmd_t->params,pCmd_t->param_index);
-#else
         for ( i = 0; i < (pCmd_t->param_index); i++ )
         {
         	pipe_values[i] = pCmd_t->params[i];
         }
 		lts_loop(phTTS,pipe_values);
-#endif
 	}
 	pCmd_t->param_index = 0;
 	pCmd_t->cmd_p_flag = 0;
@@ -538,7 +524,6 @@ int cm_phon_check(LPTTS_HANDLE_T phTTS, unsigned int c)
 	{
 		return 1;
 	}
-#ifndef MSDOS
 	if (pCmd_t->international_phon_lang<0 && pCmd_t->international_flag>=0)
 	{
 		if (c=='_')
@@ -578,7 +563,6 @@ int cm_phon_check(LPTTS_HANDLE_T phTTS, unsigned int c)
 	    check_uncertain_phones(pCmd_t->q_flag, c)) {
 		return 1;
 	}
-#endif
 	if(pCmd_t->q_flag)
 	{
 		switch(c)
@@ -614,7 +598,6 @@ int cm_phon_check(LPTTS_HANDLE_T phTTS, unsigned int c)
 			}
 			else {
 #endif
-#ifndef MSDOS
 				if (pCmd_t->international_phon_lang<0)
 					temp=cm_phon_lookup_language(phTTS,(unsigned char)pCmd_t->q_flag,(unsigned char)c); // NAL warning removal
 				else
@@ -625,7 +608,6 @@ int cm_phon_check(LPTTS_HANDLE_T phTTS, unsigned int c)
 					pCmd_t->international_temp=c;
 				}
 				else
-#endif
 				{
 					switch(cm_phon_lookup_arpa(phTTS, pCmd_t->q_flag,c))
 					{
@@ -823,7 +805,6 @@ void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c)
 	{
 		return;
 	}
-#ifndef MSDOS
 	if (pCmd_t->international_phon_lang<0 && pCmd_t->international_flag>=0)
 	{
 		if (c=='_')
@@ -876,7 +857,6 @@ void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c)
 		return;
 	}
 #endif
-#endif
 	if(pCmd_t->q_flag)
 	{
 		switch(c)
@@ -925,7 +905,6 @@ void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c)
 			} 
 			else {
 #endif			
-#ifndef MSDOS
 				if (pCmd_t->international_phon_lang<0)
 					temp=cm_phon_lookup_language(phTTS,(unsigned char)pCmd_t->q_flag,(unsigned char)c); // NAL warning removal
 				else
@@ -936,7 +915,6 @@ void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c)
 					pCmd_t->international_temp=c;
 				}
 				else
-#endif
 				{
 					switch(cm_phon_lookup_arpa(phTTS, pCmd_t->q_flag,c))
 					{
