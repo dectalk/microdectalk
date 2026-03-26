@@ -72,40 +72,16 @@
 #ifndef _TTS_H_
 #define _TTS_H_
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <mmreg.h>
-#include <stdio.h>
-// cjl 19nov97 add ifdef for sapi only.
-#ifdef OLEDECTALK
-// cjl 19nov97 change speech.h to local
-#include "speech.h"
-#endif //OLEDECTALK
-#endif
-
 #include "port.h"
 
-#if defined __unix__  || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-#define HWND unsigned long
+#define HWND size_t
 #include "dtmmedefs.h"
-#endif
-
-#ifndef ARM7
-//#include "opthread.h"   /*Platform-independent Threads implementation header file*/
-//#include "playaud.h"
-#endif
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 //typedef  HPLAY_AUDIO_T  LPAUDIO_HANDLE_T;
-#endif
 
 #ifdef OLEDECTALK       //MVP: For OLE-DECTalk
 #include "audioapi.h"
-#endif
-
-#ifdef SAPI5DECTALK
-#include "sapiiont.h"
 #endif
 
 #include "kernel.h"     /* Added for PKSD_T declaration MI :MVP */
@@ -118,13 +94,6 @@
 
 /* DECtalk Version Numbers moved to coop.h: 11/22/96 CJL */
 #include "coop.h"
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ && !defined (__APPLE__)
-/* externs for global variables :MVP   */
-extern volatile int gnInstanceCounter;
-#ifndef ARM7
-extern TLOCK tl_gnInstanceCounter; // tek 27may98
-#endif
-#endif
 
 extern int *gpufdic_index;
 extern unsigned char *gpufdic_data;
@@ -145,14 +114,12 @@ extern DT_HANDLE gufordicFileHandle;
 extern LPVOID gufordicMapStartAddr;
 
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /**********************************************************************/
 /* Sybmol definitiopns for return status from CheckLicenses           */
 /**********************************************************************/
 #define LIC_NO_PAK          1
 #define LIC_NO_MORE_UNITS   2
 #define LIC_UNKNOWN_ERR     3
-#endif
 
 /**********************************************************************/
 /*  Symbol definitions for the Text-To-Speech output state.           */
@@ -174,7 +141,6 @@ extern LPVOID gufordicMapStartAddr;
 /*  There is an additiona undocumented 32 bit word that had to be     */
 /*  added to make the files formats match the examples.               */
 /**********************************************************************/
-#ifndef ARM7
 
 typedef struct WAVE_FILE_HDR_TAG
 {
@@ -210,9 +176,7 @@ typedef struct AU_FILE_HDR_TAG
 typedef AU_FILE_HDR_T * LPAU_FILE_HDR_T;
 
 #define AU_HEADER_OFFSET  32
-#endif
 /* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (NOWIN) || defined (__APPLE__)
 /**********************************************************************/
 /*  Text Message Linked List structure for digital unix.              */
 /**********************************************************************/
@@ -226,52 +190,20 @@ struct TEXT_MSG_TAG
 
 typedef  struct TEXT_MSG_TAG  TEXT_MSG_T;
 typedef  TEXT_MSG_T * LPTEXT_MSG_T;
-#endif /* __osf__ || __unix__ */
 
 /**********************************************************************/
 /*  This structure is the text to speech handle.                      */
 /**********************************************************************/
 
-#ifdef ARM7
-typedef unsigned int UINT;
-typedef unsigned char BOOL;
-typedef unsigned short WORD;
-typedef long LONG;
-#endif
-
 struct TTS_HANDLE_TAG
 {
-#ifndef ARM7
   HWND hWnd;
   HWND hTextToSpeechWnd;
-#endif
   PKSD_T   pKernelShareData;       /* Added for Multiple instance speech objects: MVP*/
   PVOID    pCMDThreadData  ;       /* Instance specific CMD thread data */
   PVOID    pLTSThreadData  ;       /* Instance specific LTS thread data */
   PVOID    pVTMThreadData  ;       /* Instance specific VTM thread data */
   PVOID    pPHThreadData   ;       /* Instance specific PH thread data */
-#ifdef WIN32_OLD
-  DT_HANDLE   hMallocSuccessEvent;    /* Event handle to report successful memory allocations */
-  DT_HANDLE   hThread_TXT;
-  DT_HANDLE hThread_CMD;
-  DT_HANDLE hThread_SYNC;
-  DT_HANDLE hSyncEvent;
-  DT_HANDLE hNotEmptyingVtmPipeEvent;
-#endif // WIN32_OLD
-
-/* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  //HEVENT_T hMallocSuccessEvent;    /* Event handle to report successful memory allocations */
-  //HTHREAD_T hThread_TXT;
-  //HTHREAD_T hThread_CMD;
-  //HTHREAD_T hThread_SYNC;
-  //HEVENT_T hSyncEvent;
-  //HEVENT_T hNotEmptyingVtmPipeEvent;
-  //HEVENT_T hTextInQueueEvent;
-  //UINT uiTextThreadExit;
-  //UINT uiThreadError;
-/* MGS 09/15/1997 removed bInReset from osf/linux only */
-#endif
 
 #ifdef DEMO_NOISE
   int char_count;
@@ -301,74 +233,19 @@ struct TTS_HANDLE_TAG
   BOOL bMemoryReset;
   BOOL bSendingBuffer;
 
-#ifndef ARM7
   LPWAVE_FILE_HDR_T pWaveFileHdr;
   LPAU_FILE_HDR_T pAuFileHdr;
-#ifdef UNDER_CE	// must be a handle for Windows CE
-  DT_HANDLE pWaveFile;
-  DT_HANDLE pLogFile;
-#else
   FILE * pWaveFile;
   FILE * pLogFile;
-#endif
-#endif // ARM7
 
   void * pTTS_Buffer;
 
   // epsonapi callback
   short *(*EmbCallbackRoutine)(short *, long, int); // audio, length, phoneme
 
-#ifdef ARM7
-#ifndef EPSON_ARM7
-  //short *(*EmbCallbackRoutine)(short *,S32);     
-#endif
-  short *output_buffer;
-#ifdef EPSON_ARM7
-  int TTP_return_code;
-  S16 TTP_phoneme_buf_len;
-  S16 *TTP_phoneme_buf;
-  S16 PTS_phoneme_buf_len;
-  S16 *PTS_phoneme_buf;
-  int PTS_return_code;
-  int TTP_return;
-  int PTS_return;
-  int PTS_location;
-  int PTS_input_pos;
-  int PTS_special_change;
-  void (*main_lts_loop)(void *,unsigned short *);     
-#endif
-#else
   void (*DtCallbackRoutine)(LONG,LONG,DWORD,UINT);     //New Audio Integration :After testing remove these comments
-#endif
 
   DWORD dwTTSInstanceParameter;    //New Audio Integration
-#ifdef WIN32_OLD
-  HMUTEX_T hmxCallback;            //New Audio Integration
-  LPCRITICAL_SECTION pcsMemoryBuffer;
-  LPCRITICAL_SECTION pcsQueuedSampleCount;
-  LPCRITICAL_SECTION pcsLastQueuedTextMsgNumber;
-  LPCRITICAL_SECTION pcsFlushMsgNumber;
-  LPCRITICAL_SECTION pcsQueuedCharacterCount;
-  LPCRITICAL_SECTION pcsLogFile;
-  LPCRITICAL_SECTION pcsBufferPipe;
-  //  LPAUDIO_HANDLE_T pAudioHandle;
-  BOOL IsSpeaking;
-  ULONG LastError;
-#endif
-/* GL 04/21/1997  add this as the latest OSF code */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  //HMUTEX_T pcsCallback;            /*New Audio Integration*/
-  //HMUTEX_T pcsMemoryBuffer;
-  //HMUTEX_T pcsQueuedSampleCount;
-  //HMUTEX_T pcsLastQueuedTextMsgNumber;
-  //HMUTEX_T pcsFlushMsgNumber;
-  //HMUTEX_T pcsQueuedCharacterCount;
-  //HMUTEX_T pcsLogFile;
-  //HMUTEX_T pcsTextMsgList;
-  //HMUTEX_T pcsBufferPipe;
-  //LPTEXT_MSG_T pTextMsgList; /* A linked list of text messages */
-  //unsigned int LastError;
-#endif
 
 #ifdef NOWIN
   //HEVENT_T hTextInQueueEvent;
@@ -376,10 +253,6 @@ struct TTS_HANDLE_TAG
   //UINT uiThreadError;
   //HMUTEX_T pcsTextMsgList;
   //LPTEXT_MSG_T pTextMsgList; /* A linked list of text messages */
-#endif
-
-#ifndef ARM7
-  //LPAUDIO_HANDLE_T pAudioHandle;
 #endif
 
 #ifndef ACI_LICENSE
@@ -411,11 +284,7 @@ struct TTS_HANDLE_TAG
   //int bisau;
 #endif
 
-#ifdef WIN32_OLD
-  TCHAR dictionary_file_name[500];
-#else
   char dictionary_file_name[500];
-#endif
   int last_syl;
 };
 
@@ -423,7 +292,6 @@ struct TTS_HANDLE_TAG
 /*  Define the audio sample type                                      */
 /**********************************************************************/
 
-#ifndef ARM7
 typedef short SAMPLE_T;
 
 typedef SAMPLE_T * LPSAMPLE_T;
@@ -480,7 +348,6 @@ typedef struct NOTIFY_LIST
 
 //#endif //WIN32_OLD
 // end of sapi fixes
-#endif // ARM7
 /**********************************************************************/
 /*  Define the API interface.                                         */
 /**********************************************************************/
@@ -541,8 +408,6 @@ typedef struct SPDEFS_TAG {
 /*  (Functions WriteAudioToFile() and QueueInMemory() are included    */
 /*  directly in the Vocal Tract Model task in file vtmiont.c.         */
 /**********************************************************************/
-#ifndef ARM7
-
 void TextToSpeechErrorHandler( LPTTS_HANDLE_T,
 							   UINT,
 							   MMRESULT );
@@ -550,14 +415,8 @@ void TextToSpeechErrorHandler( LPTTS_HANDLE_T,
 /* MVP : This fucntion is become now obsolete 
 LPTTS_HANDLE_T TextToSpeechGetHandle(void);
 */
-#ifdef WIN32_OLD
-void Report_TTS_Status( LPTTS_HANDLE_T ttsHandle, UINT uiMsg, long lParam1, long lParam2);
-#endif
 
-/* GL 04/21/1997  add this as the latest OSF code */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 void Report_TTS_Status( LPTTS_HANDLE_T phTTS, UINT uiMsg, long lParam1, long lParam2);
-#endif
 
 void QueueToMemory( LPTTS_HANDLE_T, LPSAMPLE_T, DWORD );
 
@@ -570,7 +429,5 @@ void EmptyVtmPipe(PKSD_T);
 #ifdef PRINTFDEBUG_OLD
 void WINprintf(char *fmt, ...);
 #endif
-
-#endif // ARM7
 
 #endif // _TTS_H_

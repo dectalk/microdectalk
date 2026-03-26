@@ -77,7 +77,11 @@
 #include <unistd.h>
 
 #ifndef NO_FILESYSTEM
+#ifdef _WIN32
+#include "mman-win32/mman.h"
+#else
 #include <sys/mman.h>
+#endif
 #endif
 
 #include "ls_def.h"

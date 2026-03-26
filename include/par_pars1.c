@@ -144,25 +144,9 @@
  */
 #ifndef PARSER_STANDALONE_DEBUG_OLD
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#include "tts.h"
-#endif
-
 /* GL 04/21/1997  add this for OSF build */
-#ifdef __osf__
-#include "tts.h"
-#endif
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 #include "tts.h"
-#endif
-#if defined ARM7 || defined __EMSCRIPTEN__
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include "tts.h"
-#endif
 
 void cm_util_flush_init(LPTTS_HANDLE_T); // NAL warning removal
 

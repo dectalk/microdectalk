@@ -582,9 +582,7 @@ int lsa_util_id_name(PLTS_T pLts_t, LETTER *llp, LETTER *rlp)
  * *****************************************************************/
 void lsa_util_print_ntype(PLTS_T pLts_t, int type)
 {
-#ifndef ARM7_NOSWI
 	printf("\n[Name: %s type : %s \n]",pLts_t->name,name_types[type]);
-#endif
 }
 
 /* ******************************************************************
