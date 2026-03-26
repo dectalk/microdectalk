@@ -79,7 +79,6 @@
  
 #include "dectalkf.h"
 #include "cm_def.h"
-/* GL 04/21/1997  add this for OSF build */
 
 //#include "opthread.h"
 extern void usa_init(PKSD_T);
@@ -917,7 +916,6 @@ cmd_mod_tone(int freq, int on_time, int off_time, int cycles)
 	int total_ticks;
 	unsigned int on_duration, off_duration;
 
-#ifdef DTEX
 	// need to make sure that the DSP is alive and well here.. if
 	// it's asleep, we have to wake it up..
 	if (KS.spc_waking)
@@ -938,7 +936,6 @@ cmd_mod_tone(int freq, int on_time, int off_time, int cycles)
 		while(KS.spc_waking || KS.spc_sleeping)
 			sleep(2);
 		}
-#endif /*DTEX*/
 			
 #ifdef DTPC2
 		on_duration = (unsigned int)(((unsigned long)on_time*10)>>4);

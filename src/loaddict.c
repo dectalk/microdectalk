@@ -71,7 +71,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-/* GL 04/21/1997  add this for OSF build */
 #include "dtmmedefs.h"
 //#include "opthread.h"
 #include <unistd.h>

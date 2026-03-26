@@ -65,9 +65,7 @@
 
 #include "opmmsys.h"
 #include "opatype.h"
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include "dtmmedefs.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -211,9 +209,7 @@ MMRESULT PA_Pause( HPLAY_AUDIO_T pPlayAudio );
 
 MMRESULT PA_Resume( HPLAY_AUDIO_T pPlayAudio );
 
-#ifndef SAPI5DECTALK
 MMRESULT PA_Reset( HPLAY_AUDIO_T pPlayAudio );
-#endif
 
 MMRESULT PA_Status( HPLAY_AUDIO_T pPlayAudio,
                     DWORD dwIdentifierArray[],

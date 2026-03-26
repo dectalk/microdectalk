@@ -625,10 +625,6 @@ S32 SpeakerGain;
   PMARK_DATA pMarkData;
 #endif
 
-#ifdef SAPI5DECTALK
-  PMARK_DATA pMarkData;
-#endif
-
 #ifdef HLSYN
 	HLState state, oldstate;
 	HLFrame frame, oldframe;

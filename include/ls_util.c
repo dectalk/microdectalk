@@ -163,7 +163,6 @@ extern char *form_class_strings[];
  * *************************************************************** */
 void ls_util_dump_cword(LETTER word[], char *message)
 {
-/* GL 04/21/1997  change this for OSF build */
 	FILE *fp;
 	LETTER *llp;
 	llp=&word[0];
@@ -987,7 +986,6 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
 			printf("\nLTS input:%c(%x)",pLts_t->nitem.i_word[0],pLts_t->nitem.i_word[0]);
 		}
 
-/* GL 04/21/1997  change this for OSF build */
 		/* GL 12/02/1996, pass RESET to PH pipe */
 		if(((pLts_t->nitem.i_word[0]) & (PFONT|PVALUE)) == RESET)
 		{

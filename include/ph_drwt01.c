@@ -1040,15 +1040,6 @@ if (pDphsettar->lastone==-1)
 #endif
 			if ((pDphsettar->np_drawt0 >= 0))
 			{
- 
-#ifdef MSDOS
-				/*WAIT_PRINT;*/
-				dologphoneme (pDph_t->allophons[pDphsettar->np_drawt0],
-							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
-							  (pDph_t->f0prime / 10));
-				printf("\n");
-				/*SIGNAL_PRINT;*/
-#else
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
@@ -1064,7 +1055,6 @@ if (pDphsettar->lastone==-1)
 						//						  0L);
 					}
 				}
-#endif
 			}
 			/* keepdur = (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10); */		/* eab need to keep orig value of dur */ 
 			/* keepallo = pDph_t->allophons[pDphsettar->np_drawt0]; */
@@ -1077,10 +1067,8 @@ if (pDphsettar->lastone==-1)
         pDphsettar->nframs++;
         pDphsettar->nframg++;
 
-#ifndef MSDOS
 	pDph_t->parstochip[OUT_PH] = pDph_t->allophons[pDphsettar->np_drawt0];
 	pDph_t->parstochip[OUT_DU] = pDph_t->allodurs[pDphsettar->np_drawt0];
-#endif
 
 	
   
@@ -1901,14 +1889,6 @@ if (pDphsettar->lastone==-1)
 			if ((pDphsettar->np_drawt0 >= 0))
 			{
 /* dologphoneme(keepallo,keepdur,(pDph_t->f0prime/10)); */
-#ifdef MSDOS
-				/*WAIT_PRINT;*/
-				dologphoneme (pDph_t->allophons[pDphsettar->np_drawt0],
-							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
-							  (pDph_t->f0prime / 10));
-				printf("\n");
-				/*SIGNAL_PRINT;*/
-#else
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
@@ -1924,7 +1904,6 @@ if (pDphsettar->lastone==-1)
 						//						  0L);
 					}
 				}
-#endif
 			}
 			/* keepdur = (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10); */		
 			/* eab need to keep orig value of dur */ 
@@ -1938,10 +1917,8 @@ if (pDphsettar->lastone==-1)
         pDphsettar->nframs++;
         pDphsettar->nframg++;
 
-#ifndef MSDOS
 	pDph_t->parstochip[OUT_PH] = pDph_t->allophons[pDphsettar->np_drawt0];
 	pDph_t->parstochip[OUT_DU] = pDph_t->allodurs[pDphsettar->np_drawt0];
-#endif
 
 } /* end of malfem stuff*/
 }
@@ -2971,14 +2948,6 @@ if (pDphsettar->lastone==-1)
 			if ((pDphsettar->np_drawt0 >= 0))
 			{
 /* dologphoneme(keepallo,keepdur,(pDph_t->f0prime/10)); */
-#ifdef MSDOS
-				/*WAIT_PRINT;*/
-				dologphoneme (pDph_t->allophons[pDphsettar->np_drawt0],
-							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
-							  (pDph_t->f0prime / 10));
-				printf("\n");
-				/*SIGNAL_PRINT;*/
-#else
 				dologphoneme (phTTS, pDph_t->allophons[pDphsettar->np_drawt0],
 							  (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10),
 							  (pDph_t->f0prime / 10));
@@ -2994,7 +2963,6 @@ if (pDphsettar->lastone==-1)
 						//						  0L);
 					}
 				}
-#endif
 
 			}
 			/* keepdur = (pDph_t->allodurs[pDphsettar->np_drawt0] * NSAMP_FRAME / 10); */		
@@ -3018,10 +2986,8 @@ if (pDphsettar->lastone==-1)
 	pDphsettar->nframs++;
 	pDphsettar->nframg++;
 
-#ifndef MSDOS
 	pDph_t->parstochip[OUT_PH] = pDph_t->allophons[pDphsettar->np_drawt0];
 	pDph_t->parstochip[OUT_DU] = pDph_t->allodurs[pDphsettar->np_drawt0];
-#endif
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

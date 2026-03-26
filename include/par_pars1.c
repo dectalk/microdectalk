@@ -144,7 +144,6 @@
  */
 #ifndef PARSER_STANDALONE_DEBUG_OLD
 
-/* GL 04/21/1997  add this for OSF build */
 #include <stdlib.h>
 #include "tts.h"
 
@@ -189,10 +188,6 @@ PKSD_T pKsd_t;
 #endif
 
 #else    /* #ifdef PARSER_STANDALONE_DEBUG_OLD */
-
-#ifdef VXWORKS
-#include <ctype.h>
-#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -269,38 +264,6 @@ const unsigned int char_type_table[16] = {
 	TYPE_white,
 	TYPE_digit
 };
-
-#ifdef UNDER_CE
-#if	(UNDER_CE == 200) || (UNDER_CE == 211)
-_stricmp(const char *, const char *);
-#endif
-#endif
-
-/* ******************************************************************
- *      Function Name:_stricmp()
- *
- *      Description: 
- *
- *      Arguments:
- *
- *      Return Value: int
- *
- *      Comments:
- *
- * *****************************************************************/
-#if defined VXWORKS || defined ARM7
-int _stricmp(const char *string1, const char *string2)
-{
-	int cnt;
-
-	for (cnt = 0; cnt < ((int)strlen(string1)); cnt++) 
-	{
-		if (toupper(string1[cnt]) != toupper(string2[cnt]))	return 1;
-	}
-	if (cnt != ((int)strlen(string2)))		return 1;
-	return 0;
-}
-#endif
 
 
 /* function prototypes */ 
@@ -1072,9 +1035,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	
 	if (rule>num_rule_sections)
 	{
-#ifndef ARM7_NOSWI
 		printf("par_process_input; no such rule section %d\n",rule);
-#endif
 		strcpy(output_array,"Invalid rule section. ");
 		return(ret_value);
 	}
@@ -1083,9 +1044,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 	input_length=strlen(input_array);
 	
 	strcpy(new_input,input_array);
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	memcpy(new_input_indexes,input_indexes,input_length*sizeof(index_data_t));
-#endif
 	
 	input_length=(input_length*2)/3; /* input_length * 2/3 */
 	/* copy the input array to a temporary location for hit next rules */
@@ -1175,9 +1134,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 // 					current_rule_number=(*((U16 *)(current_rule+2)));
 					continue;
 				default:
-#ifndef ARM7_NOSWI
 					printf("special rule value is out of range\n");
-#endif
 					break;
 				}
 				break;
@@ -1353,9 +1310,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 #ifndef PARSER_STANDALONE_DEBUG_OLD
 			if (DT_DBG(CMD_DBG,0x0200))
 			{
-#ifndef ARM7_NOSWI
 				printf("rule number is R%d\n",current_rule_R_value);
-#endif
 				//par_print_rule_error("input before match",new_input,new_ret.input_pos+new_ret.input_offset);
 			}
 #endif
@@ -1478,9 +1433,7 @@ preturn_value_t par_process_input(PKSD_T pKsd_t,
 #ifndef PARSER_STANDALONE_DEBUG_OLD
 					if (DT_DBG(CMD_DBG,0x0010))
 					{
-#ifndef ARM7_NOSWI
 						printf("Rule hit:R%d, output: %s\n",current_rule_R_value, output_array);
-#endif
 					}
 #endif
 #ifdef DISPLAY_RULES_HIT
@@ -1762,9 +1715,7 @@ int par_get_return_level(int *return_rule, int *return_level, int current_rule_n
 	}
 	else
 	{
-#ifndef ARM7_NOSWI
 		printf("par_get_return_level;no place to go to, going to next rule %d\n",current_rule_number);
-#endif
 		return(current_rule_number+1);
 	}
 }
@@ -1818,9 +1769,7 @@ void par_set_return_level(int *return_rule, int *return_level, int go_rule)
 	}
 	else
 	{
-#ifndef ARM7_NOSWI
 		printf("par_set_return_level;too many levels of gorets throwing away %d\n",go_rule);
-#endif
 	}
 }
 #endif // PARSER_DEBUG_OLD
@@ -1853,14 +1802,12 @@ void par_copy_index_list(pindex_data_t dest_index,
 						 int		   src_pos,
 						 int		   length)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	//	int i;
 	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,length*sizeof(index_data_t));
 	//	for (i=0;i<length;i++)
 	//	{
 	//		par_copy_index(dest_index,dest_pos+i,src_index,src_pos+i);
 	//	}
-#endif
 }
 #else // PARSER_DEBUG_OLD
  void par_copy_index_list(pindex_data_t dest_index,
@@ -1869,16 +1816,12 @@ void par_copy_index_list(pindex_data_t dest_index,
 								  int		    src_pos,
 								  int		    length)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	//	int i;
 	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,length*sizeof(index_data_t));
 	//	for (i=0;i<length;i++)
 	//	{
 	//		par_copy_index(dest_index,dest_pos+i,src_index,src_pos+i);
 	//	}
-#else
-;
-#endif // ARM7
 }
 #endif // PARSER_DEBUG_OLD
 
@@ -1908,9 +1851,7 @@ void par_copy_index(pindex_data_t dest_index,
 					pindex_data_t src_index,
 					int		  src_pos)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,sizeof(index_data_t));
-#endif
 }
 #else // PARSER_DEBUG_OLD
  void par_copy_index(pindex_data_t dest_index,
@@ -1918,11 +1859,7 @@ void par_copy_index(pindex_data_t dest_index,
 							 pindex_data_t src_index,
 							 int		   src_pos)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,sizeof(index_data_t));
-#else
-;
-#endif
 }
 #endif // PARSER_DEBUG_OLD
 
@@ -1949,24 +1886,19 @@ void par_copy_index(pindex_data_t dest_index,
 #ifdef PARSER_DEBUG_OLD
 int par_is_index_set(pindex_data_t indexes, int pos)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	if (indexes[pos].index[0]!=0 || indexes[pos].index[1]!=0 || indexes[pos].index[2]!=0)
 	{
 		return(1);
 	}
-#endif
-	return(0);
 }
 #else
  int par_is_index_set(pindex_data_t indexes,
 								int pos)
 {
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 	if (indexes[pos].index[0]!=0 || indexes[pos].index[1]!=0 || indexes[pos].index[2]!=0)
 	{
 		return(1);
 	}
-#endif
 	return(0);
 }
 #endif // PARSER_DEBUG_OLD
@@ -2292,9 +2224,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 #ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, failure\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
-#endif
 #ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule failure of the rule\n");
 #endif
@@ -2307,9 +2237,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 #ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, end_of_string\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
-#endif
 		ret_value->value=END_OF_STRING;
 #ifdef PARSER_DEBUG_OLD
 		printf("leaving par_match_rule; the end of the string was encountered\n");
@@ -2366,9 +2294,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 #ifdef INDEX_DEBUG_OLD2
 			printf("cleared indexes from %d to %d in the output, fail-fail\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 			memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
-#endif
 			ret_value->value=FAIL;
 #ifdef PARSER_DEBUG_OLD
 			printf("leaving par_match_rule failure of the rule\n");
@@ -2395,9 +2321,7 @@ void par_match_rule(unsigned char *current_rule, int state,
 #ifdef INDEX_DEBUG_OLD2
 		printf("cleared indexes from %d to %d in the output, opt_fail\n",new_ret.output_pos,new_ret.output_pos+new_ret.output_offset);
 #endif
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(output_indexes+new_ret.output_pos,0,new_ret.output_offset*sizeof(index_data_t));
-#endif
 		if (state==BIN_OPTIONAL)
 		{
 			ret_value->rule=end_of_match+1;
@@ -3407,9 +3331,7 @@ void par_save_string(unsigned char *current_rule, unsigned char *input_array,
 	}
 	if (save_num<0 || save_num >PAR_MAX_ARRAYS)
 	{
-#ifndef ARM7_NOSWI
 		printf("$%d is out of range\n",save_num);
-#endif
 		ret_value->value=FATAL_FAIL;
 		return;
 	}
@@ -5024,7 +4946,6 @@ int par_skip_white_space(unsigned char *input_array, pindex_data_t input_indexes
  * ******************************************************************/
 void par_print_rule_error(char *message, unsigned char *current_rule, int pos)
 {
-#ifndef ARM7_NOSWI
 	int i;
 	printf("%s\n",message);
 	printf("error in rule at position %d\n",pos);
@@ -5035,7 +4956,6 @@ void par_print_rule_error(char *message, unsigned char *current_rule, int pos)
 		printf(" ");
 	}
 	printf("^\n");
-#endif
 }
 
 /* ******************************************************************

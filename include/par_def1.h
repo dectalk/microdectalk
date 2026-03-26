@@ -55,37 +55,16 @@
 #include "par_bin.h"
 
 #define PAR_MAX_MATCH_ARRAY			30
-#ifdef WIN32_OLD
-#ifdef PRINTFDEBUG_OLD
-#define printf WINprintf
-#endif
-#define PAR_MAX_INPUT_ARRAY			900
-#define PAR_MAX_OUTPUT_ARRAY		900
-#define PAR_MAX_RULE_LENGTH			300
-#define PAR_ROLLING_STOP_VALUE      300
-#else
-#ifdef ARM7
-#define PAR_MAX_INPUT_ARRAY			400
-#define PAR_MAX_OUTPUT_ARRAY		400
-#define PAR_MAX_RULE_LENGTH			200
-#define PAR_ROLLING_STOP_VALUE      200
-#else
 #define PAR_MAX_INPUT_ARRAY			600
 #define PAR_MAX_OUTPUT_ARRAY		600
 #define PAR_MAX_RULE_LENGTH			200
 #define PAR_ROLLING_STOP_VALUE      200
-#endif
-#endif
 
 #define PAR_MAX_ARRAYS				10 
 #define PAR_MAX_RETURN_LEVEL		10
 
 /* GL 10/14/98, BATS#771 reduce the minimum number for non-MSDOS */
-#ifdef MSDOS
-#define PAR_MIN_INPUT_SIZE          5
-#else
 #define PAR_MIN_INPUT_SIZE          3
-#endif
 
 //#define PAR_ROLLING_STOP_VALUE                144
 //#define PAR_ROLLING_STOP_VALUE          72

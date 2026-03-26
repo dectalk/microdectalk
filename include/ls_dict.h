@@ -74,7 +74,6 @@ typedef DWORD MEMMAP_T;
 
 struct  suff_rule
 {
-	/* GL 04/21/1997  change this for OSF build */
 	U32				next;
 	U32				fc;
 	unsigned char	rule[256];

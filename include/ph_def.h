@@ -43,10 +43,6 @@
 
 #ifndef PHDEFH
 #define PHDEFH
-#ifdef WIN32_OLD
-#include <stdio.h>
-#include <windows.h>
-#endif
 
 #ifdef __EMSCRIPTEN__
   #include "string.h"
@@ -62,21 +58,9 @@
 #include "ph_data.h"				   /* MVP : New header file ,defines  instance specific data structure for PH thread */
 #include "ph_prot.h"
 
-#ifdef ARM7
-#define printf error_func_printf
-#define WINprintf error_func_WINprintf
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG_OLD
 
-#ifdef WIN32_OLD
-#define printf WINprintf
-#endif
-
-#if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define WINprintf printf
-#endif /* defined (MSDOS) || defined (__osf__) || defined (__unix__) */
 
 #endif /* PRINTFDEBUG_OLD */
 
