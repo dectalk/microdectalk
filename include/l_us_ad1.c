@@ -169,7 +169,7 @@ void ls_adju_allo2(PLTS_T pLts_t)
 	 * run. The "bflag" conditionally blocks
 	 * this pass on VMS.
 	 */
-#if defined	(VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	if (bflag == FALSE) 
 	{
 #endif
@@ -195,7 +195,7 @@ void ls_adju_allo2(PLTS_T pLts_t)
 		pp1 = pp1->p_fp;
 	}
 
-#if defined	(VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	}
 #endif
 	/*

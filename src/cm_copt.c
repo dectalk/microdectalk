@@ -119,52 +119,18 @@
 #include "cm_cdef.h"
 #include "cm_copt.h"
 
-#ifdef UNDER_CE
-#include "cemm.h"
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#ifdef DTEX
-#include "version.h"
-#endif
 #include "coop.h"
 
 /* pick up the definition of MAXI_PHONES and COMMA */
 #include "l_com_ph.h"
 
-#ifdef MSDOS
-#include "hardw.h"
-#ifdef SW_VOLUME
-void vol_tone(int volume);
-#endif
-#endif // MSDOS
-
 extern short tlitone0[];    /* added 4/22/96 MGS */
 extern short tlitone1[];
 
-#ifdef WIN32_OLD
-#include <windows.h>
-#include "tts.h"
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#ifdef __osf__
-#include <opthread.h>
-#include  "tts.h"
-#endif //__osf__
-
-#ifdef ARM7
-#include "stdlib.h"
-#include "string.h"
-void default_lang(PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code );
-void send_index( int how, int value );
-#endif
-
 #if defined (__APPLE__)
-#include "string.h"
+#include <string.h>
 #endif
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef __cplusplus
 extern "C" { 
 #endif //__cplusplus
@@ -176,16 +142,6 @@ void wait_semaphore( P_SEMAPHORE );
 #ifdef __cplusplus
 }
 #endif //__cplusplus
-#else
-extern void wait_semaphore( P_SEMAPHORE ); 
-#endif //__unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-
-
-#ifndef MSDOS
-
-#ifndef ARM7
-//void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
-#endif
 
 /* ETT 11/04/98 for BATS#345 
 	change open and close from static  */
@@ -196,12 +152,6 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS);
 static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS);
 
 static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS);
-
-#endif // MSDOS
-
-#ifdef SAPI5DECTALK
-extern int GetSapiRealtimeRate(LPTTS_HANDLE_T phTTS);
-#endif
 
 /* ******************************************************************
  *      Function Name: cm_cmd_phoneme()
@@ -294,10 +244,8 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	
-#ifndef MSDOS
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
 	  return(CMD_flushing);
-#endif
 	
 	flag_mask = 0;
 	for(i=0; i < (int)pCmd_t->param_index; i++)
@@ -362,8 +310,6 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 				switch(value)
 				{ 
 					case 7: /* on */
-
-#ifndef MSDOS			
 						if ((flag_mask | LOG_DBGLOG) == LOG_DBGLOG)
 						{  						
 							OpenDbgLogFile(phTTS);
@@ -372,20 +318,14 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 						else
 						{		
 							if ( OpenLogFile(phTTS))
-#endif
 								pKsd_t->logflag |= flag_mask;
 							flag_mask = 0;
-#ifndef MSDOS
 						}
-#endif
 
 						break;
 					case 8:	/* off */
-
-#ifdef MSDOS	
 						pKsd_t->logflag &= (~flag_mask);
 						flag_mask = 0;
-#else
 
 						if ((flag_mask | LOG_DBGLOG) == LOG_DBGLOG)
 						{  						
@@ -404,12 +344,9 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 							}
 							flag_mask = 0;
 						}
-#endif
 						break;
 					case 9:	/* set */
-#ifndef MSDOS
 						if ( OpenLogFile(phTTS))
-#endif
 								pKsd_t->logflag = flag_mask;
 						flag_mask = 0;
 						break;
@@ -424,7 +361,6 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
 	return(CMD_success);
 }
 
-#ifndef MSDOS
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS OpenDbgLogFile()
  *
@@ -441,12 +377,10 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS)
 {
-#ifndef ARM7_NOSWI
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
 	if ((pKsd_t->dbglog = fopen("dbglog.txt","w"))==NULL)
 		return(FALSE);
-#endif
 	return( TRUE );
 
 }
@@ -466,15 +400,12 @@ static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS)
 
 static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS)
 {
-
-#ifndef ARM7_NOSWI
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	
 	if(pKsd_t->dbglog)
 	{
 	fclose((FILE *)pKsd_t->dbglog);
 	}
-#endif
 }
 
 
@@ -503,16 +434,6 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 
   phTTS = TextToSpeechGetHandle();
   */
-#ifndef ARM7
-#ifdef WIN32_OLD
-  EnterCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RESERVE );*/
-  //OP_LockMutex( phTTS->pcsLogFile );
-#endif
 
   /********************************************************************/
   /*  If a file is already open, then don't try to open another one.  */
@@ -520,16 +441,6 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 
   if ( phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE )
   {
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
 	return( TRUE );
   }
 
@@ -541,16 +452,6 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
   if (( phTTS->dwOutputState != STATE_OUTPUT_AUDIO )
    && ( phTTS->dwOutputState != STATE_OUTPUT_NULL ))
   {
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
 	return( FALSE );
   }
 
@@ -560,17 +461,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 
   if (( phTTS->pLogFile = fopen( "log.txt", "w" )) == NULL )
   {
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
-	//TextToSpeechErrorHandler( phTTS,
+  	//TextToSpeechErrorHandler( phTTS,
 	//			  ERROR_WRITING_FILE,
 	//			  0L );
 	return( FALSE );
@@ -580,18 +471,7 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
 	cm_cmd_sync(phTTS);
 
 	phTTS->dwOutputState = STATE_OUTPUT_LOG_FILE;
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
   }
-#endif // ARM7
   return( TRUE );
 }
 
@@ -613,7 +493,6 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 void CloseLogFile(LPTTS_HANDLE_T phTTS)
 {
-#ifndef ARM7
   PKSD_T pKsd_t = phTTS->pKernelShareData;
   /*
   LPTTS_HANDLE_T phTTS;                 MVP MI
@@ -627,38 +506,12 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 
   cm_cmd_sync(phTTS);
 
-#ifdef WIN32_OLD
-  EnterCriticalSection( phTTS->pcsLogFile );
-
-#if (UNDER_CE == 211) || (UNDER_CE == 200)
-	_flushall; 
-#else
-	_flushall();
-#endif // (UNDER_CE == 211) || (UNDER_CE == 200)
-#endif // WIN32_OLD
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RESERVE );*/
-  //OP_LockMutex( phTTS->pcsLogFile );
-#endif
-
   /********************************************************************/
   /*  Exit if the log file is not open.                               */
   /********************************************************************/
 
   if ( phTTS->dwOutputState != STATE_OUTPUT_LOG_FILE )
   {
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
 	return;
   }
 
@@ -677,39 +530,16 @@ void CloseLogFile(LPTTS_HANDLE_T phTTS)
 
   if ( fclose( phTTS->pLogFile ))
   {
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
-	//TextToSpeechErrorHandler( phTTS,
+  	//TextToSpeechErrorHandler( phTTS,
 	//			  ERROR_WRITING_FILE,
 	//			  0L );
   }
   else
   {
 	pKsd_t->logflag = 0;
-#ifdef WIN32_OLD
-	LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*ToggleLogfileMutex( MUTEX_RELEASE );*/
-    //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
-
   }
-#endif // ARM7
   return;
 }
-
-#endif /* #ifndef MSDOS */
 
 /* ******************************************************************
  *      Function Name: cm_cmd_break() 
@@ -868,31 +698,11 @@ int cm_cmd_error(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
 {
-#ifndef ARM7
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-#ifdef MSDOS
-	pKsd_t->pause = TRUE;
-	STOP_SAMPCLK;
-	if(pCmd_t->defaults[0] == FALSE)
-	{
-		sleep(pCmd_t->params[0]);
-		pKsd_t->pause = FALSE;
-		START_SAMPCLK;
-	}
-	return(CMD_success);
-#endif
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /*LPTTS_HANDLE_T phTTS; */
   DWORD dwDelay;
-#ifdef WIN32_OLD
-  DWORD dwStartTime;
-  DWORD dwElapsedTime;
-  DWORD dwRemainingTime;
-#endif // WIN32_OLD
 
 /* GL 10/30/1996, comment out this as V43 code
   if( cm_cmd_sync(phTTS) == CMD_flushing )
@@ -904,28 +714,6 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
   {
 	//TextToSpeechPause( phTTS );
 
-#ifdef WIN32_OLD
-	dwStartTime = GetTickCount();
-
-	while ((( dwElapsedTime = GetTickCount() - dwStartTime ) < dwDelay )
-		&& ( ! pKsd_t->halting ))
-	{
-	  dwRemainingTime = dwDelay - dwElapsedTime;
-
-	  if ( dwRemainingTime > 10 )
-	  {
-			Sleep( 10 );
-	  }
-	  else
-	  {
-			Sleep( dwRemainingTime );
-	  }
-	}
-	//TextToSpeechResume( phTTS );
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
     while ((dwDelay > 0) && ( ! pKsd_t->halting))
     {	if ( dwDelay > 10)
         {	//OP_Sleep(10);
@@ -937,13 +725,8 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
         }
     }
     //TextToSpeechResume( phTTS );
-#endif
   }
   return(CMD_success);
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
-#else // ARM7
-  return(CMD_success);
-#endif // ARM7
 }
 
 /* ******************************************************************
@@ -963,19 +746,10 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 int cm_cmd_resume(LPTTS_HANDLE_T phTTS)
 {
-#ifdef MSDOS
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	pKsd_t->pause = FALSE;
-	START_SAMPCLK;
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   if( cm_cmd_sync(phTTS) == CMD_flushing )
 	return(CMD_flushing);
 
   //TextToSpeechResume( phTTS );
-#endif
 
   return(CMD_success);          
 }
@@ -997,18 +771,11 @@ int cm_cmd_resume(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 int cm_cmd_flush(LPTTS_HANDLE_T phTTS)
 {   
-#ifndef ARM7
-#ifdef MSDOS
-	unsigned short int old_flags;
-#endif
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
 	if(pCmd_t->defaults[0] == TRUE || pCmd_t->defaults[1] == TRUE)
 	{
-#ifdef DTEX
-		p_putc(XON);
-#endif /* DTEX */
 		return(CMD_success);
 	}
 	pCmd_t->params[0] = cm_util_string_match(flush_options, pCmd_t->pString[0]);
@@ -1032,26 +799,13 @@ int cm_cmd_flush(LPTTS_HANDLE_T phTTS)
 			pKsd_t->spc_flush = TRUE;
 			break;
 		case 3:	/* after */
-
-#ifdef MSDOS                    
-			old_flags = kernel_disable();
-#endif
 			if(pKsd_t->halting == FALSE)
 			{
 				pKsd_t->spc_flush_type = SPC_flush_after;
 				pKsd_t->spc_flush_value = pCmd_t->params[1];
 				pKsd_t->spc_flush = TRUE;
 				pKsd_t->spc_sync.value = 0;
-#ifdef MSDOS
-				wait_semaphore(&pKsd_t->spc_sync);
-#endif
 			}
-#ifdef MSDOS
-			else
-			{                    
-				kernel_enable(old_flags);
-			}
-#endif
 			start_flush(TRUE);
 			break;
 		case 4:	/* text */
@@ -1060,7 +814,6 @@ int cm_cmd_flush(LPTTS_HANDLE_T phTTS)
 			pKsd_t->text_flush = TRUE;
 			break;
 	}
-#endif // ARM7
 	return(CMD_success);
 }
 
@@ -1083,42 +836,6 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 {   
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-#ifdef MSDOS
-	DT_PIPE_T pipe_value;
-	unsigned int old_flags;
-	
-#ifdef DTEX
-	/* 
-	 * pKsd_t->idleflag is used to tell when we've been quiescent long
-	 * enough to fall asleep.. 
-	 */
-	pKsd_t->idleflag = 0;
-#endif /* DTEX */ 
-
-	old_flags = kernel_disable();
-	if(pKsd_t->halting == FALSE)
-	{
-		pKsd_t->spc_sync.value = 0;
-		pipe_value = (PFASCII<<PSFONT)+0xb;
-                cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-		pipe_value = SYNC;
-                cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-		kernel_enable(old_flags);
-		wait_semaphore(&(pKsd_t->spc_sync));
-	}
-	else
-	{
-		kernel_enable(old_flags);
-	}                 
-
-	
-	if(pKsd_t->cmd_flush)
-		return(CMD_flushing);
-	return(CMD_success);
-#endif /* #ifdef MSDOS */       
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
   DT_PIPE_T pipe_value;
 
 /*  LPTTS_HANDLE_T phTTS; */    /* MVP MI earlier the value of phTTS used to get by
@@ -1129,39 +846,18 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
   {
 	/*phTTS = TextToSpeechGetHandle();*/   /*MVP MI */
 
-#ifdef WIN32_OLD
-	  ResetEvent( phTTS->hSyncEvent );
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    //OP_ResetEvent( phTTS->hSyncEvent );
-#endif
-
 	pKsd_t->spc_sync.value = 0;
 	pipe_value = (PFASCII<<PSFONT)+0xb;
 	lts_loop(phTTS,&pipe_value);
 
 	pipe_value = SYNC;
 	lts_loop(phTTS,&pipe_value);
-
-#ifdef WIN32_OLD
-	WaitForSingleObject( phTTS->hSyncEvent, INFINITE );
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    //OP_WaitForEvent( phTTS->hSyncEvent, OP_INFINITE );
-#endif
-
   }
 
   if(pKsd_t->cmd_flush)
 	return(CMD_flushing);
 
   return(CMD_success);
-
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 }
 
 /* ******************************************************************
@@ -1180,12 +876,7 @@ int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
 
 int cm_cmd_enable(PKSD_T pKsd_t)
 {
-#ifndef ARM7
 	DT_PIPE_T pipe_value;
-#ifdef MSDOS
-	unsigned int old_flags; 
-	old_flags = kernel_disable();
-#endif
 	if(pKsd_t->halting == FALSE)
 	{
 		pKsd_t->spc_sync.value = 0;
@@ -1194,24 +885,11 @@ int cm_cmd_enable(PKSD_T pKsd_t)
 		pipe_value = SYNC;
 		lts_loop(pKsd_t->phTTS,&pipe_value);
 
-#ifdef MSDOS
-		kernel_enable(old_flags);
-#endif
-
-#if !defined __unix__ && !defined VXWORKS && !defined _SPARC_SOLARIS_ && !defined __EMSCRIPTEN__ || defined (__APPLE__)
 		wait_semaphore(&pKsd_t->spc_sync);
-#endif
 	}
-#ifdef MSDOS
-	else
-	{
-		kernel_enable(old_flags);
-	}
-#endif
 	pKsd_t->spc_flush = FALSE;
 	pKsd_t->text_flush = FALSE;
 	reset_spc();
-#endif // ARM7
 	return(CMD_success);
 }
 
@@ -1355,14 +1033,6 @@ int cm_cmd_timeout(LPTTS_HANDLE_T phTTS)
  * *****************************************************************/
 int cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS)
 {   
-#ifdef MSDOS    
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	if(pCmd_t->defaults[0] == TRUE)
-		pCmd_t->params[0] = 10;
-	if(pCmd_t->params[0] <= 0 || pCmd_t->params[0] > 25)
-		return(CMD_bad_value);
-	module_clocks(pCmd_t->params[0]);
-#endif
 	return(CMD_success);
 }
 
@@ -1398,7 +1068,7 @@ int cm_cmd_setv(LPTTS_HANDLE_T phTTS)
 	pCmd_t->insertflag=2;
 #else
 	pCmd_t->insertflag=1;
-#endif	
+#endif
 
 	return(CMD_success);
 }
@@ -1419,9 +1089,7 @@ int cm_cmd_setv(LPTTS_HANDLE_T phTTS)
 int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
 {   
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-#ifndef ARM7
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
-#endif
    /* 
     *this will probably crash and burn if a flush happens 
 	* in the middle.. (tek 1/3/96)
@@ -1437,14 +1105,6 @@ int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
    pCmd_t->cmd_number = pCmd_t->params[0];
    while (flag) 
    {
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined __EMSCRIPTEN__ || defined (__APPLE__)
-          //read_pipe(pKsd_t->cmd_pipe, &temp[j], 1);
-#endif
-
-#ifdef MSDOS
-	  //temp[j] = getc();
-#endif
 	  if (temp[j] == ']')
 		flag = 0;
 	  j++;
@@ -1470,32 +1130,7 @@ int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
  *
  * *****************************************************************/
 int cm_cmd_code_page(LPTTS_HANDLE_T phTTS)
-{   
-#ifdef MSDOS    
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	volatile struct dtpc_code_pages _far *cp;
-	int i;
-
-	if(pCmd_t->defaults[0] == TRUE || pCmd_t->params[0] == 0)
-	{
-		for(i=0;i<256;i++)
-			pKsd_t->code_page[i] = i;
-		return(CMD_success);
-	}
-
-	cp = pKsd_t->loaded_code_pages;
-	while(cp != NULL_CP)
-	{
-		if((*cp).dos_id == (int)pCmd_t->params[0])
-		{
-			for(i=0;i<256;i++)
-				pKsd_t->code_page[i] = (*cp).translation_page[i];
-			return(CMD_success);
-		}
-		cp = (*cp).link;
-	}
-#endif /* MSDOS */              
+{         
 	return(CMD_bad_value);
 }
 
@@ -1516,19 +1151,14 @@ int cm_cmd_code_page(LPTTS_HANDLE_T phTTS)
 int cm_cmd_vs(LPTTS_HANDLE_T phTTS)
 {
 	PCMD_T pCmd_t=phTTS->pCMDThreadData;
-#ifdef MSDOS
-	vol_set(pCmd_t->params[0]);
-#else                      
 	StereoVolumeControl( phTTS,
 						 pCmd_t->params[0],
 						 VOLUME_SET,
 						 TRUE,
 						 TRUE );
-#endif
 	return(CMD_success);
 }                              
 
-#ifndef MSDOS
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS cm_cmd_volume()  
  *
@@ -1637,58 +1267,6 @@ int cm_cmd_volume(LPTTS_HANDLE_T phTTS)
 	return(CMD_success);
 }
 
-#else  /* The cmd_volume() function for MSDOS */
-/* ********************************************************
- *      Function Name: #ifdef MSDOS cmd_volume()     
- *
- *      Description: Resets volume. Calls vol_set(), vol_up() or vol_down() 
- *					 depending on the command.
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value: int; Either CMD_bad_value or CMD_success
- *
- *      Comments:
- *
- * *******************************************************/
-int cm_cmd_volume(LPTTS_HANDLE_T phTTS)
-{
-	int     cmd_type, cmd_value;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	cmd_type = cm_util_string_match(volume_options,pCmd_t->pString[0]);
-	if(cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	cmd_type += DCS_VOLUME_SET;
-	cmd_value = pCmd_t->params[1];
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-	switch(cmd_type)
-	{
-		case DCS_VOLUME_SET:
-			vol_set(cmd_value);
-			break;
-		case DCS_VOLUME_UP:
-			vol_up(cmd_value);
-			break;
-		case DCS_VOLUME_DOWN:
-			vol_down(cmd_value);
-			break;
-#ifdef SW_VOLUME
-		/* 10/6/99 eab the tone volume offset is added as part of this.. */
-			//already in and ifdef MSODS environment
-		case DCS_VOLUME_TONE:
-			vol_tone(cmd_value);
-			break;
-#endif /* SW_VOLUME */
-		default:
-			return(CMD_bad_value);
-	};
-	return(CMD_success);  
-}
-#endif // MSDOS
-
 /* ********************************************************
  *      Function Name: cm_cmd_language()        
  *
@@ -1737,7 +1315,6 @@ int cm_cmd_language(LPTTS_HANDLE_T phTTS)
 				return(CMD_bad_value);
 			break;
 
-#ifndef ARM7
 		case 1:	/* british */
 		case 7:	/* uk */
 			if(pKsd_t->lang_ready[LANG_british] == LANG_both_ready)
@@ -1773,7 +1350,6 @@ int cm_cmd_language(LPTTS_HANDLE_T phTTS)
 			else
 				return(CMD_bad_value);
 			break;
-#endif
 
 		default:
 			return(CMD_bad_value);
@@ -1781,11 +1357,8 @@ int cm_cmd_language(LPTTS_HANDLE_T phTTS)
 
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
 		return(CMD_flushing);
-#ifdef MSDOS    
-	default_lang(cmd_type,0);
-#else
+
 	default_lang(pKsd_t,cmd_type,0);
-#endif
 
 	pipe_value = LAST_VOICE;
 	lts_loop(phTTS,&pipe_value);
@@ -1808,194 +1381,13 @@ int cm_cmd_remove(PKSD_T pKsd_t)
 {
 	DT_PIPE_T pipe_value;
 
-#ifdef MSDOS
-	pKsd_t->lang_ready[pKsd_t->lang_curr] = 0;
-#else
 	pKsd_t->lang_ready[LANG_english] = 0;
-#endif
 
 	pipe_value = KILL_TASK;
 	lts_loop(pKsd_t->phTTS,&pipe_value);
 
 	return(CMD_success);
 }
-
-#ifdef DTEX 
-/* *****************************************************************
- *      Function Name: #ifdef DTEX cm_cmd_power()   
- *
- *      Description: Says battery state
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value:
- *
- *      Comments:
- *
- * *****************************************************************/
-int cm_cmd_power(LPTTS_HANDLE_T phTTS)
-{
-	int cmd_type,cmd_value;
-	volatile unsigned short int statusreg, i;
-	volatile unsigned long j;
-	unsigned short int flags;
-	int status;    
-    PCMD_T pCmd_t = phTTS->pCMDThreadData;
-    PKSD_T pKsd_t = phTTS->pKernelShareData;
-
-	cmd_type =  cm_util_string_match(power_options,pCmd_t->pString[0]);
-	if (cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
-
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-	/* we need to load down the power supply a bit to make sure
-	 * we get a reliable indication of battery state. Run in a 
-	 * loop for about a millisecond doing things..
-	 */
-	flags = kernel_disable();
-
-	j = 0;
-	for (i=0;i<1000;i++)
-	{
-		j = i;
-		statusreg = _inp(GPIO);
-	}
-	kernel_enable(flags);
-
-	switch (cmd_type)
-	{
-		case 0: /*speak*/
-			/* cm_util_say_string(pKsd_t, "[:sync]", 1); */
-			if (statusreg&EXTPWR)
-			{   
-				if (pKsd_t->lang_curr == LANG_british)
-					cm_util_say_string(pKsd_t, "External power on. ", 1);
-				if (pKsd_t->lang_curr == LANG_english)
-					cm_util_say_string(pKsd_t, "External power on. ", 1);
-				if (pKsd_t->lang_curr == LANG_spanish)
-					cm_util_say_string(pKsd_t, "Corriente externa prendida. ", 1);
-				if (pKsd_t->lang_curr == LANG_latin_american)
-					cm_util_say_string(pKsd_t, "Corriente externa prendida. ", 1);
-				if (pKsd_t->lang_curr == LANG_german)
-                        cm_util_say_string(pKsd_t, "Externer Netzbetrieb an. ", 1);
-				return(CMD_success);
-			}
-			if (statusreg&BATTOK)
-			{
-				if (pKsd_t->lang_curr == LANG_english)
-				   cm_util_say_string(pKsd_t, "Battery okay. ", 1);
-				if (pKsd_t->lang_curr == LANG_british)
-				   cm_util_say_string(pKsd_t, "Battery okay. ", 1);
-				if (pKsd_t->lang_curr == LANG_spanish)
-					cm_util_say_string(pKsd_t, "Batería corriendo bien. ", 1);
-				if (pKsd_t->lang_curr == LANG_latin_american)
-					cm_util_say_string(pKsd_t, "Batería corriendo bien. ", 1);
-				if (pKsd_t->lang_curr == LANG_german)
-                                        cm_util_say_string(pKsd_t, "Battieren sind voll. ", 1);
-				return(CMD_success);
-			}
-
-			if (pKsd_t->lang_curr == LANG_english)
-				cm_util_say_string(pKsd_t, "Battery is low. ", 1);
-			if (pKsd_t->lang_curr == LANG_spanish)
-				cm_util_say_string(pKsd_t, "Bajo en batería. ", 1);
-			if (pKsd_t->lang_curr == LANG_british)
-				cm_util_say_string(pKsd_t, "Battery is low. ", 1);
-			if (pKsd_t->lang_curr == LANG_latin_american)
-				cm_util_say_string(pKsd_t, "Bajo en batería. ", 1);
-			if (pKsd_t->lang_curr == LANG_german)
-                                cm_util_say_string(pKsd_t, "Batterien sind schwach. ", 1);
-			return(CMD_success);
-			break;
-		case 1: /* interval */
-			pKsd_t->power_interval=pCmd_t->params[1];
-#ifdef DEBUG_OLD
-			printf("[:rem interval %d]",pKsd_t->power_interval);
-#endif /*debug*/
-			return(CMD_success);
-			break;
-		case 2: /* status */
-			if (statusreg&EXTPWR)
-			{
-				printf("[:power external]");
-				return(CMD_success);
-			}
-
-			if (statusreg&BATTOK)
-			{
-				printf("[:power batt_OK]");
-				return(CMD_success);
-			}
-			printf("[:power batt_low]");
-			return(CMD_success);
-			break;
-		case 3: /* sleep */
-			pKsd_t->sleep_interval = pCmd_t->params[1];
-			return(CMD_success);
-			break;
-		case 4: /* check */
-			if (!(statusreg&BATTOK))
-			{
-				if(cm_cmd_sync(phTTS) == CMD_flushing)
-					return(CMD_flushing);
-				status = cm_util_dtpc_tones(phTTS, 0,750,250);
-				if (status != CMD_success)
-					return(status);
-				return(cm_util_dtpc_tones_reset(phTTS));
-			}
-			return(CMD_success);
-			break;
-		case 5: /*lspeak*/
-			cm_util_say_string(pKsd_t, "[:sync]", 0);
-			if (statusreg&EXTPWR)
-			{   
-				if (pKsd_t->lang_curr == LANG_english)
-					cm_util_say_string(pKsd_t, "External power on.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_spanish)
-					cm_util_say_string(pKsd_t, "Corriente externa prendida.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_british)
-					cm_util_say_string(pKsd_t, "External power on.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_latin_american)
-					cm_util_say_string(pKsd_t, "Corriente externa prendida.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_german)
-                        cm_util_say_string(pKsd_t, "Externer Netzbetrieb an.[:sync]", 0);
-				return(CMD_success);
-			}
-			if (statusreg&BATTOK)
-			{
-				if (pKsd_t->lang_curr == LANG_english)
-				   cm_util_say_string(pKsd_t, "Battery okay.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_spanish)
-					cm_util_say_string(pKsd_t, "Batería corriendo bien.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_british)
-				   cm_util_say_string(pKsd_t, "Battery okay.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_latin_american)
-					cm_util_say_string(pKsd_t, "Batería corriendo bien.[:sync]", 0);
-				if (pKsd_t->lang_curr == LANG_german)
-                                   cm_util_say_string(pKsd_t, "Battieren sind voll.[:sync]", 0);
-				return(CMD_success);
-			}
-
-			if (pKsd_t->lang_curr == LANG_english)
-				cm_util_say_string(pKsd_t, "Battery is low.[:sync]", 0);
-			if (pKsd_t->lang_curr == LANG_spanish)
-				cm_util_say_string(pKsd_t, "Bajo en batería.[:sync]", 0);
-			if (pKsd_t->lang_curr == LANG_british)
-				cm_util_say_string(pKsd_t, "Battery is low.[:sync]", 0);
-			if (pKsd_t->lang_curr == LANG_latin_american)
-				cm_util_say_string(pKsd_t, "Bajo en batería.[:sync]", 0);
-			if (pKsd_t->lang_curr == LANG_german)
-                                cm_util_say_string(pKsd_t, "Batterien sind schwach.[:sync]", 0);
-
-			return(CMD_success);
-			break;
-		default:
-			return(CMD_bad_string);
-	}
-}
-#endif /*DTEX*/
 
 /* *****************************************************************
  *      Function Name: #ifdef DTEX cm_cmd_version() 
@@ -2019,14 +1411,12 @@ int cm_cmd_version(LPTTS_HANDLE_T phTTS)
 	unsigned int old_sayflag;
     PCMD_T pCmd_t = phTTS->pCMDThreadData;           
     PKSD_T pKsd_t = phTTS->pKernelShareData;
-#ifndef DTEX
         unsigned char versionstr[512] = { 0 };
 	char datestr[] = __DATE__;
 	char *datepart[2];
 	int i;
 	int j=0;
 	int skip = 0;
-#endif
     
 	cmd_type =  cm_util_string_match(version_options,pCmd_t->pString[0]);
 	if (cmd_type == NO_STRING_MATCH)
@@ -2041,9 +1431,6 @@ int cm_cmd_version(LPTTS_HANDLE_T phTTS)
 			if(cm_cmd_sync(phTTS) == CMD_flushing)
 				return(CMD_flushing);
 
-#ifdef DTEX
-                        cm_util_say_string(pKsd_t, (unsigned char *)versionspeak, 1);
-#else
 			for (i = 0; datestr[i] != '\0'; i++) {
 				if (datestr[i] == ' ' && !skip) {
 					datestr[i] = '\0';
@@ -2061,67 +1448,19 @@ int cm_cmd_version(LPTTS_HANDLE_T phTTS)
 				datepart[0], datestr, datepart[1], datepart[0], datestr, datepart[1]);
 
 			cm_util_say_string(pKsd_t, versionstr, 1);
-#endif
 			if(cm_cmd_sync(phTTS) == CMD_flushing)
 				return(CMD_flushing);
 			return(CMD_success);
 			break;
 		case 1: /* status */
-#ifdef DTEX
-			printf("[:version %f]\n",&pKsd_t->version[0]);
-#else
 			sprintf(versionstr, "Version %s %s", VERSION, RELEASE);
 			printf("[:version %s]\n",versionstr);
-#endif
 			return(CMD_success);
 			break;
 		default:
 			return(CMD_bad_string);
 	}
 }
-
-#ifdef DTEX 
-/* ******************************************************************
- *      Function Name: #ifdef DTEX cm_cmd_tsr()        
- *
- *      Description:
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value: int
- *
- *      Comments:
- *
- * *****************************************************************/
-int cm_cmd_tsr(LPTTS_HANDLE_T phTTS)
-{
-	int cmd_type, cmd_value;
-    PCMD_T pCmd_t = phTTS->pCMDThreadData;  
-    PKSD_T pKsd_t = phTTS->pKernelShareData;
-
-	cmd_type =  cm_util_string_match(tsr_options,pCmd_t->pString[0]);
-	if (cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
-
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-
-	switch (cmd_type)
-	{
-		case 0: /* on */
-			pKsd_t->dleseq_OK = TRUE;
-			return(CMD_success);
-			break;
-		case 1: /* off */
-			pKsd_t->dleseq_OK = FALSE;
-			return(CMD_success);
-			break;
-		default:
-			return(CMD_bad_string);
-	}
-}
-#endif /*DTEX*/
 
 /* ******************************************************************
  *      Function Name: cm_cmd_mode()    
@@ -2307,12 +1646,6 @@ int cm_cmd_rate(LPTTS_HANDLE_T phTTS)
 {
 	DT_PIPE_T pipe_value[2];
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-#ifdef SAPI5DECTALK
-	int sapi_realtime_rate;
-	
-	sapi_realtime_rate=GetSapiRealtimeRate(phTTS);
-	pCmd_t->params[0]+=sapi_realtime_rate;
-#endif
 
 	//BTS10102 clamp high and low rate values
 
@@ -2348,11 +1681,7 @@ int cm_cmd_name(LPTTS_HANDLE_T phTTS)
 
 	if(CT[pCmd_t->cmd_index].esc_value == DCS_NAME)
 	{
-#ifdef EPSON_ARM7
-		pipe_value[1] = pCmd_t->params[0];
-#else
 		pipe_value[1] = cm_util_string_match(voice_names,pCmd_t->pString[0]);
-#endif
 	}
 	else
 	{
@@ -2511,43 +1840,11 @@ int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
 		 	pCmd_t->ParseChar=temp;
 #endif
 
-#ifdef MSDOS
-        	WAIT_PRINT;
-			printf("\n[:index %d]",pKsd_t->lastindex);
-        	SIGNAL_PRINT;
-#else
 			send_index(pipe_value[2],pKsd_t->lastindex);
-#endif
 			return(CMD_success);
 		//tek 01aug97 bats 404
 		// handle these new index types.
                 //cjl 18nov97 Add ifdef for 32bit only.
-#ifdef WIN32_OLD
-		case DCS_INDEX_BOOKMARK:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_BOOKMARK;
-			pipe_value[2] = pCmd_t->params[2];//NH
-			break;
-		case DCS_INDEX_WORDPOS:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_WORDPOS;
-			pipe_value[2] = pCmd_t->params[2];//Nl
-			break;
-		case DCS_INDEX_START:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_START;
-			pipe_value[2] = pCmd_t->params[2];//N?
-			break;
-		case DCS_INDEX_STOP:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_STOP;
-			pipe_value[2] = pCmd_t->params[2];//N?
-			break;
-		case DCS_INDEX_SENTENCE:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_SENTENCE;
-			pipe_value[2] = pCmd_t->params[2];//N?
-			break;
-		case DCS_INDEX_VOLUME:
-			pipe_value[0] = (2<<PSNEXTRA) | INDEX_VOLUME;
-			pipe_value[2] = pCmd_t->params[2];//N?
-			break;
-#endif // WIN32_OLD
 
 		default:
 	    /* change for the parser index buffer */
@@ -2587,9 +1884,7 @@ int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
 	/* insert a dummy character for the index */
 	pCmd_t->clausebuf[pCmd_t->input_counter]=PAR_INDEX_DUMMY_CHAR;
 	/* put the index into the index buffer */
-#ifndef ARM7
 	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index,pipe_value,sizeof(index_data_t));
-#endif
 #if defined ARM7 && defined ACCESS_SOLUTIONS
 	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index,pipe_value,sizeof(index_data_t));
 #endif
@@ -2847,37 +2142,16 @@ int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
 		{
 			if(pKsd_t->arpabet[i*2])
 			{
-#ifndef ARM7_NOSWI
 				WAIT_PRINT;
 				printf("\n  %d arpabet (%c%c)  asky (%c)",
 					i,pKsd_t->arpabet[i*2],pKsd_t->arpabet[i*2+1],pKsd_t->ascky[i]);
 				SIGNAL_PRINT;
-#endif
 				pipe_value = phoneme_code_add | i;
-#ifdef EPSON_ARM7
-				fill_TTP_buffer(phTTS,&pipe_value,1);
-#else
 				ph_loop(phTTS,&pipe_value);
-#endif
 				pipe_value = phoneme_code_add | COMMA;
-#ifdef EPSON_ARM7
-				fill_TTP_buffer(phTTS,&pipe_value,1);
-#else
 				ph_loop(phTTS,&pipe_value);
-#endif
 				
-				/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-				sleep(100);
-#endif
-				
-#ifdef WIN32_OLD
-				Sleep(100);
-#endif
-				
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 				//OP_Sleep(100);
-#endif
 				
 			}
 		}
@@ -2887,24 +2161,14 @@ int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
 		if(pCmd_t->params[0] < MAXI_PHONES)
 		{
 			i = pCmd_t->params[0];
-#ifndef ARM7_NOSWI
 			WAIT_PRINT;
 			printf("\n  %d arpabet (%c%c)  asky (%c)",
 				i,pKsd_t->arpabet[i*2],pKsd_t->arpabet[i*2+1],pKsd_t->ascky[i]);
 			SIGNAL_PRINT;
-#endif
 			pipe_value = phoneme_code_add | i;
-#ifdef EPSON_ARM7
-			fill_TTP_buffer(phTTS,&pipe_value,1);
-#else
 			ph_loop(phTTS,&pipe_value);
-#endif
 			pipe_value = phoneme_code_add | COMMA;
-#ifdef EPSON_ARM7
-			fill_TTP_buffer(phTTS,&pipe_value,1);
-#else
 			ph_loop(phTTS,&pipe_value);
-#endif
 		}
 	}
 	return(CMD_success);
@@ -2936,7 +2200,6 @@ int cm_cmd_stress(LPTTS_HANDLE_T phTTS)
 	return(CMD_success);
 }
 
-#ifndef MSDOS
 #define  TONE_AMPLITUDE  32767
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS cm_cmd_tone()
@@ -2977,9 +2240,7 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	if ( cm_cmd_sync(phTTS) == CMD_flushing )
 		return( CMD_flushing );
 	
-#ifndef ARM7
 	//WaitForLtsFlush( phTTS, 0xFFFFFFFF );
-#endif
 	/********************************************************************/
 	/*  The packet format here is different than the DTC07. The ramp    */
 	/*  duration has been eliminated. The tone generation software      */
@@ -3017,60 +2278,11 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	pipe[4] = 1000;
 	pipe[5] = 0;
 	
-	/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	vtm_loop(phTTS,pipe);
-#endif
 
 	return( CMD_success );
 }
 
-#else /* ifndef MSDOS */ 
-/* ******************************************************************
- *      Function Name: #ifdef MSDOS cm_cmd_tone()
- *
- *      Description: Calls cm_util_dtpc_tones() to play a certain
- *      frequency for a certain duration.
- *      The frequency (hz) is given by pCmd_t->params[0]
- *      and duration (ms) by pCmd_t->params[1]. 
- *      Returns either CMD_success or status returned
- *      by cm_util_dtpc_tones(). MS-DOS version.
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value: int 
- *						CMD_bad_value 
- *						CMD_success
- *
- *      Comments:
- *
- * *****************************************************************/
-int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
-{
-	int status;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-  
-	if(pCmd_t->defaults[0] == TRUE || pCmd_t->defaults[1] == TRUE)
-		return(CMD_bad_value);
-	/*
- 	 *  wait for spc, then send the tone off ...
- 	 */
-
-	status = cm_util_dtpc_tones(phTTS, 0, pCmd_t->params[0], pCmd_t->params[1]);
-	if(status != CMD_success)
-		return(status);
-
-	/*
- 	 *  wait for tone to complete, then reset the spc and ph ...
- 	 */
-
-	return(cm_util_dtpc_tones_reset(phTTS));
-}
-#endif /* ifndef MSDOS */
-
-#ifndef MSDOS
 #define  DTMF_PAUSE_TIME_IN_MSEC            100
 #define  DTMF_DIGIT_TIME_IN_MSEC            100
 #define  DTMF_INTER_DIGITAL_TIME_IN_MSEC    100
@@ -3116,9 +2328,7 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
   if ( cm_cmd_sync(phTTS) == CMD_flushing )
 	return( CMD_flushing );
 
-#ifndef ARM7
   //WaitForLtsFlush( phTTS, 0xFFFFFFFF );
-#endif
 
   /********************************************************************/
   /*  Write a tone packet to the VTM thread for each character in the */
@@ -3240,11 +2450,7 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[4] = 1000;
 	  pipe[5] = 0;
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
-
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 	else
@@ -3260,10 +2466,7 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[4] = tlitone1[iIndex];
 	  pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	  /****************************************************************/
 	  /*  Interdigital space.                                         */
@@ -3276,11 +2479,7 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 	  pipe[4] = 1000;
 	  pipe[5] = 0;
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	  vtm_loop(phTTS,pipe);
-
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__
 
 	}
 
@@ -3293,62 +2492,6 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 
   return( CMD_success );
 }
-
-#else  /*  ifndef MSDOS */
-/* ******************************************************************
- *      Function Name: #ifdef MSDOS cm_cmd_dial() 
- *
- *      Description: Creates DTMF tones. Uses pCmd_t->params array for input arguments.
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value: int
- *						status
- *						CMD_bad_string
- *
- *      Comments:
- *
- * *****************************************************************/
-int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
-{
-	unsigned char *s;
-	int status;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	pCmd_t->dtmf_start_clock=0;
-	
-	if(pCmd_t->defaults[0] == TRUE)
-		return(CMD_bad_string);
-	s = (unsigned char *)pCmd_t->pString[0];
-	pCmd_t->tone_wait = 0;
-	while(*s)
-	{
-		status = cm_util_dtpc_tones(phTTS, *s++, 0,0);
-		if(status != CMD_success)
-		{
-			break;                                                 
-		}
-		/* mark the starting time.. */
-		if (pCmd_t->dtmf_start_clock == 0)
-		{
-			pCmd_t->dtmf_start_clock = get_clock();
-		}
-	}                             
-	pCmd_t->dtmf_stop_clock = get_clock();     
-	/* check for roll.. */
-	if (pCmd_t->dtmf_stop_clock < pCmd_t->dtmf_start_clock)
-		/* punt; set the start to 0. (that's close enough.) */
-		pCmd_t->dtmf_start_clock = 0;
-	pCmd_t->dtmf_stop_clock = pCmd_t->dtmf_stop_clock - pCmd_t->dtmf_start_clock; /* how long? */
-	/* knock off the time we sat waiting.. */
-	if (pCmd_t->dtmf_stop_clock < (unsigned long)pCmd_t->tone_wait)
-		pCmd_t->tone_wait -= (unsigned short)pCmd_t->dtmf_stop_clock;
-	else
-		pCmd_t->tone_wait=0;
-	return(cm_util_dtpc_tones_reset(phTTS));
-}
-#endif /* MSDOS */
 
 /* ******************************************************************
  *      Function Name: cm_cmd_digitized()       
@@ -3365,23 +2508,6 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
  * ******************************************************************/
 int cm_cmd_digitized(LPTTS_HANDLE_T phTTS)
 {   
-	
-#ifdef MSDOS
-	PKSD_T pKsd_t = phTTS->pKernelShareData; 
-	DT_PIPE_T pipe_value;
-
-#ifndef DTEX
-	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-	pKsd_t->spc_mode = SPC_mode_digital;
-	signal_semaphore(&pKsd_t->isa_sem);
-	wait_semaphore(&pKsd_t->text_sync);
-
-	pipe_value = LAST_VOICE;
-        cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-#endif /*DTEX*/
-
-#endif /* MSDOS */
 	return(CMD_success);
 }
 
@@ -3453,34 +2579,6 @@ int cm_cmd_gender(LPTTS_HANDLE_T phTTS)
 	}
 	return(CMD_success);
 }
-
-#ifdef DBGV_ON
-/* ******************************************************************
- *      Function Name: #ifdef DBGV_ON cm_cmd_dbgv()       
- *
- *      Description: Debug command; set up 10 kernel variable for debug purpose 
- *
- *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
- *										 and PCMD_T data structures.
- *
- *      Return Value: int CMD_success
- *
- *      Comments:
- *
- * *****************************************************************/
-int cm_cmd_dbgv(LPTTS_HANDLE_T phTTS)
-{
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-
-	short i;
-
-	for (i=0;i<10;++i)
-	pKsd_t->dbgv[i] = pCmd_t->params[i];
-
-	return(CMD_success);
-}
-#endif // DBGV_ON
 
 #ifdef SW_VOLUME
 /* tek 08aug99

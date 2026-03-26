@@ -63,24 +63,8 @@
 #include "dectalkf.h"
 #include "cm_def.h"
 
-#ifdef ARM7
-#include "stdlib.h"
-#include "string.h"
-#endif
-
-#if (defined  __unix__) || (defined UNDER_CE) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 extern void FreeCMDThreadMemory(PCMD_T);
-#endif
-void FreeCMDThreadMemory(PCMD_T); // NAL warning removal
-
-/*
- * The following #ifdef must be before includes to defeat extern declarations.
- */
-
-#ifdef SEPARATE_PROCESSES
-struct share_data *kernel_share;
-#endif
 
 /* ******************************************************************
  *      Function Name: 
@@ -102,76 +86,13 @@ struct share_data *kernel_share;
  *      Comments:
  *
  * *****************************************************************/
-#ifdef WIN32_OLD
-int __stdcall cmd_main( LPTTS_HANDLE_T phTTS )  /* MVP was DWORD lparam */
-#endif
-
-#ifdef MSDOS
-struct TTS_HANDLE_TAG   hTTS;
-LPTTS_HANDLE_T  phTTS;
-CMD_T                   Cmd_t;
-INPUT_SEQ esc_seq;
-main(unsigned int data_seg, unsigned int stack_start)
-#endif
-
-//#ifdef ARM7
-#ifndef EPSON_ARM7
-CMD_T                   Cmd_t;
-#endif
-//INPUT_SEQ esc_seq;
-//extern int cm[];
 int cmd_main(LPTTS_HANDLE_T phTTS)
-//#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//OP_THREAD_ROUTINE( cmd_main, LPTTS_HANDLE_T phTTS )
-#endif
-
 {
 	PCMD_T pCmd_t = 0;
 	PKSD_T pKsd_t;
 
-#ifdef MSDOS
-	phTTS = &hTTS;
-	pCmd_t = &Cmd_t;
-	pCmd_t->cm = cm;
-        pCmd_t->esc_seq = &esc_seq;
-	phTTS->pKernelShareData = kernel_share;
-	phTTS->pCMDThreadData = pCmd_t;
-#endif
-	pKsd_t = phTTS->pKernelShareData;    
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    /* Initialize thread error field to no error */
-    //phTTS->uiThreadError = MMSYSERR_NOERROR;
-#endif
-
-#ifdef SEPARATE_PROCESSES
-	kernel_share = (struct share_data *)malloc(sizeof(struct share_data));
-#endif
+	pKsd_t = phTTS->pKernelShareData;
 	
-	/* Allocate a Thread specific instance data structure */
-#ifdef WIN32_OLD 
-	if((pCmd_t= (PCMD_T) malloc(sizeof(CMD_T))) == NULL)
-	{
-			return(MMSYSERR_NOMEM);
-	}        
-	/***************Thread specific structure initialization MVP ***************/
-	if((pCmd_t->cm = (short *)malloc(sizeof(int)*total_commands))== NULL)
-	{
-			return(MMSYSERR_NOMEM);
-    } 
-#ifdef ESCAPE_SEQ
-    if((pCmd_t->esc_seq = (INPUT_SEQ *)malloc(sizeof(INPUT_SEQ)))== NULL)
-	{
-			return(MMSYSERR_NOMEM);
-    } 
-#endif
-#endif
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	if((pCmd_t= (PCMD_T) calloc(1,sizeof(CMD_T))) == NULL)
             printf("Error\n");
 //	        phTTS->uiThreadError = MMSYSERR_NOMEM;
@@ -186,88 +107,11 @@ int cmd_main(LPTTS_HANDLE_T phTTS)
                                         printf("Error\n");
 //					phTTS->uiThreadError = MMSYSERR_NOMEM;
 #endif
-#endif
-#ifdef ARM7
-#ifdef EPSON_ARM7
-	pCmd_t=phTTS->pCMDThreadData;
-#else
-	pCmd_t = &Cmd_t; 
-#endif
-	memset(pCmd_t,0,sizeof(CMD_T));
-//	pCmd_t->cm = cm;
-//    pCmd_t->esc_seq = &esc_seq;
-#endif
-
-
-#ifdef WIN32_OLD
-	SetEvent(phTTS->hMallocSuccessEvent); /*MVP :Set the malloc success event after the last malloc */
-#endif
-	
-/* GL 04/21/1997  add this for OSF build */
-#ifdef __osf__
-    /* 
-	 * CP: Set the event, even if malloc eerror occurred. User
-     * will look at uiThreadError for actual error code.
-     */
-	OP_SetEvent(phTTS->hMallocSuccessEvent);
-        if (phTTS->uiThreadError != MMSYSERR_NOERROR)
-	{
-	    OP_ExitThread(phTTS->uiThreadError);
-	    OP_THREAD_RETURN;
-	}
-#endif
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    /* 
-	 * CP: Set the event, even if malloc eerror occurred. User
-     * will look at uiThreadError for actual error code.
-     */
-	//OP_SetEvent(phTTS->hMallocSuccessEvent);
-        //if (phTTS->uiThreadError != MMSYSERR_NOERROR)
-	//{
-	    //OP_ExitThread(&phTTS->uiThreadError);
-	 //   OP_THREAD_RETURN;
-	//}
-#endif
 
 	phTTS->pCMDThreadData = pCmd_t;       /* Associate thread specific instance data with corresponding speech object */
 		
 	cm_util_initialize(phTTS);      /* Initialization routine */
-	
-#ifdef MSDOS
-	create_process(cm_pars_loop,2,data_seg,stack_start,0);
-	
-	/* 
-	 *	2/18/94 eab to avoid unwind in a multiple phrase flush
-	 *	problems this needs to be a higher priority than 3 
-	 */
-	 	
-	return(1);
-#else
+
 	cm_pars_loop(phTTS);
         //cmd_loop(phTTS, '\0');
-#ifndef ARM7
-
-	// Free here all allocated memory
-//	FreeCMDThreadMemory(pCmd_t);
-	// Reset pCMDThreadData element of TTS_HANDLE_T to null
-//	phTTS->pCMDThreadData = NULL;	//
-//									 Reset CMD thread specific instance data 
-//									 with corresponding speech object 
-
-#endif
-/* GL 04/21/1997  add this for OSF build */
-#ifdef WIN32_OLD
-	return 0;
-#endif
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    //OP_ExitThread(MMSYSERR_NOERROR);
-	//OP_THREAD_RETURN;
-#endif
-
-#ifdef ARM7
-	return 0;
-#endif
-#endif
 }

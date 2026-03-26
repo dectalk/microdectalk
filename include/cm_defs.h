@@ -58,10 +58,6 @@
 #define PFUSA       0x1E    /* Used for phonemic code passing thru pipe */
 #endif
 
-#ifdef MSDOS
-#define NULL ((unsigned void *) 0)
-#endif
-
 #ifdef ACCESS32
 #define  MIN_SPEAKING_RATE   50			// Slowtalk for Kurtzweil
 #else
@@ -127,17 +123,6 @@
 /*
  * command error codes ...
  */
-#ifdef MSDOS
-#define CMD_success             0
-#define CMD_bad_string          1
-#define CMD_bad_value           2
-#define CMD_bad_command         3
-#define CMD_bad_param           4
-#define CMD_bad_phoneme         5
-#define CMD_flushing            6
-
-#else
-
 #define CMD_success                      0
 #define CMD_bad_string                   1
 #define CMD_bad_value                    2
@@ -150,8 +135,6 @@
 #define CMD_unsupported_wave_file_format 9
 #define CMD_unsupported_audio_format     10
 #define CMD_flushing                     11
-
-#endif
 
 #define NO_STRING_MATCH         0xffff
 

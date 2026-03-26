@@ -117,14 +117,9 @@
 
 #include		"dectalkf.h"
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-#include                "dbgwins.h"
-#endif 
 #include        "cm_def.h"
 #include        "pcport.h"
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern void flush_done(PKSD_T);
-#endif
 
 /******************************** Old Code ********************************************/
 #ifdef VOCAL
@@ -153,12 +148,7 @@ extern void flush_done(PKSD_T);
 				 * (merge 12/15) */
 /*#endif*/ /*DTEX*/
 
-#ifdef MSDOS
-extern LPTTS_HANDLE_T phTTS;
-void _far cm_pars_loop(void)
-#else
 void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
-#endif
 {
 	/*
 	int       i,j;                                     MVP Unreference variables
@@ -185,24 +175,10 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	pCmd_t->ParseChar =0;   /*MVP :Initialize here */ 
 	
     cm_util_init_type(pKsd_t);
-    
-#ifdef DTEX
-	OutputCharacter(XON);
-#endif /*DTEX*/
 
 	while (true)
 	{
-
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-		/* open debug window for window environement */
-		if ((windbg_flag == 0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
-		{
-			WINstart_thread();
-			windbg_flag = 1;
-		}
-#endif
 		/* display debug switch manual once */
-#ifndef ARM7_NOSWI
 		if (pKsd_t->debug_switch == 0x8fff)
 		{
 			printf("CMD debug switch description:\n");
@@ -216,7 +192,6 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 			/* reset to 0 again */
 			pKsd_t->debug_switch = 0;
 		}
-#endif
 
 /* GL 11/07/1996, fix the DTEX [:index reply xx] DTPC [:say letter] bug */
 /*#ifdef DTEX*/ /* see comment above at declaration of bracket_space.. */
@@ -236,13 +211,8 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 		/* debug switch */
 		if (DT_DBG(CMD_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt suport*/
 			fprintf(pKsd_t->dbglog,"\nCMD input:%c(%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
-			printf("\nCMD input:%c(%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
 		}
 
 #ifdef DEBUG_OLDPARS
@@ -500,9 +470,6 @@ static void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c,
 	if(char_types[c] & (MARK_space | MARK_clause))
 	{
 	/* GL 03/18/1997 BATS#301 to allow DECtalk software build the VOCAL mode */
-#ifdef MSDOS
-		block(NULL_FP); /* run a sched pass on spaces. */
-#endif
 	}
 	switch(c)       
 	{
@@ -1200,11 +1167,6 @@ void cm_pars_new_state(PCMD_T pCmd_t, int state)
 
 #else  /* Use new DTParser */
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD) && defined _DEBUG_OLD
-extern int Thread_Alive;
-extern int in_winmain;
-#endif
-
 /*set debug printing on */
 /*#define DEBUG_OLDPARS 1   */
 /*#define DEBUG_OLDRULS     */
@@ -1225,22 +1187,12 @@ extern int in_winmain;
  *      Comments:
  *
  */
-#ifdef MSDOS
-extern LPTTS_HANDLE_T phTTS;
-void _far cm_pars_loop(void)
-#else
 void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
-#endif
 {
 	PCMD_T pCmd_t = 0;
 	PKSD_T pKsd_t = 0; 
-#ifndef ARM7
 	short   ws_count=0;             /* consecutive count for white space */
 	unsigned short temp;
-#endif
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-	short windbg_flag=0;
-#endif
 
 	/* MVP : Add a variable for kernel share data and initialize it */
 	pCmd_t = phTTS->pCMDThreadData;
@@ -1249,10 +1201,6 @@ void _far cm_pars_loop(LPTTS_HANDLE_T phTTS)
 	pCmd_t->ParseChar =0;   /*MVP :Initialize here */ 
 	
 	cm_util_init_type(pKsd_t);
-	
-#ifdef DTEX
-	OutputCharacter(XON);
-#endif /*DTEX*/
 
 //#ifdef ARM7
 }
@@ -1267,22 +1215,12 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
         printf("cmd_loop input: %c\n", input);
 #endif
 
-#ifndef ARM7
 //	while (TRUE)
-#endif
 	{
 #ifdef PARSER_HACK_FOR_OLD_SONGS
 		int old_state;
 #endif
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-		/* open debug window for window environement */
-		if ((Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
-		{
-			WINstart_thread();
-		}
-#endif
-#ifndef ARM7_NOSWI
 		/* display debug switch manual once */
 		if (pKsd_t->debug_switch == 0x8fff)
 		{
@@ -1297,7 +1235,6 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 			/* reset to 0 again */
 			pKsd_t->debug_switch = 0;
 		}
-#endif
 		pCmd_t->last_char = pCmd_t->ParseChar;
 		if (pCmd_t->insertflag == 1)  /* Time to process internally stored command string */
 		{
@@ -1305,29 +1242,14 @@ int cmd_loop(LPTTS_HANDLE_T phTTS, unsigned char input) {
 		}
 		else
 		{
-#ifdef ARM7
-      if (input == 0xff ||
-	  input == PAR_PHONES_ON_D ||
-	  input == PAR_PHONES_OFF_D ||
-	  input == PAR_INDEX_DUMMY_CHAR)
-		return 0;
-			pCmd_t->ParseChar = input;
-			//cm_pars_getseq(phTTS);
-#else
 			pCmd_t->ParseChar = cm_pars_getseq(phTTS, input);
-#endif
 		}
 		
 		/* debug switch */
 	  	if (DT_DBG(CMD_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt suport*/
 			fprintf((FILE *)pKsd_t->dbglog,"\nCMD input:%c(%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
-			printf("\nCMD input:%c(%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
 		}
 
 		/* try to flush data for TAB, GL. 9/13/1996     */
@@ -1585,9 +1507,6 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 	/* ...tek try to get rid of the dreaded pause.. */
 	if(char_types[c] & (MARK_space | MARK_clause))
 	{
-#ifdef MSDOS
-		block(NULL_FP); /* run a sched pass on spaces. */
-#endif
 	}
 
 #ifdef DEBUG_OLDPARS
@@ -1631,9 +1550,6 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 					break;
 				}
 				cm_util_type_out(phTTS, c);
-#ifdef EPSON_ARM7
-				phTTS->TTP_return=1;
-#endif
 				break;
 				
 				/* GL 12/17/1998 BATS#846 say_fletter to skip control character */
@@ -1646,9 +1562,6 @@ void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
 				if (c >= 32) 
 				{
 					cm_util_type_out(phTTS, c);
-#ifdef EPSON_ARM7
-					phTTS->TTP_return=1;
-#endif
 				}
 				break;
 
@@ -1754,7 +1667,6 @@ int cm_pars_icommand(PCMD_T pCmd_t)
   return(pCmd_t->setv[pCmd_t->cmd_number].cmd[pCmd_t->cmd_count-1]);
 }
 
-#ifndef ARM7
 /*
  *      Function Name: cm_pars_getseq() 
  *
@@ -1775,17 +1687,13 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
   register int    c;
   register int    ac=0;
 
-#ifndef MSDOS
   //unsigned char inchar;
-#endif
   /* DT_PIPE_T pipe_value; Commented out as unreferenced var. SIK 3/18/96 */
   PCMD_T pCmd_t = phTTS->pCMDThreadData;
   PKSD_T pKsd_t = phTTS->pKernelShareData;
 
   while(TRUE)
     {
-      /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifdef CUP28PROJECT 
 	  //special temp hack for mit to read kjhkj,kjlkj as two phrases--no comma pronounced 
       if(pCmd_t->lastchar == ',')
@@ -1819,17 +1727,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 	  c == PAR_PHONES_OFF_D ||
 	  c == PAR_INDEX_DUMMY_CHAR)
 	continue;
-#endif
       
-#ifdef MSDOS
-      ac = getc() & 0xff;
-      /* GL 12/04/1996  allow to skip code page translation */ 
-      if (pCmd_t->skip_mode != SKIP_cpg) 
-	c = pKsd_t->code_page[ac];
-      else
-	c = ac;
-#endif
-
 		 /* 
 		   GL 10/22/1996,
 		   force the 0xb to perform the same action exactly as [:sync]
@@ -1892,59 +1790,20 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 					 * compatibility .. Hm, DTEX may still use
 					 * this path.. tek 1/3/95 
 					 */
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 					// read_pipe( pKsd_t->cmd_pipe, &inchar, 1 );
 					c = (int)inchar;
 					cm_util_type_out(phTTS, c);
-#endif
-
-#ifdef MSDOS
-					ac = getc() & 0xff;
-					/* GL 12/04/1996  allow to skip code page translation */ 
-					if (pCmd_t->skip_mode != SKIP_cpg) 
-						c = pKsd_t->code_page[ac];
-					else
-						c = ac;
-					cm_util_type_out(phTTS, c);
-#endif  
-#ifdef MSDOS
-#ifdef DTEX
-					block(NULL_FP); /* that's enough */
-#else /* not dtex*/
-					sleep(0); /* let it flow through. */
-#endif /*dtex*/
-#endif                
 				}
 				else if(ac != CMD_sync_char)
 					continue;
 			}
-#ifdef MSDOS            
-			flush_done();
-#else
 			flush_done(pKsd_t);
-#endif
-#ifdef MSDOS            
-			while(pKsd_t->spc_flush_reset != 0)
-			{
-				sleep(0);
-			}
-#endif
 			cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
-#ifdef MSDOS            
-			status_clear_update(STAT_flushing);
-#endif
 			/* ...tek 30may95 get rid of this FLUSH_DONE  */
 			/* status_set_update(FLUSH_DONE); xxx eab needed to full interlock flush */
 #ifdef ESCAPE_SEQ
 			pCmd_t->esc_seq->type = 0;    
 #endif
-#ifdef MSDOS
-#ifdef DTEX
-			/* this probably only makes sense on a serial line.. */
-			OutputCharacter(XON);                                             
-#endif /*dtex*/ 
-#endif /* MSDOS */
 			
 			continue;
 		}
@@ -1977,11 +1836,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 		{
 			if(pKsd_t->logflag & LOG_TEXT)
 			{   
-#ifdef MSDOS
-				OutputCharacter((unsigned char)ac);
-#else
 				OutputCharacter(phTTS, (unsigned char)(c & 0xff));
-#endif
 				
 			}
 			return (c);
@@ -1996,11 +1851,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 			pCmd_t->esc_seq->type = 0;
 #endif
 			if(pKsd_t->logflag & LOG_TEXT)
-#ifdef MSDOS
-				OutputCharacter((unsigned char)ac);
-#else
 				OutputCharacter(phTTS, (unsigned char)(c & 0xff));
-#endif
 			return (c);
 		}
 /*
@@ -2010,11 +1861,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 		if (c<0x20 || c==DEL || c==RDEL)
 		{
 			if(pKsd_t->logflag & LOG_TEXT)
-#ifdef MSDOS
-				OutputCharacter((unsigned char)ac);
-#else
 				OutputCharacter(phTTS, (unsigned char)(c & 0xff));
-#endif
 			return (c);
 		}
 
@@ -2121,11 +1968,7 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 				pKsd_t->eight_bit = FALSE;
 				pCmd_t->esc_seq->type = 0;
 				if(pKsd_t->logflag & LOG_TEXT)
-#ifdef MSDOS
-					OutputCharacter((unsigned char)ac);
-#else
 					OutputCharacter(phTTS, (unsigned char)(c & 0xff));
-#endif
 				return (c);
 			}
 			pCmd_t->esc_seq->type   = c;          /* Begin new sequence   */
@@ -2148,41 +1991,10 @@ unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar) {
 		return (c);
 	}       /* End while(TRUE) */
 }
-#endif
 
-#ifdef MSDOS 
-/*
- *      Function Name: OutputCharacter()        
- *
- *      Description:
- *
- *      Arguments: unsigned char c
- *
- *      Return Value: int
- *
- *      Comments:
- *
- */
-int OutputCharacter( unsigned char c )
-{
-  putc(c);
-  return 0;
-}
-
-#else
-
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <mmsystem.h>
-#include "tts.h"
-#endif
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /*#include "dtmmedefs.h"*/
 //#include "opthread.h"
 #include "tts.h"
-#endif
 
 /*LPTTS_HANDLE_T TextToSpeechGetHandle(void);*/                 /* MVP MI */
 
@@ -2202,20 +2014,14 @@ int OutputCharacter( unsigned char c )
  */
 void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
 {
-#ifndef ARM7
   /*
     LPTTS_HANDLE_T phTTS;                                   MVP MI
     phTTS = TextToSpeechGetHandle();
   */
-#ifdef WIN32_OLD
-  EnterCriticalSection( phTTS->pcsLogFile );
-#endif
   
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /* GL 04/21/1997  add this for OSF build */
   /* ToggleLogfileMutex( MUTEX_RESERVE ); */
   //OP_LockMutex( phTTS->pcsLogFile );
-#endif
   
   if ( fprintf( phTTS->pLogFile, "%c",c ) < 0 )
   {
@@ -2224,17 +2030,9 @@ void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c )
 	//			  0L );
   }
 
-#ifdef WIN32_OLD
-  LeaveCriticalSection( phTTS->pcsLogFile );
-#endif
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
   /* GL 04/21/1997  change this for OSF build */
   /* ToggleLogfileMutex( MUTEX_RELEASE );*/
   //OP_UnlockMutex( phTTS->pcsLogFile );
-#endif
 
 /*  return;*/
-#endif
 }
-#endif /* #else !MSDOS */

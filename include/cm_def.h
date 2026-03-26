@@ -45,20 +45,10 @@
 #define CMDEFH 1
 
 #include "dectalk.h"
- 
-#ifdef WIN32_OLD
-#include <windows.h>
-#include <stdio.h>
-#include <string.h>
-#include "tts.h"
-#endif
 
-/* GL 04/21/1997  add this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdio.h>
 #include <string.h>
 #include "tts.h"
-#endif
 
 #include "l_all_ph.h"
 #include "defs.h"
@@ -78,14 +68,8 @@
 #define NEW_INDEXING
 #endif
 
-/* GL 04/21/1997  add this for OSF build */
 #ifdef PRINTFDEBUG_OLD
-#ifdef WIN32_OLD
-#define printf WINprintf
-#endif
-#if defined (MSDOS) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define WINprintf printf
-#endif
 #endif
 
 #endif

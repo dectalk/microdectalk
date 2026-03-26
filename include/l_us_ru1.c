@@ -717,7 +717,7 @@ GRAPH *ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH *gp1, int def_lang, int se
 		{
 			goto fail;
 		}
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 		rline = lswtab[rulep+4];		/* Line number of rule.	*/
 		++lswtab[rulep+5];				/* Usage count of rule.	*/
 #endif

@@ -147,11 +147,7 @@ typedef struct CMD_TAG
 	int				international_flag;
 	int				international_temp;
 	int				international_phon_lang;
-#ifdef ARM7
- 	short			cm[60]; // This has to updated when a new command is added
-#else
 	short             *cm;
-#endif
 	int             total_matches;              /* currently matching buffers */
 	int             cmd_index;                  /* array index of active command */
 	unsigned int    last_char;                  /* last accepted character */
@@ -193,10 +189,6 @@ typedef struct CMD_TAG
 							   					 * Don't confuse with 'c' used in 
 							   					 * Function arguments (stack variable)
 							   					 */ 
-#ifdef MSDOS
-	unsigned int    tone_wait;
-	unsigned int    last_wait;
-#endif
 												 
 	unsigned long   dtmf_start_clock;
 	unsigned long   dtmf_stop_clock;                                                                                          
@@ -211,21 +203,9 @@ typedef struct CMD_TAG
 	unsigned char	output_buf[PAR_MAX_OUTPUT_ARRAY];
 	unsigned char	new_input[PAR_MAX_OUTPUT_ARRAY];
 	unsigned char 	dict_hit_buf[PAR_MAX_INPUT_ARRAY];
-#ifdef ARM7
-#ifdef ACCESS_SOLUTIONS
 	index_data_t	input_indexes[PAR_MAX_INPUT_ARRAY];
 	index_data_t	new_input_indexes[PAR_MAX_INPUT_ARRAY];
 	index_data_t	output_indexes[PAR_MAX_OUTPUT_ARRAY];
-#else
-	index_data_t	input_indexes[1];
-	index_data_t	new_input_indexes[1];
-	index_data_t	output_indexes[1];
-#endif
-#else
-	index_data_t	input_indexes[PAR_MAX_INPUT_ARRAY];
-	index_data_t	new_input_indexes[PAR_MAX_INPUT_ARRAY];
-	index_data_t	output_indexes[PAR_MAX_OUTPUT_ARRAY];
-#endif
 #ifdef NEW_BINARY_PARSER
 	match_arrays_t 		match_array; /* this is 300 bytes, maybe it should be passed instead of allocated */
 #endif
@@ -268,23 +248,8 @@ typedef struct CMD_TAG
 typedef CMD_T *PCMD_T;
 typedef CMD_T **PPCMD_T ;
 
-#ifdef MSDOS 
-	/*
-	 * TTS_HANDLE_TAG struct contains handles to the thread-specific data 
-	 * for kernel share memory (pKernelShareData) and the struct of global variables
-	 * (pCMDThreadData).
-	 */
-	typedef struct TTS_HANDLE_TAG
-	{
-		PKSD_T pKernelShareData;
-		PCMD_T pCMDThreadData;
-	} *LPTTS_HANDLE_T;
-#endif  
-
 extern const int      total_commands;                  /* number of commands in table */
-#ifndef ARM7
 extern short	cm[];
-#endif
 /*
  *  character types ...
  */

@@ -136,9 +136,6 @@
 #include "dectalkf.h"
 
 #include "cm_def.h"
-#ifdef ARM7
-#include "string.h"
-#endif
 
 /* 12/11/1996 GL, use pKsd_t->lang_curr for all environment */
 #define PAR_LANG_CODE pKsd_t->lang_curr
@@ -147,10 +144,8 @@ extern const unsigned short parser_char_types[];
 extern const unsigned char *par_illegal_cluster[];
 extern const unsigned char par_lower[];
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 // MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
 extern int _far par_dict_lookup(LPTTS_HANDLE_T, char *, int);
-#endif
 
 void par_copy_index_list_cm_text(pindex_data_t dest_index,
 								  int		    dest_pos,
@@ -176,14 +171,6 @@ int par_is_index_set_cm_text(pindex_data_t indexes,
 	}
 	return(0);
 }
-
-#ifdef EPSON_ARM7
-void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
-{
-	phTTS->main_lts_loop(phTTS,input);
-}
-
-#endif
 
 
 /*
@@ -282,9 +269,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 #ifdef SIMPLE_UMLAUT_CONVERSIONS
 	int relook;
 #endif
-#ifndef EPSON_ARM7
 	unsigned int k;	// NAL warning removal
-#endif
 	U32 temp_mode=0;
 	U16 parser_flag;
 
@@ -516,8 +501,6 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	}
 	else
 	{
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		/* GL 09/30/1997 BATS# 475 redesign the header detection code */
 		unsigned char header1[]={"From"};
 		unsigned char header2[]={"Return-Path:"};
@@ -536,15 +519,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 
 		/* catch the empty line as 0xd 0xa or 0xa for OSF */
 		/* this empty line will mark the end of header section */
-#if defined (WIN32_OLD) || defined (MSDOS)
-		if ((pCmd_t->email_header == 1) &&
-			// Add fix for email mode BATS#985
-      	   ((header_buff[0] == 0xd && header_buff[1] == 0xa) || (header_buff[0] == 0xa)))
-#endif
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		if ((pCmd_t->email_header == 1) && (header_buff[0] == 0xa))
-#endif
 		{   
       		/* leave the email header section */
       	 	pCmd_t->email_header = 0;
@@ -560,18 +535,10 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
       		/* enter the email header section */
       	 	pCmd_t->email_header = 1;
       	}
-#endif
 		/* GL 02/08/1997,  catch record line by line if in email mode */
       	/* GL 02/11/1997   fix the hight-light mode by catching 0xd, 0x20 as new-line*/
-#if defined (WIN32_OLD) || defined (MSDOS)
-		if ((pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa ||
-		     pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0x20)
-		&& (pCmd_t->clausebuf[pCmd_t->input_counter-2] == 0xd))
-#endif
 /* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		if (pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa)
-#endif
 		{
 			pCmd_t->done=1;
 		}
@@ -596,10 +563,6 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	}
 	if(pCmd_t->done)
 	{
-#ifdef EPSON_ARM7
-		if (pCmd_t->done==1)
-			phTTS->TTP_return=1;
-#endif
 		/* timing here */
 #ifdef CMD_DEBUG_OLD
 		if (DT_DBG(CMD_DBG,0x100))
@@ -634,8 +597,6 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		}
 		else
 		{
-		  /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 		  if ((pCmd_t->skip_mode != SKIP_email) &&
 		      ((pKsd_t->modeflag & MODE_EMAIL) != 0))
 		    {
@@ -651,24 +612,16 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 				/* debug switch */
 		      if (DT_DBG(CMD_DBG,0x040))
 			{
-#ifndef ARM7_NOSWI
 			  printf("\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-#ifndef MSDOS
 			  if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 			    fprintf((FILE *)pKsd_t->dbglog,"\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-#endif
 			  
 			  printf("\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-#endif
 			  for (k=0; k < strlen(pCmd_t->clausebuf); k++)
 			    {
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 					if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 						fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-#endif
 					printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-#endif
 			  }
 				}
 				/* process email mode */
@@ -695,24 +648,16 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 				/* debug switch */
 				if (DT_DBG(CMD_DBG,0x080))
 				{   
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\nEmail output:");
-#endif
 
 				printf("\nEmail output:");
-#endif
 
 					for (k=0; k < strlen(pCmd_t->output_buf); k++)
 					{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 					if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 						fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-#endif
 					printf("\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-#endif
 					}				
 				}
 			
@@ -731,13 +676,10 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 				/* reinit the new_input buffer */
 				memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 				memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 				memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
 #endif
-#endif
         	} /* if skip_mode != SKIP_email */
-#endif
 			if (pCmd_t->skip_mode != SKIP_punct)
 			{
 				/* cm_text_preproc(pCmd_t); */             
@@ -837,38 +779,25 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		
 
 				temp_mode = 0x00000001 << pCmd_t->punct_mode;
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 
 				if ((pKsd_t->modeflag & MODE_EMAIL) != 0)
 				{
 			   		temp_mode = temp_mode | 0x20;
 			   		if (pCmd_t->email_header == 1) temp_mode = temp_mode | 0x10;
 				}
-#endif
 				/* debug switch */
 				if (DT_DBG(CMD_DBG,0x002))
 				{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
-#ifndef ARM7
 					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
 						fprintf((FILE *)pKsd_t->dbglog,"\nInput to Punct:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-#endif		
-#endif			
 					printf("\nInput to Punct:(%d)(%x)",pCmd_t->input_counter,temp_mode);
 					for (k=0; k < strlen(pCmd_t->clausebuf); k++)
 					printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
 					{
-#ifndef MSDOS
-#ifndef ARM7
 						if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
 							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-#endif
-#endif
 						printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
 					}
-#endif
 				}
 				/* process punctuation mode */
 #ifdef NEW_BINARY_PARSER
@@ -894,30 +823,22 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 				/* debug switch */
 				if (DT_DBG(CMD_DBG,0x004))
 				{   
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
 						fprintf((FILE *)pKsd_t->dbglog,"\nPunct output:");
-#endif
 					printf("\nPunct output:");
 					for (k=0; k < strlen(pCmd_t->output_buf); k++)
 					{
-#ifndef MSDOS
 					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
 						fprintf(pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-#endif					
 					printf("\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
 					}			
-#endif
 				}
 			
 				/* put the output back into the input */
 				strcpy(pCmd_t->clausebuf,pCmd_t->output_buf);
 #ifdef NEW_INDEXING
 				/* put the indexes from the output into the input */
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 				par_copy_index_list_cm_text(pCmd_t->input_indexes,0,pCmd_t->output_indexes,0,PAR_MAX_INPUT_ARRAY);
-#endif
 #endif
         	} /* if skip_mode != SKIP_punct */
 			if (pCmd_t->skip_mode != SKIP_rule)
@@ -931,10 +852,8 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 				/* reinit the new_input buffer */
 				memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 				memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 				memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
 #endif
 				/* checking cmd_flushing */
 				if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
@@ -1023,19 +942,13 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 #ifdef CMD_DEBUG_OLD
 		if (DT_DBG(CMD_DBG,0x100))
 		{
-#ifndef ARM7_NOSWI
 			ulEndTime=timeGetTime();
-#ifndef UNDER_CE  //mfg 01/08/98 WINprintf not supported under Windows CE
 			WINprintf("\nget_clause_parse at %ld. ms %s\n", ulEndTime-ulStartTime,pCmd_t->output_buf);
-#endif
 
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 				fprintf((FILE *)pKsd_t->dbglog,"\nget_clause_parse at %ld. ms %s\n", ulEndTime-ulStartTime,pCmd_t->output_buf);
-#endif
-#endif
 		}
-#endif //CMD_DEBUG_OLD
+#endif
 
 		mode = PAR_OUTPUT_CHARS;
 		
@@ -1044,13 +957,9 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		/* debug switch */
 		if (DT_DBG(CMD_DBG,0x008))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 				fprintf(pKsd_t->dbglog,"\nNormal output:");
-#endif
 			printf("\nNormal output:");
-#endif
 		}
 		/*
 		   GL 09/06/1996, always send a space first, make sure we have space
@@ -1086,13 +995,9 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 					/* debug switch */
 					if (DT_DBG(CMD_DBG,0x008))
 					{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-#endif						
 						printf("\n%c(%x)",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-#endif
 					}
 #ifdef DEBUG_OLD_PARSER
 					putc(pCmd_t->output_buf[i]);
@@ -1110,13 +1015,9 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 					/* debug switch */
 					if (DT_DBG(CMD_DBG,0x008))
 					{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 							fprintf((FILE *)pKsd_t->dbglog,"\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-#endif
 						printf("\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-#endif
 					}
 #ifdef DEBUG_OLD_PARSER
 						putc(pCmd_t->output_buf[i]);
@@ -1125,31 +1026,23 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 					lts_loop(phTTS,&pipe_value);
 				}
 			}
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 			if (par_is_index_set_cm_text(pCmd_t->output_indexes,i))
 			  {
 			    /* debug switch */
 			    if (DT_DBG(CMD_DBG,0x008))
 			      {
-#ifndef ARM7_NOSWI
 					// * 059	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
 					if (i>0 && pCmd_t->output_buf[i-1] != ' ' && 
 						(i+2)<pCmd_t->ret_value.output_offset && 
 						!(char_types[pCmd_t->output_buf[i+1]] & MARK_clause) && 
 						!(char_types[pCmd_t->output_buf[i+2]] & MARK_space))
 					{
-#ifndef MSDOS
 						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",' ',' ');
-#endif						
 						printf("\n%c(%x)",' ',' ');
 					}
-#ifndef MSDOS
 				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 				  fprintf(pKsd_t->dbglog,"\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-#endif
-				printf("\n*%c[%x]",pCmd_t->output_indexes[i].index[1],pCmd_t->output_indexes[i].index[1]);
-#endif // ARM7_NOSWI
 			      }
 				// MGS 10/14/1999 BATS#900 fixed indexing with spanish phone nubmer rules
 				if (i > 0 && pCmd_t->output_buf[i-1] !=' ' && !par_is_index_set_cm_text(pCmd_t->output_indexes,i-1))
@@ -1165,7 +1058,6 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 
 				lts_loop(phTTS,pCmd_t->output_indexes[i].index);
 			}
-#endif // ARM7
 		}                                               
 #ifdef DEBUG_OLD_PARSER
 		printf(".\n output offset=%d\n",pCmd_t->ret_value.output_offset);
@@ -1183,13 +1075,9 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			/* debug switch */
 			if (DT_DBG(CMD_DBG,0x008))
 			{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\n%c(*%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
 				printf("\n%c(*%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-#endif
 			}
 			pipe_value = (PFASCII<<PSFONT)+pCmd_t->ParseChar;
 			lts_loop(phTTS,&pipe_value);
@@ -1197,13 +1085,9 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		/* debug switch */
 		if (DT_DBG(CMD_DBG,0x008))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\n");
-#endif
 			printf("\n");
-#endif
 		}
 			
 		/* checking cmd_flushing */
@@ -1219,10 +1103,8 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			{
 				pCmd_t->clausebuf[j]=pCmd_t->clausebuf[i];
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 				/* move the indexes too */
 				par_copy_index_cm_text(pCmd_t->input_indexes,j,pCmd_t->input_indexes,i);
-#endif
 #endif
 			}
 			pCmd_t->roll_text=1;
@@ -1231,9 +1113,7 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			pCmd_t->prevword-=(pCmd_t->ret_value.input_offset+pCmd_t->ret_value.input_pos); 
 			memset(pCmd_t->clausebuf+j,0,PAR_MAX_INPUT_ARRAY-j-1);
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 			memset(&(pCmd_t->input_indexes[j].index[0]),0,(PAR_MAX_INPUT_ARRAY-j-1)*sizeof(index_data_t));
-#endif
 #endif
 		}
 		else
@@ -1245,10 +1125,8 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 			pCmd_t->clausebuf[0]=' ';
             pCmd_t->prev_word_index=0;
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 			memset(pCmd_t->input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 			memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-#endif
 #endif
 			pCmd_t->prevword=&(pCmd_t->clausebuf[0]);
 		}
@@ -1262,10 +1140,8 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		memset(pCmd_t->output_buf,0,PAR_MAX_OUTPUT_ARRAY);
 		memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
 #ifdef NEW_INDEXING
-#if !defined ARM7 || (defined ARM7 && defined ACCESS_SOLUTIONS)
 		memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
 		memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
 #endif
 		pCmd_t->done=0;
 

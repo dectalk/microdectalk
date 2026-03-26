@@ -326,15 +326,6 @@ const unsigned char *index_options[] = {
 	"reply",
 	"query",
 	"pause",
-#ifdef WIN32_OLD	//tek 12nov97 bats404 new index types
-	"bookmark",
-	"wordpos",
-	"start",
-	"stop",
-	"sentence",
-	"volume",
-	"noise",
-#endif //WIN32_OLD
 	0
 };
 
@@ -396,9 +387,6 @@ const unsigned char *define_options[] = {
 const struct dtpc_command command_table[] = {
 	{"rate","d",1,DCS_RATE,cm_cmd_rate},
 	{"latin","d",1,DCS_LATIN,cm_cmd_latin},
-#ifdef EPSON_ARM7
-	{"name","d",1,DCS_NAME,cm_cmd_name},
-#else
 	{"name","a",1,DCS_NAME,cm_cmd_name},
     {"np","",0,DCS_NAME_PAUL,cm_cmd_name},
     {"nb","",0,DCS_NAME_BETTY,cm_cmd_name},
@@ -413,28 +401,14 @@ const struct dtpc_command command_table[] = {
     {"nr","",0,DCS_NAME_RITA,cm_cmd_name},
     {"nw","",0,DCS_NAME_WILLY,cm_cmd_name},
     {"nv","",0,DCS_NAME_VAL,cm_cmd_name},
-#endif
 	{"comma","d",1,DCS_COMMA,cm_cmd_comma},
 	{"cp","d",1,DCS_COMMA,cm_cmd_comma},
 	{"period","d",1,DCS_PERIOD,cm_cmd_period},
 	{"pp","d",1,DCS_PERIOD,cm_cmd_period},
 	{"volume","add",3,DCS_VOLUME_SET,cm_cmd_volume},
-#ifdef MSDOS
-#ifdef SW_VOLUME //eab 10/6/99 added the lockheed martin tone volume
-	{NULL_COMMAND,"",0,DCS_VOLUME_TONE,cm_cmd_volume},
-#endif
-#endif // MSDOS
 
 	{"vs","d",1,0,cm_cmd_vs},
-#ifdef MSDOS
-    {NULL_COMMAND,"",0,DCS_VOLUME_UP,cm_cmd_volume},
-    {NULL_COMMAND,"",0,DCS_VOLUME_DOWN,cm_cmd_volume},
-#endif
 	{"index","add",2,DCS_INDEX,cm_cmd_mark}, // tek bats404 add another parameter
-#ifdef MSDOS
-    {NULL_COMMAND,"",0,DCS_INDEX_REPLY,cm_cmd_mark},
-    {NULL_COMMAND,"",0,DCS_INDEX_QUERY,cm_cmd_mark},
-#endif
 	{"error","a",1,DCS_ERROR,cm_cmd_error},
 	{"phoneme","aaa",3,DCS_PHONEME,cm_cmd_phoneme},
 	{"log","aa",2,DCS_LOG,cm_cmd_log},
@@ -443,34 +417,11 @@ const struct dtpc_command command_table[] = {
 	{"punctuation","a",1,DCS_PUNCT,cm_cmd_punct},
 	{"skip","a",1,DCS_SKIP,cm_cmd_skip},
 	{"pause","d",1,DCS_PAUSE,cm_cmd_pause},
-#ifndef MSDOS
-#ifndef ARM7
-//	{"play","a",1,0,cm_cmd_play},
-#endif
-#endif // MSDOS
 	{"resume","",0,DCS_RESUME,cm_cmd_resume},
 	{"sync","",0,DCS_SYNC,cm_cmd_sync},
-#ifdef MSDOS
-	{"flush","ad",2,DCS_FLUSH,cm_cmd_flush},
-	{"enable","",1,DCS_ENABLE,cm_cmd_enable},
-#ifdef SW_VOLUME //eab 10/6/99 added the lockheed martin tone volume
-	{"mtone","dddd",4,0,cm_cmd_mtone},
-#endif
-#endif // MSDOS
 	{"dial","a",1,DCS_DIAL,cm_cmd_dial},
 	{"tone","dd",1,DCS_TONE,cm_cmd_tone},
-#ifdef MSDOS
-	{"timeout","d",1,DCS_TIMEOUT,cm_cmd_timeout},
-#endif
 	{"pronounce","aa",2,DCS_PRONOUNCE,cm_cmd_pronounce},
-#ifdef MSDOS
-        {"digitized","",0,DCS_DIGITIZED,cm_cmd_digitized},
-	{"language","a",1,DCS_LANGUAGE,cm_cmd_language},
-	{"remove","",1,DCS_REMOVE,cm_cmd_remove},
-	/*   Not used anymore - KM 4/29/94     
-	 * {"type","da",2,DCS_TYPE,cm_cmd_type}, 
-	 */
-#endif // MSDOS
 	{"pitch","d",1,DCS_STRESS,cm_cmd_stress},
 	{"define_voice","ad*",2,DCS_DEFINE,cm_cmd_define},
 	{"dv","ad*",2,DCS_DEFINE,cm_cmd_define},
@@ -485,22 +436,8 @@ const struct dtpc_command command_table[] = {
 	{"gender","a",1,DCS_GENDER,cm_cmd_gender},
 
 	{"preamble","d",1,0,cm_cmd_preamble},
-#ifdef DBGV_ON
-	{"dbgv","dddddddddd",1,DCS_DBGV,cm_cmd_dbgv},
-#endif
         {"version","a",1,0,cm_cmd_version},
         {"spf","d",1,0,cm_cmd_samples_per_frame},
-
-#ifdef MSDOS
-	{"clk_rate","d",1,DCS_CPU_RATE,cm_cmd_cpu_rate},
-	{"code_page","d",1,DCS_CODE_PAGE,cm_cmd_code_page},
-	{"plang","d",1,0,cm_cmd_plang},
-        {"break","a",1,DCS_BREAK,cm_cmd_break}
-#ifdef DTEX
-	,{"power","ad",2,0,cm_cmd_power},
-        {"tsr","a",1,0,cm_cmd_tsr}
-#endif /* DTEX */
-#endif // MSDOS
 };
 
 #define TOTAL_COMMANDS  (sizeof(command_table)/sizeof(struct dtpc_command))
