@@ -21,9 +21,6 @@
 */
 
 #include "dectalkf.h"
-#ifdef ARM7
-#pragma arm section code="VTM3CODE", rwdata="VTM3RWDATA", rodata="VTM3RODATA", zidata="VTM3DATA"
-#endif
 
 /* removed leading spaces */
 
