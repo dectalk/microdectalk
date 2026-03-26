@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Get latest commit hash
-        run: LATEST_COMMIT_HASH=$(git rev-parse --short HEAD)
+        run: echo "LATEST_COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Set up Java 21
         uses: actions/setup-java@v5
         with:
@@ -42,5 +42,5 @@ jobs:
           cp $(find ./build/libs -maxdepth 1 -type f -name "*.jar") ../../release/
       - uses: actions/upload-artifact@v6
         with:
-          name: java-test
+          name: libdtc-java
           path: ./release/
