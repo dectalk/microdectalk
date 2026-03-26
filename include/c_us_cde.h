@@ -169,7 +169,6 @@ const unsigned char *skip_options[] = {
  *  Option parameters for volume command.
  */
 
-#ifndef MSDOS
 /*
  *  change the volume 
  */
@@ -188,20 +187,6 @@ const unsigned char *volume_options[] = {
 	"att",
 	0
 };
-
-#else
-
-const unsigned char *volume_options[] = {
-	"set",
-	"up",
-	"down",
-#ifdef SW_VOLUME /* eab 10/9 99 added the "tone" option */
-	"tone",
-#endif /* SW_VOLUME */
-
-	0
-};
-#endif // MSDOS
 
 /*  
  *  Used in cm_cmd_language()
@@ -225,22 +210,6 @@ const unsigned char *lang_options[] = {
 	0
 };
 
-#ifdef DTEX
-/*  
- * Used in cm_cmd_power()
- * things related to the battery and external power..
- */
-const unsigned char *power_options[] = {
-	"speak",	// say the power status.
-	"interval",	// interval to repeat batt-low beeps (0=don't beep)
-	"status",	// send back the power status.
-	"sleep",	// time to wait before sleeping.. 
-	"check",	// beep if batt low.
-	"lspeak",	// say the power status in loader.c .
-	0
-	};
-#endif /* DTEX */
-
 /* 
  * Used in cm_cmd_version()
  * version stuff
@@ -250,18 +219,6 @@ const unsigned char *version_options[] = {
 	"status",
 	0
 	};
-                                 
-#ifdef DTEX
-/*  
- * Used in cm_cmd_tsr()
- * [:tsr  stuff
- */
-const unsigned char *tsr_options[] = {
-	"on",
-	"off",
-	0
-	};
-#endif /* DTEX */
 
 /* Used in cm_cmd_mode() */
 const unsigned char *mode_options[] = {
@@ -297,7 +254,6 @@ const unsigned char *pronounce_options[] = {
  *  Used in cm_cmd_name()
  *  set the speaking voice ...
  */
-#ifndef EPSON_ARM7
 const unsigned char *voice_names[] = {
 	"paul",
 	"betty",
@@ -314,7 +270,6 @@ const unsigned char *voice_names[] = {
 	"val",
 	0
 }; 
-#endif
 
 /*  
  *  Used in cm_cmd_mark()
@@ -442,13 +397,5 @@ const struct dtpc_command command_table[] = {
 
 #define TOTAL_COMMANDS  (sizeof(command_table)/sizeof(struct dtpc_command))
 
-const int total_commands = TOTAL_COMMANDS;                         
-
-#ifdef MSDOS
-short cm[TOTAL_COMMANDS+1];                             /* command match parse array */
-#endif
-
-#ifdef ARM7
-//short cm[TOTAL_COMMANDS+1];                             /* command match parse array */
-#endif
+const int total_commands = TOTAL_COMMANDS;      
 #endif // CUSCDEH

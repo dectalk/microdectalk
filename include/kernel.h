@@ -90,19 +90,7 @@
 
 #include "port.h"
 
-#ifdef MSDOS
-#include "libp.h"
-#include "kernp.h"
-#endif
-
-#if defined __unix__ ||defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include "dtmmedefs.h"
-#endif
-
-#ifdef __osf__
-#include "mmsystem.h"
-#include "dtmmedefs.h"
-#endif
 
 #define VOID_FP volatile void _far *
 
@@ -171,60 +159,9 @@ typedef struct GATE_struct {
 #undef _PIPE
 #endif
 
-#ifdef MSDOS
-
-#define _PIPE
-
-typedef struct PIPE_struct {
-	volatile        void _far *             link;
-	P_PCB           get_queue;
-	P_PCB           put_queue;
-	volatile        int                     size;
-	volatile        int                     id;
-	volatile        int                     count;
-	volatile        unsigned int            head;
-	volatile        unsigned int            tail;
-	volatile        unsigned char           buff[1];
-} PIPE;
-
-#endif /* MSDOS */
-
-#ifdef WIN32_OLD
-#define _PIPE
-
-#ifndef _WINDOW_H
-#define _WINDOW_H
-#include <windows.h>
-#endif // _WINDOW_H
-
-// tek 30apr97 some debugging stuff..
-#ifdef _DEBUG_OLD
-//#include "pipe.h"
-extern FILE *fpODS_File;
-#undef OutputDebugString
-#define OutputDebugString(x) {\
-	if (!(fpODS_File)) \
-		fpODS_File = fopen("odslog.log","w"); \
-	fprintf(fpODS_File,"%s",x); \
-  } \
-
-
-#define ODSFlush()
-
-#else //_DEBUG_OLD
-#undef OutputDebugString
-#define OutputDebugString(x)
-#define ODSFlush()
-#endif //DEBUG_OLD
-//#include "pipe.h"
-#endif //WIN32_OLD
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define _PIPE
 //#include "opthread.h"
 //#include "pipe.h"
-#endif
 
 #ifndef _PIPE
 typedef struct PIPE_struct {
@@ -234,11 +171,8 @@ typedef struct PIPE_struct {
 #endif
 
 // tek 30apr97 some debugging stuff..
-#if defined __osf__ || defined __unix__ || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #ifdef _DEBUG_OLD
-#if defined __unix__ || defined (__APPLE__)
 #define timeGetTime() (unsigned long)(time(NULL))
-#endif
 extern FILE *fpODS_File;
 #undef OutputDebugString
 #define OutputDebugString(x) {\
@@ -250,17 +184,6 @@ extern FILE *fpODS_File;
 #undef OutputDebugString
 #define OutputDebugString(x)
 #endif // _DEBUG_OLD
-#endif // __osf__ || __unix__ || defined _SPARC_SOLARIS_
-
-/* GL 04/21/1997 add this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//typedef  PIPE_T  PIPE;
-//typedef  LPPIPE_T  P_PIPE;
-#endif
-
-#ifdef MSDOS
-//#define P_PIPE          volatile PIPE _far *
-#endif
 
 /*
  *  ... a memory block ...
@@ -316,7 +239,6 @@ typedef struct RING_struct {
 #define SPC_type_digitized              5
 #define SPC_type_mixed                  6
 #define SPC_type_index                  7
-#if defined WIN32_OLD || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 /* tek 01aug97 index subtypes for the new messages */
 #define		SPC_subtype_bookmark	(0x0100) // this is already shifted.
 #define		SPC_subtype_wordpos		(0x0200)
@@ -325,7 +247,6 @@ typedef struct RING_struct {
 #define		SPC_subtype_sentence	(0x0500) // this is already shifted.
 #define		SPC_subtype_volume		(0x0600) // this is already shifted.
 #define		SPC_subtype_noise		(0x0700) // this is already shifted.
-#endif //WIN32_OLD || defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__
 
 #define SPC_type_sync                   8
 #define SPC_type_flush                  9
@@ -354,28 +275,6 @@ typedef struct RING_struct {
 #define MAX_SPC_DATA            32
 /*#define       MAX_SPC_PACKETS 1024 eab 2/18/94 6.4 seconds of speech too long
 change to smaller number*/
-#ifdef MSDOS
-#ifndef DTEX
-#define MAX_SPC_PACKETS 400 /* tek 8/9/95 */
-#else
-#define MAX_SPC_PACKETS 128
-#endif // DTEX
-#else
-#define MAX_SPC_PACKETS 128
-#endif // MSDOS
-
-#ifdef MSDOS
-
-struct spc_packet {
-	volatile  struct		spc_packet _far  *link;	/* thread to next */
-	volatile  unsigned int	high_addr;              /* high physical address */
-	volatile  unsigned int	low_addr;               /* low physical address */
-	volatile  unsigned int  length;                 /* length of data in packets */
-	volatile  unsigned int  type;                   /* type code for packet */
-	volatile  unsigned int  data[MAX_SPC_DATA];		/* caller supplied data */
-};
-
-#else
 
 struct spc_packet {
   volatile  struct			spc_packet _far *link;	/* thread to next */
@@ -385,8 +284,6 @@ struct spc_packet {
   volatile  unsigned int	type;					/* type code for packet */
   volatile  unsigned int	data[MAX_SPC_DATA];		/* caller supplied data */
 };
-
-#endif // MSDOS
 
 #define SPC_DATA_OFFSET (12)	/* offset to data array in struct in bytes */
 #define SPC_PACKET_POOL ((sizeof(struct spc_packet)*(MAX_SPC_PACKETS/16))+1)
@@ -456,11 +353,7 @@ struct dtpc_code_pages {
 struct dtpc_language_tables {
 	struct  dtpc_language_tables    _far    *link;
 
-#ifdef MSDOS
-	unsigned int							lang_id;
-#else
 	int                                     lang_id;
-#endif // MSDOS
 
 	unsigned char _far *                    lang_ascky;
 	int                                     lang_ascky_size;
@@ -519,11 +412,6 @@ typedef struct language_tables {
 #define PHONEME_ASCKY       0x2     /* parse type ascky or arpabet */
 #define PHONEME_SPEAK       0x4     /* phonemes are spoken */
 
-#ifdef DTEX
-#define VERSIONLEN (80)
-#define SPEAKLEN   (190)
-#endif /* DTEX */
-
 /**********************************************************
  *  kernel shared data ... a single common far pointers is
  *  linked via the kernel stub into every runtime image that
@@ -535,13 +423,8 @@ typedef struct language_tables {
  * platform dependent typedef of a DICTIONARY REFERENCE
  */
 
-#ifdef MSDOS
-typedef volatile unsigned int _far *DICT_REF;
-typedef volatile S32 DICT_SIZ;
-#else
 typedef struct dic_entry **DICT_REF;
 typedef unsigned int DICT_SIZ;
-#endif // MSDOS
 
 /****************************************************************/
 /*        KERNEL SHARE DATA STRUCTURE DEFINITION                */
@@ -604,8 +487,6 @@ struct share_data {
  *  current language interprocess pipes ...
  */
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 	//P_PIPE          cmd_pipe;               /* cmd input  */
 	//P_PIPE          sync_pipe;              /* sync input */
 	//P_PIPE          buffer_pipe;            /* Used to pass buffers */
@@ -621,7 +502,6 @@ struct share_data {
 	// tek 21nov97 BATS 530 provide a secondary interlock on the
 	// pipe draining process to avoid deadlock
 	//#endif
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 /*
  *  language specific pipes and enables ...
@@ -639,22 +519,13 @@ struct share_data {
 	volatile int            text_flush;	/* flush text and phones but not commands */
 	volatile        int     halting;    /* panic halt */
 	volatile        int     pause;      /* spc output stalled */
-#ifdef MSDOS
-	volatile 		int		spc_flush_reset;
-#else
 /*
  *  index control ...
  */
 	volatile        struct spc_packet * spc_pkt_save;
-#ifdef EPSON_ARM7
-	struct spc_packet *g_spc_packet;
-#endif
 //#ifdef WIN32_OLD
-#ifndef ARM7
 //	LPCRITICAL_SECTION	pcsSpcPktSave;	/* tek 6mar97 bats 278 protect this linked list */
-#endif
 //#endif
-#endif // MSDOS
 	volatile	QUEUE_SEMAPHORE	index_pending;	/* indexes waiting for flush */
 	volatile    QUEUE_SEMAPHORE index_active;   /* indexes waiting to print*/
 	volatile    unsigned int    lastindex;      /* last flushed index */
@@ -665,12 +536,7 @@ struct share_data {
 
 	volatile        int					spc_mode;			/* digital or text mode */
 	volatile int                        spc_flush;			/* flush all packets */
-#ifdef MSDOS
-    volatile		int					spc_ffinish;
-    volatile unsigned int				spc_flush_value;
-#else
 	volatile        int                 spc_flush_value;	/* mask or search value */
-#endif
 
 	volatile        int                 spc_flush_type;     /* style of flush */
 	volatile        QUEUE_SEMAPHORE     spc_pool;           /* free queue */
@@ -682,9 +548,6 @@ struct share_data {
 	volatile        DT_SEMAPHORE        spc_resume;         /* where spc process blocks for pauses */
 	volatile        DT_SEMAPHORE        spc_dma;                    /* dma0 semaphore */
 	volatile        DT_SEMAPHORE        text_sync;          /* where text to speech waits */
-#ifdef MSDOS
-	volatile		DT_SEMAPHORE		getc_empty;
-#endif
 
 /*
  *  misc settings ...
@@ -700,58 +563,15 @@ struct share_data {
 	volatile        int                 volume;			/* current module volume */
 	volatile		int					vol_att;		/* attenuator volume */
 
-#ifdef DTEX
-	/* things that only the express uses.. */
-	P_RING					p_out_ring;
-	volatile unsigned short int command;
-	volatile unsigned short int in_data;
-	volatile unsigned short int out_data;
-
-	volatile short int 					l_verbose;
-	volatile short int					power_interval;
-    volatile short int                  sleep_interval;
-	volatile long int					idleseconds;	/* how long we've been idle.. */
-	volatile short int					idleflag;		/* cleared when anything is done */
-	volatile short int					spc_sleeping;	/* spc has been shut down. */
-    volatile short int					spc_waking;		/* the spc is awakened, waiting for speakerdef. */
-
-	volatile unsigned char				version[VERSIONLEN];
-	volatile unsigned char				versionspeak[SPEAKLEN];
-	volatile unsigned short int			sc_flush;       /* single-char flush req. */
-	volatile unsigned short int			dleseq_OK;
-#endif /*DTEX*/
-
 /*
  * The following 6 elements are added for Multiple instances :MVP
  */
-
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-    volatile short  sprate;
-    volatile short  last_voice;
-
-#ifdef SW_VOLUME
-	//eab 10/7/99 re-eng into new code
-/* tek 05aug99
- * items for managing the software implementation of the volume control.
- * these are both linear 0-100 entities. The older "volume" field (above)
- * is also maintained for compatibility (I don't know if anybody uses it)
- */
-volatile unsigned int CurrentVolume;
-volatile unsigned int ToneVolume;
-/* this is the same as CurrentVolume, but in dB (0 to -40) for PH use */
-volatile int CurrentVolumeDB;
-volatile int mtone_running; /* flag to hold flushes until we see them */
-#endif /* SW_VOLUME */
-
-#else  
-	short           last_voice;         /* used by API,VTM,PH */
-	short           sprate;             /* used by API,PH */
-	short           uiCurrentSpeaker;	/* Current speaker,used by API,VTM*/
-	DWORD           dwLastPhoneme;      /* used by VTM,PH */
-	U32             uiSampleRate;		/* used by vtm,ph,cmd*/
-	double          SamplePeriod;		/*Used by VTM,SYNC threads*/
-#endif // MSDOS
+	        short           last_voice;         /* used by API,VTM,PH */
+        short           sprate;             /* used by API,PH */
+        short           uiCurrentSpeaker;       /* Current speaker,used by API,VTM*/
+        DWORD           dwLastPhoneme;      /* used by VTM,PH */
+        U32             uiSampleRate;           /* used by vtm,ph,cmd*/
+        double          SamplePeriod;           /*Used by VTM,SYNC threads*/
 
 #ifdef SOFTWARE_VOLUME
 volatile int iSwVolume;
@@ -772,15 +592,6 @@ volatile int iSwVolume;
  */
 
 	volatile int    pitch_delta;
-
-#ifdef MSDOS
-/*
- *  DOS code page translations ...
- */
-
-	volatile unsigned char                  code_page[256];
-	volatile struct dtpc_code_pages _far    *loaded_code_pages;
-#endif 
 /*
  *  common iso tables ...
  */
@@ -817,41 +628,17 @@ volatile int iSwVolume;
  *      gender switch for gender command. GL 11/22/96
  */
 		volatile unsigned short         gender_switch;
-
-/*
- *      dbgv[] for dbgv command.         GL 03/25/98
- */
-#ifdef DBGV_ON
-		volatile short					dbgv[10];
-#endif
 	
 		
 /*
  *	log file pointer for dttest		 MFG 04/22/98
  */
-#ifdef MSDOS
-
-		volatile int *dbglog;
-#else 
-#ifndef ARM7_NOSWI
 		volatile FILE *dbglog;
-#endif
-#endif // MSDOS
-
-
-#ifdef WIN32_OLD
-		volatile unsigned short			ph_reload;
-		volatile unsigned short			ph_group;
-#endif
 
 #ifdef TYPING_MODE
 		volatile BOOL					bInTypingMode;
 #endif //TYPING_MODE
-
-#ifndef MSDOS
-	// tek 20aug98 this is needed so that ls_util_write_pipe can log phonemes
 	PVOID			phTTS;	// should be LPTTS_HANDLE_T, but we can't see that.
-#endif //MSDOS
 };    
 
 /* JDB: merges from DTPC/DTEX with Win95 code 8/16/96 */
@@ -869,86 +656,11 @@ extern struct share_data far *kernel_share;
 #define KS              (*kernel_share)
 */
 
-#ifdef MSDOS
-#define WAIT_PRINT              wait_semaphore(&KS.print_sem)
-#define SIGNAL_PRINT            signal_semaphore(&KS.print_sem)
-#else
 #define WAIT_PRINT
 #define SIGNAL_PRINT
 // extern void wait_semaphore(SEMAPHORE *);
-#endif  /* #ifdef MSDOS */
 
-#ifndef MSDOS
 #define CODEPAGE                (pKsd_t->code_page)
-#else
-#define CODEPAGE                (KS.code_page)
-
-#define IN_RING                 (*KS.in_ring)
-#define OUT_RING                (*KS.out_ring)
-#define IN_RING_MAX				(IN_RING.size-16)
-/*
- *  misc macros ...
- */
-
-#define _FP_SEG(fp) (*((unsigned _far *)&(fp)+1))
-#define _FP_OFF(fp) (*((unsigned _far *)&(fp)))
-
-#define FP_SEG _FP_SEG
-#define FP_OFF _FP_OFF
-/**********************************************************
- *  kernel entry points ...
- **********************************************************/
-
-/*
- *  queueing routines ...
- */
-
-kernel_enqueue(VOID_FP,VOID_FP);
-void _far *kernel_dequeue(VOID_FP);
-void _far *wait_queue(P_QS);
-int signal_queue(P_QS,VOID_FP);
-
-/*
- * process control
- */
-
-signal_semaphore(P_SEMAPHORE);
-wait_semaphore(P_SEMAPHORE);
-
-sleep(int);
-block(VOID_FP);
-create_process();
-connect_sem(int,P_SEMAPHORE);
-gate_init(P_GATE);
-gate_register(P_GATE);
-gate_deregister(P_GATE);
-gate_open(P_GATE);
-gate_close(P_GATE);
-gate_entry(P_GATE);
-
-#ifdef MSDOS
-flush_pipe();
-#endif // #ifdef MSDOS
-
-#define TICKS_PER_SECOND        100
-
-/*
- *  timer control 
- */
-
-start_timer();
-stop_timer();
-get_timer();
-
-/*
- *  memory allocation ...
- */
-
-void _far *malloc();
-void _far *free(VOID_FP);
-unsigned int max_block();
-
-#endif // MSDOS
 
 /*
  * character pipe ...
@@ -959,56 +671,22 @@ unsigned int max_block();
 #endif
 
 
-#ifdef MSDOS
-#define _DEF_PIPES
-P_PIPE create_pipe(int, int);
-write_pipe(P_PIPE, VOID_FP, int);
-read_pipe(P_PIPE, VOID_FP, int);
-int test_pipe(P_PIPE);
-#else
 //int printf(VOID_FP,);
-#endif // MSDOS
-
-#ifdef WIN32_OLD
-#define _DEF_PIPES
-/* Pipes declared previously in pipe.h for Windows NT (see above) */
-/*
-#ifndef _WINDOW_H
-#define _WINDOW_H
-#include <windows.h>
-#endif
-PIPE * create_pipe( UINT, UINT );
-void write_pipe( PIPE *, PIPE_ITEM_T *, UINT );
-void read_pipe( PIPE *, PIPE_ITEM_T *, UINT );
-void reset_pipe( PIPE * );
-void destroy_pipe( PIPE * );
-*/
-#endif // WIN32_OLD
 
 /* GL 04/21/1997  add this for OSF build */
-#if defined __osf__ || defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define _DEF_PIPES
 //#include "opthread.h"
-#endif
 
 #ifndef _DEF_PIPES
 #define _DEF_PIPES
 
 /* Pipe function prototypes for OSF1 go here. */
-#ifndef ARM7
 P_PIPE  create_pipe(int,int);
-#endif
 #endif // _DEF_PIPES
-
-#ifndef ARM7
-
-#ifndef MSDOS
-#ifndef WIN32_OLD
 
 /*
  * over-ride the getc function in cmd_get.c
  */
-#if !defined VXWORKS && !defined _SPARC_SOLARIS_
 #ifdef getc
 #undef getc
 #endif
@@ -1018,13 +696,7 @@ P_PIPE  create_pipe(int,int);
 #undef putc
 #endif
 
-#if defined __unix__ || defined (__APPLE__)
 #define putc(c)      putc(c,stderr)
-#else
-#define putc(c)
-#endif // __unix__
-#endif // !defined VXWORKS && !defined _SPARC_SOLARIS_
-/* Volume control */
 
 /*
  * on non-MSDOS platforms, stub these functions
@@ -1040,9 +712,6 @@ P_PIPE  create_pipe(int,int);
 #define set_gpio(x)
 */
 
-#endif // WIN32_OLD
-#endif // MSDOS
-
 /*
  *  ring stuff ..
  */
@@ -1054,25 +723,6 @@ void flush_ring(P_RING);
 unsigned int test_ring(P_RING);
 void lock_ring(P_RING);
 void unlock_ring(P_RING);
-
-/*
- *  general and gpio interface ...
- */
-
-#ifdef MSDOS
-port_out(int,char);
-char port_in(int);
-#ifndef DTPC2
-#ifndef DTEX
-set_gpio(int);
-clr_gpio(int);
-#endif // DTEX
-#endif // DTPC2
-#endif // MSDOS
-
-#ifdef DTEX
-extern DT_SEMAPHORE isa_port_sem;
-#endif /* DTEX */
 
 /*
  *  physical i/o stuff ...
@@ -1131,5 +781,4 @@ struct share_data far *get_share();
     _asm    mov     where, ax \
     }
 
-#endif // ARM7
 #endif // kernel_defs

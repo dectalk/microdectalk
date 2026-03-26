@@ -35,25 +35,11 @@
  *	006	CAB		06/17/2002		Removed assert.h for UNDER_CE
 */
 
-#ifdef WIN32_OLD
-#ifndef UNDER_CE
-#include <assert.h>
-#define dt_abort \
-	{ \
-	assert(1); \
-	}\
-
-#endif
-#endif //WIN32_OLD
-
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined (__APPLE__)
 #include <assert.h>
 #define dt_abort \
 { \
     assert(0); \
 }
-
-#endif  //__osf__ || (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 
 #ifdef DTPC1
 #include "pcport.h"
@@ -78,17 +64,3 @@
 	}\
 
 #endif //DTPC2
-
-#ifdef DTEX
-#include "pcport.h"
-#include "libp.h"
-#define dt_abort \
-	{ \
-	status_clear(0xFFFF); \
-	status_set_update(MODE_error); \
-	printf(__FILE__); \
-	printf("dt_abort!\n"); \
-	error_hang(); \
-	}\
-
-#endif //DTEX

@@ -176,10 +176,8 @@
 ** 	Follows microsoft specs for the most part.
 ** 
 */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 #include <string.h>
-#endif
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>

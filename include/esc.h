@@ -205,9 +205,6 @@
 #ifdef SW_VOLUME //eab 10/6/99 Lockheed Martin Functionality for hardware
 #define	DCS_VOLUME_TONE			103 //unused number
 #endif      
-/* JDB: merged in from Win95 code */      
-#ifndef MSDOS
-
 #define     DCS_VOLUME_LSET      103
 #define     DCS_VOLUME_LUP       104
 #define     DCS_VOLUME_LDOWN     105
@@ -219,8 +216,6 @@
 #define     VOLUME_SET           0
 #define     VOLUME_UP            1
 #define     VOLUME_DOWN          2
-
-#endif
 // tek 12nov97 bats404 new index types
 // 30may97
 // WARNING WARNING WARNING
