@@ -3,6 +3,11 @@ name: node-gyp integration
 on:
   push:
     branches: dectalk-develop
+    paths:
+      - src/**
+      - include/**
+      - platforms/node/**
+      - .github/workflows/node.yml
   workflow_dispatch:
 
 jobs:
