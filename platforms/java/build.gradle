@@ -7,7 +7,8 @@ plugins {
 
 group = 'dev.bytesizedfox.dectalk'
 archivesBaseName = 'libdtc'
-version = '1.0.0'
+def gitHash = System.getenv('LATEST_COMMIT_HASH')
+version = gitHash ? "1.0.0-${gitHash}" : '1.0.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
