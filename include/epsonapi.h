@@ -19,14 +19,22 @@
 #define PTS_DONE		0
 #define PTS_OUTPUT		5
 
-extern int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
-extern int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
-extern int TextToSpeechReset(void);
-extern int TextToSpeechSync();
-extern int TextToSpeechChangeVoice(const char *cvoice);
-extern void TextToSpeechSetRate(int rate);
-extern int TextToSpeechSetVoiceParam(const char *cmd, int value);
-extern short TextToSpeechGetSpdefValue(int index);
+#if defined(BLD_DECTALK_DLL) && defined(_WIN32)
+#define DT_EXTERN extern __declspec(dllexport)
+#elif defined(_WIN32)
+#define DT_EXTERN extern __declspec(dllimport)
+#else
+#define DT_EXTERN extern
+#endif
+
+DT_EXTERN int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
+DT_EXTERN int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
+DT_EXTERN int TextToSpeechReset(void);
+DT_EXTERN int TextToSpeechSync();
+DT_EXTERN int TextToSpeechChangeVoice(const char *cvoice);
+DT_EXTERN void TextToSpeechSetRate(int rate);
+DT_EXTERN int TextToSpeechSetVoiceParam(const char *cmd, int value);
+DT_EXTERN short TextToSpeechGetSpdefValue(int index);
 
 #endif //_EPSONAPI_H
 

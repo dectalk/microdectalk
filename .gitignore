@@ -12,6 +12,7 @@ say
 /OUTPUT.WAV
 /output.wav
 /dtc.lib
+/dtc.dll
 
 # Nintendo DS
 .DS_Store
