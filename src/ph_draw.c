@@ -191,9 +191,6 @@ int ii;			   /* for regression testing eab */
 #endif                                           
 
 #include "ph_draw1.c" /* pick up the language dependent code */
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-#include "dbgwins.h"
-#endif
 	//EAB		7/13/98			BATS 711 
 void r_modulation (LPTTS_HANDLE_T phTTS,short *formpointer, short percent, short temp);
 void rs_modulation (LPTTS_HANDLE_T phTTS,short *formpointer, short percent, short temp);
@@ -258,12 +255,8 @@ void phdraw (LPTTS_HANDLE_T phTTS)
 
 	PDPHSETTAR_ST           pDphsettar = pDph_t->pSTphsettar;
 
-#ifndef MSDOS
-#ifndef ARM7
 	/* MGS 10/14/1997 BATS #470 Fixed crashed due to reset */
 	volatile BOOL		*bInReset;
-#endif
-#endif
 	
 	/* register short del_av; */
 	/* static short drawinitsw; *//* MVP made instance specific added to PHSETTAR struct */
@@ -272,12 +265,8 @@ void phdraw (LPTTS_HANDLE_T phTTS)
 //	EAB		7/13/98			BATS 711 removed vadjust
 	
 
-#ifndef MSDOS
-#ifndef ARM7
 	/* MGS 10/14/1997 BATS #470 Fixed crashed due to reset */
 	bInReset =&(pDph_t->phTTS->bInReset);
-#endif
-#endif
 /* Loop across all parameters but T0. I changed this so that it    */
 /* pulls the value of "parp" from the "outp" field of the struct.  */
 /* This lets these loops be written nicely, but makes it possible  */
@@ -287,7 +276,6 @@ void phdraw (LPTTS_HANDLE_T phTTS)
 #ifdef HLSYN
 area_rel[0]=pVtm_t->NOM_Fricative_Opening;
 #endif
-#ifndef MSDOS
 				if (pDphsettar->drawinitsw == 0)
 				{
 					pDphsettar->drawinitsw = 1;
@@ -324,7 +312,6 @@ area_rel[0]=pVtm_t->NOM_Fricative_Opening;
 
 					
 				}
-#endif
 
 	
 	if (pDph_t->nphone>=1)
@@ -347,15 +334,9 @@ area_rel[0]=pVtm_t->NOM_Fricative_Opening;
 		parp = np->outp;			   /* Where it goes.       */
 
 		/* If diphthongized seg, see if new straight line called for.   */
-#ifndef MSDOS
-#ifdef ARM7
-		if (phTTS->pKernelShareData->halting) return;
-#else
 		if (phTTS->pKernelShareData->halting) return;
 		/* MGS 10/14/1997 BATS #470 Fixed crashed due to reset */
 		if (*bInReset)	return;
-#endif
-#endif
 
 	    /* crashing if adjust != 0 eab 11/96 need to fix correctly eab */
 		if (pDph_t->tcum > np->durlin && pDph_t->tcum > 0 && np->durlin >=0){
@@ -717,9 +698,6 @@ if(pKsd_t->lang_curr == LANG_french)
 			}
 			*parp += frac4mul (pDph_t->spdeflaxprcnt, pDphsettar->breathytilt);
 #ifdef DEBUG_OLDPHT
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-				WINprintf("til2=%d \n",*parp);
-#endif
 #endif	// DEBUG_OLDPHT
 		}
 	}
@@ -4554,9 +4532,7 @@ abort_til_later:
 		   (pDph_t->parstochip[OUT_AB] < 0)  || */
 		   (pDph_t->parstochip[OUT_TLT] < 0 ))
 		{
-#ifndef UNDER_CE
 		WINprint(" ERROR Negative value \n");
-#endif
 		}
 
 #endif	// PH_DEBUG_OLD
@@ -4771,42 +4747,19 @@ abort_til_later:
 	if( (pDphsettar->phcur & PVALUE) != 0)
 	{
 #ifdef DEBUG_OLDPHT
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-		WINprintf ("*phcur= %d \n", pDphsettar->phcur);
-				
-
-#else
 		printf ("*phcur= %d \n", pDphsettar->phcur);
 		//printf ("%s \n", phprint(pDphsettar->phcur));
-
-
-
-#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 #endif	// DEBUG_OLDPHT
 
-#ifndef UNDER_CE
-//		WINprintf ("phon= %d  ", ((pDph_t->allophons[ pDph_t->nphone]& PVALUE)));
-			//printf ("*phcur= %d", pDphsettar->phcur);
-//		printf ("%s \n", phprint(pDphsettar->phcur));
-
-#endif
 		for (ii = 0; ii<=32; ii++)			   /* EAB FOR REGRESSION TESTING */
 		{
 			WAIT_PRINT;
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-			WINprintf("%d ", pDph_t->parstochip[ii]);
-#else
 			printf("%d ", pDph_t->parstochip[ii]);
-#endif // defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 			SIGNAL_PRINT;
 		}
 		WAIT_PRINT;
 
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-		WINprintf ("\n");
-#else
 		printf ("\n");
-#endif	// defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
 		SIGNAL_PRINT;
 	}
 	}

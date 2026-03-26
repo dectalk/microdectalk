@@ -72,14 +72,10 @@
 #include <stdio.h>
 #include <windows.h>
 
-#ifndef UNDER_CE
 #include <process.h>
-#endif
 #include <stdarg.h>
 #include <commdlg.h>
 #include "dbgwins.h"
-
-#ifndef UNDER_CE
 
 // #define	USE_MAIN
 
@@ -596,8 +592,6 @@ void WINprintf(char *fmt, ...) {
 //	if (strlen(line) > 2 && line[0] > 31)	lmode = 1;
 	return;
 }
-
-#endif
 
 
 #else //#ifdef _DEBUG_OLD

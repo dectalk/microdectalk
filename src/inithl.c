@@ -44,7 +44,7 @@
 
 #include "flavor.h"
 
-#if (defined(DEBUG_OLD) && !defined(UNDER_CE)) || (defined(WARNINGS) && !defined(UNDER_CE)) 
+#if (defined(DEBUG_OLD)) || (defined(WARNINGS)) 
 
 #include <stdlib.h>	/* for exit on error */
 #include <process.h>	/* for exit on error */

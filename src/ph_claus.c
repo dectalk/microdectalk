@@ -165,10 +165,6 @@ static void init_pars (PDPH_T pDph_t);
 static void init_clause (PDPH_T pDph_t);
 void        init_phclause (PDPH_T pDph_t);
 
-#ifdef EPSON_ARM7
-void send_pars_loop(LPTTS_HANDLE_T phTTS);
-#endif
-
 #ifdef DEBUG_OLD
 //matt I don't think we want this
 //#ifndef UNDER_CE
@@ -200,13 +196,7 @@ short last_phoneme;
 // send parameters to the synthesizer every 6.4 ms in send_pars() below.
 void phclause (LPTTS_HANDLE_T phTTS)
 {
-/* GL 04/21/1997  add this for OSF build */
-#ifndef MSDOS
-//#if defined  (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
-#ifndef EPSON_ARM7
 	DT_PIPE_T   pipe_item[1];
-#endif
-#endif
 	PKSD_T		pKsd_t = phTTS->pKernelShareData;
 	PDPH_T      pDph_t = phTTS->pPHThreadData;
 	
@@ -350,10 +340,8 @@ else
 #ifdef PH_DEBUG_OLD
     // Michel : to draw f0 curves with Excel
     if(DT_DBG(PH_DBG,0x10)) {  // [:debug 2010] for Michel
-#ifndef ARM7
 #ifdef DEBGFRENCH
 		affichetab3 (pDph_t);   // debug for FRENCH; keep it
-#endif
 #endif
       //affichetab4 (pDph_t);   // for use with Excel to get the DECTalk durations
     }
@@ -365,21 +353,9 @@ else
 	init_pars (pDph_t);  // Initialize, routine included below
 
 	// For each 6.4 msec frame of current clause
-#ifndef EPSON_ARM7
 	while (TRUE)
 	{
             last_phoneme = pDph_t->allophons[pDph_t->nphone];
-#endif
-#ifdef EPSON_ARM7
-		send_pars_loop(phTTS);
-
-}
-
-void send_pars_loop(LPTTS_HANDLE_T phTTS)
-		{
-			PDPH_T pDph_t=phTTS->pPHThreadData;
-			PKSD_T pKsd_t=phTTS->pKernelShareData;
-#endif
 		pDph_t->oqleadtime = NF64MS;
 
 	    //	Reset open quotient target 40 ms before start of next phone
@@ -400,16 +376,9 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 
 			if (pDph_t->nphone != -1)  
 
-
-#ifdef MSDOS
-					check_index (pDph_t->nphone);
-#endif                                 // Michel : should it be an #else ???
-
 /* GL 04/21/1997  add this for OSF build */
 //#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
-#ifndef MSDOS
 					check_index (phTTS, pDph_t->nphone+1);
-#endif
 			pDph_t->nphone++;
 
 			/* Graceful exit if phonemes used up */
@@ -417,15 +386,8 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 			{
 				pDph_t->number_verbs =0 ;
 				pDph_t->number_words =0; 
-
-#ifndef EPSON_ARM7/* GL 04/21/1997  change this as the latest OSF code */
-/* write forced clause boundary symbol to VTM */
-#ifndef MSDOS
-//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 				pipe_item[0] = SPC_type_force;
 				vtm_loop(phTTS,pipe_item);
-#endif
-#endif
 
 #ifdef PH_SWAPDATA
 				if (pDph_t->PHSwapOut)
@@ -433,21 +395,6 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 					fclose(pDph_t->PHSwapOut);
 					pDph_t->PHSwapCnt++;
 				}
-#endif
-#ifdef EPSON_ARM7
-				phTTS->PTS_return_code=5; /* DONE_WITH_CLAUSE */
-				if (pDph_t->reset_pitch)
-				{
-					setparam (phTTS, 3, pDph_t->default_pitch);
-					pDph_t->reset_pitch = FALSE;
-				}
-				check_index (phTTS, PHONE_HUGE);
-				pDph_t->symbols[0] = GEN_SIL;
-				pDph_t->bound = COMMA;
-				pDph_t->lastoffs = 0;
-				pDph_t->nsymbtot = 1;
-				pDph_t->nphone = 0;
-				pDph_t->asperation = 0;
 #endif
 
 				return;
@@ -495,20 +442,9 @@ void send_pars_loop(LPTTS_HANDLE_T phTTS)
 		if (!(DT_DBG(PH_DBG,0x800)))
 		send_pars (phTTS);
 
-#ifdef EPSON_ARM7
-		if (phTTS->PTS_return_code!=4) //PTS_BUFFER_FILLED
-		{
-			phTTS->PTS_return_code=2; //PTS_SEND_PARS_LOOP
-		}
-		} // send_pars_loop();
-#endif
-#ifndef EPSON_ARM7
 	} /* while(TRUE) */
-#endif
 
-#ifndef EPSON_ARM7
 }  // phclause
-#endif
 
 // Initialize variables for clause processing
 
@@ -762,17 +698,7 @@ static void send_pars (LPTTS_HANDLE_T phTTS)
 
 		fflush (stdout);
 #else
-#ifdef MSDOS
-		spcwrite (pDph_t->delaypars);
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#ifndef MSDOS
-//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
-
-
 		spcwrite (pKsd_t, pDph_t->delaypars);
-#endif // defined (WIN32_OLD) || defined (__osf__) || defined (__unix__)
 		pDph_t->delaypars = (short far *) spcget (SPC_type_voice);
 #endif	// SEPARATE_PROCESSES
 
@@ -810,14 +736,9 @@ static void send_pars (LPTTS_HANDLE_T phTTS)
 #endif
 	pDph_t->delaypars[OUT_AP] = pDph_t->parstochip[OUT_AP];
 
-/* GL 04/21/1997  add this for OSF build */
-#ifndef MSDOS
-//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 	pDph_t->delaypars[OUT_PH] = pDph_t->parstochip[OUT_PH];
 	pDph_t->delaypars[OUT_DU] = pDph_t->parstochip[OUT_DU];
 	pDph_t->delaypars[OUT_PH2] = pDph_t->parstochip[OUT_PH2];
-	
-#endif
 
 
 #ifdef NEW_VTM

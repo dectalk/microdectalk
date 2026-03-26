@@ -103,9 +103,7 @@
 
 #include "dectalkf.h"  
 #include "ph_def.h"  
-#ifndef MSDOS
 #include "vtminst.h"	// NAL needed to control tuning
-#endif
   
 /***************************************************************************/
 /* MVP: The following extern variables are now become elements of instance */
@@ -266,8 +264,7 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 	short value;
 #endif
 
-#ifdef EPSON_ARM7
-#elif defined(HLSYN) || defined(CHANGES_AFTER_V43)
+#if defined(HLSYN) || defined(CHANGES_AFTER_V43)
 	if(pKsd_t->lang_curr == LANG_english)
 	{
 	pDph_t->tunedef_8[0] = (short*)us_paul_8_tune;
@@ -439,10 +436,6 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 #endif
 
 
-#ifdef MSDOS
-	newspdef = pDph_t->voidef[voice];  /* Copy into place.     */
-	tunespdef = pDph_t->tunedef[voice];
-#else
 #ifdef HLSYN
 	changeSpeakerValues(phTTS, &pVtm_t->speakerDef, voice );
 #endif
@@ -456,7 +449,6 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 		newspdef = pDph_t->voidef[voice];
 		tunespdef = pDph_t->tunedef[voice];
 	}
-#endif
 	
 	for (i = 0; i < SPDEF; ++i)
 	{
@@ -481,11 +473,9 @@ void usevoice (LPTTS_HANDLE_T phTTS, int voice)
 #endif
 	}
 
-#ifndef MSDOS
 	/* MGS made curspdef contain the speaker number */
 	pDph_t->curspdef[SPD_NM]=voice;
 	//pDph_t->curspdef[SPD_SEX] = pDph_t->malfem;
-#endif
 #ifdef HLSYN
 //	changeSpeakerValues(phTTS, &pDph_t->curspdef, voice );
 #endif
@@ -785,10 +775,8 @@ void setspdef (LPTTS_HANDLE_T phTTS)
 
 
 
-#ifndef MSDOS
 	spdef->osgain = pDph_t->curspdef[SPD_OS];	/* BH Added speaker to packet *//* GH -> GH  */
 	spdef->speaker = pDph_t->curspdef[SPD_NM];	/* BH Added speaker to packet *//* GH -> GH  */
-#endif
 
 #ifdef SEPARATE_PROCESSESdi
 	fwrite (&sd, sizeof (short), 1, stdout);
@@ -821,11 +809,7 @@ void setspdef (LPTTS_HANDLE_T phTTS)
 	printf ("apgain is %d \n", spdef->apgain);
 	printf ("notused is %d \n", 0);	   /* hardwire */
 #endif
-#ifdef MSDOS
-	spcwrite ((unsigned short _far *) spdef);	/* MVP : typecast was unsigned int _far * */
-#else
 	spcwrite (pKsd_t, (unsigned short _far *) spdef);	/* MVP : typecast was unsigned int _far * */
-#endif
 
 #endif
 }

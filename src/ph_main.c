@@ -105,13 +105,7 @@
 #include "dectalkf.h"
 #include "ph_def.h"		/* the new all inclusive include file for ph */
 
-#ifdef UNDER_CE
-#include "cemm.h"
-#endif //UNDER_CE
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
-#endif
 
 #ifdef SEPARATE_PROCESSES
 struct share_data      *kernel_share;
@@ -188,14 +182,10 @@ short TOT_ALLOPHONES = (PH_LAST_PH+1);  /* total number of phones */
 
 /* MVP : Function prototypes */
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern void spcfree(unsigned short *);
-#endif
 
-#ifndef MSDOS
 void FreePHInstanceData (PDPH_T pDph_t);
 void spcfree(unsigned short *); // NAL warning removal
-#endif
 
 /* Static function declarations */
 
@@ -217,43 +207,8 @@ void spcfree(unsigned short *); // NAL warning removal
  *
  */
 
-#ifdef WIN32_OLD
-
-int __stdcall ph_main (LPTTS_HANDLE_T phTTS)
-
-#endif
-
-#ifdef MSDOS
-struct TTS_HANDLE_TAG   hTTS;
-LPTTS_HANDLE_T          phTTS;
-DPHSETTAR_ST            STphsettar;
-DPH_T                   Dph_t;
-
-#define WITHOUT_CALLOC               
-#ifndef NULL
-#define NULL ((void *)0)
-#endif
-
-main (data_seg, stack_start)
-	unsigned int            data_seg;
-	unsigned int            stack_start;
-#endif
-
-#ifdef ARM7
-#include <stdlib.h>
-#include <string.h>
-#ifndef EPSON_ARM7
-DPHSETTAR_ST            STphsettar;
-DPH_T                   Dph_t;
-#endif
-int ph_main(LPTTS_HANDLE_T phTTS)
-#endif
-
 /* GL 04/21/1997  change to be the same as the latest OSF code */
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 DWORD ph_main(LPTTS_HANDLE_T phTTS)
-#endif
-
 {
 	/* Added a variable to get the handle of Current instance krenel_share_data */
 	PKSD_T                  pKsd_t;
@@ -264,38 +219,7 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	int                     i;		   /* MVP : 03/18/96 */
 #endif
 
-#ifdef MSDOS
-	phTTS = &hTTS;
-	phTTS->pKernelShareData = kernel_share;		/* set a pointer to the KS structure */
 	pKsd_t = phTTS->pKernelShareData;
-	phTTS->pPHThreadData = &Dph_t;
-	pDph_t = phTTS->pPHThreadData;
-	pDph_t->pSTphsettar = &STphsettar;
-	pDphsettar_st = pDph_t->pSTphsettar;
-#elif defined ARM7
-	pKsd_t = phTTS->pKernelShareData;
-#ifdef EPSON_ARM7
-	pDph_t = phTTS->pPHThreadData;
-	pDphsettar_st = pDph_t->pSTphsettar;
-	memset(pDph_t,0,sizeof(DPH_T));
-	memset(pDphsettar_st,0,sizeof(DPHSETTAR_ST));
-#else
-	memset(&Dph_t,0,sizeof(DPH_T));
-	memset(&STphsettar,0,sizeof(DPHSETTAR_ST));
-	phTTS->pPHThreadData = &Dph_t;
-	pDph_t = phTTS->pPHThreadData;
-	pDph_t->pSTphsettar = &STphsettar;
-	pDphsettar_st = pDph_t->pSTphsettar;
-#endif
-	/* MGS BATS 470 Fixed crashing due to reset */
-			pDph_t->phTTS=phTTS;
-#else
-	pKsd_t = phTTS->pKernelShareData;
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-    /* GL 04/21/1997  add this as the latest OSF code */
-    /* Initialize thread error field to no error */
-    //phTTS->uiThreadError = MMSYSERR_NOERROR;
-#endif
 
 #ifdef SEPARATE_PROCESSES
 	kernel_share = (struct share_data *) malloc (sizeof (struct share_data));
@@ -309,10 +233,8 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
         {
 			/* Associate this PH thread instance specific structure with current speech object */
 			phTTS->pPHThreadData = pDph_t;
-#ifndef MSDOS
 			/* MGS BATS 470 Fixed crashing due to reset */
 			pDph_t->phTTS=phTTS;
-#endif
 			/* MVP : Initialize all structure pointers in DPH_T to NULL. */
 			pDph_t->pSTphsettar = NULL;
 			
@@ -330,7 +252,6 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 			}
 		}
 
-#endif // !MSDOS
 	/* Associate this structure handle with current PH thread data structure */
 	pDph_t->pSTphsettar = pDphsettar_st;
 	/* MVP :Do required initialization of certain elements of DPHSETTAR_ST structure */
@@ -381,30 +302,6 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	/* MVP : Initialize the speaker param arrays voidef,voidef_8 here */
 	/* NAL : Initialize the speaker param arrays tunedef,tunedef_8 here */
 	
-#ifdef EPSON_ARM7
-	pDph_t->voidef_8[0] = (short*)paul_8;
-	pDph_t->voidef_8[1] = (short*)paul_8;
-	pDph_t->voidef_8[2] = (short*)paul_8;
-	pDph_t->voidef_8[3] = (short*)paul_8;
-	pDph_t->voidef_8[4] = (short*)paul_8;
-	pDph_t->voidef_8[5] = (short*)paul_8;
-	pDph_t->voidef_8[6] = (short*)paul_8;
-	pDph_t->voidef_8[7] = (short*)paul_8;
-	pDph_t->voidef_8[8] = (short*)paul_8;
-	pDph_t->voidef_8[9] = (short*)paul_8;
-
-	// CAB Removed warnings by typecast
-	pDph_t->voidef[0] = (short*)paul;
-	pDph_t->voidef[1] = (short*)paul;
-	pDph_t->voidef[2] = (short*)paul;
-	pDph_t->voidef[3] = (short*)paul;
-	pDph_t->voidef[4] = (short*)paul;
-	pDph_t->voidef[5] = (short*)paul;
-	pDph_t->voidef[6] = (short*)paul;
-	pDph_t->voidef[7] = (short*)paul;
-	pDph_t->voidef[8] = (short*)paul;
-	pDph_t->voidef[9] = (short*)paul;
-#else
 	// CAB Removed warnings by typecast
 	pDph_t->voidef_8[0] = (short*)paul_8;
 	pDph_t->voidef_8[1] = (short*)betty_8;
@@ -428,31 +325,9 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	pDph_t->voidef[7] = (short*)rita;
 	pDph_t->voidef[8] = (short*)wendy;
 	pDph_t->voidef[9] = pDph_t->var_val;
-#endif
 
 
-#ifdef EPSON_ARM7
-	pDph_t->tunedef_8[0] = (short*)default_tune;
-	pDph_t->tunedef_8[1] = (short*)default_tune;;
-	pDph_t->tunedef_8[2] = (short*)default_tune;;
-	pDph_t->tunedef_8[3] = (short*)default_tune;;
-	pDph_t->tunedef_8[4] = (short*)default_tune;;
-	pDph_t->tunedef_8[5] = (short*)default_tune;;
-	pDph_t->tunedef_8[6] = (short*)default_tune;;
-	pDph_t->tunedef_8[7] = (short*)default_tune;;
-	pDph_t->tunedef_8[8] = (short*)default_tune;;
-	pDph_t->tunedef_8[9] = (short*)default_tune;;
-	pDph_t->tunedef[0] = (short*)default_tune;;
-	pDph_t->tunedef[1] = (short*)default_tune;;
-	pDph_t->tunedef[2] = (short*)default_tune;;
-	pDph_t->tunedef[3] = (short*)default_tune;;
-	pDph_t->tunedef[4] = (short*)default_tune;;
-	pDph_t->tunedef[5] = (short*)default_tune;;
-	pDph_t->tunedef[6] = (short*)default_tune;;
-	pDph_t->tunedef[7] = (short*)default_tune;;
-	pDph_t->tunedef[8] = (short*)default_tune;;
-	pDph_t->tunedef[9] = (short*)default_tune;;
-#elif defined(HLSYN) || defined(CHANGES_AFTER_V43)
+#if defined(HLSYN) || defined(CHANGES_AFTER_V43)
 	if(pKsd_t->lang_curr == LANG_english)
 	{
 	pDph_t->tunedef_8[0] = (short*)us_paul_8_tune;
@@ -626,35 +501,6 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	pDph_t->tunedef[8] = (short*)wendy_tune;
 	pDph_t->tunedef[9] = (short*)val_tune;*/
 
-
-#ifdef MSDOS
-	pKsd_t->lang_curr = LANG_none;	/* KM added for initilizing lang tables */
-#endif
-
-#ifdef MSDOS
-#ifdef ENGLISH_US
-		default_lang (LANG_english, LANG_ph_ready);
-#endif
-#ifdef ENGLISH_UK
-		default_lang (LANG_british, LANG_ph_ready);
-#endif
-#ifdef SPANISH_SP
-		default_lang (LANG_spanish, LANG_ph_ready);
-#endif
-#ifdef SPANISH_LA
-		default_lang (LANG_latin_american, LANG_ph_ready);
-#endif
-#ifdef GERMAN                        
-		default_lang (LANG_german, LANG_ph_ready);
-#endif
-#ifdef FRENCH
-		default_lang (LANG_french, LANG_ph_ready);
-#endif
-
-	create_process (kltask, 4, data_seg, stack_start, 0);
-
-
-#else
 #ifdef ENGLISH_US
 		default_lang (pKsd_t, LANG_english, LANG_ph_ready);
 #endif
@@ -676,17 +522,8 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 
 	kltask (phTTS);
 	return MMSYSERR_NOERROR;
-#if defined (MSDOS) || defined (WIN32_OLD)
-	return 0;						/* No error MVP */
-#endif
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	return MMSYSERR_NOERROR;
-#endif
-#endif
 }
 
-#ifndef MSDOS
-#ifndef ARM7
 void FreePHInstanceData(PDPH_T pDph_t)
 {
 if (pDph_t->pSTphsettar)
@@ -703,6 +540,4 @@ if (pDph_t->pSTphsettar)
 pDph_t = NULL;
      
      }
-#endif
-#endif
 /*****************************end of phmain.c**************************************/

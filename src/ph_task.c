@@ -149,31 +149,13 @@
 #include "dectalkf.h"
 #include "ph_def.h"				/* the new all inclusive include file for ph */
 
-
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 #include <string.h>
-#endif
 
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-#include "objbase.h" /* for CoTaskMemAlloc and CoTaskMemFree, JAW 4/6/98 */
-#endif
-
-#ifdef ARM7
-#ifndef EPSON_ARM7
-extern short	cur_packet_number;
-extern short	max_packet_number;
-#endif
-#endif
 /* #define GLD */
 
 int              readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[]);
 void             speak_now (LPTTS_HANDLE_T phTTS);
-
-
-#ifdef MSDOS
-	extern LPTTS_HANDLE_T phTTS;
-#endif
 
 
 /* ******************************************************************
@@ -199,11 +181,7 @@ void             speak_now (LPTTS_HANDLE_T phTTS);
  *
  * *****************************************************************/
 
-#ifdef MSDOS
-void far kltask (void)
-#else
 void far kltask (LPTTS_HANDLE_T phTTS)
-#endif
 {
 	int                     new_phone;
 	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
@@ -214,28 +192,7 @@ void far kltask (LPTTS_HANDLE_T phTTS)
  	 */
     /* speaking rate set to 180 as default */
 
-#ifdef EPSON_ARM7
-	pDph_t->tunedef_8[0] = (short*)default_tune;
-	pDph_t->tunedef_8[1] = (short*)default_tune;
-	pDph_t->tunedef_8[2] = (short*)default_tune;
-	pDph_t->tunedef_8[3] = (short*)default_tune;
-	pDph_t->tunedef_8[4] = (short*)default_tune;
-	pDph_t->tunedef_8[5] = (short*)default_tune;
-	pDph_t->tunedef_8[6] = (short*)default_tune;
-	pDph_t->tunedef_8[7] = (short*)default_tune;
-	pDph_t->tunedef_8[8] = (short*)default_tune;
-	pDph_t->tunedef_8[9] = (short*)default_tune;
-	pDph_t->tunedef[0] = (short*)default_tune;
-	pDph_t->tunedef[1] = (short*)default_tune;
-	pDph_t->tunedef[2] = (short*)default_tune;
-	pDph_t->tunedef[3] = (short*)default_tune;
-	pDph_t->tunedef[4] = (short*)default_tune;
-	pDph_t->tunedef[5] = (short*)default_tune;
-	pDph_t->tunedef[6] = (short*)default_tune;
-	pDph_t->tunedef[7] = (short*)default_tune;
-	pDph_t->tunedef[8] = (short*)default_tune;
-	pDph_t->tunedef[9] = (short*)default_tune;
-#elif defined(HLSYN) || defined(CHANGES_AFTER_V43)
+#if defined(HLSYN) || defined(CHANGES_AFTER_V43)
 	if(pKsd_t->lang_curr == LANG_english)
 	{
 	pDph_t->tunedef_8[0] = (short*)us_paul_8_tune;
@@ -357,7 +314,7 @@ void far kltask (LPTTS_HANDLE_T phTTS)
 	pDph_t->param[OUT_DC].outp = &(pDph_t->parstochip[OUT_DC]);
 #endif
 	init_phclause (pDph_t);
-#if defined SPANISH && !defined EPSON_ARM7
+#if defined SPANISH
 
 	pKsd_t->async_voice =HUGE_HARRY;
 	
@@ -411,7 +368,6 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 		if (nextra==-1)
 			return;
 		/* display debug switch manual once */
-#ifndef ARM7_NOSWI
 		if (pKsd_t->debug_switch == 0x2fff)
 		{
 			printf("PH debug switch description:\n");
@@ -425,7 +381,6 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 			/* reset to 0 again */
 			pKsd_t->debug_switch = 0;
 		}
-#endif		
 
 		if (pKsd_t->halting)
 		{
@@ -448,15 +403,9 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 			speak_now (phTTS);
 
 #ifndef SEPARATE_PROCESSES
-#ifdef MSDOS
-			spcwrite ((unsigned short _far *) spcget (SPC_type_sync));
-#endif
-/* GL 04/21/1997  change to be the same as the latest OSF code */
-#ifndef MSDOS
 //#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 			buf[0] = SPC_type_sync;
 			vtm_loop(phTTS,buf);
-#endif // #ifndef MSDOS
 #endif // SEPARATE_PROCESSES
 		/* 
 		 * #ifdef WIN32_OLD buf[0] = SPC_type_sync; 
@@ -476,10 +425,6 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 
 		if (pKsd_t->async_change)
 		{
-#ifdef EPSON_ARM7
-			if (pDph_t->nsymbtot>1)
-				phTTS->PTS_special_change=6; //PTS_BACKUP_ONE_PHONE
-#endif
 			speak_now (phTTS);
 			while (pKsd_t->async_change)
 			{
@@ -517,9 +462,6 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 					pKsd_t->async_change &= (~ASYNC_period);
 				}
 			}
-#ifdef MSDOS
-			continue;
-#endif
 		}
 
 		/* 
@@ -534,20 +476,8 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 		/* debug eab */
 		if (   buf[0] == INDEX 
 			|| buf[0] == INDEX_REPLY   // tek 01aug97 bats 404 new msg types
-#ifdef WIN32_OLD
-			|| buf[0] == INDEX_BOOKMARK
-			|| buf[0] == INDEX_WORDPOS
-			|| buf[0] == INDEX_START
-			|| buf[0] == INDEX_STOP
-			|| buf[0] == INDEX_SENTENCE
-			|| buf[0] == INDEX_VOLUME
-			|| buf[0] == INDEX_NOISE
-#endif //WIN32_OLD
 		   )
 		{
-#ifdef MSDOS
-				save_index (pDph_t->nsymbtot, buf[0], buf[1], buf[2]);
-#else
 				if (buf[0]==INDEX_START && pDph_t->nsymbtot==1)
 				{
 					save_index (pKsd_t, 0, buf[0], buf[1], buf[2]);
@@ -556,7 +486,6 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 				{
 					save_index (pKsd_t, pDph_t->nsymbtot, buf[0], buf[1], buf[2]);
 				}
-#endif
 
 			return;
 		}
@@ -653,11 +582,7 @@ void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 				printf ("This is the octal number %o\n\r", 'c');
 				printf ("This is the binary number %b\n\r", 'c');
 #endif
-#ifdef MSDOS
-				logitem (buf);
-#else
 				logitem (phTTS, buf);
-#endif
 			}
 			switch (buf[0])
 			{
@@ -863,9 +788,7 @@ if (pKsd_t->lang_curr==LANG_french)
  * *****************************************************************/
 void speak_now (LPTTS_HANDLE_T phTTS)
 {
-#ifndef MSDOS
 	DT_PIPE_T               pipe_item[1];
-#endif
 	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
 	PDPH_T                  pDph_t = phTTS->pPHThreadData;
 	int n=0;
@@ -880,19 +803,6 @@ if (pKsd_t->lang_curr!=LANG_french)
 	}	
 }
 	pDph_t->nphonelast=-1; //init to an impossible value
-#ifdef DTEX
-	if (pKsd_t->spc_sleeping)
-	{
-		/* 
-		 * we've put the DSP to sleep; have to wake it up before  
-		 * we try to do anything else. Make sure there is a speakerdef 
-		 * packet in there to reinit the DSP before anything else 
-		 * gets to it.. 
-		 */
-		dsp_wakeup ();
-		setspdef (phTTS);
-	}
-#endif								   /* DTEX */
 
 	if ((pDph_t->nsymbtot > 1) && (pKsd_t->halting == FALSE))
 	{
@@ -910,11 +820,7 @@ if (pKsd_t->lang_curr!=LANG_french)
 			printf ("This is the octal number %o\n\r", 'c');
 			printf ("This is the binary number %b\n\r", 'c');
 #endif
-#ifdef MSDOS
-			logclaus (pDph_t->symbols, pDph_t->nsymbtot, pDph_t->user_durs, pDph_t->user_f0);
-#else
 			logclaus (phTTS, pDph_t->symbols, pDph_t->nsymbtot, pDph_t->user_durs, pDph_t->user_f0);
-#endif
 		}
 #if (defined ENGLISH) || (defined SPANISH) || (defined FRENCH) /* no syllablification in german */
 		/* debug switch */
@@ -966,35 +872,14 @@ if (pKsd_t->lang_curr!=LANG_french)
 #endif  // DEBGFRENCH
 			//saysyllable (phTTS);
 			phclause (phTTS);
-#ifdef EPSON_ARM7
-			if (phTTS->PTS_return_code!=5)
-				return;
-#endif
 		}
-#ifdef MSDOS
-		block (NULL_FP);			   /* run a scheduler pass.. */
-#endif
 		if (pDph_t->reset_pitch)
 		{
 			setparam (phTTS, 3, pDph_t->default_pitch);
 			pDph_t->reset_pitch = FALSE;
 		}
 	}	// (pDph_t->nsymbtot > 1) && (pKsd_t->halting == FALSE)
-#ifdef MSDOS
-        else /*tek 6/25/96 */
-        {
-           /* we might have a load-speaker pending with nothing else in */
-           /* process.. */
-           if (pDph_t->loadspdef)
-           {
-                setspdef(phTTS);
-                pDph_t->loadspdef=0;
-            }
-        }
-	check_index (PHONE_HUGE);
-#else
 	check_index (phTTS, PHONE_HUGE);
-#endif // MSDOS
 
 	pDph_t->symbols[0] = GEN_SIL;
 	pDph_t->bound = COMMA;
@@ -1006,21 +891,13 @@ if (pKsd_t->lang_curr!=LANG_french)
 /* GL 04/21/1997  change to be the same as the latest OSF code */
 	if (pDph_t->nsymbtot>1)
 	{
-#ifndef MSDOS
 	//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7
 	/* write forced clause boundary symbol to VTM */
 	pipe_item[0] = SPC_type_force;
 	/* debug switch GL 3/27/1997 BATS#319 */
 	if (!(DT_DBG(PH_DBG,0x800)))
 	vtm_loop(phTTS,pipe_item);
-#endif // MSDOS
 	}
-#ifdef ARM7
-#ifndef EPSON_ARM7
-	cur_packet_number=0;
-	max_packet_number=0;
-#endif
-#endif
 }	// speak_now
 
 
@@ -1093,8 +970,6 @@ int readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[])
 		/* GL 09/01/1998 BATS#755  fix the PH pipe data display format to show the control section */
 		if (DT_DBG(PH_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 			{
 				if ((buf[0] & 0x1f00) != PFCONTROL << PSFONT)
@@ -1105,7 +980,6 @@ int readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[])
 					fprintf (pKsd_t->dbglog,"\n(*%d-%d--%d)",(buf[0] & 0xe000) >> PSNEXTRA,(buf[0] & 0x1f00) >> PSFONT,buf[0] & 0xff);
 				}
 			}
-#endif
 			if ((buf[0] & 0x1f00) != PFCONTROL << PSFONT)
 				printf ("\n(%d-%d--%d-%c%c)",(buf[0] & 0xe000) >> PSNEXTRA,(buf[0] & 0x1f00) >> PSFONT,buf[0] & 0xff,
 											   pKsd_t->arpabet[(buf[0] & 0xff) * 2],pKsd_t->arpabet[(buf[0] & 0xff) * 2 + 1]);
@@ -1113,7 +987,6 @@ int readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[])
 			{
 				printf ("\n(*%d-%d--%d)",(buf[0] & 0xe000) >> PSNEXTRA,(buf[0] & 0x1f00) >> PSFONT,buf[0] & 0xff);
 			}
-#endif // ARM7_NOSWI
 		}
 
 		nextra = (buf[0] & PNEXTRA) >> PSNEXTRA;
@@ -1127,13 +1000,9 @@ int readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[])
 		/* debug switch */
 		if (DT_DBG(PH_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
 				fprintf (pKsd_t->dbglog,"\n(#%u[0x%x])",buf[i],buf[i]);
-#endif
 			printf ("\n(#%u[0x%x])",buf[i],buf[i]);
-#endif // ARM7_NOSWI
 		}
 			if (pKsd_t->halting)
 			{
@@ -1169,12 +1038,6 @@ int readphone (PKSD_T pKsd_t, register DT_PIPE_T buf[], DT_PIPE_T input[])
  *
  * *****************************************************************/
 
-#ifdef MSDOS
-#if     NSAMP_FRAME != 64
-<<<Big trouble.In "PH" code too ! >>>
-#endif
-#endif // MSDOS
-
 int mstofr (int nms)
 {
         S32                     temp;
@@ -1184,125 +1047,8 @@ int mstofr (int nms)
         return ((int) (temp >> 6));
 }
 
-/* ******************************************************************
- *      Function Name: GetCurrentPitch()
- *
- *  	Description: 
- *
- *      Arguments: LPTTS_HANDLE_T phTTS		Text-to-speech handle
- *				   int *pitch
- *
- *      Return Value: int
- *
- *      Comments:
- *
- * *****************************************************************/
-#ifdef WIN32_OLD
-#ifdef SAPI_GROUP_F_INTERFACES
-int GetCurrentPitch(LPTTS_HANDLE_T phTTS, int *pitch)
-{
-	PDPH_T pDph_t;
-	if (phTTS==NULL)
-		return(MMSYSERR_INVALPARAM);
-	pDph_t = phTTS->pPHThreadData;
-	*pitch=pDph_t->curspdef[SPD_AP];
-	return(MMSYSERR_NOERROR);
-}
-#endif
-
-/* ******************************************************************
- *      Function Name: GetDefaultPitch()
- *
- *  	Description:
- *
- *      Arguments: LPTTS_HANDLE_T phTTS		Text-to-speech handle
- *				   int *pitch
- *
- *      Return Value: int
- *
- *      Comments:
- *
- * *****************************************************************/
-#ifdef SAPI5DECTALK
-int GetDefaultPitch(LPTTS_HANDLE_T phTTS, int *pitch)
-{
-	PKSD_T pKsd_t;
-	PDPH_T pDph_t;
-
-	short			*newspdef;
-	short			*tunespdef;
-
-	if (phTTS==NULL)
-		return(MMSYSERR_INVALPARAM);
-	
-	pKsd_t=phTTS->pKernelShareData;
-	pDph_t=phTTS->pPHThreadData;
-
-	if (pKsd_t->uiSampleRate < 8763)
-	{
-		newspdef = pDph_t->voidef_8[pKsd_t->last_voice];
-		tunespdef = pDph_t->tunedef_8[pKsd_t->last_voice];
-	}
-	else
-	{
-		newspdef = pDph_t->voidef[pKsd_t->last_voice];
-		tunespdef = pDph_t->tunedef[pKsd_t->last_voice];
-	}
-
-	*pitch=(newspdef[SPD_AP]+tunespdef[SPD_AP]);
-	return(MMSYSERR_NOERROR);
-}
-
-/* ******************************************************************
- *      Function Name: GetDefaultPitchRange()
- *
- *  	Description: 
- *
- *      Arguments: LPTTS_HANDLE_T phTTS		Text-to-speech handle
- *				   int *pitch
- *
- *      Return Value: int
- *
- *      Comments:
- *
- * *****************************************************************/
-int GetDefaultPitchRange(LPTTS_HANDLE_T phTTS, int *pitch_range)
-{
-	PKSD_T pKsd_t;
-	PDPH_T pDph_t;
-
-	short			*newspdef;
-	short			*tunespdef;
-
-	if (phTTS==NULL)
-		return(MMSYSERR_INVALPARAM);
-	
-	pKsd_t=phTTS->pKernelShareData;
-	pDph_t=phTTS->pPHThreadData;
-
-	if (pKsd_t->uiSampleRate < 8763)
-	{
-		newspdef = pDph_t->voidef_8[pKsd_t->last_voice];
-		tunespdef = pDph_t->tunedef_8[pKsd_t->last_voice];
-	}
-	else
-	{
-		newspdef = pDph_t->voidef[pKsd_t->last_voice];
-		tunespdef = pDph_t->tunedef[pKsd_t->last_voice];
-	}
-
-	*pitch_range=(newspdef[SPD_PR]+tunespdef[SPD_PR]);
-	return(MMSYSERR_NOERROR);
-}
-
-#endif
-#endif
-
 /* The following two functions are used for the API, so they are not compiled under MS-DOS.
    JAW 5/4/98 */
-#ifndef MSDOS
-
-#ifndef ARM7
 
 /* ******************************************************************
  *		Function: GetPhVdefParams()                                      
@@ -1324,19 +1070,11 @@ short *GetPhVdefParams(LPTTS_HANDLE_T phTTS, UINT index)
 {
 	short *params=NULL;
 	
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-	params = (short *) CoTaskMemAlloc(sizeof(SPDEFS));
-#else
 	params = (short *) malloc(sizeof(SPDEFS));
-#endif
 
 	if (params == NULL)
 	{
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-		CoTaskMemFree(params);
-#else
 		free(params);
-#endif
 		return NULL;
 	}
 	switch (index) 
@@ -1406,64 +1144,33 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	pKsd_t = phTTS->pKernelShareData;
 	voice = pKsd_t->last_voice;
 
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-	*ppspCur     = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
-#else
 	*ppspCur     = (SPDEFS *) malloc(sizeof(SPDEFS));
-#endif
 
 	if (*ppspCur == NULL)
 		return MMSYSERR_NOMEM;
 
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-	*ppspLoLimit = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
-#else
 	*ppspLoLimit = (SPDEFS *) malloc(sizeof(SPDEFS));
-#endif
 
 	if (*ppspLoLimit == NULL)
 	{
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-		CoTaskMemFree(*ppspCur);
-#else
 		free(*ppspCur);
-#endif
 		return MMSYSERR_NOMEM;
 	}
 
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-	*ppspHiLimit = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
-#else
 	*ppspHiLimit = (SPDEFS *) malloc(sizeof(SPDEFS));
-#endif
 	if (*ppspHiLimit == NULL)
 	{
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-		CoTaskMemFree(*ppspCur);
-		CoTaskMemFree(*ppspLoLimit);
-#else
 		free(*ppspCur);
 		free(*ppspLoLimit);
-#endif
 		return MMSYSERR_NOMEM;
 	}
 
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-	*ppspDefault = (SPDEFS *) CoTaskMemAlloc(sizeof(SPDEFS));
-#else
 	*ppspDefault = (SPDEFS *) malloc(sizeof(SPDEFS));
-#endif
 	if (*ppspDefault == NULL)
 	{
-#if defined(WIN32_OLD) && !defined(UNDER_CE)
-		CoTaskMemFree(*ppspCur);
-		CoTaskMemFree(*ppspLoLimit);
-		CoTaskMemFree(*ppspHiLimit);
-#else
 		free(*ppspCur);
 		free(*ppspLoLimit);
 		free(*ppspHiLimit);
-#endif
 		return MMSYSERR_NOMEM;
 	}
 
@@ -1505,9 +1212,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	(*ppspCur)->open_quo      = pDph_t->curspdef[SPD_OQ] - (pDph_t->tunedef[voice][SPD_OQ]);
 
 
-#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	(*ppspCur)->output_gain_mult   = pDph_t->curspdef[SPD_OS] - (pDph_t->tunedef[voice][SPD_OS]);
-#endif
 
 	/* Fill low limits for speaker parameters */
 	/* The limits are taken from the limit array, which is defined in ph_vdefi.c. */
@@ -1655,9 +1360,7 @@ MMRESULT GetSpeakerParams(LPTTS_HANDLE_T phTTS, UINT uiIndex, SPDEFS **ppspCur,
 	(*ppspDefault)->hat_rise           = cur_speaker[SPD_HR];
 	(*ppspDefault)->stress_rise        = cur_speaker[SPD_SR];
 	(*ppspDefault)->avg_glot_open      = cur_speaker[SPD_AGO];
-#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	(*ppspDefault)->output_gain_mult   = cur_speaker[SPD_OS];
-#endif
 
 	return MMSYSERR_NOERROR;
 }
@@ -1732,13 +1435,9 @@ MMRESULT SetSpeakerParams(LPTTS_HANDLE_T phTTS, SPDEFS *pspSet)
 	pDph_t->curspdef[SPD_CHINK]  = pspSet->area_chink	 +	(pDph_t->tunedef[voice][SPD_CHINK]);
 	pDph_t->curspdef[SPD_OQ]  = pspSet->open_quo	 +	(pDph_t->tunedef[voice][SPD_OQ]);
 
-#if (defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__) && !defined (i386) && !defined (__APPLE__)
 	pDph_t->curspdef[SPD_OS]  = pspSet->output_gain_mult + (pDph_t->tunedef[voice][SPD_OS]);;
-#endif
 
 	pDph_t->loadspdef = TRUE; /* inform PH to reload the VTM on the next utterance */
 
 	return MMSYSERR_NOERROR;
 }
-#endif // ARM7
-#endif // MSDOS
