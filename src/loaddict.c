@@ -73,7 +73,10 @@
 #include <fcntl.h>
 #include "dtmmedefs.h"
 //#include "opthread.h"
+
+#ifdef __linux__
 #include <unistd.h>
+#endif
 
 #ifndef NO_FILESYSTEM
 #ifdef _WIN32
