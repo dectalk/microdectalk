@@ -4685,7 +4685,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	while (high>=low)
 	{
 		mid=(high+low)>>1;
-		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=portstricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;
@@ -4705,7 +4705,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	if (!found)
 	{
 		mid=high;
-		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=portstricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;
@@ -4714,7 +4714,7 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	if (!found)
 	{
 		mid=low;
-		value=_stricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
+		value=portstricmp(word,&(verb_pairs_words[verb_pairs_index[mid]]));
 		if (value==0)
 		{
 			found=1;

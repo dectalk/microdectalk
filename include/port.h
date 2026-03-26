@@ -75,7 +75,7 @@ typedef void * PVOID;
 typedef uint32_t UINT;
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
 //#define _stricmp strcasecmp
-extern int _stricmp(const char *a, const char *b);
+extern int portstricmp(const char *a, const char *b);
 
 #define PRINTFDEBUG_OLD
 typedef uint64_t PTRINT;

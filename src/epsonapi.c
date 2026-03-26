@@ -385,7 +385,7 @@ short TextToSpeechGetSpdefValue(int index)
 
 // put here for portability
 #include <ctype.h>
-int _stricmp(const char *a, const char *b) {
+int portstricmp(const char *a, const char *b) {
     while (*a && *b) {
         int diff = tolower((unsigned char)*a) - tolower((unsigned char)*b);
         if (diff != 0) return diff;

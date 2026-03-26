@@ -3602,7 +3602,7 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 #ifdef PARSER_DEBUG_OLD
 		printf("comparing %s to %d %s\n",input,pos,(unsigned char *)(dict_data_table+dict_index_table[pos]));
 #endif
-		if ((value=_stricmp(input,(unsigned char *)(dict_data_table+dict_index_table[pos])))==0)
+		if ((value=portstricmp(input,(unsigned char *)(dict_data_table+dict_index_table[pos])))==0)
 		{
 			break;
 		}
@@ -3637,13 +3637,13 @@ int par_search_for_word( unsigned char *input, int input_length, unsigned char *
 	}
 	/* do the case sensitive part of the search */
 	rev_same=pos-1;
-	while ((rev_same>=low) && (_stricmp(input,(unsigned char *)(dict_data_table+dict_index_table[rev_same]))==0))
+	while ((rev_same>=low) && (portstricmp(input,(unsigned char *)(dict_data_table+dict_index_table[rev_same]))==0))
 	{
 		rev_same--;
 	}                  
 	for_same=pos+1;
 	/* BATS 895 Fixed problem with spanish phone numbers with 9 */
-	while ((for_same<=high) && (_stricmp(input,(unsigned char *)(dict_data_table+dict_index_table[for_same]))==0))
+	while ((for_same<=high) && (portstricmp(input,(unsigned char *)(dict_data_table+dict_index_table[for_same]))==0))
 	{
 		for_same++;
 	}                  
