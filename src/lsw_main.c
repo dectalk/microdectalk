@@ -125,6 +125,10 @@
 struct share_data       *kernel_share;
 #endif
 
+#ifdef __linux__
+#include <unistd.h>
+#endif
+
 int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name);
 void default_lang(PKSD_T, unsigned int, unsigned int); // NAL warning removal
 

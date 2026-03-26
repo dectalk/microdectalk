@@ -47,7 +47,6 @@
 #define _PORT_H
 
 #include "dectalkf.h"
-#include <unistd.h>
 #include <stdio.h>
 
 /*
