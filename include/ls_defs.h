@@ -87,7 +87,7 @@
 
 #include "esc.h"
 
-#if !defined VXWORKS && defined __unix__ && !defined _SPARC_SOLARIS_ && !defined (__APPLE__)
+#ifndef NULL
 #define NULL    ((void *)0)
 #endif
 /* #define NULL 0 */
@@ -510,21 +510,10 @@ typedef	struct LETTER_struct	{
 #define ISVOWEL(c) 	((lsctype[(c)]&OO)!=0)
 #define _TOLOWER(c) (c += ('a' - 'A'))  /* Known to be uppercase */
 
-#ifdef VMS
-#define NBR_DEBUG_OLD       1
-#define LTS_DEBUG_OLD       2
-#define SYL_DEBUG_OLD       4
-#define STR_DEBUG_OLD       8
-#define DIC_DEBUG_OLD       16
-#define DEBUG_OLD(what)     ((lprintsw & (what)) != 0)
-#define dt_lock()                                                
-#define dt_unlock()
-#else
 #define NBR_DEBUG_OLD       0
 #define SYL_DEBUG_OLD       0
 #define STR_DEBUG_OLD       0
 #define DIC_DEBUG_OLD       16      
-#endif // VMS
 
 #endif // SPANISH
 
@@ -548,13 +537,6 @@ typedef	struct LETTER_struct	{
 #define BYTE unsigned char  /* de 0 a 255 */
 #define FLAG short          /* Bool‚en */
 #endif	// FRENCH
-
-
-#if defined ARM7 && !defined FRENCH
-//#define SHORT 	unsigned short  /* de 0 a 65535 */
-#define BYTE unsigned char  /* de 0 a 255 */
-//#define FLAG short          /* Bool‚en */
-#endif
 
 /*
  *  all routines that expect a far pointer must be prototyped ...
@@ -610,7 +592,7 @@ typedef struct  NUM_struct {
 /* from ls4.c -> ls_rule.c */
 
 typedef	struct GRAPH_struct	{
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	short g_graph;			/* Grapheme code		*/
 	short g_feats;			/* Set of features		*/
 #else

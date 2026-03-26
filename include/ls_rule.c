@@ -89,7 +89,7 @@
  */
 
 /* GL 09/24/1997 for BATS#470 change the LDS rule table handling */
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	extern unsigned char     lsbtab[];              /* Byte array.*/
 	extern unsigned short   lswtab[];               /* Word array.*/                 
 
@@ -123,7 +123,7 @@
 #endif
 #endif
 
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	short	rline;					/* Rule: line			*/
 	extern  int dflag;
 	extern  char pname[];
@@ -282,7 +282,7 @@ void ls_rule_do_lts(LPTTS_HANDLE_T phTTS,LETTER *lp2,LETTER *lp1)
 
 int ls_rule_show_phone(PHONE *pp1,PHONE *pp2,char *title)
 {
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	if (dflag == FALSE)			/* Not debugging.	*/
 		return(1);
 	printf("After %s:\n", title);

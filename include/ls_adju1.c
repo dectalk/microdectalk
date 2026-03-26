@@ -38,7 +38,7 @@
  *      
  * 
  */
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	extern int bflag;
 	extern int rflag;
 #endif

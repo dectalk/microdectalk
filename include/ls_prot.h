@@ -83,23 +83,11 @@ extern  struct PHONE *l_sp_ad1_wordstart(PLTS_T pLts_t, struct PHONE *wstart, st
 extern  void l_sp_ad1_stress(struct PHONE *wstart, struct PHONE *wend, int syllcount);
 #endif
 
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-extern int main(unsigned int data_seg, unsigned int stack_start);
-#endif
-
 extern PHONE *ls_rule_delete(PLTS_T pLts_t, PHONE *lsp);
 extern void ls_rule_do_lts(LPTTS_HANDLE_T phTTS, LETTER *lp2, LETTER *lp1);
 extern int ls_util_is_name(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp);
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 extern  void ls_task_main(LPTTS_HANDLE_T phTTS);
-#endif
-
-#ifdef MSDOS
-extern  void __far ls_task_main(void);
-#endif
 
 extern  void ls_proc_do_sign(LPTTS_HANDLE_T phTTS, int sign);
 extern  void ls_proc_do_part_number(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp);
@@ -280,22 +268,11 @@ extern int  ls_task_lookup_first_verbs(LPTTS_HANDLE_T phTTS);
 void ls_task_read_sentence(LPTTS_HANDLE_T phTTS);
 #endif
 
-
-#ifndef EPSON_ARM7
 void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-#endif
 
 void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
 void lts_main_loop(LPTTS_HANDLE_T phTTS);
 int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf);
-
-#ifdef EPSON_ARM7
-extern void fill_TTP_buffer(LPTTS_HANDLE_T phTTS,short *phone,int count);
-#endif
-
-#ifdef ARM7
-int lts_main(LPTTS_HANDLE_T phTTS);
-#endif
 
 extern void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char *pp);
 

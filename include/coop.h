@@ -323,9 +323,7 @@
 #define COMPANY "DECtalk Software"
 #define PRODUCT "DECtalk"
 
-#ifndef UNDER_CE
 #define CURRENT_USER_PRODUCT "DECtalk\\" VERSION
-#endif
 
 #endif	// ACI_LICENCE
 
@@ -365,31 +363,15 @@ CHAR gszLicenseKey[] =
 #ifndef DTDEMO
 
 #ifdef WINDIC_C_STATIC
-#ifdef UNDER_CE
-LPTSTR szLocalMachineDECtalk;
-#else
 LPSTR szLocalMachineDECtalk;
-#endif
 
 #else
-
-#ifdef UNDER_CE
-
-LPTSTR szLocalMachineDECtalk =
-	TEXT("SOFTWARE\\") TEXT(COMPANY) TEXT("\\") TEXT(PRODUCT) TEXT("\\") TEXT(VERSION) TEXT("\\") TEXT(DECTALK_LANGUAGE);
-
-LPTSTR szCurrentUsersDECtalk =
-    TEXT("Software\\") TEXT(COMPANY) TEXT("\\") TEXT(PRODUCT) TEXT("\\") TEXT(VERSION) TEXT("\\") TEXT(DECTALK_LANGUAGE);
-
-
-#else //UNDER_CE 
 
 LPSTR szLocalMachineDECtalk =
 	"SOFTWARE\\" COMPANY "\\" PRODUCT "\\" VERSION "\\" DECTALK_LANGUAGE;
 
 LPSTR szCurrentUsersDECtalk =
     "Software\\" COMPANY "\\" CURRENT_USER_PRODUCT "\\" DECTALK_LANGUAGE;
-#endif //UNDER_CE
 
 
 /* GL 09/25/1997 add abbreviation dict entry and UK_english support */
@@ -445,14 +427,8 @@ LPSTR szCurrentUsersTTSsrv =
 
 #ifdef UPDATERG_C
 
-#ifdef UNDER_CE
-TCHAR szLicenseKey[] = 
-      TEXT("Software\\") TEXT(COMPANY) TEXT("\\") TEXT(PRODUCT) TEXT("\\") TEXT(VERSION);
-
-#else	// UNDER_CE
 CHAR szLicenseKey[] = 
       "Software\\" COMPANY "\\" PRODUCT "\\" VERSION;
-#endif // UNDER_CE
 #endif /* UPDATERG_C  */
 
 

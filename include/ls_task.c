@@ -221,24 +221,11 @@ extern void ls_suff_print_fc(LPTTS_HANDLE_T phTTS);
 #define SPELL_WORD      2
 #define FINISHED_WORD   3
 
-#if defined __unix__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdio.h>
-#endif
 
-#ifndef ARM7
 extern char *form_class_strings[];
-#endif
 /* when running on DECtalk PC this parameter can't be passed to */
 /* ls_task_main so a global is used */
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS           
-	extern LPTTS_HANDLE_T phTTS;
-#endif
-
-#if defined (WIN32) && defined (PRINTFDEBUG_OLD) && defined _DEBUG_OLD
-extern int Thread_Alive;
-extern int in_winmain;
-#endif
 
 /* ******************************************************************
  *  Function Name:
@@ -260,19 +247,7 @@ extern int in_winmain;
  *
 * *****************************************************************/
      
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 void ls_task_main(LPTTS_HANDLE_T phTTS)
-#endif
-
-#ifdef ARM7
-void ls_task_main(LPTTS_HANDLE_T phTTS)
-#endif
-
-#ifdef MSDOS
-void far ls_task_main(void)
-#endif
-
 {
 	/* of special words.*/ 
 	PKSD_T  pKsd_t;
@@ -303,9 +278,6 @@ void far ls_task_main(void)
 	pLts_t->isnumabr=0;
 
     pLts_t->pflp = 0;   
-#ifdef MSDOS
-	pKsd_t->lang_curr = LANG_none; 
-#endif
 #ifdef SPANISH
     pLts_t->got_quote = 0;
 #endif  
@@ -334,11 +306,7 @@ void far ls_task_main(void)
 
 }
 
-#ifdef EPSON_ARM7
-void lts_loop_2(LPTTS_HANDLE_T phTTS,unsigned short *input)
-#else
 void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
-#endif
 {
 //	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PLTS_T pLts_t = phTTS->pLTSThreadData;	
@@ -368,19 +336,15 @@ void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input)
 				return;
 			}
 #endif
-#ifndef ARM7
 			if (phTTS->bInReset)	
 				return;
-#endif
 			pLts_t->first_pass=1;
 #ifdef HLSYN
 			ls_task_parse_sentence(phTTS);
 #endif
 			pLts_t->input_array[pLts_t->cur_input_pos]=0;
 			pLts_t->first_pass=0;
-#ifndef ARM7
 			if (!phTTS->bInReset)	
-#endif
 				lts_main_loop(phTTS);
 			pLts_t->cur_input_pos=0;
 			pLts_t->num_indexes=0;
@@ -432,9 +396,7 @@ parse_label:		if (pLts_t->cur_input_pos!=0)
 			ls_task_parse_sentence(phTTS);
 			pLts_t->input_array[pLts_t->cur_input_pos]=0;
 			pLts_t->first_pass=0;
-#ifndef ARM7
 			if (!phTTS->bInReset)	
-#endif
 				lts_main_loop(phTTS);
 		}
 		pLts_t->cur_input_pos=0;
@@ -445,11 +407,7 @@ parse_label:		if (pLts_t->cur_input_pos!=0)
 			//			ls_util_read_item(phTTS);
 			//			ls_util_write_item(phTTS);
 			//		}
-#ifdef EPSON_ARM7
-		fill_TTP_buffer(phTTS,input,(((input[0])&PNEXTRA) >> PSNEXTRA)+1);
-#else
 			ph_loop(phTTS,input);
-#endif
 		pLts_t->nitem.i_nword = 0;
 		
 		//		lts_main_loop(phTTS);
@@ -499,19 +457,10 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 
 		/* ET 6/9/1998: BATS #691
 		copied from ...\dapi\src\CMD\cm_pars.c to get the debug win to come up */
-#if defined (WIN32_OLD) && defined (PRINTFDEBUG_OLD)
-		/* open debug window for window environement */
-		if (/*(windbg_flag == 0) && ET 6/9/1998*/(Thread_Alive == 0) && (in_winmain==0) && (pKsd_t->debug_switch != 0 || pKsd_t->logflag != 0))
-		{
-			WINstart_thread();
-		/*	windbg_flag = 1;	ET 6/9/1998: not defined in ls_task. */ 
-		}
-#endif
 #ifdef FRENCH
 		pLts_t->contgc = FALSE; //default is false
 #endif
 		/* display debug switch manual once */
-#ifndef ARM7_NOSWI
 		if (pKsd_t->debug_switch == 0x4fff)
 		{
 			printf("LTS debug switch description:\n");
@@ -526,7 +475,6 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 			/* reset to 0 again */
 			pKsd_t->debug_switch = 0;
 		}
-#endif
 
 #ifdef NEW_LTS
 		pLts_t->first_pass=1; // this is here for now
@@ -564,9 +512,7 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 #ifndef NEW_LTS
 		if (DT_DBG(LTS_DBG,0x001))
 		{
-#ifndef ARM7_NOSWI
 			ls_util_dump_cword (pLts_t->cword, "LTS Input:");
-#endif
 		}
 #ifdef DUMP_WORD
 		ls_util_dump_cword (pLts_t->cword, "ltsinput:");
@@ -576,10 +522,7 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 		/* 
 		 *...tek block here to make sure PH has something to do and that
 		 *	we don't hog the CPU.. 
-		 */
-#ifdef MSDOS
-		block(NULL_FP);
-#endif    
+		 */  
 		/* 
 		 * xxxx eab WE added code to allow for double abreviations such as
 		 *	4 sq. ft. but we need to block these abbreviations in normal
@@ -679,9 +622,6 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS)
 					done++;
 				}
 #ifdef _DEBUG_OLD 
-#ifndef UNDER_CE
-			printf("hit it \n");
-#endif
 #endif // _DEBUG_OLD
 			//eab what if prefix-looks like another prefix imim should be ok
 			done=ls_task_dictionary_search(phTTS,llp,rlp);
@@ -1119,9 +1059,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 //#ifdef ENGLISH		
 		if((pKsd_t->logflag& LOG_FORM_TYPES) || DT_DBG(LTS_DBG,0x100))
 		{
-#ifndef ARM7_NOSWI
 			ls_suff_print_fc(phTTS);
-#endif
 		}
 //#endif
 		return;
@@ -1142,9 +1080,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 //#ifdef ENGLISH			
 			if((pKsd_t->logflag & LOG_FORM_TYPES) || DT_DBG(LTS_DBG,0x100))
 			{
-#ifndef ARM7_NOSWI
 				ls_suff_print_fc(phTTS);
-#endif
 			}
 //#endif				
 			ls_util_read_item(phTTS);
@@ -1167,9 +1103,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 //#ifdef ENGLISH
 		    if((pKsd_t->logflag& LOG_FORM_TYPES) || DT_DBG(LTS_DBG,0x100))
 			{
-#ifndef ARM7_NOSWI
 				ls_suff_print_fc(phTTS);
-#endif
 			}
 //#endif
 			ls_util_read_item(phTTS);
@@ -1184,9 +1118,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 //#ifdef ENGLISH			
 		    if((pKsd_t->logflag& LOG_FORM_TYPES) || DT_DBG(LTS_DBG,0x100))
 			{
-#ifndef ARM7_NOSWI
 				ls_suff_print_fc(phTTS);
-#endif
 			}
 //#endif				
 			pLts_t->wstate = UNK_WH;
@@ -1202,9 +1134,7 @@ void ls_task_do_right_punct(LPTTS_HANDLE_T phTTS,int flag)
 //#ifdef ENGLISH			
 			if((pKsd_t->logflag& LOG_FORM_TYPES) || DT_DBG(LTS_DBG,0x100))
 			{
-#ifndef ARM7_NOSWI
 				ls_suff_print_fc(phTTS);
-#endif
 			}
 //#endif				
 #ifndef NEW_LTS
@@ -2480,13 +2410,9 @@ int ls_task_spell_vs_speak(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
 				/* debug switch */
 		if (DT_DBG(LTS_DBG,0x400))
 			{
-#ifndef ARM7_NOSWI
-#ifndef MSDOS
 				if (pKsd_t->dbglog)			/*mfg 05/13/98 added debug support*/
 					fprintf((FILE *)pKsd_t->dbglog,"\nSPELL IT (HIT)");
-#endif // MSDOS
 				printf("\nSPELL IT (HIT)");
-#endif // ARM7_NOSWI
 		}
 
 		ls_spel_spell(phTTS,llp,rlp);
@@ -4725,21 +4651,12 @@ int find_next_marker(PLTS_T pLts_t,int pos)
 	return(count);
 }
 
-#ifndef ARM7
 #include "proverbs.h"
-#endif
 
-#if defined ARM7 || defined __unix__ || defined SPARC_SOLARIS || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #define stricmp strcasecmp
-#endif
-
-#ifdef UNDER_CE
-#define stricmp _stricmp
-#endif
 
 int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *word_end)
 {
-#ifndef ARM7
 	PLTS_T  pLts_t;
 	unsigned char word[200];
 	int high;
@@ -4809,12 +4726,10 @@ int ls_task_find_verb_particles(LPTTS_HANDLE_T phTTS,LETTER *word_start,LETTER *
 	{
 		return(mid);
 	}
-#endif
 	return(0);
 }
 
 
-#ifndef ARM7
 int ls_task_search_for_conj(PLTS_T pLts_t)
 {
 	int i,j;
@@ -4889,7 +4804,6 @@ int ls_task_search_for_conj(PLTS_T pLts_t)
 	}
 	return(0);
 }
-#endif
 
 /* ******************************************************************
  *  Function Name:ls_task_parse_sentence() 
@@ -5016,9 +4930,7 @@ void ls_task_parse_sentence(LPTTS_HANDLE_T phTTS)
 	}
 
 
-#ifndef ARM7
 	ls_task_search_for_conj(pLts_t);
-#endif
 
 	// insert prosidic markers on ";" ":" " - " "?" """ "(" ")" 
 	//    conjunctions, "that", prepositions that are not particles
@@ -5089,7 +5001,6 @@ void ls_task_parse_sentence(LPTTS_HANDLE_T phTTS)
 	// run the simple rules on the markers.
 
 	//do parsing stuff here.....
-#ifndef ARM7_NOSWI
 	if (DT_DBG(VTM_DBG,0x002))
 	{
 		for (i=0;i<pLts_t->cur_input_pos;i++)
@@ -5135,7 +5046,6 @@ void ls_task_parse_sentence(LPTTS_HANDLE_T phTTS)
 			}
 		}
 	}
-#endif
 
 	pLts_t->fc_index = 1;
 	pLts_t->old_fc_index = -1;

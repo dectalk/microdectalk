@@ -52,12 +52,12 @@
 #ifndef LS_DATAH
 #define LS_DATAH
 
-#if defined GERMAN || defined EPSON_ARM7
+#if defined GERMAN
 /* BACHUS INCLUDED HERE REWT:*/
 #include "bachus.h" 
 #endif
 
-#if defined FRENCH || defined EPSON_ARM7
+#if defined FRENCH
 #define	LgPile	30
 typedef struct {
   short LgPhon;    /* longueur max de Phon et PhonT */
@@ -137,13 +137,13 @@ typedef struct index_info {
 
 typedef struct LTS_TAG 
 {
-#if defined (VMS) || defined (LDS_BUILD)
+#if defined (LDS_BUILD)
 	unsigned short	rpart;
 #else
 	U16  	rpart;
 #endif
 
-#if defined GERMAN || defined EPSON_ARM7
+#if defined GERMAN
 /* ifdef BACHUS_I_INCLUDED */
 	wordgrammarinfo *bachus_wordgrammarinfo;    /* BACHUS REWT */
 // eab updated for bts10187 new junk node
@@ -206,7 +206,7 @@ typedef struct LTS_TAG
 	int   	pflag;
 	unsigned int hit_type;
 
-#if (defined ENGLISH && defined ACNA) || defined EPSON_ARM7
+#if (defined ENGLISH && defined ACNA)
 	char name[64];
 	int name_size;
 	struct	langs	lp[NO_LANGS];
@@ -215,14 +215,14 @@ typedef struct LTS_TAG
 	PHONE   pnode[NPNODE];                  /* Phoneme pool.                     */
 	int namef; 							    /* this flag seems useless           */ 
 
-#if defined SPANISH || defined EPSON_ARM7
+#if defined SPANISH
     int ord;
     int flag; 
     short dic_offset;
     int got_quote;
 #endif
 
-#if defined FRENCH || defined EPSON_ARM7
+#if defined FRENCH
 	char precedent [80]; //contains the preceding word in ascii
 	/* left string shorter than the current one */
 	short PilSauv [LgPile];
@@ -236,16 +236,5 @@ typedef struct LTS_TAG
 } LTS_T;
 typedef LTS_T *PLTS_T;
 typedef LTS_T **PPLTS_T;
-  
-/* GL 04/21/1997  change this for OSF build */
-#ifdef MSDOS
-typedef struct share_data far *PKSD_T;
-struct TTS_HANDLE_TAG
-{
-	PKSD_T	pKernelShareData;
-	PLTS_T	pLTSThreadData;
-}; 
-typedef struct TTS_HANDLE_TAG  *LPTTS_HANDLE_T;
-#endif /* #ifdef MSDOS */
 
 #endif // LS_DATAH
