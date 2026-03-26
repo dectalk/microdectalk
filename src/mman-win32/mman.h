@@ -11,7 +11,7 @@
 #endif						
 
 /* All the headers include this file. */
-#ifndef _MSC_VER
+#ifdef __MINGW32__
 #include <_mingw.h>
 #endif
 

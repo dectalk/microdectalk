@@ -402,7 +402,7 @@ parse_label:		if (pLts_t->cur_input_pos!=0)
 		pLts_t->cur_input_pos=0;
 		pLts_t->num_indexes=0;
 		pLts_t->cur_index=-1;
-		if (ls_util_next_item_new(phTTS,input))
+		if (ls_util_next_item_new(phTTS,(short*)input))
 			//		{
 			//			ls_util_read_item(phTTS);
 			//			ls_util_write_item(phTTS);

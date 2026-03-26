@@ -127,6 +127,7 @@
  *          set operations like intersection and union deletion addition 
  *											
  */
+
 #include "dectalkf.h"
 
 #ifdef NEW_BINARY_PARSER

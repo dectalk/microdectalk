@@ -87,13 +87,13 @@ int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
 	int return_code;
 	int i;
 
-#ifndef NO_FILESYSTEM
-        init_charset();
-#endif
-
 	PKSD_T pKsd_t;
 	memset(&hTTS,0,sizeof(TTS_HANDLE_T));
 	memset(&Ksd_t,0,sizeof(KSD_T));
+
+#ifndef NO_FILESYSTEM
+        init_charset();
+#endif
 	
 	phTTS=&hTTS;
 	phTTS->EmbCallbackRoutine=callback;

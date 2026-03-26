@@ -810,6 +810,12 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 	long limit;
 	PKSD_T pKsd_t;
 	PLTS_T pLts_t;
+        S32 fdic_entries;
+        S32 fdic_fc_entries;
+        S32 *fdic_fc_entry;
+        S32 *fdic_index;
+        unsigned char *fdic_data;
+
 	pKsd_t = phTTS->pKernelShareData;
 	pLts_t = (PLTS_T)phTTS->pLTSThreadData;
 	limit = ((int)DICT_ENTRY) - 1;
@@ -845,11 +851,11 @@ int ls_dict_dlook(LPTTS_HANDLE_T phTTS, long index, int *pLocaloff, struct dic_e
 	// *ppent = (struct dic_entry *) &main_dict[0]; // (struct dic_entry far *)  DICT_ACCESS(index);
         // &main_dict[0];
         //fdic_bytes = get_long_int(main_dict+4);
-        S32 fdic_entries = get_long_int(main_dict);
-        S32 fdic_fc_entries = get_long_int(main_dict+8);
-        S32 *fdic_fc_entry = (volatile S32 *) (main_dict+12);
-        S32 *fdic_index = (S32 *)(main_dict+12+((fdic_fc_entries)*4));
-        unsigned char *fdic_data = ((unsigned char*)main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
+        fdic_entries = get_long_int(main_dict);
+        fdic_fc_entries = get_long_int(main_dict+8);
+        fdic_fc_entry = (volatile S32 *) (main_dict+12);
+        fdic_index = (S32 *)(main_dict+12+((fdic_fc_entries)*4));
+        fdic_data = ((unsigned char*)main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
         // *ppent = ((struct dic_entry *)(&(fdic_data[((U32 *)fdic_index)[(index)]])));
 
         *ppent = (struct dic_entry *) DICT_ACCESS(index);

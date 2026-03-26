@@ -382,7 +382,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 
 	if (config_file==NULL)
 	{
-		char p[PATH_MAX] = {};
+		char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 		ssize_t count = 3;
 		p[0] = '.';
@@ -415,7 +415,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 
 	if (config_file==NULL)
 	{
-		char p[PATH_MAX] = {};
+		char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 		ssize_t count = 3;
 		p[0] = '.';
@@ -472,7 +472,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 				line[strlen(line)-1]='\0';
 				strcpy(main_dict_name,line+8);
 				if (exe_path && (main_dict_name[0] != '/')) {
-					char p[PATH_MAX] = {};
+					char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 					ssize_t count = 3;
 					p[0] = '.';
@@ -510,7 +510,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 		fprintf(stderr,"libtts.so: Using default dictionary name\n");
 		strcpy(main_dict_name,DEF_LINUX_MAIN_DICT);
 		if (exe_path && (main_dict_name[0] != '/')) {
-			char p[PATH_MAX] = {};
+			char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 			ssize_t count = 3;
 			p[0] = '.';
@@ -554,7 +554,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 				line[strlen(line)-1]='\0';
 				strcpy(foreign_dict_name,line+9);
 				if (exe_path && (foreign_dict_name[0] != '/')) {
-					char p[PATH_MAX] = {};
+					char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 					ssize_t count = 2;
 					p[0] = '.';
@@ -591,7 +591,7 @@ int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreig
 		//fprintf(stderr,"libtts.so: Using default foreign dictionary name\n");
 		strcpy(foreign_dict_name,DEF_LINUX_FOREIGN_DICT);
 		if (exe_path && (foreign_dict_name[0] != '/')) {
-			char p[PATH_MAX] = {};
+			char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 			ssize_t count = 3;
 			p[0] = '.';

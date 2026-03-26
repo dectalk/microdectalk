@@ -1684,7 +1684,7 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
 			return;
 		}
 
-		ph_loop(phTTS,phone);
+		ph_loop(phTTS,(unsigned short*)phone);
         return;
 }
 

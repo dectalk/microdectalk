@@ -160,8 +160,9 @@ char *d_lookup(unsigned char *llp, char *table) {
     int bytes = get_long_int((char *) &table[4]);
     char *indices = &table[8];
     char *data = &table[(entries * 4) + 8];
+    int j;
 
-    for (int j = 0; j < entries; j++) {
+    for (j = 0; j < entries; j++) {
         int test = 1;
         int ind = get_long_int(&indices[j * 4]);
         char *entry = &data[ind + 4];
@@ -545,6 +546,11 @@ int par_dict_dlook(long DICT_ENTRY,
 {
 	int	i;
 	long limit;
+        S32 fdic_entries;
+        S32 fdic_fc_entries;
+        S32 *fdic_fc_entry;
+        S32 *fdic_index;
+        unsigned char *fdic_data;
 	              
 	limit = ((int)DICT_ENTRY) - 1;
 
@@ -558,11 +564,11 @@ int par_dict_dlook(long DICT_ENTRY,
 		return(LOOK_LOWER);
 	}
 
-        S32 fdic_entries = get_long_int(main_dict);
-        S32 fdic_fc_entries = get_long_int(main_dict+8);
-        S32 *fdic_fc_entry = (volatile S32 *) (main_dict+12);
-        S32 *fdic_index = (S32 *)(main_dict+12+((fdic_fc_entries)*4));
-        unsigned char *fdic_data = ((unsigned char*)main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
+        fdic_entries = get_long_int(main_dict);
+        fdic_fc_entries = get_long_int(main_dict+8);
+        fdic_fc_entry = (volatile S32 *) (main_dict+12);
+        fdic_index = (S32 *)(main_dict+12+((fdic_fc_entries)*4));
+        fdic_data = ((unsigned char*)main_dict+((fdic_entries+3)*4) + ((fdic_fc_entries)*4));
         // *ppent = ((struct dic_entry *)(&(fdic_data[((U32 *)fdic_index)[(index)]])));
 
         if (index >= fdic_entries-1) {
