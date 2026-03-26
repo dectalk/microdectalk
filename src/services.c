@@ -47,22 +47,10 @@
 
 
 #include "dectalkf.h"
-#ifdef WIN32_OLD
-#include  <windows.h>
-#endif
-
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-//#include "opthread.h"
-#endif
 
 #include  <math.h>
-#ifndef VXWORKS
-#ifndef ARM7
 #if !defined (__APPLE__)
 #include  <malloc.h>
-#endif
-#endif
 #endif
 #include  "defs.h"
 #include  "dectalk.h"
@@ -71,19 +59,8 @@
 #include  "esc.h"
 #include  "tts.h"
 
-#ifdef ARM7
-#include "stdlib.h"
-#include "string.h"
-#endif
-
 #if defined (__APPLE__)
 #include <stdlib.h>
-#endif
-
-#ifdef WIN32_OLD
-#include "playaud.h"
-
-/*LPTTS_HANDLE_T TextToSpeechGetHandle(void);*/
 #endif
 
 int vtm_loop(LPTTS_HANDLE_T phTTS,short *input);
@@ -97,21 +74,13 @@ int vtm_loop(LPTTS_HANDLE_T phTTS,short *input);
 void check_index( LPTTS_HANDLE_T phTTS, unsigned int which_phone );
 void kernel_enable(PKSD_T pKsd_t, unsigned int);
 unsigned int kernel_disable(PKSD_T pKsd_t);
-#ifdef WIN32_OLD
-void wait_semaphore( int * );
-#endif
 
-/* GL 04/21/1997  add this for OSF build */
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __osf__ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 void wait_semaphore( P_SEMAPHORE );
-#endif
 
 void signal_semaphore( int * );
 void free_index(PKSD_T pKsd_t);
 
-#ifndef MSDOS
 static DWORD ModifyVolume( DWORD, int, int );
-#endif
 
 //#ifdef ARM7
 #ifdef ACCESS_SOLUTIONS
@@ -143,7 +112,6 @@ void free_spc_packet(struct spc_packet *spc_pkt)
 //	}
 }
 #else
-#ifndef EPSON_ARM7
 	struct spc_packet global_spc_pkt[1];
 	short cur_packet_number;
 	short max_packet_number;
@@ -167,7 +135,6 @@ void free_spc_packet(struct spc_packet *spc_pkt)
 		cur_packet_number=0;
 	}
 }
-#endif
 #endif
 //#endif
 
@@ -207,27 +174,13 @@ void save_index( PKSD_T pKsd_t,unsigned int sym,
   /*  Go to the end of the packet chain and add a new packet.         */
   /********************************************************************/
 //#ifdef WIN32_OLD
-#ifndef ARM7
-  /* tek 6mar97 bats 278 this is protected by a critial section */
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   spc_pkt = pKsd_t->spc_pkt_save;
 
   if ( spc_pkt == NULL_SPC_PACKET )
   {
-#ifdef ARM7
-#ifdef EPSON_ARM7
-	  spc_pkt=pKsd_t->g_spc_packet;
-#else
-	spc_pkt = get_spc_packet();
-#endif
-	if (spc_pkt==NULL)
-		return;
-#else
 	spc_pkt = (struct spc_packet *)malloc(sizeof(struct spc_packet));
-#endif
 	spc_pkt->link = NULL_SPC_PACKET;
 	pKsd_t->spc_pkt_save = spc_pkt;
   }
@@ -242,17 +195,7 @@ void save_index( PKSD_T pKsd_t,unsigned int sym,
 	  spc_pkt = spc_pkt->link;
 	}
 
-#ifdef ARM7
-#ifdef EPSON_ARM7
-	  spc_pkt=pKsd_t->g_spc_packet;
-#else
-	spc_pkt = get_spc_packet();
-#endif
-	if (spc_pkt==NULL)
-		return;
-#else
 	spc_pkt = (struct spc_packet *)malloc(sizeof(struct spc_packet));
-#endif
 	spc_pkt->link = NULL_SPC_PACKET;
 	last_pkt->link = spc_pkt;
   }
@@ -267,9 +210,6 @@ void save_index( PKSD_T pKsd_t,unsigned int sym,
   spc_pkt->data[6] = 0;  /* KSB 11/14/1996,  Sync bug for uninitialized number */
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
 
@@ -292,9 +232,6 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   while(( spc_pkt = pKsd_t->spc_pkt_save ) != NULL_SPC_PACKET )
@@ -342,22 +279,13 @@ void check_index( LPTTS_HANDLE_T phTTS,unsigned int which_phone )
 	spc_pkt = spc_pkt->link;
 	pKsd_t->spc_pkt_save = spc_pkt;
 
-#ifdef ARM7
-#ifndef EPSON_ARM7
-	free_spc_packet( last_pkt );
-#endif
-#else
 	free( last_pkt );
-#endif
 	/* GL 04/21/1997  change this for OSF build */
 	vtm_loop(phTTS,buf);
 
   }
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   return;
@@ -376,9 +304,6 @@ void adjust_index( PKSD_T pKsd_t,unsigned int which, int direction, int del )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   if(( spc_pkt = pKsd_t->spc_pkt_save ) != NULL_SPC_PACKET )
@@ -395,9 +320,6 @@ void adjust_index( PKSD_T pKsd_t,unsigned int which, int direction, int del )
   }
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
 }
@@ -414,9 +336,6 @@ void adjust_allo( PKSD_T pKsd_t,unsigned int which, int direction )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   if((spc_pkt = pKsd_t->spc_pkt_save ) != NULL_SPC_PACKET )
@@ -434,9 +353,6 @@ void adjust_allo( PKSD_T pKsd_t,unsigned int which, int direction )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
 }
@@ -454,9 +370,6 @@ void set_index_allo( PKSD_T pKsd_t,unsigned int nphone, unsigned int nallo )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   if (( spc_pkt = pKsd_t->spc_pkt_save ) != NULL_SPC_PACKET )
@@ -473,9 +386,6 @@ void set_index_allo( PKSD_T pKsd_t,unsigned int nphone, unsigned int nallo )
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
 }
@@ -493,9 +403,6 @@ void free_index(PKSD_T pKsd_t)
 
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //EnterCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
   if (( spc_pkt = pKsd_t->spc_pkt_save ) != NULL_SPC_PACKET )
@@ -504,13 +411,7 @@ void free_index(PKSD_T pKsd_t)
 	{
 	  free_pkt = spc_pkt;
 	  spc_pkt = spc_pkt->link;
-#ifdef ARM7
-#ifndef EPSON_ARM7
-	  free_spc_packet( free_pkt );
-#endif
-#else
 	  free( free_pkt );
-#endif
 	}
 //#ifdef WIN32_OLD
   /* tek 7mar97 bats 278 - have to update spc_pkt_save! */
@@ -519,9 +420,6 @@ void free_index(PKSD_T pKsd_t)
   }
 //#ifdef WIN32_OLD
   /* tek 6mar97 bats 278 this is protected by a critial section */
-#ifndef ARM7
-  //LeaveCriticalSection(pKsd_t->pcsSpcPktSave);
-#endif
 //#endif
 
 }
@@ -576,18 +474,6 @@ void send_index( int how, int value )
 
 void start_flush( int serial_mode )
 {
-/*
-#ifdef WIN32_OLD
-  int i;
-  LPTTS_HANDLE_T phTTS;
-
-  phTTS = TextToSpeechGetHandle();
-
-  TextToSpeechReset( phTTS, TRUE );
-
-  return;
-#endif
-*/
 
 /*
   unsigned int            temp,flags;
@@ -703,11 +589,6 @@ f_fprintf(tmp);
 
 	if(pKsd_t->lang_ready[lang_code] == 0)
 		{
-#ifdef MSDOS
-		pKsd_t->lang_lts[lang_code] = create_pipe(LTS_PIPE+lang_code,256);
-		pKsd_t->lang_ph[lang_code] = create_pipe(PH_PIPE+lang_code,256);
-#else
-#endif
 		}
 	
 	pKsd_t->lang_ready[lang_code] |= ready_code;
@@ -768,13 +649,6 @@ void flush_done(PKSD_T pKsd_t)
 
 unsigned int kernel_disable(PKSD_T pKsd_t)
 {
-#ifdef MSDOS
-  pause_pipe( pKsd_t->cmd_pipe );
-  pause_pipe( pKsd_t->lts_pipe );
-  pause_pipe( pKsd_t->ph_pipe );
-  pause_pipe( pKsd_t->vtm_pipe );
-  pause_pipe( pKsd_t->sync_pipe );
-#endif
 
   return( 0 );
 }
@@ -788,15 +662,6 @@ unsigned int kernel_disable(PKSD_T pKsd_t)
 void kernel_enable( PKSD_T pKsd_t, unsigned int flags )
 {
 
-#ifdef MSDOS 
-
-  resume_pipe( pKsd_t->sync_pipe );
-  resume_pipe( pKsd_t->vtm_pipe );
-  resume_pipe( pKsd_t->ph_pipe );
-  resume_pipe( pKsd_t->lts_pipe );
-  resume_pipe( pKsd_t->cmd_pipe );
-#endif
-
   return;
 }
 
@@ -805,18 +670,7 @@ void kernel_enable( PKSD_T pKsd_t, unsigned int flags )
 /*  Function: wait_semaphore                                          */
 /**********************************************************************/
 /**********************************************************************/
-/* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32_OLD
-void wait_semaphore( int * semaphore )
-#endif
-
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 void wait_semaphore( P_SEMAPHORE semaphore )
-#endif
-
-#ifdef ARM7
-void wait_semaphore( int * semaphore )
-#endif
 {
 }
 
@@ -856,31 +710,16 @@ void clr_gpio( int dummy )
 /**********************************************************************/
 /**********************************************************************/
 
-/* GL 04/21/1997  change this for OSF build */
-#ifdef WIN32_OLD
-void sleep( unsigned int uiTimeInMsec )
-{
-  Sleep((DWORD)uiTimeInMsec );
-}
-#endif
-
 /**********************************************************************/
 /**********************************************************************/
 /*  Function: putseq                                                  */
 /**********************************************************************/
 /**********************************************************************/
 
-#if defined __unix__ || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 int putseq( void *sp )
 {
   return(0);
 }
-#else
-extern int putseq( struct SEQ_struct __far *sp )
-{
-  return(0);
-}
-#endif
 
 /**********************************************************************/
 /**********************************************************************/
@@ -890,7 +729,6 @@ extern int putseq( struct SEQ_struct __far *sp )
 
 #define  MAX_VOLUME  99
 
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 static int dwVolumeTable[MAX_VOLUME+1] =
 {
  0, 32768, 32768, 32768, 33792,
@@ -914,33 +752,6 @@ static int dwVolumeTable[MAX_VOLUME+1] =
  61440, 62464, 62464, 62464, 63488,
  63488, 63488, 63488, 64512, 64512
 };
-#endif
-
-#ifdef WIN32_OLD
-static dwVolumeTable[MAX_VOLUME+1] =
-{
-  0,  2220,  2298,  2379,  2463,
-  2549,  2639,  2731,  2827,  2927,
-  3030,  3136,  3246,  3361,  3479,
-  3601,  3727,  3858,  3994,  4134,
-  4280,  4430,  4586,  4747,  4914,
-  5087,  5265,  5450,  5642,  5840,
-  6046,  6258,  6478,  6706,  6941,
-  7185,  7438,  7699,  7970,  8250,
-  8540,  8840,  9151,  9472,  9805,
-  10150,  10506,  10876,  11258,  11653,
-  12063,  12487,  12926,  13380,  13850,
-  14337,  14841,  15362,  15902,  16461,
-  17040,  17638,  18258,  18900,  19564,
-  20252,  20963,  21700,  22463,  23252,
-  24069,  24915,  25791,  26697,  27635,
-  28607,  29612,  30653,  31730,  32845,
-  33999,  35194,  36431,  37711,  39036,
-  40408,  41828,  43298,  44820,  46395,
-  48025,  49713,  51460,  53268,  55140,
-  57078,  59084,  61160,  63310,  65535
-};
-#endif
 
 /**********************************************************************/
 /**********************************************************************/
@@ -1171,12 +982,6 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
   DWORD dwLeftChannelVolume;
   /*LPTTS_HANDLE_T phTTS;*/
 
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-  /*phTTS = TextToSpeechGetHandle();*/
-  //PA_GetVolume( phTTS->pAudioHandle, &dwStereoVolume );
-#endif
-
 
   /********************************************************************/
   /*  Extract the right channel volume from the high 16 bits and      */
@@ -1249,7 +1054,6 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
   dwStereoVolume = ( dwRightChannelVolume << 16 ) | dwLeftChannelVolume;
 
 /* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #ifndef SOFTWARE_VOLUME
   //PA_SetVolume( phTTS->pAudioHandle, dwStereoVolume );
 #else
@@ -1266,7 +1070,6 @@ void StereoVolumeControl( LPTTS_HANDLE_T phTTS,
     LastVoice[1]=SYNC;
     ph_loop(phTTS,LastVoice);
   }
-#endif
 #endif
 
   return;
@@ -1404,49 +1207,7 @@ void SetStereoVolume( LPTTS_HANDLE_T phTTS, int iLeftVolume, int iRightVolume )
 	dwRightChannelVolume = EncodeDectalkVolume((DWORD)iRightVolume );
 
 	dwStereoVolume = ( dwRightChannelVolume << 16 ) | dwLeftChannelVolume;
-
-/* GL 04/21/1997  change this for OSF build */
-#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined __EMSCRIPTEN__ || defined (__APPLE__)
-	/*phTTS = TextToSpeechGetHandle();*/
-	//PA_SetVolume( phTTS->pAudioHandle, dwStereoVolume );
-#endif
-
   }
 
   return;
 }
-
-#ifdef MSDOS
-/**********************************************************************/
-/**********************************************************************/
-/*  Function: vol_up                                                  */
-/*  Bump volume up "count" notches.                                   */
-/**********************************************************************/
-/**********************************************************************/
-
-void vol_up( int count )
-{
-}
-
-
-/**********************************************************************/
-/**********************************************************************/
-/*  Function: vol_down                                                */
-/*  Bump volume down "count" notches.                                 */
-/**********************************************************************/
-/**********************************************************************/
-
-void vol_down( int count )
-{
-}
-/**********************************************************************/
-/**********************************************************************/
-/*  Function: vol_set                                                 */
-/*  Set volume to "count". Out of range values ignored.               */
-/**********************************************************************/
-/**********************************************************************/
-
-void vol_set( int count )
-{
-}
-#endif

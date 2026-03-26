@@ -44,35 +44,12 @@
  */
 
 #include "dectalkf.h"
-#ifdef WIN32_OLD
-#include <windows.h>
-  #if !defined (__APPLE__)
-    #include <malloc.h>
-  #endif
-#include <stdio.h>
-#include "port.h"
-#include "kernel.h"
-#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
-#endif
 
-#if defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_ || defined ARM7 || defined __EMSCRIPTEN__ || defined (__APPLE__)
 #include <stdlib.h>
 //#include "opthread.h"
 #include "port.h"
 #include "kernel.h"
 #include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
-#endif
-
-#ifdef ARM7
-#include <stdlib.h>
-#include <string.h>
-#include "port.h"
-#include "kernel.h"
-#include "ph_def.h"         /* MVP : Now phinst.h includes phdefs.h, php.h */
-
-short global_spc_v_buf[VOICE_PARS+2];
-short global_spc_s_buf[SPDEF_PARS+2];
-#endif
 
 /* ******************************************************************
  *      Function Name: spc_size()
@@ -127,33 +104,12 @@ void * spcget( unsigned short spc_type )
 
     if ( nwords > 0 )
     {
-#ifdef ARM7
-		if (spc_type==1)
-		{
-			spc_buffer = global_spc_s_buf;
-		}
-		else
-		{
-			spc_buffer = global_spc_v_buf;
-		}
-#else
 	spc_buffer = (unsigned short *)malloc( nwords * sizeof( unsigned short ) );
-#endif
 	if ( spc_buffer != (unsigned short *)NULL )
 	    spc_buffer[0] = spc_type;
     }
-#ifdef ARM7
-	else
-	{
-	    return( (void *)(spc_buffer+1) );
-	}
-#endif
 
-#ifdef ARM7
-    return( (void *)&(spc_buffer[1]) );
-#else
     return( (void *)(spc_buffer+1) );
-#endif
 }
 
 /* ******************************************************************
@@ -181,24 +137,14 @@ int spcwrite( PKSD_T pKsd_t, unsigned short *spc_buffer )
     if ( spc_buffer == (unsigned short *)NULL ) return( 0 );
     
     /* find size of SPC packet */
-#ifdef ARM7
     nwords = spc_size( spc_buffer[0] );
-#else
-    nwords = spc_size( spc_buffer[0] );
-#endif
 
 
     if ( nwords > 0 )
-#ifdef ARM7
 		vtm_loop(pKsd_t->phTTS,spc_buffer);
-#else
-		vtm_loop(pKsd_t->phTTS,spc_buffer);
-#endif
 
-#ifndef ARM7
     /* free buffer */
     free( spc_buffer );
-#endif
 
     return(nwords);
 }
@@ -217,7 +163,5 @@ int spcwrite( PKSD_T pKsd_t, unsigned short *spc_buffer )
  * *****************************************************************/
 void spcfree(unsigned short *spc_buffer)
 {
-#ifndef ARM7
 	free(--spc_buffer);
-#endif
 }
