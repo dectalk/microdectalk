@@ -43,6 +43,7 @@ __unix__=1
 PICO_AUDIO_I2S_MONO_OUTPUT=1 # mono output on I2S
 PICO_AUDIO_I2S_MONO_INPUT=1 # required for output
 AUDIO_HALF_FREQ=1 # fix frequency for PWM
+HANG_FIXES=1
 )
 
 # Link necessary libraries

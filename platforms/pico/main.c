@@ -33,6 +33,11 @@ static const char *daisy_bell = "[:phoneme on] [dey<600,24>ziy<600,21>dey<600,17
 typedef struct { char text[MAX_LINE_LEN]; } Line;
 static queue_t line_queue;
 
+// Set by core 0 on 0x90. write_wav discards audio while set, causing
+// cmd_loop(0x0B) in TextToSpeechSync to drain instantly without touching
+// engine state. Safe to spam — no TextToSpeechInit is ever triggered.
+static volatile bool stop_requested = false;
+
 // globals
 struct audio_buffer_pool *audio_pool;
 
@@ -86,7 +91,25 @@ struct audio_buffer_pool *init_audio() {
 
 // buffer callback
 short *write_wav(short *iwave, long length, int phoneme) {
-    struct audio_buffer *buffer = take_audio_buffer(audio_pool, true);
+    // Poll for a free buffer rather than blocking, so we can detect a stop
+    // request that arrives after we enter write_wav but before we get a buffer.
+    // On stop we discard without calling TextToSpeechReset — that function
+    // causes TextToSpeechStart to re-init the engine on the next call, which
+    // leaks all the calloc'd thread state (LTS, VTM, PH, CMD) every time.
+    // Pure discard is fast enough since phoneme generation is far faster than
+    // real-time on the Pico, so Sync drains quickly without halting the engine.
+    struct audio_buffer *buffer;
+    while (!(buffer = take_audio_buffer(audio_pool, false))) {
+        if (stop_requested) {
+            TextToSpeechReset();
+            return iwave;
+        }
+    }
+    if (stop_requested) {
+        give_audio_buffer(audio_pool, buffer);
+        TextToSpeechReset();
+        return iwave;
+    }
     memcpy(buffer->buffer->bytes, iwave, length*2);
     buffer->sample_count = length;
     give_audio_buffer(audio_pool, buffer);
@@ -108,9 +131,19 @@ static void core1_tts_task() {
 
     Line line;
     while (1) {
-        queue_remove_blocking(&line_queue, &line);
+        // While idle, immediately acknowledge stop requests — otherwise core 0
+        // would spin-wait forever on a stop with nothing being synthesized.
+        while (!queue_try_remove(&line_queue, &line)) {
+            if (stop_requested) stop_requested = false;
+            tight_loop_contents();
+        }
+        stop_requested = false;
         TextToSpeechStart(line.text, NULL, WAVE_FORMAT_1M16);
         TextToSpeechSync();
+        if (stop_requested) {
+            Line discard;
+            while (queue_try_remove(&line_queue, &discard)) {}
+        }
     }
 }
 
@@ -118,7 +151,7 @@ int main() {
     stdio_init_all();
 
     // set frequency for PWM timing
-    set_sys_clock_48mhz();
+    //set_sys_clock_48mhz();
 
     printf("\n\n");
     printf("System clock: %lu Hz\n", clock_get_hz(clk_sys));
@@ -138,6 +171,7 @@ int main() {
     // Core 0 input loop: collect chars from USB serial and hardware UART,
     // accumulate into lines, enqueue complete lines for core 1 to speak.
     // Non-blocking polls on both sources keep input responsive at all times.
+    printf("READY\n");  // signals test scripts that the device is up and listening
     char linebuf[MAX_LINE_LEN];
     int len = 0;
 
@@ -153,7 +187,14 @@ int main() {
 
         if (ch < 0) continue;
 
-        if (ch == '\n' || ch == '\r') {
+        if ((uint8_t)ch == 0x90) {
+            printf("[core0] 0x90 received, setting stop_requested\n");
+            stop_requested = true;
+            len = 0;
+            printf("[core0] spin-waiting for core1 to clear stop_requested\n");
+            while (stop_requested) tight_loop_contents();
+            printf("[core0] stop acknowledged\n");
+        } else if (ch == '\n' || ch == '\r') {
             if (len > 0) {
                 linebuf[len] = '\0';
                 Line line;
