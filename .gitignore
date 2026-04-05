@@ -13,6 +13,6 @@ say
 /output.wav
 /dtc.lib
 /dtc.dll
-
+/platforms/pico/build
 # Nintendo DS
 .DS_Store
