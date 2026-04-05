@@ -17,6 +17,7 @@
 #include "epsonapi.h" // include DECtalk
 #include "pico/stdlib.h"
 #include "pico/stdio_usb.h"
+#include "tusb.h"
 #include "pico/multicore.h"
 #include "pico/util/queue.h"
 #include "hardware/clocks.h" // for clock control
@@ -241,17 +242,28 @@ int main() {
         int ch = getchar_timeout_us(0);
         if (ch == PICO_ERROR_TIMEOUT) continue;
 
-        if ((uint8_t)ch == 0x90) {
+        if ((uint8_t)ch == 0x90 || ch == 0x03) {  // 0x90 or Ctrl-C
             stop_requested = true;
             usb_len = 0;
             while (stop_requested) tight_loop_contents();
             printf("\r\n> ");
         } else if (ch == '\n' || ch == '\r') {
             if (usb_len > 0) {
-                enqueue_line(usb_buf, usb_len, true);
-                usb_len = 0;
+                usb_buf[usb_len] = '\0';
+                if (strcmp(usb_buf, "/exit") == 0) {
+                    printf("\r\nBye.\r\n");
+                    usb_len = 0;
+                    tud_disconnect();
+                    sleep_ms(500);
+                    tud_connect();
+                } else {
+                    enqueue_line(usb_buf, usb_len, true);
+                    usb_len = 0;
+                    printf("\r\n> ");
+                }
+            } else {
+                printf("\r\n> ");
             }
-            printf("\r\n> ");
         } else if (ch == '\b' || (uint8_t)ch == 0x7F) {
             if (usb_len > 0) {
                 usb_len--;
