@@ -16,6 +16,7 @@
 // pico & DECtalk includes
 #include "epsonapi.h" // include DECtalk
 #include "pico/stdlib.h"
+#include "pico/stdio_usb.h"
 #include "pico/multicore.h"
 #include "pico/util/queue.h"
 #include "hardware/clocks.h" // for clock control
@@ -27,10 +28,10 @@
 #include "pico/audio_pwm.h"
 #endif
 
-static const char *daisy_bell = "[:phoneme on] [dey<600,24>ziy<600,21>dey<600,17>ziy<600,12>gih<200,14>vmiy<200,16>yurr<200,17>ah<400,14>nsrr<200,17>duw<1200,12>][ay<600,19>mhxah<600,24>fkrey<600,21>ziy<600,17>ah<400,14>llfow<100,16>rthah<100,17>llah<400,19>vah<200,21>vyu<1200,19>][ih<200,21>twow<200,22>ntbiy<200,21>ah<200,19>stay<400,24>llih<200,21>shmae<200,19>rih<600,17>jh][ay<200,19>keh<400,21>ntah<200,17>fow<400,14>rdah<200,17>keh<200,14>rih<800,12>jh][buh<200,12>tyu<400,17>lluh<200,21>kswiy<400,19>tah<200,12>pah<400,17>nthah<200,21>siy<200,19>t][ah<100,21>vah<100,22>bay<200,24>sih<200,21>kuh<200,17>llbih<400,19>lltfow<200,12>rtuw<1200,17>]";
-
-// Queue of complete lines from core 0 → core 1 (TTS)
-typedef struct { char text[MAX_LINE_LEN]; } Line;
+// Queue of text chunks from core 0 → core 1 (TTS).
+// sync=true: call TextToSpeechSync after Start (end of logical line).
+// sync=false: overflow chunk — Start only, let engine accumulate continuously.
+typedef struct { char text[MAX_LINE_LEN]; bool sync; } Line;
 static queue_t line_queue;
 
 // Set by core 0 on 0x90. write_wav discards audio while set, causing
@@ -91,13 +92,6 @@ struct audio_buffer_pool *init_audio() {
 
 // buffer callback
 short *write_wav(short *iwave, long length, int phoneme) {
-    // Poll for a free buffer rather than blocking, so we can detect a stop
-    // request that arrives after we enter write_wav but before we get a buffer.
-    // On stop we discard without calling TextToSpeechReset — that function
-    // causes TextToSpeechStart to re-init the engine on the next call, which
-    // leaks all the calloc'd thread state (LTS, VTM, PH, CMD) every time.
-    // Pure discard is fast enough since phoneme generation is far faster than
-    // real-time on the Pico, so Sync drains quickly without halting the engine.
     struct audio_buffer *buffer;
     while (!(buffer = take_audio_buffer(audio_pool, false))) {
         if (stop_requested) {
@@ -139,12 +133,46 @@ static void core1_tts_task() {
         }
         stop_requested = false;
         TextToSpeechStart(line.text, NULL, WAVE_FORMAT_1M16);
-        TextToSpeechSync();
-        if (stop_requested) {
-            Line discard;
-            while (queue_try_remove(&line_queue, &discard)) {}
+
+        // Only sync on the final chunk of a logical line. Overflow chunks have
+        // sync=false so the engine accumulates them as continuous text without
+        // resetting its parse state between chunks.
+        if (line.sync) {
+            TextToSpeechSync();
+            if (stop_requested) {
+                Line discard;
+                while (queue_try_remove(&line_queue, &discard)) {}
+            }
         }
     }
+}
+
+// USB CDC: interactive/cooked mode — ANSI header, local echo, backspace, prompt.
+// UART: raw mode — no echo, no backspace, plain line accumulation.
+// Both sources feed the same TTS queue with independent line buffers.
+#define TERM_ROWS 24
+
+static void cooked_init(void) {
+    printf("\033[2J\033[H");          // clear screen, cursor home
+    printf("=== DECtalkMini ===\r\n");
+    printf("-------------------\r\n");
+    printf("\r\n");
+    printf("\033[4;%dr", TERM_ROWS);  // scroll region: rows 4-TERM_ROWS
+    printf("\033[4;1H");              // cursor to first scrolling row
+    printf("> ");
+}
+
+// flush=true appends \x0b so DECtalk synthesises without an utterance break.
+// flush=false enqueues the chunk bare — used on overflow so DECtalk keeps its
+// internal buffer flowing continuously across chunk boundaries.
+static void enqueue_line(char *buf, int len, bool flush) {
+    if (flush) buf[len++] = '\x0b';
+    buf[len] = '\0';
+    Line line;
+    strncpy(line.text, buf, MAX_LINE_LEN - 1);
+    line.text[MAX_LINE_LEN - 1] = '\0';
+    line.sync = flush;  // only sync after the final chunk of a logical line
+    queue_add_blocking(&line_queue, &line);
 }
 
 int main() {
@@ -168,43 +196,75 @@ int main() {
     multicore_fifo_pop_blocking();
     printf("Audio and TTS initialized\n");
 
-    // Core 0 input loop: collect chars from USB serial and hardware UART,
-    // accumulate into lines, enqueue complete lines for core 1 to speak.
-    // Non-blocking polls on both sources keep input responsive at all times.
+    // Core 0 input loop: collect chars from USB serial (cooked) and hardware
+    // UART (raw), accumulate into separate line buffers, enqueue for core 1.
     printf("READY\n");  // signals test scripts that the device is up and listening
-    char linebuf[MAX_LINE_LEN];
-    int len = 0;
+
+    char usb_buf[MAX_LINE_LEN];
+    int  usb_len = 0;
+    char uart_buf[MAX_LINE_LEN];
+    int  uart_len = 0;
+    bool usb_was_connected = false;
 
     while (1) {
-        int ch = -1;
+        // Re-run cooked_init whenever a new USB CDC connection is detected
+        bool usb_connected = stdio_usb_connected();
+        if (usb_connected && !usb_was_connected) {
+            cooked_init();
+            usb_len = 0;
+        }
+        usb_was_connected = usb_connected;
 
+        // --- UART (raw mode) ---
         if (uart_is_readable(UART_ID)) {
-            ch = uart_getc(UART_ID);
-        } else {
-            int c = getchar_timeout_us(0);
-            if (c != PICO_ERROR_TIMEOUT) ch = c;
+            int ch = uart_getc(UART_ID);
+            if ((uint8_t)ch == 0x90) {
+                stop_requested = true;
+                uart_len = 0;
+                while (stop_requested) tight_loop_contents();
+            } else if (ch == '\n' || ch == '\r') {
+                if (uart_len > 0) {
+                    enqueue_line(uart_buf, uart_len, true);
+                    uart_len = 0;
+                }
+            } else {
+                // Overflow: enqueue chunk bare and keep going — never drop input
+                if (uart_len >= MAX_LINE_LEN - 2) {
+                    enqueue_line(uart_buf, uart_len, false);
+                    uart_len = 0;
+                }
+                uart_buf[uart_len++] = (char)ch;
+            }
         }
 
-        if (ch < 0) continue;
+        // --- USB CDC (cooked/interactive mode) ---
+        int ch = getchar_timeout_us(0);
+        if (ch == PICO_ERROR_TIMEOUT) continue;
 
         if ((uint8_t)ch == 0x90) {
-            printf("[core0] 0x90 received, setting stop_requested\n");
             stop_requested = true;
-            len = 0;
-            printf("[core0] spin-waiting for core1 to clear stop_requested\n");
+            usb_len = 0;
             while (stop_requested) tight_loop_contents();
-            printf("[core0] stop acknowledged\n");
+            printf("\r\n> ");
         } else if (ch == '\n' || ch == '\r') {
-            if (len > 0) {
-                linebuf[len] = '\0';
-                Line line;
-                strncpy(line.text, linebuf, MAX_LINE_LEN - 1);
-                line.text[MAX_LINE_LEN - 1] = '\0';
-                queue_add_blocking(&line_queue, &line);
-                len = 0;
+            if (usb_len > 0) {
+                enqueue_line(usb_buf, usb_len, true);
+                usb_len = 0;
             }
-        } else if (len < MAX_LINE_LEN - 1) {
-            linebuf[len++] = (char)ch;
+            printf("\r\n> ");
+        } else if (ch == '\b' || (uint8_t)ch == 0x7F) {
+            if (usb_len > 0) {
+                usb_len--;
+                printf("\b \b");
+            }
+        } else {
+            // Overflow: enqueue chunk bare and keep going — never drop input
+            if (usb_len >= MAX_LINE_LEN - 2) {
+                enqueue_line(usb_buf, usb_len, false);
+                usb_len = 0;
+            }
+            usb_buf[usb_len++] = (char)ch;
+            printf("%c", (char)ch);  // local echo
         }
     }
 }
