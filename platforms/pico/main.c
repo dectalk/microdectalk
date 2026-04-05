@@ -151,7 +151,8 @@ static void core1_tts_task() {
 // USB CDC: interactive/cooked mode — ANSI header, local echo, backspace, prompt.
 // UART: raw mode — no echo, no backspace, plain line accumulation.
 // Both sources feed the same TTS queue with independent line buffers.
-#define TERM_ROWS 24
+#define TERM_ROWS    24
+#define HISTORY_SIZE 16
 
 static void cooked_init(void) {
     printf("\033[2J\033[H");          // clear screen, cursor home
@@ -207,6 +208,17 @@ int main() {
     int  uart_len = 0;
     bool usb_was_connected = false;
 
+    // Input history for USB CDC (static to avoid blowing the 2KB stack)
+    static char history[HISTORY_SIZE][MAX_LINE_LEN];
+    static char history_saved[MAX_LINE_LEN];
+    int  history_count     = 0;
+    int  history_pos       = -1;   // -1 = live input
+    int  history_saved_len = 0;
+
+    // Escape sequence state for USB CDC
+    typedef enum { ESC_NONE, ESC_ESC, ESC_CSI } EscState;
+    EscState esc_state = ESC_NONE;
+
     while (1) {
         // Re-run cooked_init whenever a new USB CDC connection is detected
         bool usb_connected = stdio_usb_connected();
@@ -242,9 +254,49 @@ int main() {
         int ch = getchar_timeout_us(0);
         if (ch == PICO_ERROR_TIMEOUT) continue;
 
+        // Escape sequence state machine — absorbs arrow keys and scroll sequences
+        if (esc_state == ESC_ESC) {
+            esc_state = (ch == '[') ? ESC_CSI : ESC_NONE;
+            continue;
+        }
+        if (esc_state == ESC_CSI) {
+            if ((ch >= '0' && ch <= '9') || ch == ';') continue; // param bytes
+            esc_state = ESC_NONE;
+            if (ch == 'A') { // up arrow — older history
+                if (history_count == 0) continue;
+                if (history_pos == -1) {
+                    memcpy(history_saved, usb_buf, usb_len);
+                    history_saved_len = usb_len;
+                    history_pos = 0;
+                } else if (history_pos < history_count - 1) {
+                    history_pos++;
+                }
+                usb_len = strlen(history[history_pos]);
+                memcpy(usb_buf, history[history_pos], usb_len);
+                printf("\r\033[K> %.*s", usb_len, usb_buf);
+            } else if (ch == 'B') { // down arrow — newer history / live input
+                if (history_pos == -1) continue;
+                if (history_pos > 0) {
+                    history_pos--;
+                    usb_len = strlen(history[history_pos]);
+                    memcpy(usb_buf, history[history_pos], usb_len);
+                } else {
+                    history_pos = -1;
+                    usb_len = history_saved_len;
+                    memcpy(usb_buf, history_saved, usb_len);
+                }
+                printf("\r\033[K> %.*s", usb_len, usb_buf);
+            }
+            // all other CSI sequences (scroll, page, right/left, etc.) are ignored
+            continue;
+        }
+        if (ch == '\033') { esc_state = ESC_ESC; continue; }
+
+        // Normal input
         if ((uint8_t)ch == 0x90 || ch == 0x03) {  // 0x90 or Ctrl-C
             stop_requested = true;
             usb_len = 0;
+            history_pos = -1;
             while (stop_requested) tight_loop_contents();
             printf("\r\n> ");
         } else if (ch == '\n' || ch == '\r') {
@@ -253,11 +305,18 @@ int main() {
                 if (strcmp(usb_buf, "/exit") == 0) {
                     printf("\r\nBye.\r\n\r\n\r\n");
                     usb_len = 0;
+                    history_pos = -1;
                     sleep_ms(100);
                     tud_disconnect();
                     sleep_ms(500);
                     tud_connect();
                 } else {
+                    // Push to history
+                    if (history_count < HISTORY_SIZE) history_count++;
+                    memmove(&history[1], &history[0], (history_count - 1) * sizeof(history[0]));
+                    strncpy(history[0], usb_buf, MAX_LINE_LEN - 1);
+                    history[0][MAX_LINE_LEN - 1] = '\0';
+                    history_pos = -1;
                     enqueue_line(usb_buf, usb_len, true);
                     usb_len = 0;
                     printf("\r\n> ");
