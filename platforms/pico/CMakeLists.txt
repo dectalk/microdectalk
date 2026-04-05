@@ -48,6 +48,8 @@ AUDIO_HALF_FREQ=1 # fix frequency for PWM
 # Link necessary libraries
 target_link_libraries(${PROJECT}
     pico_stdlib
+    pico_multicore
+    pico_util
     pico_audio_i2s
     pico_audio_pwm
     pico_unique_id
@@ -57,9 +59,9 @@ target_link_libraries(${PROJECT}
 # Add extra outputs (e.g., UF2 file for bootloader)
 pico_add_extra_outputs(${PROJECT})
 
-# Enable USB and UART output
-pico_enable_stdio_usb(${PROJECT} 1)  # Enable USB serial
-pico_enable_stdio_uart(${PROJECT} 1) # Enable UART serial
+# USB serial for debug output; UART is used directly by core 1 for TTS input
+pico_enable_stdio_usb(${PROJECT} 1)
+pico_enable_stdio_uart(${PROJECT} 0)
 
 # Specify include directories for the project
 
