@@ -155,7 +155,7 @@ static void core1_tts_task() {
 
 static void cooked_init(void) {
     printf("\033[2J\033[H");          // clear screen, cursor home
-    printf("=== DECtalkMini ===\r\n");
+    printf("=== DECtalkMini === /exit to exit, CTRL-C to stop\r\n");
     printf("-------------------\r\n");
     printf("\r\n");
     printf("\033[4;%dr", TERM_ROWS);  // scroll region: rows 4-TERM_ROWS
@@ -251,8 +251,9 @@ int main() {
             if (usb_len > 0) {
                 usb_buf[usb_len] = '\0';
                 if (strcmp(usb_buf, "/exit") == 0) {
-                    printf("\r\nBye.\r\n");
+                    printf("\r\nBye.\r\n\r\n\r\n");
                     usb_len = 0;
+                    sleep_ms(100);
                     tud_disconnect();
                     sleep_ms(500);
                     tud_connect();
