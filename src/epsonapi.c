@@ -1,7 +1,7 @@
 /* **********************************************************************************
  *                			Copyright                         
  *
- *    Copyright © 2002 Fonix Coporation. All rights reserved.
+ *    Copyright ï¿½ 2002 Fonix Coporation. All rights reserved.
  *
  *    This is an unpublished work, and is confidential and proprietary: 
  *    technology and information of Fonix corporation.  No part of this
@@ -85,9 +85,34 @@ extern const unsigned char main_dict[];
 extern void init_charset();
 #endif
 
+extern void FreePHInstanceData(PDPH_T pDph_t);
+extern void FreeCMDThreadMemory(PCMD_T pCmd_t);
+
 int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
 	int return_code;
 	int i;
+
+	/* Free previously allocated thread state to prevent leaks on re-init.
+	 * Each sub-system allocates its own struct (and sub-structs) on init;
+	 * without freeing first, repeated resets exhaust the heap. */
+	if (phTTS) {
+		if (phTTS->pVTMThreadData) {
+			free(phTTS->pVTMThreadData);
+			phTTS->pVTMThreadData = NULL;
+		}
+		if (phTTS->pLTSThreadData) {
+			free(phTTS->pLTSThreadData);
+			phTTS->pLTSThreadData = NULL;
+		}
+		if (phTTS->pPHThreadData) {
+			FreePHInstanceData((PDPH_T)phTTS->pPHThreadData);
+			phTTS->pPHThreadData = NULL;
+		}
+		if (phTTS->pCMDThreadData) {
+			FreeCMDThreadMemory((PCMD_T)phTTS->pCMDThreadData);
+			phTTS->pCMDThreadData = NULL;
+		}
+	}
 
 	PKSD_T pKsd_t;
 	memset(&hTTS,0,sizeof(TTS_HANDLE_T));

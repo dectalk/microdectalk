@@ -132,6 +132,10 @@ struct share_data       *kernel_share;
 #include <unistd.h>
 #endif
 
+#ifndef PATH_MAX
+#define PATH_MAX 260
+#endif
+
 static size_t
 dt_dirname_r(const char *path, char *buf, size_t buflen)
 {
