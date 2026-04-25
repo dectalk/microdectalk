@@ -17,6 +17,22 @@ premake5 gmake
 make
 ```
 
+for nix:
+```
+nix develop
+nix run .#say -- output.wav "hello world"
+nix run .#speak
+nix build .#appimage
+```
+
+flake outputs:
+```
+.#say
+.#libdtc
+.#speak
+.#appimage
+```
+
 for speak gui demo:
 ```
 premake5 gmake --build-speak=yes

@@ -16,3 +16,5 @@ say
 /platforms/pico/build
 # Nintendo DS
 .DS_Store
+/.nix-cache/nix
+/result
