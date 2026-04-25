@@ -56,4 +56,22 @@ for webassembly go into the platforms/wasm folder, make sure you have the emscri
 
 to compile for uefi, install gnu-efi and run make in the platforms/uefi folder (creates HdaPlayer.efi)
 
+
+for nix:
+```
+nix develop
+nix run .#say -- output.wav "hello world"
+nix run .#speak
+nix build .#appimage
+```
+
+flake outputs:
+```
+.#say
+.#libdtc
+.#speak
+.#appimage
+```
+
+
 note unsupported: if your device isn't on this list, try native anyways, most platforms with a compiler should be able to compile this
