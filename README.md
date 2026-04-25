@@ -17,22 +17,6 @@ premake5 gmake
 make
 ```
 
-for nix:
-```
-nix develop
-nix run .#say -- output.wav "hello world"
-nix run .#speak
-nix build .#appimage
-```
-
-flake outputs:
-```
-.#say
-.#libdtc
-.#speak
-.#appimage
-```
-
 for speak gui demo:
 ```
 premake5 gmake --build-speak=yes
@@ -71,5 +55,23 @@ to compile for gameboy advance, install gba-dev from pacman following [this guid
 for webassembly go into the platforms/wasm folder, make sure you have the emscripten sdk in your home folder and activated and run bash compile.sh, launch it in a webserver for CORS compatability
 
 to compile for uefi, install gnu-efi and run make in the platforms/uefi folder (creates HdaPlayer.efi)
+
+
+for nix:
+```
+nix develop
+nix run .#say -- output.wav "hello world"
+nix run .#speak
+nix build .#appimage
+```
+
+flake outputs:
+```
+.#say
+.#libdtc
+.#speak
+.#appimage
+```
+
 
 note unsupported: if your device isn't on this list, try native anyways, most platforms with a compiler should be able to compile this

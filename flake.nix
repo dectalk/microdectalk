@@ -106,6 +106,12 @@
                 pkgs.motif
               ];
               installPhase = ''
+                audioRuntimePath="${lib.makeLibraryPath [
+                  pkgs.alsa-lib
+                  pkgs.libjack2
+                  pkgs.libpulseaudio
+                ]}"
+
                 runHook preInstall
                 mkdir -p \
                   $out/bin \
@@ -117,6 +123,7 @@
                 install -Dm644 DECtalk.conf $out/libexec/dectalk/DECtalk.conf
                 cp -r dic $out/libexec/dectalk/dic
                 makeWrapper $out/libexec/dectalk/speak $out/bin/speak \
+                  --prefix LD_LIBRARY_PATH : "$audioRuntimePath" \
                   --prefix LD_LIBRARY_PATH : $out/libexec/dectalk
                 install -Dm644 resources/speak.desktop $out/share/applications/speak.desktop
                 install -Dm644 resources/paul.png $out/share/icons/hicolor/256x256/apps/paul.png
