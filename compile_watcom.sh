@@ -35,4 +35,5 @@ else
 	wlib -q -b -fo -n dtc.lib $OBJS
 fi
 
+TARGET="`echo "$TARGET" | sed s/_dll//`"
 owcc -b$TARGET -Iinclude -o say.exe main.c dtc.lib
