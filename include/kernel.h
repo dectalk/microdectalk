@@ -1,5 +1,3 @@
-extern int __printf(const char* fmt, ...);
-#define printf __printf
 /*
  ***********************************************************************
  *
