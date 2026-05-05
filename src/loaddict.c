@@ -387,6 +387,7 @@ void init_dictionary(void) {
 	if(!init_dic) {
 		S32* b;
 		int  i;
+		int entries;
 
 		init_dic = 1;
 
