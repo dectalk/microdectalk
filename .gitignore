@@ -1,5 +1,6 @@
 *.o
 *.wav
+/build
 /bin
 /obj
 /*.make

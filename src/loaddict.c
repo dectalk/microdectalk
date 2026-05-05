@@ -74,7 +74,7 @@
 #include "dtmmedefs.h"
 //#include "opthread.h"
 
-#ifdef __linux__
+#ifdef __unix__
 #include <unistd.h>
 #endif
 
