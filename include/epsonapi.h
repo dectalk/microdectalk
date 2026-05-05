@@ -32,7 +32,7 @@
 DT_EXTERN int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
 DT_EXTERN int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
 DT_EXTERN int TextToSpeechReset(void);
-DT_EXTERN int TextToSpeechSync();
+DT_EXTERN int TextToSpeechSync(void);
 DT_EXTERN int TextToSpeechChangeVoice(const char *cvoice);
 DT_EXTERN void TextToSpeechSetRate(int rate);
 DT_EXTERN int TextToSpeechSetVoiceParam(const char *cmd, int value);

@@ -5,8 +5,7 @@ file(GLOB SOURCES src/*.c)
 
 add_library(dtc STATIC ${SOURCES})
 
-option(DECTALKMINI_NO_FILESYSTEM "Disable filesystem" OFF)
-option(DECTALKMINI_NO_CHARSET "Disable charset conversion" OFF)
+option(DECTALKMINI_NO_FILESYSTEM "No filesystem" OFF)
 option(DECTALKMINI_EXAMPLES "Build examples" ON)
 
 target_include_directories(dtc PUBLIC include)
@@ -32,10 +31,6 @@ endif()
 
 if(DECTALKMINI_NO_FILESYSTEM)
 	target_compile_definitions(dtc PRIVATE "NO_FILESYSTEM")
-endif()
-
-if(DECTALKMINI_NO_CHARSET)
-	target_compile_definitions(dtc PRIVATE "NO_CHARSET")
 endif()
 
 if(DECTALKMINI_EXAMPLES)

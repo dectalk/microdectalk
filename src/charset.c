@@ -9,7 +9,7 @@
 #define USE_ICONV
 #define REALLOC_SIZE 4096
 
-#if defined(__unix__) && defined(USE_ICONV)
+#if defined(__unix__) && defined(USE_ICONV) && !defined(NO_CHARSET)
 /* unix */
 #include <langinfo.h>
 #include <iconv.h>
@@ -78,9 +78,7 @@ char *convert_string_for_dapi(char *in, size_t inlen) {
 	return out;
 }
 
-#else
-
-#if defined(_WIN32)
+#elif defined(_WIN32) && !defined(NO_CHARSET)
 /* win32 */
 #include <windows.h>
 #include <wchar.h>
@@ -121,8 +119,6 @@ void init_charset() {
 char *convert_string_for_dapi(char *in, size_t inlen) {
     return in; // TODO: non-windows non-iconv implementation
 }
-
-#endif
 
 #endif
 
