@@ -36,6 +36,8 @@ endif()
 
 if(DECTALKMINI_NO_CHARSET)
 	target_compile_definitions(dtc PRIVATE "NO_CHARSET")
+elseif(NOT DECTALKMINI_NO_FILESYSTEM AND NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	target_link_libraries(dtc PRIVATE iconv)
 endif()
 
 if(DECTALKMINI_EXAMPLES)
