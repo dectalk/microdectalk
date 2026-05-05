@@ -6,7 +6,7 @@ file(GLOB SOURCES src/*.c)
 add_library(dtc STATIC ${SOURCES})
 
 option(DECTALKMINI_NO_FILESYSTEM "No filesystem" OFF)
-option(DECTALKMINI_EXAMPLES "Build examples" OFF)
+option(DECTALKMINI_EXAMPLES "Build examples" ON)
 
 target_include_directories(dtc PUBLIC include)
 target_compile_definitions(
