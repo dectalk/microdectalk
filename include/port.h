@@ -78,11 +78,7 @@ typedef uint32_t UINT;
 extern int portstricmp(const char* a, const char* b);
 
 #define PRINTFDEBUG_OLD
-#ifdef __LP64__
 typedef uint64_t PTRINT;
-#else
-typedef uint32_t PTRINT;
-#endif
 
 /* SWAP_dd_eeeeeee */
 /* dd is 16 or 32 bits */
