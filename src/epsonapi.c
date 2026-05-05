@@ -87,7 +87,11 @@ extern void FreeCMDThreadMemory(PCMD_T pCmd_t);
 void* TextToSpeechAllocate(void) {
 	LPTTS_HANDLE_T phTTS = malloc(sizeof(*phTTS));
 
+	memset(phTTS, 0, sizeof(*phTTS));
+
 	phTTS->pKernelShareData = malloc(sizeof(*phTTS->pKernelShareData));
+
+	memset(phTTS->pKernelShareData, 0, sizeof(*phTTS->pKernelShareData));
 
 	return phTTS;
 }
