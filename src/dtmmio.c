@@ -882,9 +882,7 @@ DTKmmioStringToFOURCC(
 	strcpy(tmp, "    ");
 
 	/* copy in the string, up to 4 characters */
-	size = strlen(sz);
-	if(size > 4) size = 4;
-
+	size = min(4, strlen(sz));
 	strncpy(tmp, sz, size);
 
 	/* convert to upper case if appropriate */
