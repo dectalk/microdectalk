@@ -24,14 +24,14 @@
  * 	  Shell to include ls_task.c for the ACNA compile
  *
  ***********************************************************************
- *    Revision History:                    
+ *    Revision History:
  *
  *	Rev	Who		Date			Description
  *	---	-----	-----------		---------------------------------------
- *  001 GL      10/13/1997      For BATS#486 remove English_us only ACNA setting 
- *	               		
+ *  001 GL      10/13/1997      For BATS#486 remove English_us only ACNA setting
  *
- */                         
+ *
+ */
 /*
 #ifdef ENGLISH_US
 #ifndef ACNA
@@ -40,5 +40,3 @@
 #endif
 */
 #include "ls_task.c"
-
-

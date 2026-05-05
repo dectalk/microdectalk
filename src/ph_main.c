@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -33,7 +33,7 @@
  *    Revision History:
  *
  * Rev  Who     Date            Description
- * ---  -----   -----------     --------------------------------------------  
+ * ---  -----   -----------     --------------------------------------------
  * 001  DGC    	12/27/1984		Renamed from "kl1.c". Many edits for
  *                      		the new synthesizer.
  * 002  DGC   	01/02/1985		Added an "mstofr" routine that watches
@@ -63,7 +63,7 @@
  * 019  SGS		09/17/1990    	Added PR control switches
  * 020  CJL		03/15/1995    	Added debug code for printf bug; uses define DEBUG_OLD
  * 021  JDB		09/17/1995   	Replaced /n's with \n's.
- * 022  MGS 	03/21/1996	  	WIN32_OLD code merge 
+ * 022  MGS 	03/21/1996	  	WIN32_OLD code merge
  * 023	MGS	 	05/31/1996		kltask moved to ph_task.c file
  * 024	MGS		05/31/1996		Merged spanish with english
  * 025	MGS		06/06/1996		Changed file name from phmain.c ph_main.c
@@ -72,8 +72,8 @@
  * 028  GL		12/05/1996		remove the language pipe hack for DTEX.
  * 029  GL		12/11/1996		initialize the lang_curr only for MSDOS
  *								also remove the WIN32_OLD language pipe hack
- * 030	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
- * 031	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ * 030	GL		04/21/1997		BATS#357  Add the code for __osf__ build
+ * 031	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  * 032  DR		09/30/1997		UK BUILD: added UK STUFF
  * 033	MGS		10/14/1997		BATS #470 Fixed crashing due to reset
  * 034	ET		06/04/1998		Merged in code from PHEDIT2
@@ -81,12 +81,12 @@
  * 036	mfg		06/22/1998		Added support for LANG_latin_american
  * 037  ETT		10/05/1998      	Added Linux code.
  * 038  EAB		02/03/1999		Added change from NWSNOAA->NWS_US for multi language NOA
-								and new code for evan ballaban to allow multiple vtm frame 
+								and new code for evan ballaban to allow multiple vtm frame
 								file outputs
  * 042	mfg		07/22/1999		included  cemm.h
  * 043	NAL		01/20/2000		Added initialization of speaker param arrays
- * 044	MGS		04/13/2000		Changes for integrated phoneme set 
-								tunedef,tunedef_8 
+ * 044	MGS		04/13/2000		Changes for integrated phoneme set
+								tunedef,tunedef_8
  * 045  NAL		06/12/2000		Added function prototype (warning removal)
  * 045  NAL		06/13/2000		Fixed val to use proper offsets BATS #930
  * 046	CHJ		07/20/2000		French added
@@ -103,12 +103,12 @@
  */
 
 #include "dectalkf.h"
-#include "ph_def.h"		/* the new all inclusive include file for ph */
+#include "ph_def.h" /* the new all inclusive include file for ph */
 
 #include <stdlib.h>
 
 #ifdef SEPARATE_PROCESSES
-struct share_data      *kernel_share;
+struct share_data* kernel_share;
 
 #endif
 
@@ -124,24 +124,23 @@ short TOT_ALLOPHONES = 39;
 #elif defined FRENCH
 short TOT_ALLOPHONES = 40;
 #else
-short TOT_ALLOPHONES = (PH_LAST_PH+1);  /* total number of phones */
+short TOT_ALLOPHONES = (PH_LAST_PH + 1); /* total number of phones */
 #endif
 #endif /* PHEDIT2 */
-											
-/* 
- * #ifdef __osf__ this is the opaque PIPE input handle    
- * MVP : Now it is same as for NT. extern void *vtm_pipe; 
- * #endif 
+
+/*
+ * #ifdef __osf__ this is the opaque PIPE input handle
+ * MVP : Now it is same as for NT. extern void *vtm_pipe;
+ * #endif
  */
 
-
-/* 
+/*
  *  asperation is used to dynamically adapt the period and comma pauses ...
  */
 
-/* unsigned int    asperation; 	  *//* MVP MI Made instance specific in DPH_T */
-/* int             reset_pitch;   *//* MVP MI Made instance specific in DPH_T */
-/* int             default_pitch; *//* MVP MI Made instance specific in DPH_T */
+/* unsigned int    asperation; 	  */ /* MVP MI Made instance specific in DPH_T */
+/* int             reset_pitch;   */ /* MVP MI Made instance specific in DPH_T */
+/* int             default_pitch; */ /* MVP MI Made instance specific in DPH_T */
 
 /***************************************************************************/
 /* MVP: The following extern variables are now become elements of instance */
@@ -171,7 +170,7 @@ short TOT_ALLOPHONES = (PH_LAST_PH+1);  /* total number of phones */
 /* extern   int docitation;                                                */
 /***************************************************************************/
 
-/* 
+/*
  * Because the KRM uses a very large
  * number of index marks, Kurzweil asked for the index
  * event queue to be made larger. This was possible
@@ -182,23 +181,23 @@ short TOT_ALLOPHONES = (PH_LAST_PH+1);  /* total number of phones */
 
 /* MVP : Function prototypes */
 
-extern void spcfree(unsigned short *);
+extern void spcfree(unsigned short*);
 
-void FreePHInstanceData (PDPH_T pDph_t);
-void spcfree(unsigned short *); // NAL warning removal
+void FreePHInstanceData(PDPH_T pDph_t);
+void spcfree(unsigned short*); // NAL warning removal
 
 /* Static function declarations */
 
 /*
  *      Function Name:
  *
- *  	Description: process creation main ... this entry is called by the 
- *					 loader to create any static processes that are needed 
+ *  	Description: process creation main ... this entry is called by the
+ *					 loader to create any static processes that are needed
  *					 for this task ...
  *
- *      Arguments: 		
+ *      Arguments:
  *                 	#ifdef MSDOS
- *						data_seg, stack_start 
+ *						data_seg, stack_start
  *					#else
  *						LPTTS_HANDLE_T phTTS
  *      Return Value: int 0
@@ -208,100 +207,95 @@ void spcfree(unsigned short *); // NAL warning removal
  */
 
 /* GL 04/21/1997  change to be the same as the latest OSF code */
-DWORD ph_main(LPTTS_HANDLE_T phTTS)
-{
+DWORD ph_main(LPTTS_HANDLE_T phTTS) {
 	/* Added a variable to get the handle of Current instance krenel_share_data */
-	PKSD_T                  pKsd_t;
-	PDPH_T                  pDph_t = NULL;
-	PDPHSETTAR_ST           pDphsettar_st = NULL;	/* Pointer to PHSETTAR.C file STATIC structure */
+	PKSD_T	      pKsd_t;
+	PDPH_T	      pDph_t	    = NULL;
+	PDPHSETTAR_ST pDphsettar_st = NULL; /* Pointer to PHSETTAR.C file STATIC structure */
 
 #ifdef WITHOUT_CALLOC
-	int                     i;		   /* MVP : 03/18/96 */
+	int i; /* MVP : 03/18/96 */
 #endif
 
 	pKsd_t = phTTS->pKernelShareData;
 
 #ifdef SEPARATE_PROCESSES
-	kernel_share = (struct share_data *) malloc (sizeof (struct share_data));
+	kernel_share = (struct share_data*)malloc(sizeof(struct share_data));
 
 #endif
 
-
 	/* MVP MI kinp is not used in this function  kinp = pKsd_t->lang_ph[LANG_english]; */
-	if ((pDph_t = (PDPH_T) calloc (1, sizeof (DPH_T))) == NULL)
+	if((pDph_t = (PDPH_T)calloc(1, sizeof(DPH_T))) == NULL)
 		return (MMSYSERR_NOMEM);
-        {
-			/* Associate this PH thread instance specific structure with current speech object */
-			phTTS->pPHThreadData = pDph_t;
-			/* MGS BATS 470 Fixed crashing due to reset */
-			pDph_t->phTTS=phTTS;
-			/* MVP : Initialize all structure pointers in DPH_T to NULL. */
-			pDph_t->pSTphsettar = NULL;
-			
-			/****************************************************************************/
-			/* MVP : Allocation of structures specific to STATIC varaibles in each file */
-			/****************************************************************************/
-			
-			/* Structure for PHSETTAR.C file specific static variables */
-			/* MVP: 03/19/96 Use calloc() to initialize all elements to zero. */
-			if ((pDphsettar_st = (PDPHSETTAR_ST) calloc (1, sizeof (DPHSETTAR_ST))) == NULL)
-			{
-				FreePHInstanceData (pDph_t);
-				phTTS->pPHThreadData = NULL;
-				return(MMSYSERR_NOMEM);
-			}
+	{
+		/* Associate this PH thread instance specific structure with current speech object */
+		phTTS->pPHThreadData = pDph_t;
+		/* MGS BATS 470 Fixed crashing due to reset */
+		pDph_t->phTTS = phTTS;
+		/* MVP : Initialize all structure pointers in DPH_T to NULL. */
+		pDph_t->pSTphsettar = NULL;
+
+		/****************************************************************************/
+		/* MVP : Allocation of structures specific to STATIC varaibles in each file */
+		/****************************************************************************/
+
+		/* Structure for PHSETTAR.C file specific static variables */
+		/* MVP: 03/19/96 Use calloc() to initialize all elements to zero. */
+		if((pDphsettar_st = (PDPHSETTAR_ST)calloc(1, sizeof(DPHSETTAR_ST))) == NULL) {
+			FreePHInstanceData(pDph_t);
+			phTTS->pPHThreadData = NULL;
+			return (MMSYSERR_NOMEM);
 		}
+	}
 
 	/* Associate this structure handle with current PH thread data structure */
 	pDph_t->pSTphsettar = pDphsettar_st;
 	/* MVP :Do required initialization of certain elements of DPHSETTAR_ST structure */
 #ifdef WITHOUT_CALLOC
-	pDphsettar_st->drawinitsw = 0;
-	pDphsettar_st->breathyah = 0;
-	pDphsettar_st->breathytilt = 0;
-	pDphsettar_st->nrises_sofar = 0;
-	pDphsettar_st->hatsize = 0;    
-	pDphsettar_st->lastbound = 0;    
-	pDphsettar_st->tarbas=0;
+	pDphsettar_st->drawinitsw	   = 0;
+	pDphsettar_st->breathyah	   = 0;
+	pDphsettar_st->breathytilt	   = 0;
+	pDphsettar_st->nrises_sofar	   = 0;
+	pDphsettar_st->hatsize		   = 0;
+	pDphsettar_st->lastbound	   = 0;
+	pDphsettar_st->tarbas		   = 0;
 	pDphsettar_st->hat_loc_re_baseline = 0;
-	pDphsettar_st->initsw = 0;		   	/* MVP :03/19/96 */
-	pDphsettar_st->sprlast = 0;		   	/* MVP :03/19/96 */
-	pDphsettar_st->strucstressprev = 0;	/* MVP :03/19/96 */      
-	pDphsettar_st->phonex_drawt0 = 0;  	/* MVP :03/19/96 */
-	pDphsettar_st->tarseg = 0;		   	/* MVP :03/19/96 */
-	pDphsettar_st->tarseg1 = 0;		   	/* MVP :03/19/96 */
-	pDphsettar_st->nimp = 0;		   	/* MVP :03/19/96 */
-	pDphsettar_st->timecos10 = 0;	   	/* MVP :03/19/96 */
-	pDphsettar_st->timecos15 = 0;	   	/* MVP :03/19/96 */
-	pDphsettar_st->timecosvib = 0;	/* MVP :03/19/96 */
+	pDphsettar_st->initsw		   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->sprlast		   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->strucstressprev	   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->phonex_drawt0	   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->tarseg		   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->tarseg1		   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->nimp		   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->timecos10	   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->timecos15	   = 0; /* MVP :03/19/96 */
+	pDphsettar_st->timecosvib	   = 0; /* MVP :03/19/96 */
 	/* MVP : 03/15/96 Do required initialization of certain elements of  DPH_T structure    */
 	pDph_t->initpardelay = 0;
 	/* MVP: 03/18/96 */
-	for (i = 0; i < VOICE_PARS; i++)
+	for(i = 0; i < VOICE_PARS; i++)
 		pDph_t->parstochip[i] = 0;
-	pDph_t->shrink=0;
-	pDph_t->shrib=0;
-	pDph_t->shrif=0;
-
+	pDph_t->shrink = 0;
+	pDph_t->shrib  = 0;
+	pDph_t->shrif  = 0;
 
 #ifdef PH_SWAPDATA
-	pDph_t->PHSwapCnt=0; //Foe evan balaban
+	pDph_t->PHSwapCnt = 0; // Foe evan balaban
 #endif
 
-
-#endif  // WITHOUT_CALLOC
+#endif // WITHOUT_CALLOC
 #ifdef GERMAN
-		pDph_t->new_sentence=0;  	/* for german sentence intonation 		*/
-		pDph_t->nstep=0;
-		pDph_t->gain=0;
-		pDph_t->tarold=0;
-		pDph_t->dur1=0;
-		pDph_t->oldval=0;
+	pDph_t->new_sentence = 0; /* for german sentence intonation 		*/
+	pDph_t->nstep	     = 0;
+	pDph_t->gain	     = 0;
+	pDph_t->tarold	     = 0;
+	pDph_t->dur1	     = 0;
+	pDph_t->oldval	     = 0;
 #endif
 
 	/* MVP : Initialize the speaker param arrays voidef,voidef_8 here */
 	/* NAL : Initialize the speaker param arrays tunedef,tunedef_8 here */
-	
+
 	// CAB Removed warnings by typecast
 	pDph_t->voidef_8[0] = (short*)paul_8;
 	pDph_t->voidef_8[1] = (short*)betty_8;
@@ -326,135 +320,128 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	pDph_t->voidef[8] = (short*)wendy;
 	pDph_t->voidef[9] = pDph_t->var_val;
 
-
 #if defined(HLSYN) || defined(CHANGES_AFTER_V43)
-	if(pKsd_t->lang_curr == LANG_english)
-	{
-	pDph_t->tunedef_8[0] = (short*)us_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)us_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)us_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)us_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)us_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)us_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)us_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)us_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)us_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)us_paul_tune;
-	pDph_t->tunedef[1] = (short*)us_betty_tune;
-	pDph_t->tunedef[2] = (short*)us_harry_tune;
-	pDph_t->tunedef[3] = (short*)us_frank_tune;
-	pDph_t->tunedef[4] = (short*)us_dennis_tune;
-	pDph_t->tunedef[5] = (short*)us_kit_tune;
-	pDph_t->tunedef[6] = (short*)us_ursula_tune;
-	pDph_t->tunedef[7] = (short*)us_rita_tune;
-	pDph_t->tunedef[8] = (short*)us_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_english) {
+		pDph_t->tunedef_8[0] = (short*)us_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)us_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)us_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)us_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)us_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)us_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)us_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)us_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)us_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)us_paul_tune;
+		pDph_t->tunedef[1]   = (short*)us_betty_tune;
+		pDph_t->tunedef[2]   = (short*)us_harry_tune;
+		pDph_t->tunedef[3]   = (short*)us_frank_tune;
+		pDph_t->tunedef[4]   = (short*)us_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)us_kit_tune;
+		pDph_t->tunedef[6]   = (short*)us_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)us_rita_tune;
+		pDph_t->tunedef[8]   = (short*)us_wendy_tune;
 	}
 
-	if(pKsd_t->lang_curr == LANG_british)
-	{
-	pDph_t->tunedef_8[0] = (short*)uk_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)uk_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)uk_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)uk_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)uk_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)uk_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)uk_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)uk_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)uk_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)uk_paul_tune;
-	pDph_t->tunedef[1] = (short*)uk_betty_tune;
-	pDph_t->tunedef[2] = (short*)uk_harry_tune;
-	pDph_t->tunedef[3] = (short*)uk_frank_tune;
-	pDph_t->tunedef[4] = (short*)uk_dennis_tune;
-	pDph_t->tunedef[5] = (short*)uk_kit_tune;
-	pDph_t->tunedef[6] = (short*)uk_ursula_tune;
-	pDph_t->tunedef[7] = (short*)uk_rita_tune;
-	pDph_t->tunedef[8] = (short*)uk_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_british) {
+		pDph_t->tunedef_8[0] = (short*)uk_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)uk_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)uk_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)uk_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)uk_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)uk_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)uk_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)uk_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)uk_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)uk_paul_tune;
+		pDph_t->tunedef[1]   = (short*)uk_betty_tune;
+		pDph_t->tunedef[2]   = (short*)uk_harry_tune;
+		pDph_t->tunedef[3]   = (short*)uk_frank_tune;
+		pDph_t->tunedef[4]   = (short*)uk_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)uk_kit_tune;
+		pDph_t->tunedef[6]   = (short*)uk_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)uk_rita_tune;
+		pDph_t->tunedef[8]   = (short*)uk_wendy_tune;
 	}
 
-	if(pKsd_t->lang_curr == LANG_latin_american)
-	{
-	pDph_t->tunedef_8[0] = (short*)la_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)la_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)la_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)la_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)la_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)la_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)la_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)la_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)la_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)la_paul_tune;
-	pDph_t->tunedef[1] = (short*)la_betty_tune;
-	pDph_t->tunedef[2] = (short*)la_harry_tune;
-	pDph_t->tunedef[3] = (short*)la_frank_tune;
-	pDph_t->tunedef[4] = (short*)la_dennis_tune;
-	pDph_t->tunedef[5] = (short*)la_kit_tune;
-	pDph_t->tunedef[6] = (short*)la_ursula_tune;
-	pDph_t->tunedef[7] = (short*)la_rita_tune;
-	pDph_t->tunedef[8] = (short*)la_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_latin_american) {
+		pDph_t->tunedef_8[0] = (short*)la_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)la_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)la_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)la_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)la_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)la_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)la_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)la_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)la_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)la_paul_tune;
+		pDph_t->tunedef[1]   = (short*)la_betty_tune;
+		pDph_t->tunedef[2]   = (short*)la_harry_tune;
+		pDph_t->tunedef[3]   = (short*)la_frank_tune;
+		pDph_t->tunedef[4]   = (short*)la_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)la_kit_tune;
+		pDph_t->tunedef[6]   = (short*)la_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)la_rita_tune;
+		pDph_t->tunedef[8]   = (short*)la_wendy_tune;
 	}
-	if(pKsd_t->lang_curr == LANG_spanish)
-	{
-	pDph_t->tunedef_8[0] = (short*)sp_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)sp_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)sp_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)sp_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)sp_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)sp_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)sp_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)sp_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)sp_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)sp_paul_tune;
-	pDph_t->tunedef[1] = (short*)sp_betty_tune;
-	pDph_t->tunedef[2] = (short*)sp_harry_tune;
-	pDph_t->tunedef[3] = (short*)sp_frank_tune;
-	pDph_t->tunedef[4] = (short*)sp_dennis_tune;
-	pDph_t->tunedef[5] = (short*)sp_kit_tune;
-	pDph_t->tunedef[6] = (short*)sp_ursula_tune;
-	pDph_t->tunedef[7] = (short*)sp_rita_tune;
-	pDph_t->tunedef[8] = (short*)sp_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_spanish) {
+		pDph_t->tunedef_8[0] = (short*)sp_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)sp_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)sp_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)sp_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)sp_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)sp_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)sp_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)sp_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)sp_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)sp_paul_tune;
+		pDph_t->tunedef[1]   = (short*)sp_betty_tune;
+		pDph_t->tunedef[2]   = (short*)sp_harry_tune;
+		pDph_t->tunedef[3]   = (short*)sp_frank_tune;
+		pDph_t->tunedef[4]   = (short*)sp_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)sp_kit_tune;
+		pDph_t->tunedef[6]   = (short*)sp_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)sp_rita_tune;
+		pDph_t->tunedef[8]   = (short*)sp_wendy_tune;
 	}
-	if(pKsd_t->lang_curr == LANG_french)
-	{
-	pDph_t->tunedef_8[0] = (short*)fr_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)fr_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)fr_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)fr_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)fr_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)fr_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)fr_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)fr_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)fr_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)fr_paul_tune;
-	pDph_t->tunedef[1] = (short*)fr_betty_tune;
-	pDph_t->tunedef[2] = (short*)fr_harry_tune;
-	pDph_t->tunedef[3] = (short*)fr_frank_tune;
-	pDph_t->tunedef[4] = (short*)fr_dennis_tune;
-	pDph_t->tunedef[5] = (short*)fr_kit_tune;
-	pDph_t->tunedef[6] = (short*)fr_ursula_tune;
-	pDph_t->tunedef[7] = (short*)fr_rita_tune;
-	pDph_t->tunedef[8] = (short*)fr_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_french) {
+		pDph_t->tunedef_8[0] = (short*)fr_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)fr_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)fr_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)fr_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)fr_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)fr_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)fr_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)fr_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)fr_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)fr_paul_tune;
+		pDph_t->tunedef[1]   = (short*)fr_betty_tune;
+		pDph_t->tunedef[2]   = (short*)fr_harry_tune;
+		pDph_t->tunedef[3]   = (short*)fr_frank_tune;
+		pDph_t->tunedef[4]   = (short*)fr_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)fr_kit_tune;
+		pDph_t->tunedef[6]   = (short*)fr_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)fr_rita_tune;
+		pDph_t->tunedef[8]   = (short*)fr_wendy_tune;
 	}
-	if(pKsd_t->lang_curr == LANG_german)
-	{
-	pDph_t->tunedef_8[0] = (short*)gr_paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)gr_betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)gr_harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)gr_frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)gr_dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)gr_kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)gr_ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)gr_rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)gr_wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)gr_paul_tune;
-	pDph_t->tunedef[1] = (short*)gr_betty_tune;
-	pDph_t->tunedef[2] = (short*)gr_harry_tune;
-	pDph_t->tunedef[3] = (short*)gr_frank_tune;
-	pDph_t->tunedef[4] = (short*)gr_dennis_tune;
-	pDph_t->tunedef[5] = (short*)gr_kit_tune;
-	pDph_t->tunedef[6] = (short*)gr_ursula_tune;
-	pDph_t->tunedef[7] = (short*)gr_rita_tune;
-	pDph_t->tunedef[8] = (short*)gr_wendy_tune;
+	if(pKsd_t->lang_curr == LANG_german) {
+		pDph_t->tunedef_8[0] = (short*)gr_paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)gr_betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)gr_harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)gr_frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)gr_dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)gr_kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)gr_ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)gr_rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)gr_wendy_8_tune;
+		pDph_t->tunedef[0]   = (short*)gr_paul_tune;
+		pDph_t->tunedef[1]   = (short*)gr_betty_tune;
+		pDph_t->tunedef[2]   = (short*)gr_harry_tune;
+		pDph_t->tunedef[3]   = (short*)gr_frank_tune;
+		pDph_t->tunedef[4]   = (short*)gr_dennis_tune;
+		pDph_t->tunedef[5]   = (short*)gr_kit_tune;
+		pDph_t->tunedef[6]   = (short*)gr_ursula_tune;
+		pDph_t->tunedef[7]   = (short*)gr_rita_tune;
+		pDph_t->tunedef[8]   = (short*)gr_wendy_tune;
 	}
 #else
 	pDph_t->tunedef_8[0] = (short*)paul_8_tune;
@@ -466,78 +453,76 @@ DWORD ph_main(LPTTS_HANDLE_T phTTS)
 	pDph_t->tunedef_8[6] = (short*)ursula_8_tune;
 	pDph_t->tunedef_8[7] = (short*)rita_8_tune;
 	pDph_t->tunedef_8[8] = (short*)wendy_8_tune;
-	pDph_t->tunedef[0] = (short*)paul_tune;
-	pDph_t->tunedef[1] = (short*)betty_tune;
-	pDph_t->tunedef[2] = (short*)harry_tune;
-	pDph_t->tunedef[3] = (short*)frank_tune;
-	pDph_t->tunedef[4] = (short*)dennis_tune;
-	pDph_t->tunedef[5] = (short*)kit_tune;
-	pDph_t->tunedef[6] = (short*)ursula_tune;
-	pDph_t->tunedef[7] = (short*)rita_tune;
-	pDph_t->tunedef[8] = (short*)wendy_tune;
+	pDph_t->tunedef[0]   = (short*)paul_tune;
+	pDph_t->tunedef[1]   = (short*)betty_tune;
+	pDph_t->tunedef[2]   = (short*)harry_tune;
+	pDph_t->tunedef[3]   = (short*)frank_tune;
+	pDph_t->tunedef[4]   = (short*)dennis_tune;
+	pDph_t->tunedef[5]   = (short*)kit_tune;
+	pDph_t->tunedef[6]   = (short*)ursula_tune;
+	pDph_t->tunedef[7]   = (short*)rita_tune;
+	pDph_t->tunedef[8]   = (short*)wendy_tune;
 #endif
-/*
-	// CAB Removed warnings by typecast
-	pDph_t->tunedef_8[0] = (short*)paul_8_tune;
-	pDph_t->tunedef_8[1] = (short*)betty_8_tune;
-	pDph_t->tunedef_8[2] = (short*)harry_8_tune;
-	pDph_t->tunedef_8[3] = (short*)frank_8_tune;
-	pDph_t->tunedef_8[4] = (short*)dennis_8_tune;
-	pDph_t->tunedef_8[5] = (short*)kit_8_tune;
-	pDph_t->tunedef_8[6] = (short*)ursula_8_tune;
-	pDph_t->tunedef_8[7] = (short*)rita_8_tune;
-	pDph_t->tunedef_8[8] = (short*)wendy_8_tune; */
-	//pDph_t->tunedef_8[9] = (short*)val_tune;
+	/*
+		// CAB Removed warnings by typecast
+		pDph_t->tunedef_8[0] = (short*)paul_8_tune;
+		pDph_t->tunedef_8[1] = (short*)betty_8_tune;
+		pDph_t->tunedef_8[2] = (short*)harry_8_tune;
+		pDph_t->tunedef_8[3] = (short*)frank_8_tune;
+		pDph_t->tunedef_8[4] = (short*)dennis_8_tune;
+		pDph_t->tunedef_8[5] = (short*)kit_8_tune;
+		pDph_t->tunedef_8[6] = (short*)ursula_8_tune;
+		pDph_t->tunedef_8[7] = (short*)rita_8_tune;
+		pDph_t->tunedef_8[8] = (short*)wendy_8_tune; */
+	// pDph_t->tunedef_8[9] = (short*)val_tune;
 
-/*	// CAB Removed warnings by typecast
-	pDph_t->tunedef[0] = (short*)paul_tune;
-	pDph_t->tunedef[1] = (short*)betty_tune;
-	pDph_t->tunedef[2] = (short*)harry_tune;
-	pDph_t->tunedef[3] = (short*)frank_tune;
-	pDph_t->tunedef[4] = (short*)dennis_tune;
-	pDph_t->tunedef[5] = (short*)kit_tune;
-	pDph_t->tunedef[6] = (short*)ursula_tune;
-	pDph_t->tunedef[7] = (short*)rita_tune;
-	pDph_t->tunedef[8] = (short*)wendy_tune;
-	pDph_t->tunedef[9] = (short*)val_tune;*/
+	/*	// CAB Removed warnings by typecast
+		pDph_t->tunedef[0] = (short*)paul_tune;
+		pDph_t->tunedef[1] = (short*)betty_tune;
+		pDph_t->tunedef[2] = (short*)harry_tune;
+		pDph_t->tunedef[3] = (short*)frank_tune;
+		pDph_t->tunedef[4] = (short*)dennis_tune;
+		pDph_t->tunedef[5] = (short*)kit_tune;
+		pDph_t->tunedef[6] = (short*)ursula_tune;
+		pDph_t->tunedef[7] = (short*)rita_tune;
+		pDph_t->tunedef[8] = (short*)wendy_tune;
+		pDph_t->tunedef[9] = (short*)val_tune;*/
 
 #ifdef ENGLISH_US
-		default_lang (pKsd_t, LANG_english, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_english, LANG_ph_ready);
 #endif
 #ifdef ENGLISH_UK
-		default_lang (pKsd_t, LANG_british, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_british, LANG_ph_ready);
 #endif
 #ifdef SPANISH_SP
-		default_lang (pKsd_t, LANG_spanish, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_spanish, LANG_ph_ready);
 #endif
 #ifdef SPANISH_LA
-		default_lang (pKsd_t, LANG_latin_american, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_latin_american, LANG_ph_ready);
 #endif
 #ifdef GERMAN
-		default_lang (pKsd_t, LANG_german, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_german, LANG_ph_ready);
 #endif
 #ifdef FRENCH
-		default_lang (pKsd_t, LANG_french, LANG_ph_ready);
+	default_lang(pKsd_t, LANG_french, LANG_ph_ready);
 #endif
 
-	kltask (phTTS);
+	kltask(phTTS);
 	return MMSYSERR_NOERROR;
 }
 
-void FreePHInstanceData(PDPH_T pDph_t)
-{
-if (pDph_t->pSTphsettar)
-     free (pDph_t->pSTphsettar);
-     pDph_t->pSTphsettar = NULL;
-     
-     // tek 13aug96 have to free the last delaypars
-     if(pDph_t->delaypars)
-     spcfree((unsigned short*)pDph_t->delaypars);
-     
-     if (pDph_t)
-     free (pDph_t);
-     
-pDph_t = NULL;
-     
-     }
+void FreePHInstanceData(PDPH_T pDph_t) {
+	if(pDph_t->pSTphsettar)
+		free(pDph_t->pSTphsettar);
+	pDph_t->pSTphsettar = NULL;
+
+	// tek 13aug96 have to free the last delaypars
+	if(pDph_t->delaypars)
+		spcfree((unsigned short*)pDph_t->delaypars);
+
+	if(pDph_t)
+		free(pDph_t);
+
+	pDph_t = NULL;
+}
 /*****************************end of phmain.c**************************************/

@@ -4,53 +4,51 @@
 /*                                                                    */
 /*  This include declares functions used by the DECtalk vocal tract   */
 /*  model vtm.c                                                       */
-// 001 4/8.98 Yubing Wang Added notch filter 
+// 001 4/8.98 Yubing Wang Added notch filter
 
 /**********************************************************************/
 
 /**********************************************************************/
 /*  Function two_zero_filter.                                         */
 /**********************************************************************/
-#include "kernel.h"		   /* For PKSD_T MVP MI */
-#include "vtminst.h"	   /* MVP MI */
+#include "kernel.h"  /* For PKSD_T MVP MI */
+#include "vtminst.h" /* MVP MI */
 
-#define  two_zero_filter( tz_input, \
-                          tz_output, \
-                          tz_delay_1, \
-                          tz_delay_2, \
-                          tz_a, \
-                          tz_b, \
-                          tz_c ) \
-  temp1 = tz_c * (S32)tz_delay_2; \
-  temp1 += tz_b * (S32)tz_delay_1; \
-  temp1 += tz_a * (S32)tz_input; \
-  tz_delay_2 = tz_delay_1; \
-  tz_delay_1 = tz_input; \
-  tz_output = (S32)( temp1 >> 12 );
+#define two_zero_filter(tz_input, \
+			tz_output, \
+			tz_delay_1, \
+			tz_delay_2, \
+			tz_a, \
+			tz_b, \
+			tz_c) \
+	temp1 = tz_c * (S32)tz_delay_2; \
+	temp1 += tz_b * (S32)tz_delay_1; \
+	temp1 += tz_a * (S32)tz_input; \
+	tz_delay_2 = tz_delay_1; \
+	tz_delay_1 = tz_input; \
+	tz_output  = (S32)(temp1 >> 12);
 
 /**********************************************************************/
 
-#define Notch_Filter(tn_input,\
-                     tnp_delay_1,\
-					 tnp_delay_2,\
-                     tnz_delay_1,\
-					 tnz_delay_2,\
-					 tn_a,\
-					 tn_b,\
-					 tn_c,\
-					 tn_gain)\
-  tem0 = tn_gain * (S32)tnz_delay_2;\
-  tem0 += tn_a * (S32)tnz_delay_1;\
-  tem0 += tn_gain * (S32)tn_input;\
-  tnz_delay_2 = tnz_delay_1;\
-  tnz_delay_1 = tn_input; \
-  tem1 = tn_c * (S32)tnp_delay_2;\
-  tnp_delay_2 = tnp_delay_1; \
-  tem1 += tn_b * (S32)tnp_delay_1; \
-  tem1 += tem0; \
-  tnp_delay_1 = (S16)( tem1 >> 12 );\
-
-
+#define Notch_Filter(tn_input, \
+		     tnp_delay_1, \
+		     tnp_delay_2, \
+		     tnz_delay_1, \
+		     tnz_delay_2, \
+		     tn_a, \
+		     tn_b, \
+		     tn_c, \
+		     tn_gain) \
+	tem0 = tn_gain * (S32)tnz_delay_2; \
+	tem0 += tn_a * (S32)tnz_delay_1; \
+	tem0 += tn_gain * (S32)tn_input; \
+	tnz_delay_2 = tnz_delay_1; \
+	tnz_delay_1 = tn_input; \
+	tem1	    = tn_c * (S32)tnp_delay_2; \
+	tnp_delay_2 = tnp_delay_1; \
+	tem1 += tn_b * (S32)tnp_delay_1; \
+	tem1 += tem0; \
+	tnp_delay_1 = (S16)(tem1 >> 12);
 
 /**********************************************************************/
 /*  Function two_zero_filter_2.                                       */
@@ -59,34 +57,34 @@
 /*  The input and output variable is "tz_input".                      */
 /**********************************************************************/
 
-#define  two_zero_filter_2( tz_input, \
-                            tz_delay_1, \
-                            tz_delay_2, \
-                            tz_b, \
-                            tz_c ) \
-  temp0 = tz_c * (S32)tz_delay_2; \
-  temp0 += tz_b * (S32)tz_delay_1; \
-  tz_delay_2 = tz_delay_1; \
-  tz_delay_1 = tz_input; \
-  tz_input += (S16)( temp0 >> 12 );
+#define two_zero_filter_2(tz_input, \
+			  tz_delay_1, \
+			  tz_delay_2, \
+			  tz_b, \
+			  tz_c) \
+	temp0 = tz_c * (S32)tz_delay_2; \
+	temp0 += tz_b * (S32)tz_delay_1; \
+	tz_delay_2 = tz_delay_1; \
+	tz_delay_1 = tz_input; \
+	tz_input += (S16)(temp0 >> 12);
 
 /**********************************************************************/
 /*  Function two_pole_filter                                          */
 /**********************************************************************/
 
-#define  two_pole_filter( tp_input, \
-                          tp_delay_1, \
-                          tp_delay_2, \
-                          tp_a, \
-                          tp_b, \
-                          tp_c ) \
-  temp1 = tp_c * (S32)tp_delay_2; \
-  tp_delay_2 = tp_delay_1; \
-  temp0 = tp_b * (S32)tp_delay_1; \
-  temp1 += temp0; \
-  temp0 = tp_a * (S32)tp_input; \
-  temp1 += temp0; \
-  tp_delay_1 = (S32)( temp1 >> 12 );
+#define two_pole_filter(tp_input, \
+			tp_delay_1, \
+			tp_delay_2, \
+			tp_a, \
+			tp_b, \
+			tp_c) \
+	temp1	   = tp_c * (S32)tp_delay_2; \
+	tp_delay_2 = tp_delay_1; \
+	temp0	   = tp_b * (S32)tp_delay_1; \
+	temp1 += temp0; \
+	temp0 = tp_a * (S32)tp_input; \
+	temp1 += temp0; \
+	tp_delay_1 = (S32)(temp1 >> 12);
 
 /**********************************************************************/
 /*                                                                    */
@@ -101,92 +99,87 @@
 /*                                                                    */
 /**********************************************************************/
 
-S16 radius;    /*  Radius of pole locations                           */
+S16 radius; /*  Radius of pole locations                           */
 
-S16 d2pole_cf45( PVTM_T pVtm_t,
-				 S16 * bcoef,
-                 S16 * ccoef,
-                 S16 frequency,
-                 S16 bandwidth,
-                 S16 gain )
-{
-  S16 acoef;
+S16 d2pole_cf45(PVTM_T pVtm_t,
+		S16*   bcoef,
+		S16*   ccoef,
+		S16    frequency,
+		S16    bandwidth,
+		S16    gain) {
+	S16 acoef;
 
-  /********************************************************************/
-  /*  Scale the frequency and bandwidth if the sample rate is not     */
-  /*  10 KHz.                                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Scale the frequency and bandwidth if the sample rate is not     */
+	/*  10 KHz.                                                         */
+	/********************************************************************/
 
-  if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE )
-  {
-    frequency = frac1mul( pVtm_t->inv_rate_scale, frequency ) << 1;
-    bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth ) << 1;
-  }
-  else
-  {
-    if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE )
-    {
-      frequency = frac1mul( pVtm_t->inv_rate_scale, frequency );
-      bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth );
-    }
-  }
+	if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE) {
+		frequency = frac1mul(pVtm_t->inv_rate_scale, frequency) << 1;
+		bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth) << 1;
+	} else {
+		if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE) {
+			frequency = frac1mul(pVtm_t->inv_rate_scale, frequency);
+			bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth);
+		}
+	}
 
-  /********************************************************************/
-  /*  Zap resonator if center frequency above maximum frequency.      */ 
-  /********************************************************************/
+	/********************************************************************/
+	/*  Zap resonator if center frequency above maximum frequency.      */
+	/********************************************************************/
 #ifndef HLSYN
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-  if ( frequency >= 4500 || bandwidth > 4950 ) {
+	if(frequency >= 4500 || bandwidth > 4950) {
 #else
-  if ( frequency >= 9000 || bandwidth > 9900 ) {
+	if(frequency >= 9000 || bandwidth > 9900) {
 #endif
-    *bcoef = 0;
-    *ccoef = 0;
-  } else
+		*bcoef = 0;
+		*ccoef = 0;
+	} else
 #endif
 
-  {
-    /******************************************************************/
-    /*  calculate radius = exp( -pi * T * bandwidth ).                */
-    /******************************************************************/
+	{
+		/******************************************************************/
+		/*  calculate radius = exp( -pi * T * bandwidth ).                */
+		/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    radius = radius_table[bandwidth >> 3];
+		radius = radius_table[bandwidth >> 3];
 #else
-    radius = radius_calc(bandwidth);
+		radius = radius_calc(bandwidth);
 #endif
 
-    /******************************************************************/
-    /*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
-    /******************************************************************/
+		/******************************************************************/
+		/*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
+		/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    *bcoef = frac4mul( radius, cosine_table[ frequency >> 3 ] );
+		*bcoef = frac4mul(radius, cosine_table[frequency >> 3]);
 #else
-    *bcoef = frac4mul( radius, cosine_calc( frequency ) );
+		*bcoef = frac4mul(radius, cosine_calc(frequency));
 #endif
 
-    /******************************************************************/
-    /*  Let ccoef = - r^2                                             */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Let ccoef = - r^2                                             */
+		/******************************************************************/
 
-    *ccoef = - frac4mul( radius, radius );
-  }
+		*ccoef = -frac4mul(radius, radius);
+	}
 
-  /********************************************************************/
-  /*  Let acoef = 1.0 - bcoef - ccoef                                 */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Let acoef = 1.0 - bcoef - ccoef                                 */
+	/********************************************************************/
 
-  pVtm_t->temp = 4096 - *bcoef - *ccoef;
-  
-  /********************************************************************/
-  /*  Adjust "acoef" by the gain term to keep output signal of the    */
-  /*  resonator in the high-order bits.                               */
-  /********************************************************************/
+	pVtm_t->temp = 4096 - *bcoef - *ccoef;
 
-  acoef = frac4mul( gain, pVtm_t->temp ) << 1;
+	/********************************************************************/
+	/*  Adjust "acoef" by the gain term to keep output signal of the    */
+	/*  resonator in the high-order bits.                               */
+	/********************************************************************/
 
-  return( acoef );
+	acoef = frac4mul(gain, pVtm_t->temp) << 1;
+
+	return (acoef);
 }
 
 /**********************************************************************/
@@ -205,88 +198,82 @@ S16 d2pole_cf45( PVTM_T pVtm_t,
 /*                                                                    */
 /**********************************************************************/
 
-S32 d2pole_cf123( PVTM_T pVtm_t,
-				  PKSD_T pKsd_t,
-				  S16 * bcoef,
-                  S16 * ccoef,
-                  S16 frequency,
-                  S16 bandwidth,
-                  S16 gain )
-{
-  S32 acoef;
+S32 d2pole_cf123(PVTM_T pVtm_t,
+		 PKSD_T pKsd_t,
+		 S16*	bcoef,
+		 S16*	ccoef,
+		 S16	frequency,
+		 S16	bandwidth,
+		 S16	gain) {
+	S32 acoef;
 
-  /********************************************************************/
-  /*  Scale the frequency and bandwidth if the sample rate is not     */
-  /*  10 KHz.                                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Scale the frequency and bandwidth if the sample rate is not     */
+	/*  10 KHz.                                                         */
+	/********************************************************************/
 
-  if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE )
-  {
-	  frequency = frac1mul( pVtm_t->inv_rate_scale, frequency ) << 1;
-	  bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth ) << 1;
-  }
-  else
-  {
-	  if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE )
-	  {
-		  frequency = frac1mul( pVtm_t->inv_rate_scale, frequency );
-		  bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth );
-	  }
-  }
+	if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE) {
+		frequency = frac1mul(pVtm_t->inv_rate_scale, frequency) << 1;
+		bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth) << 1;
+	} else {
+		if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE) {
+			frequency = frac1mul(pVtm_t->inv_rate_scale, frequency);
+			bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth);
+		}
+	}
 
-  /********************************************************************/
-  /*  Zap resonator if center frequency above maximum frequency.      */ 
-  /********************************************************************/
+	/********************************************************************/
+	/*  Zap resonator if center frequency above maximum frequency.      */
+	/********************************************************************/
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-  if ( frequency >= 4500 || bandwidth > 4950 ) {
+	if(frequency >= 4500 || bandwidth > 4950) {
 #else
-  if ( frequency >= 9000 || bandwidth > 9900 ) {
+	if(frequency >= 9000 || bandwidth > 9900) {
 #endif
-    frequency = pKsd_t->uiSampleRate >> 1;
-    bandwidth = pKsd_t->uiSampleRate >> 2;
-  }
+		frequency = pKsd_t->uiSampleRate >> 1;
+		bandwidth = pKsd_t->uiSampleRate >> 2;
+	}
 
-  /********************************************************************/
-  /*  calculate radius = exp( -pi * T * bandwidth ).                  */
-  /********************************************************************/
+	/********************************************************************/
+	/*  calculate radius = exp( -pi * T * bandwidth ).                  */
+	/********************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-  radius = radius_table[bandwidth >> 3];
+	radius = radius_table[bandwidth >> 3];
 #else
-  radius = radius_calc(bandwidth);
+	radius = radius_calc(bandwidth);
 #endif
 
-  /********************************************************************/
-  /*  bcoef = radius * 2 * cos( 2* pi * T * frequency )               */
-  /********************************************************************/
+	/********************************************************************/
+	/*  bcoef = radius * 2 * cos( 2* pi * T * frequency )               */
+	/********************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-  *bcoef = frac4mul( radius, cosine_table[ frequency >> 3 ] );
+	*bcoef = frac4mul(radius, cosine_table[frequency >> 3]);
 #else
-  *bcoef = frac4mul( radius, cosine_calc( frequency ) );
+	*bcoef = frac4mul(radius, cosine_calc(frequency));
 #endif
 
-  /********************************************************************/
-  /*  Let ccoef = - r^2                                               */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Let ccoef = - r^2                                               */
+	/********************************************************************/
 
-  *ccoef = - frac4mul( radius, radius );
+	*ccoef = -frac4mul(radius, radius);
 
-  /********************************************************************/
-  /*  Let acoef = 1.0 - bcoef - ccoef                                 */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Let acoef = 1.0 - bcoef - ccoef                                 */
+	/********************************************************************/
 
-  pVtm_t->temp = 4096 - *bcoef - *ccoef;
-  
-  /********************************************************************/
-  /*  Adjust "acoef" by the gain term to keep output signal of the    */
-  /*  resonator in the high-order bits.                               */
-  /********************************************************************/
+	pVtm_t->temp = 4096 - *bcoef - *ccoef;
 
-  acoef = frac4mul( gain, pVtm_t->temp ) << 1;
-  
-  
-  return( acoef );
+	/********************************************************************/
+	/*  Adjust "acoef" by the gain term to keep output signal of the    */
+	/*  resonator in the high-order bits.                               */
+	/********************************************************************/
+
+	acoef = frac4mul(gain, pVtm_t->temp) << 1;
+
+	return (acoef);
 }
 
 /**********************************************************************/
@@ -303,139 +290,128 @@ S32 d2pole_cf123( PVTM_T pVtm_t,
 /*                                                                    */
 /**********************************************************************/
 
-S16 d2pole_pf( PVTM_T pVtm_t,
-			   S16 * bcoef,
-               S16 * ccoef,
-               S16 frequency,
-               S16 bandwidth,
-               S16 gain )
-{
-  S16 acoef;
+S16 d2pole_pf(PVTM_T pVtm_t,
+	      S16*   bcoef,
+	      S16*   ccoef,
+	      S16    frequency,
+	      S16    bandwidth,
+	      S16    gain) {
+	S16 acoef;
 
-  /********************************************************************/
-  /*  Scale the frequency and bandwidth if the sample rate is not     */
-  /*  10 KHz.                                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Scale the frequency and bandwidth if the sample rate is not     */
+	/*  10 KHz.                                                         */
+	/********************************************************************/
 
-  if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE )
-  {
-    frequency = frac1mul( pVtm_t->inv_rate_scale, frequency ) << 1;
-    bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth ) << 1;
-  }
-  else
-  {
-    if ( pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE )
-    {
-      frequency = frac1mul( pVtm_t->inv_rate_scale, frequency );
-      bandwidth = frac1mul( pVtm_t->inv_rate_scale, bandwidth );
-    }
-  }
+	if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_DECREASE) {
+		frequency = frac1mul(pVtm_t->inv_rate_scale, frequency) << 1;
+		bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth) << 1;
+	} else {
+		if(pVtm_t->uiSampleRateChange == SAMPLE_RATE_INCREASE) {
+			frequency = frac1mul(pVtm_t->inv_rate_scale, frequency);
+			bandwidth = frac1mul(pVtm_t->inv_rate_scale, bandwidth);
+		}
+	}
 
-  /********************************************************************/
-  /*  Zap resonator if center frequency above maximum frequency.      */ 
-  /********************************************************************/
+	/********************************************************************/
+	/*  Zap resonator if center frequency above maximum frequency.      */
+	/********************************************************************/
 #ifndef HLSYN
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-  if ( frequency >= 4500 || bandwidth > 4950 ) {
+	if(frequency >= 4500 || bandwidth > 4950) {
 #else
-  if ( frequency >= 9000 || bandwidth > 9900 ) {
+	if(frequency >= 9000 || bandwidth > 9900) {
 #endif
-    *bcoef = 0;
-    *ccoef = 0;
-    acoef = 0;
-  } else
+		*bcoef = 0;
+		*ccoef = 0;
+		acoef  = 0;
+	} else
 #endif
 
-
-  {
-    /******************************************************************/
-    /*  calculate radius = exp( -pi * T * bandwidth ).                */
-    /******************************************************************/
+	{
+		/******************************************************************/
+		/*  calculate radius = exp( -pi * T * bandwidth ).                */
+		/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    radius = radius_table[bandwidth >> 3];
+		radius = radius_table[bandwidth >> 3];
 #else
-    radius = radius_calc(bandwidth);
+		radius = radius_calc(bandwidth);
 #endif
 
-    /******************************************************************/
-    /*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
-    /******************************************************************/
+		/******************************************************************/
+		/*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
+		/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    *bcoef = frac4mul( radius, cosine_table[ frequency >> 3 ] );
+		*bcoef = frac4mul(radius, cosine_table[frequency >> 3]);
 #else
-    *bcoef = frac4mul( radius, cosine_calc( frequency ) );
+		*bcoef = frac4mul(radius, cosine_calc(frequency));
 #endif
 
-    /******************************************************************/
-    /*  Let ccoef = - r^2                                             */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Let ccoef = - r^2                                             */
+		/******************************************************************/
 
-    *ccoef = - frac4mul( radius, radius );
+		*ccoef = -frac4mul(radius, radius);
 
-    /******************************************************************/
-    /*  Let acoef = 1.0 - bcoef - ccoef                               */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Let acoef = 1.0 - bcoef - ccoef                               */
+		/******************************************************************/
 
-    pVtm_t->temp = 4096 - *bcoef - *ccoef;
-  
-    /******************************************************************/
-    /*  Adjust "acoef" by the gain term to keep output signal of the  */
-    /*  resonator in the high-order bits.                             */
-    /******************************************************************/
+		pVtm_t->temp = 4096 - *bcoef - *ccoef;
 
-    acoef = frac4mul( gain, pVtm_t->temp ) << 1;
-  }
-  return( acoef );
+		/******************************************************************/
+		/*  Adjust "acoef" by the gain term to keep output signal of the  */
+		/*  resonator in the high-order bits.                             */
+		/******************************************************************/
+
+		acoef = frac4mul(gain, pVtm_t->temp) << 1;
+	}
+	return (acoef);
 }
 
+void Notch_fc(PVTM_T pVtm_t,
+	      S16*   bcoef,
+	      S16*   ccoef,
+	      S16*   acoef,
+	      S16    frequency,
+	      S16    bandwidth,
+	      S16    gain) {
 
-void Notch_fc( PVTM_T pVtm_t,
-			   S16 * bcoef,
-               S16 * ccoef,
-			   S16 * acoef,
-               S16 frequency,
-               S16 bandwidth,
-			   S16 gain
-                  )
-{
-    
-    /******************************************************************/
-    /*  calculate radius = exp( -pi * T * bandwidth ).                */
-    /******************************************************************/
+	/******************************************************************/
+	/*  calculate radius = exp( -pi * T * bandwidth ).                */
+	/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    radius = radius_table[bandwidth >> 3];
+	radius = radius_table[bandwidth >> 3];
 #else
-    radius = radius_calc(bandwidth);
+	radius = radius_calc(bandwidth);
 #endif
 
-    /******************************************************************/
-    /*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
-    /******************************************************************/
+	/******************************************************************/
+	/*  bcoef = radius * 2 * cos( 2* pi * T * frequency )             */
+	/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    *bcoef = frac4mul( radius, cosine_table[ frequency >> 3 ] );
+	*bcoef = frac4mul(radius, cosine_table[frequency >> 3]);
 #else
-    *bcoef = frac4mul( radius, cosine_calc( frequency ) );
+	*bcoef = frac4mul(radius, cosine_calc(frequency));
 #endif
 
-    /******************************************************************/
-    /*  Let ccoef = - r^2                                             */
-    /******************************************************************/
+	/******************************************************************/
+	/*  Let ccoef = - r^2                                             */
+	/******************************************************************/
 
-    *ccoef = - frac4mul( radius, radius );
+	*ccoef = -frac4mul(radius, radius);
 
-    /******************************************************************/
-    /*  Let acoef = 1.0 - bcoef - ccoef                               */
-    /******************************************************************/
+	/******************************************************************/
+	/*  Let acoef = 1.0 - bcoef - ccoef                               */
+	/******************************************************************/
 
 #if (PC_SAMPLE_RATE == 11025) || (PC_SAMPLE_RATE == 10000)
-    *acoef = - frac4mul(gain,cosine_table[ frequency >> 3 ]);
+	*acoef = -frac4mul(gain, cosine_table[frequency >> 3]);
 #else
-    *acoef = - frac4mul(gain,cosine_calc( frequency ));
+	*acoef = -frac4mul(gain, cosine_calc(frequency));
 #endif
-  
-   
 }

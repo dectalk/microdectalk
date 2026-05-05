@@ -41,14 +41,14 @@
  * Revision 1.1.2.2  1995/07/05  19:35:32  Krishna_Mangipudi
  * 	Copied from ./src/tts
  * 	[1995/07/05  19:32:23  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2.2.2  1994/11/07  23:07:20  Krishna_Mangipudi
  * 	Initial Check-in
  * 	[1994/11/07  21:12:51  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2  1994/11/04  18:33:29  root
  * 	Initial load of project
- * 
+ *
  */
 /*
  * 001	MGS	09/09/1997	Changed code for osf
@@ -59,15 +59,15 @@
  */
 /*
 **++
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
-** FILE NAME:   
-** MODULE NAME: 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
 **
-** MODULE DESCRIPTION: 
-** 
-** DESIGN OVERVIEW: 
-** 
+** FILE NAME:
+** MODULE NAME:
+**
+** MODULE DESCRIPTION:
+**
+** DESIGN OVERVIEW:
+**
 **--
 */
 
@@ -87,7 +87,7 @@
 ** CREATION DATE: 3/15/1993
 **
 ** DESIGN OVERVIEW:
-**         
+**
 **
 **--
 */
@@ -106,7 +106,6 @@
 #endif
 #endif
 
-
 /*
 ** [Include Files]
 */
@@ -114,10 +113,10 @@
 /*
 ** Constant Definitions
 */
-#define CONST               const
+#define CONST const
 #define CALLBACK
 #define APIENTRY
-#define WINAPI   	APIENTRY
+#define WINAPI APIENTRY
 #define FAR
 #define NEAR
 #define PASCAL
@@ -126,93 +125,93 @@
 ** Data Structure Definitions
 */
 /* basic data type for ALPHA MM system */
-typedef char                Int8;
-typedef short               Int16;
-typedef int                 Int32;
-typedef long long                Int64;
-typedef unsigned char       Uint8;
-typedef unsigned short      Uint16;
-typedef unsigned int        Uint32;
-typedef unsigned long long  Uint64; 
+typedef char		   Int8;
+typedef short		   Int16;
+typedef int		   Int32;
+typedef long long	   Int64;
+typedef unsigned char	   Uint8;
+typedef unsigned short	   Uint16;
+typedef unsigned int	   Uint32;
+typedef unsigned long long Uint64;
 
-typedef char                Char8;
-typedef short               Char16;
+typedef char  Char8;
+typedef short Char16;
 #ifndef _DWORD
 #define _DWORD
-typedef uint32_t      	    DWORD;
+typedef uint32_t DWORD;
 #endif
-typedef unsigned char 		    BOOL;
+typedef unsigned char BOOL;
 
 #ifndef TRUE
-#define TRUE	1
+#define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE	0
+#define FALSE 0
 #endif
 
 #ifndef NULL
-#define NULL  ((void *)0)
+#define NULL ((void*)0)
 #endif
 
-typedef Uint8       	    BYTE;
+typedef Uint8 BYTE;
 
 #ifndef _WORD
 #define _WORD
-typedef Uint16      	    WORD;
+typedef Uint16 WORD;
 #endif
 
-typedef Int32               INT;
-typedef long                LONG;
+typedef Int32 INT;
+typedef long  LONG;
 
-typedef float               FLOAT;
+typedef float FLOAT;
 
 #ifndef _UINT
 #define _UINT
-typedef uint32_t        	    UINT;
+typedef uint32_t UINT;
 #endif
 
-typedef Char8 		    CHAR;
-typedef Int16 		    SHORT;
+typedef Char8 CHAR;
+typedef Int16 SHORT;
 
-typedef Uint32        	    *PUINT;
-typedef FLOAT               *PFLOAT;
-typedef BOOL 	            *PBOOL;
-typedef BOOL                *LPBOOL;
-typedef BYTE                *PBYTE;
-typedef BYTE                *LPBYTE;
-typedef INT                 *PINT;
-typedef INT                 *LPINT;
-typedef WORD                *PWORD;
-typedef WORD                *LPWORD;
-typedef LONG                *LPLONG;
-typedef DWORD               *PDWORD;
-typedef DWORD               *LPDWORD;
-typedef void		    VOID;
-typedef void                *LPVOID;
+typedef Uint32* PUINT;
+typedef FLOAT*	PFLOAT;
+typedef BOOL*	PBOOL;
+typedef BOOL*	LPBOOL;
+typedef BYTE*	PBYTE;
+typedef BYTE*	LPBYTE;
+typedef INT*	PINT;
+typedef INT*	LPINT;
+typedef WORD*	PWORD;
+typedef WORD*	LPWORD;
+typedef LONG*	LPLONG;
+typedef DWORD*	PDWORD;
+typedef DWORD*	LPDWORD;
+typedef void	VOID;
+typedef void*	LPVOID;
 
-typedef LONG                SIZE;
+typedef LONG SIZE;
 
 /* Types use for passing & returning polymorphic values */
-typedef UINT                WPARAM;
-typedef LONG                LPARAM;
-typedef UINT                MMRESULT;
+typedef UINT WPARAM;
+typedef LONG LPARAM;
+typedef UINT MMRESULT;
 
 /* Handle is 32 bit UINT */
-typedef LONG *DT_HANDLE;
-typedef DT_HANDLE HANDLE;  
+typedef LONG*	  DT_HANDLE;
+typedef DT_HANDLE HANDLE;
 
-typedef Char16 WCHAR;    /* wc,   16-bit UNICODE character */
+typedef Char16 WCHAR; /* wc,   16-bit UNICODE character */
 
-typedef WCHAR *PWCHAR;
-typedef WCHAR *LPWCH, *PWCH;
+typedef WCHAR*	     PWCHAR;
+typedef WCHAR *	     LPWCH, *PWCH;
 typedef CONST WCHAR *LPCWCH, *PCWCH;
-typedef WCHAR *NWPSTR;
-typedef WCHAR *LPWSTR, *PWSTR;
+typedef WCHAR*	     NWPSTR;
+typedef WCHAR *	     LPWSTR, *PWSTR;
 
 typedef CONST WCHAR *LPCWSTR, *PCWSTR;
-typedef CHAR *LPSTR, *PSTR;
-typedef CHAR *LPCSTR;
+typedef CHAR *	     LPSTR, *PSTR;
+typedef CHAR*	     LPCSTR;
 
 #define DECLARE_HANDLE(handle) typedef DT_HANDLE handle
 /*
@@ -232,57 +231,56 @@ typedef CHAR *LPCSTR;
 
 /****************************************************************************
 
-                        General error return values
+			General error return values
 
 ****************************************************************************/
-#define MMSYSERR_BASE         0
-#define MMSYSERR_NOERROR      0                    /* no error */
-#define MMSYSERR_ERROR        (MMSYSERR_BASE + 1)  /* unspecified error */
-#define MMSYSERR_BADDEVICEID  (MMSYSERR_BASE + 2)  /* device ID out of range */
-#define MMSYSERR_NOTENABLED   (MMSYSERR_BASE + 3)  /* driver failed enable */
-#define MMSYSERR_ALLOCATED    (MMSYSERR_BASE + 4)  /* device already allocated */
-#define MMSYSERR_INVALHANDLE  (MMSYSERR_BASE + 5)  /* device handle is invalid */
-#define MMSYSERR_NODRIVER     (MMSYSERR_BASE + 6)  /* no device driver present */
-#define MMSYSERR_NOMEM        (MMSYSERR_BASE + 7)  /* memory allocation error */
+#define MMSYSERR_BASE 0
+#define MMSYSERR_NOERROR 0			   /* no error */
+#define MMSYSERR_ERROR (MMSYSERR_BASE + 1)	   /* unspecified error */
+#define MMSYSERR_BADDEVICEID (MMSYSERR_BASE + 2)   /* device ID out of range */
+#define MMSYSERR_NOTENABLED (MMSYSERR_BASE + 3)	   /* driver failed enable */
+#define MMSYSERR_ALLOCATED (MMSYSERR_BASE + 4)	   /* device already allocated */
+#define MMSYSERR_INVALHANDLE (MMSYSERR_BASE + 5)   /* device handle is invalid */
+#define MMSYSERR_NODRIVER (MMSYSERR_BASE + 6)	   /* no device driver present */
+#define MMSYSERR_NOMEM (MMSYSERR_BASE + 7)	   /* memory allocation error */
 #define MMSYSERR_NOTSUPPORTED (MMSYSERR_BASE + 8)  /* function isn't supported */
-#define MMSYSERR_BADERRNUM    (MMSYSERR_BASE + 9)  /* error value out of range */
-#define MMSYSERR_INVALFLAG    (MMSYSERR_BASE + 10) /* invalid flag passed */
-#define MMSYSERR_INVALPARAM   (MMSYSERR_BASE + 11) /* invalid parameter passed */
-#define MMSYSERR_HANDLEBUSY   (MMSYSERR_BASE + 12) /* handle being used */
-                                                   /* simultaneously on another */
-                                                   /* thread (eg callback) */
+#define MMSYSERR_BADERRNUM (MMSYSERR_BASE + 9)	   /* error value out of range */
+#define MMSYSERR_INVALFLAG (MMSYSERR_BASE + 10)	   /* invalid flag passed */
+#define MMSYSERR_INVALPARAM (MMSYSERR_BASE + 11)   /* invalid parameter passed */
+#define MMSYSERR_HANDLEBUSY (MMSYSERR_BASE + 12)   /* handle being used */
+						   /* simultaneously on another */
+						   /* thread (eg callback) */
 #define MMSYSERR_INVALIDALIAS (MMSYSERR_BASE + 13) /* "Specified alias not found in WIN.INI */
-#define MMSYSERR_LASTERROR    (MMSYSERR_BASE + 13) /* last error in range */
+#define MMSYSERR_LASTERROR (MMSYSERR_BASE + 13)	   /* last error in range */
 
 /* defines for dwFormat field of WAVEINCAPS and WAVEOUTCAPS */
-#define WAVE_INVALIDFORMAT     0x00000000       /* invalid format */
-#define WAVE_FORMAT_1M08       0x00000001       /* 11.025 kHz, Mono,   8-bit */
-#define WAVE_FORMAT_1S08       0x00000002       /* 11.025 kHz, Stereo, 8-bit */
-#define WAVE_FORMAT_1M16       0x00000004       /* 11.025 kHz, Mono,   16-bit */
-#define WAVE_FORMAT_1S16       0x00000008       /* 11.025 kHz, Stereo, 16-bit */
-#define WAVE_FORMAT_2M08       0x00000010       /* 22.05  kHz, Mono,   8-bit */
-#define WAVE_FORMAT_2S08       0x00000020       /* 22.05  kHz, Stereo, 8-bit */
-#define WAVE_FORMAT_2M16       0x00000040       /* 22.05  kHz, Mono,   16-bit */
-#define WAVE_FORMAT_2S16       0x00000080       /* 22.05  kHz, Stereo, 16-bit */
-#define WAVE_FORMAT_4M08       0x00000100       /* 44.1   kHz, Mono,   8-bit */
-#define WAVE_FORMAT_4S08       0x00000200       /* 44.1   kHz, Stereo, 8-bit */
-#define WAVE_FORMAT_4M16       0x00000400       /* 44.1   kHz, Mono,   16-bit */
-#define WAVE_FORMAT_4S16       0x00000800       /* 44.1   kHz, Stereo, 16-bit */
-#define WAVE_FORMAT_08M08      0x00001000       /* 8      kHz, Mono,   8-bit */
-#define WAVE_FORMAT_08M16      0x00002000       /* 8      kHz, Mono,   16-bit */
-#define WAVE_FORMAT_MULAW      0x00000007	/* 8      kHz, Mono,   Mu-law */
+#define WAVE_INVALIDFORMAT 0x00000000 /* invalid format */
+#define WAVE_FORMAT_1M08 0x00000001   /* 11.025 kHz, Mono,   8-bit */
+#define WAVE_FORMAT_1S08 0x00000002   /* 11.025 kHz, Stereo, 8-bit */
+#define WAVE_FORMAT_1M16 0x00000004   /* 11.025 kHz, Mono,   16-bit */
+#define WAVE_FORMAT_1S16 0x00000008   /* 11.025 kHz, Stereo, 16-bit */
+#define WAVE_FORMAT_2M08 0x00000010   /* 22.05  kHz, Mono,   8-bit */
+#define WAVE_FORMAT_2S08 0x00000020   /* 22.05  kHz, Stereo, 8-bit */
+#define WAVE_FORMAT_2M16 0x00000040   /* 22.05  kHz, Mono,   16-bit */
+#define WAVE_FORMAT_2S16 0x00000080   /* 22.05  kHz, Stereo, 16-bit */
+#define WAVE_FORMAT_4M08 0x00000100   /* 44.1   kHz, Mono,   8-bit */
+#define WAVE_FORMAT_4S08 0x00000200   /* 44.1   kHz, Stereo, 8-bit */
+#define WAVE_FORMAT_4M16 0x00000400   /* 44.1   kHz, Mono,   16-bit */
+#define WAVE_FORMAT_4S16 0x00000800   /* 44.1   kHz, Stereo, 16-bit */
+#define WAVE_FORMAT_08M08 0x00001000  /* 8      kHz, Mono,   8-bit */
+#define WAVE_FORMAT_08M16 0x00002000  /* 8      kHz, Mono,   16-bit */
+#define WAVE_FORMAT_MULAW 0x00000007  /* 8      kHz, Mono,   Mu-law */
 
-#define WAVE_MAPPER     ((DWORD)(-1))   /* device ID for wave device mapper */
-#define WAVE_OPEN_SHAREABLE   0x00000004       /* Open device as shareable */
-#define CALLBACK_FUNCTION   0x00030000l    /* dwCallback is a FARPROC */
-#define WAVE_FORMAT_PCM     1 
+#define WAVE_MAPPER ((DWORD)(-1))      /* device ID for wave device mapper */
+#define WAVE_OPEN_SHAREABLE 0x00000004 /* Open device as shareable */
+#define CALLBACK_FUNCTION 0x00030000l  /* dwCallback is a FARPROC */
+#define WAVE_FORMAT_PCM 1
 
 #ifndef SUN_ULAW
-#define SUN_ULAW        1
-#define SUN_LIN_8       2
-#define SUN_LIN_16      3
+#define SUN_ULAW 1
+#define SUN_LIN_8 2
+#define SUN_LIN_16 3
 #endif
-
 
 /* general extended waveform format structure
    Use this for all NON PCM formats
@@ -290,21 +288,20 @@ typedef CHAR *LPCSTR;
 */
 #ifndef tWAVEFORMATEX
 #define _WAVEFORMATEX_
-typedef struct tWAVEFORMATEX
-{
-    WORD    wFormatTag;        /* format type */
-    WORD    nChannels;         /* number of channels (i.e. mono, stereo...) */
-    DWORD   nSamplesPerSec;    /* sample rate */
-    DWORD   nAvgBytesPerSec;   /* for buffer estimation */
-    WORD    nBlockAlign;       /* block size of data */
-    WORD    wBitsPerSample;    /* Number of bits per sample of mono data */
-    WORD    cbSize;            /* The count in bytes of the size of
-                                    extra information (after cbSize) */
+typedef struct tWAVEFORMATEX {
+	WORD  wFormatTag;      /* format type */
+	WORD  nChannels;       /* number of channels (i.e. mono, stereo...) */
+	DWORD nSamplesPerSec;  /* sample rate */
+	DWORD nAvgBytesPerSec; /* for buffer estimation */
+	WORD  nBlockAlign;     /* block size of data */
+	WORD  wBitsPerSample;  /* Number of bits per sample of mono data */
+	WORD  cbSize;	       /* The count in bytes of the size of
+				    extra information (after cbSize) */
 
 } WAVEFORMATEX;
-typedef WAVEFORMATEX       *PWAVEFORMATEX;
-typedef WAVEFORMATEX NEAR *NPWAVEFORMATEX;
-typedef WAVEFORMATEX FAR  *LPWAVEFORMATEX;
+typedef WAVEFORMATEX*	   PWAVEFORMATEX;
+typedef WAVEFORMATEX NEAR* NPWAVEFORMATEX;
+typedef WAVEFORMATEX FAR*  LPWAVEFORMATEX;
 #endif /* _WAVEFORMATEX_ */
 
-#endif  /* H_MMBASIC */
+#endif /* H_MMBASIC */

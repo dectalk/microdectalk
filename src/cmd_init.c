@@ -22,19 +22,19 @@
  *
  *    Functionality:
  *    This function initializes the CMD thread task.
- *    Input:                                                     
- *    bResetAll  A boolean which indicates whether to reset all of    
- *               CMD parameters or just to flush the input text.      
- *    Output:                                                    
- *    None.                                                           
+ *    Input:
+ *    bResetAll  A boolean which indicates whether to reset all of
+ *               CMD parameters or just to flush the input text.
+ *    Output:
+ *    None.
  *    this file is only used for the windows 32 code
  *
  ***********************************************************************
- *    Revision History:                                        
+ *    Revision History:
  *
  * Rev  Who 	Date        Description
  * ---  -----   ----------- --------------------------------------------
- * 001	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
+ * 001	GL		04/21/1997	BATS#357  Add the code for __osf__ build
  * 002  ETT     10/05/1998  added linux code
  * 003	CAB		10/18/2000	Changed copyright info and formatted comments
  * 004	MGS		05/09/2001	Some VxWorks porting BATS#972
@@ -47,45 +47,41 @@
 #include "dectalkf.h"
 
 /*#include "dtmmedefs.h"*/
-//#include "opthread.h"
+// #include "opthread.h"
 #include <stdlib.h>
-
 
 #include "cm_def.h"
 /* #include "defs.h"
 #include "esc.h"
-#include "kernel.h"                                 
+#include "kernel.h"
 #include "cm_def.h" */
 
-/*extern int phoneme_mode;*/  /* MVP MI */
-/*extern int error_mode;  */  /* MVP MI */
-/*extern int punct_mode;  */  /* MVP MI */
+/*extern int phoneme_mode;*/	    /* MVP MI */
+/*extern int error_mode;  */	    /* MVP MI */
+/*extern int punct_mode;  */	    /* MVP MI */
 /*extern unsigned int last_punct;*/ /* MVP MI */
 
 /*extern int timeout;  MVP MI */
 
-void cmd_init( LPTTS_HANDLE_T phTTS, BOOL bResetAll )
-{
+void cmd_init(LPTTS_HANDLE_T phTTS, BOOL bResetAll) {
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-        cm_util_init_type(pKsd_t);
+	cm_util_init_type(pKsd_t);
 
-	cm_cmd_reset_comm( pCmd_t, STATE_NORMAL );
+	cm_cmd_reset_comm(pCmd_t, STATE_NORMAL);
 
-	if ( bResetAll )
-	{
-		/*esc_seq->type = 0;  */           /* MVP MI */
+	if(bResetAll) {
+		/*esc_seq->type = 0;  */ /* MVP MI */
 		pKsd_t->phoneme_mode = PHONEME_OFF | PHONEME_SPEAK;
-		pCmd_t->error_mode = ERROR_speak;
-		pCmd_t->punct_mode = PUNCT_some;
-		pCmd_t->last_punct = 0;
+		pCmd_t->error_mode   = ERROR_speak;
+		pCmd_t->punct_mode   = PUNCT_some;
+		pCmd_t->last_punct   = 0;
 		/* timeout = 0;    MVP MI */
 		pKsd_t->pitch_delta = 35;
 	}
-  /*    return;*/
+	/*    return;*/
 }
-
 
 /**********************************************************************/
 /**********************************************************************/
@@ -111,8 +107,7 @@ void cmd_init( LPTTS_HANDLE_T phTTS, BOOL bResetAll )
 /**********************************************************************/
 /**********************************************************************/
 
-void FreeCMDThreadMemory(PCMD_T pCmd_t)
-{
+void FreeCMDThreadMemory(PCMD_T pCmd_t) {
 	/* Free the esc_seq pointer */
 #ifdef ESCAPE_SEQ
 	if(pCmd_t->esc_seq)
@@ -129,7 +124,4 @@ void FreeCMDThreadMemory(PCMD_T pCmd_t)
 	if(pCmd_t)
 		free(pCmd_t);
 	pCmd_t = NULL;
-
 }
-
-

@@ -68,10 +68,10 @@
  * 0027	MGS		08/26/1997		Merged in fasttalk
  * 0028 EAB     10/7/1997         Modified to improve slow speaking rates(< 75 wpm)
  * 0029	EAB		10/13/1997		Removed redundant checks and obsolete code
- *								also comment the dummy rate check code.(checked in deadstop() call in ph_task.c)						
+ *								also comment the dummy rate check code.(checked in deadstop() call in ph_task.c)
  * 0030	EAB		12/12/1997		adjust speak rate for UK_English
  * 0031 EAB		2/3/1997		Needed to re-adjust speaking rate after tuning BATS 589
- * 0032 EAB		03/20/1998      German speedup no longer needed after tuning eab 3/20/98 
+ * 0032 EAB		03/20/1998      German speedup no longer needed after tuning eab 3/20/98
 								Rate will be calibrated later
  * 0033 EAB     02/3/1999		EAB First pass at tuning refernece rate for x timed rythm
  * 0034 EAB		02/10/1999		EAB slow down slighlty for release later check durations......
@@ -100,7 +100,7 @@
 /* extern short nallotot;      Number of phones in phonetic string         */
 /* Arguments for fractional multiply instruction                           */
 /* 		mlsh1(pDph_t->arg1,pDph_t->arg2) and                               */
-/* 		muldv(pDph_t->arg1,pDph_t->arg2,pDph_t->arg3)       			   */	
+/* 		muldv(pDph_t->arg1,pDph_t->arg2,pDph_t->arg3)       			   */
 /* extern short arg1,arg2,arg3;                                            */
 /* extern short *user_durs;    User-specified durations (optional)         */
 /* extern FLAG  newparagsw;    If 1, pause before this clause long         */
@@ -117,27 +117,24 @@
  * Tables located in language specific files
  * P_US_ROM.C, P_SP_ROM.C, P_GR_ROM.C
  */
-//extern short *inhdr;	   /* Inherent duration for each phone */
-//extern short *mindur;	   /* Minimum duration for each phone  */
-extern short *featb;	   /* Phonetic features                */
+// extern short *inhdr;	   /* Inherent duration for each phone */
+// extern short *mindur;	   /* Minimum duration for each phone  */
+extern short* featb; /* Phonetic features                */
 
-
-#define   BASE_ASP			500
-#define   MAX_ASP_COMMA     (8)
-#define   MIN_ASP_COMMA     (-4)
-#define   MAX_ASP_PERIOD    (20)
-#define   MIN_ASP_PERIOD    (-10)
-
+#define BASE_ASP 500
+#define MAX_ASP_COMMA (8)
+#define MIN_ASP_COMMA (-4)
+#define MAX_ASP_PERIOD (20)
+#define MIN_ASP_PERIOD (-10)
 
 /* MVP : static function prototypes */
-static void init_timing (LPTTS_HANDLE_T phTTS);
+static void init_timing(LPTTS_HANDLE_T phTTS);
 
-#define phone_feature(a,b) (all_featb[(b)>>8][(b)&0x00ff])
+#define phone_feature(a, b) (all_featb[(b) >> 8][(b) & 0x00ff])
 
-
-/* static short sprlast; *//* Sprate during last clause        */
-/* static short sprat1; *//* Sprate factor for pauses and deldur   */
-/* static short sprat2; *//* Sprate factor for segments        */
+/* static short sprlast; */ /* Sprate during last clause        */
+/* static short sprat1; */  /* Sprate factor for pauses and deldur   */
+/* static short sprat2; */  /* Sprate factor for segments        */
 /* static short emphasissw; */
 /* static short prcnt,durinh,durmin,deldur,nphon; */
 /* static short pholas,struclas,fealas; */
@@ -153,12 +150,12 @@ static void init_timing (LPTTS_HANDLE_T phTTS);
  *  pauses based on what has come before it.
  */
 
-#include "ph_time1.c"	/* file to catch the language dependent code for phtiming */
+#include "ph_time1.c" /* file to catch the language dependent code for phtiming */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* I N I T - T I M I N G                */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+
 /*
  *      Function Name: init_timing()
  *
@@ -171,75 +168,56 @@ static void init_timing (LPTTS_HANDLE_T phTTS);
  *      Comments:
  *
  */
-static void init_timing(LPTTS_HANDLE_T phTTS)
-{
-	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
-	PDPH_T                  pDph_t = phTTS->pPHThreadData;
-	PDPHSETTAR_ST           pDphsettar = pDph_t->pSTphsettar;
-	int temp2,temp3;
-	
-	if (pKsd_t->sprate != pDphsettar->sprlast)
-	{
-	/* eab 2/10/97 These are older limits no need noit to have all have same limits
-	the US and Spanish used to be 120 and 550*/
+static void init_timing(LPTTS_HANDLE_T phTTS) {
+	PKSD_T	      pKsd_t	 = phTTS->pKernelShareData;
+	PDPH_T	      pDph_t	 = phTTS->pPHThreadData;
+	PDPHSETTAR_ST pDphsettar = pDph_t->pSTphsettar;
+	int	      temp2, temp3;
+
+	if(pKsd_t->sprate != pDphsettar->sprlast) {
+		/* eab 2/10/97 These are older limits no need noit to have all have same limits
+		the US and Spanish used to be 120 and 550*/
 		// 033 EAB     2/3/99			EAB First pass at tuning refernece rate for x timed rythm
-if(pKsd_t->lang_curr == LANG_english)
-{
-	pDph_t->timeref=16000/pKsd_t->sprate; //stressed timed language
-}
-else if(pKsd_t->lang_curr == LANG_british)
-{
-	pKsd_t->sprate += 20;
-	pDph_t->timeref=16000/pKsd_t->sprate; //stressed timed langua
-	pKsd_t->sprate = pKsd_t->sprate;
-}
-else if(pKsd_t->lang_curr == LANG_latin_american)
-{
-	pKsd_t->sprate = pKsd_t->sprate+35;
-	pDph_t->timeref=4000/pKsd_t->sprate; //stressed timed langua
-	
-}
-else if(pKsd_t->lang_curr == LANG_spanish)
-{
-		pKsd_t->sprate = pKsd_t->sprate;
-	pDph_t->timeref=16000/pKsd_t->sprate; //stressed timed langua
+		if(pKsd_t->lang_curr == LANG_english) {
+			pDph_t->timeref = 16000 / pKsd_t->sprate; // stressed timed language
+		} else if(pKsd_t->lang_curr == LANG_british) {
+			pKsd_t->sprate += 20;
+			pDph_t->timeref = 16000 / pKsd_t->sprate; // stressed timed langua
+			pKsd_t->sprate	= pKsd_t->sprate;
+		} else if(pKsd_t->lang_curr == LANG_latin_american) {
+			pKsd_t->sprate	= pKsd_t->sprate + 35;
+			pDph_t->timeref = 4000 / pKsd_t->sprate; // stressed timed langua
 
-}
-else if(pKsd_t->lang_curr == LANG_german)
-{
-		pDph_t->timeref=12000/pKsd_t->sprate; //syllable timed language
-		pKsd_t->sprate = pKsd_t->sprate + 30;
-}
-else if(pKsd_t->lang_curr == LANG_french)
-{	
-	pKsd_t->sprate -= 20;
-	if (pKsd_t->sprate < 120) pKsd_t->sprate = 120;
-    if (pKsd_t->sprate > 350) pKsd_t->sprate = 350;
-}
+		} else if(pKsd_t->lang_curr == LANG_spanish) {
+			pKsd_t->sprate	= pKsd_t->sprate;
+			pDph_t->timeref = 16000 / pKsd_t->sprate; // stressed timed langua
 
+		} else if(pKsd_t->lang_curr == LANG_german) {
+			pDph_t->timeref = 12000 / pKsd_t->sprate; // syllable timed language
+			pKsd_t->sprate	= pKsd_t->sprate + 30;
+		} else if(pKsd_t->lang_curr == LANG_french) {
+			pKsd_t->sprate -= 20;
+			if(pKsd_t->sprate < 120) pKsd_t->sprate = 120;
+			if(pKsd_t->sprate > 350) pKsd_t->sprate = 350;
+		}
 
-
-
-/* EAB/GL  10/19/1997,  dummy checking, rate have been checked in deadstop() call in ph_task.c
-		if (pKsd_t->sprate < 75)
-			pKsd_t->sprate = 75;
-		else if (pKsd_t->sprate > 600)
-			pKsd_t->sprate = 600;
-*/
+		/* EAB/GL  10/19/1997,  dummy checking, rate have been checked in deadstop() call in ph_task.c
+				if (pKsd_t->sprate < 75)
+					pKsd_t->sprate = 75;
+				else if (pKsd_t->sprate > 600)
+					pKsd_t->sprate = 600;
+		*/
 		pDphsettar->sprlast = pKsd_t->sprate;
 
 		/* Linearize (calibrate) high speaking rates by a fudge */
 		/* Tuned to perform on 300 word standard passage published on p. 114 of G. Fairbanks ^^Voice and Articulation Drill Book^^ */
-		if (pKsd_t->sprate > 250)
-		{
+		if(pKsd_t->sprate > 250) {
 			pDphsettar->sprat0 = 250 + ((pKsd_t->sprate - 250) >> 1);
-		}
-		else
-		{
+		} else {
 			pDphsettar->sprat0 = pKsd_t->sprate;
-        }
+		}
 #ifdef SPANISH
-		pDphsettar->sprat0 = pKsd_t->sprate-12; //slow down slightly per CHRIS
+		pDphsettar->sprat0 = pKsd_t->sprate - 12; // slow down slightly per CHRIS
 #endif
 #ifdef ENGLISH_UK
 		/*eab 12/12/97 adjust so that 200 is "normal speaking
@@ -247,16 +225,16 @@ else if(pKsd_t->lang_curr == LANG_french)
 		this breaks slowtalk for UK the problem is with the definition of inherent duration
 		which I believe I understand how dennis obtained the better fix later is to increase inherent durations
 		I believe BATS 589*/
-			
+
 		pDphsettar->sprat0 -= 40;
 		if(pDphsettar->sprat0 <= 65)
-			pDphsettar->sprat0=65;
+			pDphsettar->sprat0 = 65;
 #endif
-	
+
 #ifdef SLOWTALK
 		/*EAB 9/97 AT slower speeds unvoice glotal stops should be added rather than
 		sounding like a retard rate goes below 100 sprat0 doesn't*/
-		if (pDphsettar->sprat0 < 75)
+		if(pDphsettar->sprat0 < 75)
 			pDphsettar->sprat0 = 75;
 #endif
 		/* For pDphsettar->sprat0 = 300, sprat1 = 0.4, sprat2 = 0.56 */
@@ -265,48 +243,41 @@ else if(pKsd_t->lang_curr == LANG_french)
 		/* For pDphsettar->sprat0 = 120, sprat1 = 1.5, sprat2 = 1.25 */
 
 		/* Effect of speaking rate on additive pauses (sprat1) */
-		if (pDphsettar->sprat0 >= 180)
-		{
+		if(pDphsettar->sprat0 >= 180) {
 			temp3 = 220;
 #if defined(HLSYN) || defined(CHANGES_AFTER_V43)
 			temp2 = 400 - pDphsettar->sprat0;
 #else
 			temp2 = 425 - pDphsettar->sprat0;
 #endif
-		}
-		else
-		{
+		} else {
 			temp3 = 120;
 			temp2 = 300 - pDphsettar->sprat0;
-
 		}
-		//pDph_t->arg1 = FRAC_ONE;
-		if (temp2 < 0)
+		// pDph_t->arg1 = FRAC_ONE;
+		if(temp2 < 0)
 			temp2 = 1;
-		pDphsettar->sprat1 = muldv (FRAC_ONE, temp2, temp3);
+		pDphsettar->sprat1 = muldv(FRAC_ONE, temp2, temp3);
 
 		/* Effect of sp. rate on compressible part of seg dur (sprat2) */
-		if (pDphsettar->sprat0 > 180)
-		{
+		if(pDphsettar->sprat0 > 180) {
 			temp2 = 460 - pDphsettar->sprat0;
 			temp3 = 280;
-			if (temp2 <= 0)
+			if(temp2 <= 0)
 				temp2 = 1;
-			pDphsettar->sprat2 = muldv (FRAC_ONE, temp2, temp3);
-		}
-		else
-		{
-			pDphsettar->sprat2 = ((unsigned) pDphsettar->sprat1 + FRAC_ONE) >> 1;
+			pDphsettar->sprat2 = muldv(FRAC_ONE, temp2, temp3);
+		} else {
+			pDphsettar->sprat2 = ((unsigned)pDphsettar->sprat1 + FRAC_ONE) >> 1;
 		}
 	}
 	/* Zero counters */
 
-	/* nrises_sofar = 0; *//* Number of accent rises in clause sofar  */
+	/* nrises_sofar = 0; */ /* Number of accent rises in clause sofar  */
 	pDph_t->longcumdur = 0;
-	/* pholas = GEN_SIL; *//* Moved to phtiming() */
-	/* fealas = featb[GEN_SIL]; *//* Moved to phtiming() */
-	/* struclas = 0; *//* Moved to phtiming() */
-	/* emphasissw = FALSE;  *//* Moved to phtiming() */
+	/* pholas = GEN_SIL; */	       /* Moved to phtiming() */
+	/* fealas = featb[GEN_SIL]; */ /* Moved to phtiming() */
+	/* struclas = 0; */	       /* Moved to phtiming() */
+	/* emphasissw = FALSE;  */     /* Moved to phtiming() */
 }
 
 /*
@@ -328,32 +299,28 @@ else if(pKsd_t->lang_curr == LANG_french)
  *
  */
 
-void prdurs (PDPH_T pDph_t, short phocur, short durinh,
-			 short durmin, short deldur, short prcnt, int n)
-{
+void prdurs(PDPH_T pDph_t, short phocur, short durinh,
+	    short durmin, short deldur, short prcnt, int n) {
 
 #ifdef EABDEBUG_OLD
-	if (n == 0)
-	{
-		printf ("phocur %d\n", phocur);
-		printf (
-				   "Init:inhdur=%3d durmin=%3d prcnt=%3d deldur=%3d\n",
-				   ((durinh * NSAMP_FRAME) + 5) / 10, ((durmin * NSAMP_FRAME) + 5) / 10,
-				   (prcnt * 100) / 128, ((deldur * NSAMP_FRAME) + 5) / 10);
-	}
-	else
-	{
-		printf ("phocur ");
-		dologphoneme(phocur,0,0);
+	if(n == 0) {
+		printf("phocur %d\n", phocur);
+		printf(
+		    "Init:inhdur=%3d durmin=%3d prcnt=%3d deldur=%3d\n",
+		    ((durinh * NSAMP_FRAME) + 5) / 10, ((durmin * NSAMP_FRAME) + 5) / 10,
+		    (prcnt * 100) / 128, ((deldur * NSAMP_FRAME) + 5) / 10);
+	} else {
+		printf("phocur ");
+		dologphoneme(phocur, 0, 0);
 		printf("\n");
-		printf (
-				   "Rule %2d:       %3d        %3d       %3d        %3d\n",
-				   n, ((durinh * NSAMP_FRAME) + 5) / 10, ((durmin * NSAMP_FRAME) + 5) / 10,
-				   (prcnt * 100) / 128, ((deldur * NSAMP_FRAME) + 5) / 10);
+		printf(
+		    "Rule %2d:       %3d        %3d       %3d        %3d\n",
+		    n, ((durinh * NSAMP_FRAME) + 5) / 10, ((durmin * NSAMP_FRAME) + 5) / 10,
+		    (prcnt * 100) / 128, ((deldur * NSAMP_FRAME) + 5) / 10);
 	}
 #endif
 }
-
+
 /*
  *      Function Name: prphdurs()
  *
@@ -366,130 +333,98 @@ void prdurs (PDPH_T pDph_t, short phocur, short durinh,
  *      Comments:
  *
  */
-void prphdurs (PDPH_T pDph_t)
-{
+void prphdurs(PDPH_T pDph_t) {
 
-#ifdef   EABDEBUG_OLD
-#ifdef   VERBOSE
-	/* extern short *user_f0; *//* Moved to DPH_T structure MVP */
-	short                   n, prf0;
+#ifdef EABDEBUG_OLD
+#ifdef VERBOSE
+	/* extern short *user_f0; */ /* Moved to DPH_T structure MVP */
+	short n, prf0;
 
-    /*
+	/*
 	 * printf (
 	 *		   "\nPHTIMING: Output %d allophones and associated durations in msec \n",
 	 *		   pDph_t->nallotot);
 	 */
-	if (pDph_t->f0mode == HAT_F0_SIZES_SPECIFIED)
-	{
-		printf (
-				   "\n    User-specified f0 commands are present (see PHSORT output)");
+	if(pDph_t->f0mode == HAT_F0_SIZES_SPECIFIED) {
+		printf(
+		    "\n    User-specified f0 commands are present (see PHSORT output)");
 	}
 	/* printf("\nPhone     Dur    F0tar    Struc    Struc-names"); */
-	for (n = 0; n < pDph_t->nallotot; n++)
-	{
+	for(n = 0; n < pDph_t->nallotot; n++) {
 		prf0 = pDph_t->user_f0[n];
 		/* if (pDph_t->f0mode == HAT_F0_SIZES_SPECIFIED) prf0 = 0; printf("\n\t%s\  4d  %4d ", */
-		printf ("allo=%d allodur %d\n", pDph_t->allophons[n], (((pDph_t->allodurs[n] * NSAMP_FRAME) + 5) / 10));
+		printf("allo=%d allodur %d\n", pDph_t->allophons[n], (((pDph_t->allodurs[n] * NSAMP_FRAME) + 5) / 10));
 		/* feprint(pDph_t->allofeats[n]); */
 
-		printf ("\n");
+		printf("\n");
 	}
 #endif /* EABDEBUG_OLD */
 #endif /* VERBOSE */
 }
 /***************************end of ph_timng.c*********************************/
-int min_timing(LPTTS_HANDLE_T phTTS, int phone)
-{
+int min_timing(LPTTS_HANDLE_T phTTS, int phone) {
 
-extern const short us_mindur[];
-extern const short gr_mindur[];
-extern const short la_mindur[];
-extern const short sp_mindur[];
-extern const short uk_mindur[];
-extern const short fr_mindur[];
+	extern const short us_mindur[];
+	extern const short gr_mindur[];
+	extern const short la_mindur[];
+	extern const short sp_mindur[];
+	extern const short uk_mindur[];
+	extern const short fr_mindur[];
 
 	int tmp;
 	tmp = phone & PFONT;
-	if((phone & PVALUE) >= 100 )
-		return(0);
-	if(tmp == PFUSA<<PSFONT)
-	{
-		return(us_mindur[phone & PVALUE]);
-	}
-	else if(tmp == PFUK<<PSFONT)
-	{
-		return(uk_mindur[phone & PVALUE]);
-	}
-	else if(tmp == PFGR<<PSFONT)
-	{
-		return(gr_mindur[phone & PVALUE]);
-	}
-	else if(tmp == PFLA<<PSFONT)
-	{
-		return(la_mindur[phone & PVALUE]);
-	}
-	else if(tmp == PFSP<<PSFONT)
-	{
-		return(sp_mindur[phone & PVALUE]);
-	}
-	else if(tmp == PFFR<<PSFONT)
-	{
-		return(fr_mindur[phone & PVALUE]);
-	}
-	else 
-	{
+	if((phone & PVALUE) >= 100)
+		return (0);
+	if(tmp == PFUSA << PSFONT) {
+		return (us_mindur[phone & PVALUE]);
+	} else if(tmp == PFUK << PSFONT) {
+		return (uk_mindur[phone & PVALUE]);
+	} else if(tmp == PFGR << PSFONT) {
+		return (gr_mindur[phone & PVALUE]);
+	} else if(tmp == PFLA << PSFONT) {
+		return (la_mindur[phone & PVALUE]);
+	} else if(tmp == PFSP << PSFONT) {
+		return (sp_mindur[phone & PVALUE]);
+	} else if(tmp == PFFR << PSFONT) {
+		return (fr_mindur[phone & PVALUE]);
+	} else {
 #ifdef PH_DEBUG_OLD
-	printf("OH MY GOD! THEY'VE KILLED KENNY\n");
+		printf("OH MY GOD! THEY'VE KILLED KENNY\n");
 #endif
-	return(us_mindur[phone & PVALUE]);
-	}    
+		return (us_mindur[phone & PVALUE]);
+	}
 }
 
-int inh_timing(LPTTS_HANDLE_T phTTS, int phone)
-{
-extern const short us_inhdr[];
-extern const short uk_inhdr[];
-extern const short gr_inhdr[];
-extern const short la_inhdr[];
-extern const short sp_inhdr[];
-extern const short fr_inhdr[];
+int inh_timing(LPTTS_HANDLE_T phTTS, int phone) {
+	extern const short us_inhdr[];
+	extern const short uk_inhdr[];
+	extern const short gr_inhdr[];
+	extern const short la_inhdr[];
+	extern const short sp_inhdr[];
+	extern const short fr_inhdr[];
 
 	int tmp;
 	tmp = phone & PFONT;
-	if((phone & PVALUE) >= 100 )
-		return(0);
-	if(tmp == PFUSA<<PSFONT)
-	{
-		tmp=phone & PVALUE;
-		return(us_inhdr[tmp/*phone & PVALUE*/]);
-	}
-	else if(tmp == PFUK<<PSFONT)
-	{
-		return(uk_inhdr[phone & PVALUE]);
-	}
-	else if(tmp == PFGR<<PSFONT)
-	{
-		return(gr_inhdr[phone & PVALUE]);
-	}
-	else if(tmp == PFLA<<PSFONT)
-	{
-		return(la_inhdr[phone & PVALUE]);
-	}
-	else if(tmp == PFSP<<PSFONT)
-	{
-		return(sp_inhdr[phone & PVALUE]);
-	}
-	else if(tmp == PFFR<<PSFONT)
-	{
-		return(fr_inhdr[phone & PVALUE]);
-		//when we have french change to fr_
-	}
-	else 
-	{
+	if((phone & PVALUE) >= 100)
+		return (0);
+	if(tmp == PFUSA << PSFONT) {
+		tmp = phone & PVALUE;
+		return (us_inhdr[tmp /*phone & PVALUE*/]);
+	} else if(tmp == PFUK << PSFONT) {
+		return (uk_inhdr[phone & PVALUE]);
+	} else if(tmp == PFGR << PSFONT) {
+		return (gr_inhdr[phone & PVALUE]);
+	} else if(tmp == PFLA << PSFONT) {
+		return (la_inhdr[phone & PVALUE]);
+	} else if(tmp == PFSP << PSFONT) {
+		return (sp_inhdr[phone & PVALUE]);
+	} else if(tmp == PFFR << PSFONT) {
+		return (fr_inhdr[phone & PVALUE]);
+		// when we have french change to fr_
+	} else {
 #ifdef PH__DEBUG_OLD
-	printf("OH MY GOD! THEY'VE KILLED KENNY\n");
+		printf("OH MY GOD! THEY'VE KILLED KENNY\n");
 #endif
-	return(us_inhdr[phone & PVALUE]);
-	}    
+		return (us_inhdr[phone & PVALUE]);
+	}
 }
-

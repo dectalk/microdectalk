@@ -9,4 +9,4 @@
 #ifndef PC_SAMPLE_RATE
 #error PC_SAMPLE_RATE needs to be defined in top-level configuration
 #endif
-#define  MULAW_SAMPLE_RATE   8000
+#define MULAW_SAMPLE_RATE 8000

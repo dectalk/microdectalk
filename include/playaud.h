@@ -55,7 +55,7 @@
  *  005 CAB		10/16/2000		Changed copyright info
  *  006	CAB		02/12/2001		Updated copyright info
  *  007	MGS		05/09/2001		Some VxWorks porting BATS#972
- *  008 CAB		05/14/2001		Edited copyright 
+ *  008 CAB		05/14/2001		Edited copyright
  *  009	MGS		06/19/2001		Solaris Port BATS#972
  */
 
@@ -76,7 +76,7 @@ extern "C" {
 /**********************************************************************/
 
 #ifndef _PLAYAUDD_H_
-typedef void * HPLAY_AUDIO_T;
+typedef void* HPLAY_AUDIO_T;
 #endif
 
 /**********************************************************************/
@@ -144,94 +144,93 @@ typedef void * HPLAY_AUDIO_T;
 /**********************************************************************/
 /**********************************************************************/
 
-#define  PA_PLAY_START           1
-#define  PA_PLAY_STOP            2
-#define  PA_DEVICE_OPEN_FAILURE  3
-#define  PA_SYNC_MARK            4
-#define  PA_SYNC_ERROR           5
-#define  PA_GET_CAPS_ERROR       6
-#define  PA_WRITE_ERROR          7
+#define PA_PLAY_START 1
+#define PA_PLAY_STOP 2
+#define PA_DEVICE_OPEN_FAILURE 3
+#define PA_SYNC_MARK 4
+#define PA_SYNC_ERROR 5
+#define PA_GET_CAPS_ERROR 6
+#define PA_WRITE_ERROR 7
 
 /**********************************************************************/
 /*  Waveform output device initialization symbols for function        */
 /*  PA_CreatePlayHandle().                                            */
 /**********************************************************************/
 
-#define  PA_OWN_DEVICE      0x00000001
+#define PA_OWN_DEVICE 0x00000001
 
 /**********************************************************************/
 /*  Identifier Definitions for function PA_Status().                  */
 /**********************************************************************/
 
-#define  PA_DEVICE_PLAYING  0
-#define  PA_FREE_SPACE      1
-#define  PA_QUEUE_COUNT     2
-#define  PA_DEVICE_ID       3
+#define PA_DEVICE_PLAYING 0
+#define PA_FREE_SPACE 1
+#define PA_QUEUE_COUNT 2
+#define PA_DEVICE_ID 3
 
 /**********************************************************************/
 /*  Function prototypes.                                              */
 /**********************************************************************/
 
-MMRESULT PA_CreatePlayHandle( HPLAY_AUDIO_T * ppPlayAudio,
-                    unsigned int uiWaveOutDeviceID,
-                    LPWAVEFORMATEX pWaveFormat,
-                    DWORD dwDeviceOptions,
-                    unsigned int ( * CallbackRoutine )( HPLAY_AUDIO_T,
-                                                        ATYPE_T,
-                                                        ATYPE_T,
-                                                        ATYPE_T ),
-                    ATYPE_T vInstance );
+MMRESULT PA_CreatePlayHandle(HPLAY_AUDIO_T* ppPlayAudio,
+			     unsigned int   uiWaveOutDeviceID,
+			     LPWAVEFORMATEX pWaveFormat,
+			     DWORD	    dwDeviceOptions,
+			     unsigned int (*CallbackRoutine)(HPLAY_AUDIO_T,
+							     ATYPE_T,
+							     ATYPE_T,
+							     ATYPE_T),
+			     ATYPE_T vInstance);
 
-MMRESULT PA_DestroyPlayHandle( HPLAY_AUDIO_T pPlayAudio );
+MMRESULT PA_DestroyPlayHandle(HPLAY_AUDIO_T pPlayAudio);
 
-MMRESULT PA_Queue( HPLAY_AUDIO_T pPlayAudio,
-                   unsigned char * pBuffer,
-                   DWORD dwLength );
+MMRESULT PA_Queue(HPLAY_AUDIO_T	 pPlayAudio,
+		  unsigned char* pBuffer,
+		  DWORD		 dwLength);
 
-MMRESULT PA_SetVolume( HPLAY_AUDIO_T pPlayAudio, DWORD dwVolume );
+MMRESULT PA_SetVolume(HPLAY_AUDIO_T pPlayAudio, DWORD dwVolume);
 
-MMRESULT PA_GetVolume( HPLAY_AUDIO_T pPlayAudio,
-                       LPDWORD pdwVolume );
+MMRESULT PA_GetVolume(HPLAY_AUDIO_T pPlayAudio,
+		      LPDWORD	    pdwVolume);
 
-MMRESULT PA_SynchronizationMark( HPLAY_AUDIO_T pPlayAudio, ATYPE_T aTag );
+MMRESULT PA_SynchronizationMark(HPLAY_AUDIO_T pPlayAudio, ATYPE_T aTag);
 
-MMRESULT PA_GetPosition( HPLAY_AUDIO_T pPlayAudio,
-                         LPDWORD pdwPosition,
-                         unsigned int bFast );
+MMRESULT PA_GetPosition(HPLAY_AUDIO_T pPlayAudio,
+			LPDWORD	      pdwPosition,
+			unsigned int  bFast);
 
-#ifdef OLEDECTALK // this is sapi-only
-MMRESULT PA_GetQWPosition( HPLAY_AUDIO_T, QWORD *pwqTimeStamp); //tek 04aug97
-HRESULT PA_SetBookmark(HPLAY_AUDIO_T, DWORD dwMarkId); // tek 22aug97
+#ifdef OLEDECTALK					       // this is sapi-only
+MMRESULT PA_GetQWPosition(HPLAY_AUDIO_T, QWORD* pwqTimeStamp); // tek 04aug97
+HRESULT	 PA_SetBookmark(HPLAY_AUDIO_T, DWORD dwMarkId);	       // tek 22aug97
 
-#endif //OLEDECTALK
+#endif // OLEDECTALK
 
-MMRESULT PA_Pause( HPLAY_AUDIO_T pPlayAudio );
+MMRESULT PA_Pause(HPLAY_AUDIO_T pPlayAudio);
 
-MMRESULT PA_Resume( HPLAY_AUDIO_T pPlayAudio );
+MMRESULT PA_Resume(HPLAY_AUDIO_T pPlayAudio);
 
-MMRESULT PA_Reset( HPLAY_AUDIO_T pPlayAudio );
+MMRESULT PA_Reset(HPLAY_AUDIO_T pPlayAudio);
 
-MMRESULT PA_Status( HPLAY_AUDIO_T pPlayAudio,
-                    DWORD dwIdentifierArray[],
-                    DWORD dwStatusArray[],
-                    DWORD dwNumberOfStatusValues );
+MMRESULT PA_Status(HPLAY_AUDIO_T pPlayAudio,
+		   DWORD	 dwIdentifierArray[],
+		   DWORD	 dwStatusArray[],
+		   DWORD	 dwNumberOfStatusValues);
 
-MMRESULT PA_GetFormat( HPLAY_AUDIO_T pPlayAudio,
-                       LPWAVEFORMATEX pWaveFormat );
+MMRESULT PA_GetFormat(HPLAY_AUDIO_T  pPlayAudio,
+		      LPWAVEFORMATEX pWaveFormat);
 
-MMRESULT PA_SetFormat( HPLAY_AUDIO_T pPlayAudio,
-                       LPWAVEFORMATEX pWaveFormat );
+MMRESULT PA_SetFormat(HPLAY_AUDIO_T  pPlayAudio,
+		      LPWAVEFORMATEX pWaveFormat);
 
-MMRESULT PA_WaitForPlayToComplete( HPLAY_AUDIO_T pPlayAudio );
+MMRESULT PA_WaitForPlayToComplete(HPLAY_AUDIO_T pPlayAudio);
 
 // tek 07jan98 bats850: the non-SAPI version of the function.
 #ifndef OLEDECTALK
 BOOL PumpModeMessage(HPLAY_AUDIO_T);
-#endif //OLEDECTALK
-
+#endif // OLEDECTALK
 
 #ifdef __cplusplus
-}  /* End extern "C" */
+} /* End extern "C" */
 #endif
 
 #endif

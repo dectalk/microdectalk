@@ -1,29 +1,29 @@
 /*
  ***********************************************************************
- *                                                                      
- *                           Coryright (c)                              
- *    © Digital Equipment Corporation 1996. All rights reserved.        
- * Copyright (c) 1985, Digital Equipment Corporation, Maynard, Mass.    
- *                                                                      
- *    Restricted Rights: Use, duplication, or disclosure by the U.S.    
+ *
+ *                           Coryright (c)
+ *    © Digital Equipment Corporation 1996. All rights reserved.
+ * Copyright (c) 1985, Digital Equipment Corporation, Maynard, Mass.
+ *
+ *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
  *    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
- *    52.227-14 Alt. III, as applicable.                                
- *                                                                      
- *    This software is proprietary to and embodies the confidential     
- *    technology of Digital Equipment Corporation and other parties.    
+ *    52.227-14 Alt. III, as applicable.
+ *
+ *    This software is proprietary to and embodies the confidential
+ *    technology of Digital Equipment Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Digital or an        
- *    authorized sublicensor.                                            
- *                                                                       
- *********************************************************************** 
+ *    only pursuant to a valid written license from Digital or an
+ *    authorized sublicensor.
+ *
+ ***********************************************************************
  *    File Name:	l_us_cha.c
- *    Author:		Matthew Schnee                                         
- *    Creation Date:02/06/96                                                   
- *                                                                             
- *    Functionality:                                                           
+ *    Author:		Matthew Schnee
+ *    Creation Date:02/06/96
+ *
+ *    Functionality:
  *    DECtalk-pc character folding and conversion tables ...  the following
- *    sets of tables are used to accept, type, and translate input characters.  
+ *    sets of tables are used to accept, type, and translate input characters.
  *    This looks like a big waste of space until you realize the baggage you
  *    would have to carry around with each character otherwise ...
  *
@@ -34,10 +34,10 @@
  *
  *    lower case conversion is now  ls_lower[c]
  *    upper case conversion is now  ls_upper[c]
- *                                                                             
- ***********************************************************************       
- *                                                                             
- * Rev	Who		Date		Description                    
+ *
+ ***********************************************************************
+ *
+ * Rev	Who		Date		Description
  * ---	-----	-----------	---------------------------------------
  * 001  CJL     11/09/1995      Add GL's new char set for English
  * 002  MGS     02/07/1996      Moved code from lschar.c
@@ -75,7 +75,7 @@ const unsigned char ls_lower[] = {
 };
 
 /*
- *  Upper case folding table ...  sort of like above but only the 
+ *  Upper case folding table ...  sort of like above but only the
  *  lower case ascii is folded to upper and the full eight bits are
  *  kept.
  */
@@ -88,6 +88,6 @@ const unsigned char ls_upper[] = {
  *  Each letter that is read in has certain characteristics associated with
  *  it.
  */
-const unsigned char ls_char_feat[]= {
+const unsigned char ls_char_feat[] = {
 #include "ls_feat.tab"
 };

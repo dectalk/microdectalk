@@ -25,16 +25,16 @@
  * 	  Shell to include ls_adju.c for the ACNA compile
  *
  ***********************************************************************
- *    Revision History:                    
+ *    Revision History:
  *
  *	Rev	Who		Date			Description
  *	---	-----	-----------		---------------------------------------
- *  001 GL      10/13/1997      For BATS#486 remove English_us only ACNA setting 
+ *  001 GL      10/13/1997      For BATS#486 remove English_us only ACNA setting
  * 	002 CAB		10/16/00		Changed copyright info
- *	               		
+ *
  *
  */
-/*                         
+/*
 #ifdef ENGLISH_US
 #ifndef ACNA
 #define ACNA
@@ -44,4 +44,3 @@
 #ifndef FRENCH
 #include "ls_adju.c"
 #endif
-

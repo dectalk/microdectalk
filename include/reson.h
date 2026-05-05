@@ -13,9 +13,9 @@
  *  Modification History:
  *
  *    10 Sep 1996  reb:  include flavor.h
- *    03 Sep 1996  reb:  placed Float under control of 
+ *    03 Sep 1996  reb:  placed Float under control of
  *                       FLAV_FLOATTYPE_DOUBLE.
- *    08 Aug 1996  reb:  changed type Float back to float (for Lisp 
+ *    08 Aug 1996  reb:  changed type Float back to float (for Lisp
  *                       compatibility); archived as version 2.2.
  *    20 Feb 1996  changed type Float back to double
  *    22 Jul 1992  changed type Float back to float
@@ -29,21 +29,25 @@
 #include "flavor.h"
 
 #ifdef FLAV_FLOATTYPE_DOUBLE
-  typedef double Float;
+typedef double Float;
 #else
-  typedef float Float;
+typedef float Float;
 #endif
 
 typedef struct {
-	struct { Float A, B, C; } Coef;
-	struct { Float Z1, Z2; } State;
+	struct {
+		Float A, B, C;
+	} Coef;
+	struct {
+		Float Z1, Z2;
+	} State;
 } Resonator;
 
-extern void ClearResonator(Resonator *theResonator);
-extern Float AdvanceResonator(Resonator *theResonator, Float input);
-extern Float AdvanceAntiResonator(Resonator *theResonator, Float input);
-extern void SetPolePair(Resonator *theResonator, int CF, int BW, int SF);
-extern void InterPolePair(Resonator *theResonator, int CF, int BW, int SF);
-extern void SetZeroPair(Resonator *theResonator, int CF, int BW, int SF);
+extern void  ClearResonator(Resonator* theResonator);
+extern Float AdvanceResonator(Resonator* theResonator, Float input);
+extern Float AdvanceAntiResonator(Resonator* theResonator, Float input);
+extern void  SetPolePair(Resonator* theResonator, int CF, int BW, int SF);
+extern void  InterPolePair(Resonator* theResonator, int CF, int BW, int SF);
+extern void  SetZeroPair(Resonator* theResonator, int CF, int BW, int SF);
 
 #endif

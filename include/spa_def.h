@@ -28,9 +28,9 @@
  *    Revision History:
  *
  * Rev  Who     Date            Description
- * ---  -----   -----------     -------------------------------------------- 
+ * ---  -----   -----------     --------------------------------------------
  * 001	GL		09/01/1998	    BATS#758 change PFSPAIN to PFSP.
- * 002	MGS		04/13/2000		Changes for integrated phoneme set 
+ * 002	MGS		04/13/2000		Changes for integrated phoneme set
  * 003	CAB		01/19/2001		Fixed copyright info
  */
 
@@ -39,13 +39,12 @@
 
 #include "defs.h"
 #include "kernel.h"
-#include        "iso_char.h"
-#include        "l_all_ph.h"
-#include        "cmd.h"
+#include "iso_char.h"
+#include "l_all_ph.h"
+#include "cmd.h"
 
-//#define NULL    0
-#define NULL_ASCKY              0xffff
-#define PSPA(x)                 ((PFSP<<PSFONT) | (x)) 
+// #define NULL    0
+#define NULL_ASCKY 0xffff
+#define PSPA(x) ((PFSP << PSFONT) | (x))
 
 #endif
-

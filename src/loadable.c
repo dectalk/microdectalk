@@ -39,57 +39,56 @@
  * Revision 1.1.2.7  1996/10/18  12:14:51  Cathy_Page
  * 	Added new error codes for lmf - no longer use lmf_test_license
  * 	[1996/10/18  12:13:28  Cathy_Page]
- * 
+ *
  * Revision 1.1.2.6  1996/09/25  13:43:24  Cathy_Page
  * 	Changed lmf logic
  * 	[1996/09/25  13:41:06  Cathy_Page]
- * 
+ *
  * Revision 1.1.2.5  1995/09/25  19:59:10  Krishna_Mangipudi
  * 	Added check for license quota exceeded
  * 	[1995/09/25  19:59:01  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.1.2.4  1995/09/25  15:19:39  Krishna_Mangipudi
  * 	Set the right product name
  * 	[1995/09/25  15:19:32  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.1.2.3  1995/09/22  16:14:09  Krishna_Mangipudi
  * 	Added code to look at dtklock to package a version for Platinum that has
  * 	to work without LMF.
  * 	[1995/09/22  16:13:57  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.1.2.2  1995/07/05  19:35:39  Krishna_Mangipudi
  * 	Copied from ./src/tts
  * 	[1995/07/05  19:32:29  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2.2.2  1994/11/07  23:07:42  Krishna_Mangipudi
  * 	Initial Check-in
  * 	[1994/11/07  21:13:28  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2  1994/11/04  18:33:29  root
  * 	Initial load of project
  *
  * 001	MGS		05/09/2001	Some VxWorks porting BATS#972
  * 002  CAB		05/14/2001	Consolidated copyright info
  * 003	MGS		06/19/2001		Solaris Port BATS#972
- * 
+ *
  */
 
 /* BATS #496 Changed license keys MGS 10/14/1997 */
 
 /*
 **++
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
-** FILE NAME:   
-** MODULE NAME: 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
 **
-** MODULE DESCRIPTION: 
-** 
-** DESIGN OVERVIEW: 
-** 
+** FILE NAME:
+** MODULE NAME:
+**
+** MODULE DESCRIPTION:
+**
+** DESIGN OVERVIEW:
+**
 **--
 */
-
 
 /*****************************************************************************
 **  PROGRAM:
@@ -267,5 +266,4 @@ void TestLicense(unsigned int productIndex)
     } 
     return;
 }
-#endif // __osf__
-
+#endif				    // __osf__

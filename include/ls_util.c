@@ -1,34 +1,34 @@
 /*
  ***********************************************************************
- *                                                                      
- *                           Copyright ©                              
+ *
+ *                           Copyright ©
  *    Copyright © 2002 Fonix Corporation. All rights reserved.
  *    Copyright © 2000-2001 Force Computers, a Solectron Company. All rights reserved.
- *    © SMART Modular Technologies 1999. All rights reserved.    
+ *    © SMART Modular Technologies 1999. All rights reserved.
  *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
- *                                                                      
- *    Restricted Rights: Use, duplication, or disclosure by the U.S.    
+ *
+ *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
  *    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
- *    52.227-14 Alt. III, as applicable.                                
- *                                                                      
+ *    52.227-14 Alt. III, as applicable.
+ *
  *    This software is proprietary to and embodies the confidential
  *    technology of Fonix Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
  *    only pursuant to a valid written license from Fonix or an
  *    authorized sublicensor.
- *                                                                       
- *********************************************************************** 
+ *
+ ***********************************************************************
  *    File Name:        ls_util.c
- *    Author:           Matthew Schnee                                         
- *    Creation Date:	02/06/96                                                   
- *                                                                             
+ *    Author:           Matthew Schnee
+ *    Creation Date:	02/06/96
+ *
  *    Functionality:
- *	  Collection of utility routines used in other mondule.                                                           
- *                                                                             
- ***********************************************************************       
- *                                                                             
- *	Rev	Who		Date			Description                    
+ *	  Collection of utility routines used in other mondule.
+ *
+ ***********************************************************************
+ *
+ *	Rev	Who		Date			Description
  *	---	-----	-----------		---------------------------------------
  *	001 DGC		04/05/1985		hanged some [|] to [x] as per DHK.
  *	002 DGC		04/08/1985		Changed the third argument to the
@@ -65,9 +65,9 @@
  *	----------------        	Released as C5005 V1.0 firmware.
  *	015 DGC		10/21/1986		Changes for KRM.
  *	016 EAB		11/29/1989		Changes for NKR-It's OK as is becuase NKR has a user dictionary.
- *  017 MGS		02/07/1996		File created and functions move in    
+ *  017 MGS		02/07/1996		File created and functions move in
  *	018	MGS		02/20/1996		Added functions ls_util_dump_cword and
- *								ls_util_dump_llp_rlp 
+ *								ls_util_dump_llp_rlp
  *	019	MGS		02/26/1996		Fixed bossible bug in ls_util_lookup
  *	020	MGS		02/27/1996		Added function headers and reformated code
  *	021	MGS		03/05/1996		Added function ls_util_lts_init
@@ -82,17 +82,17 @@
  *  030 GL		02/01/1996      add ls_util_is_aword() to indentify the legal word string
  *  031	GL		03/21/1997	    for BATS#308
  *							    add LTD 4200 debug switch for data dump.
- *  032 GL      04/21/1997      BATS#357  Add the code for __osf__ build 
- *  033 MGS     07/22/1997      BATS#412  fixed ½ and ¼ problem 
- *  034 GL      09/24/1997      BATS#470  Add LDS debug switch 
- *  035 DR      09/30/1997		UK BUILD: added some uk stoff 
+ *  032 GL      04/21/1997      BATS#357  Add the code for __osf__ build
+ *  033 MGS     07/22/1997      BATS#412  fixed ½ and ¼ problem
+ *  034 GL      09/24/1997      BATS#470  Add LDS debug switch
+ *  035 DR      09/30/1997		UK BUILD: added some uk stoff
  *  036 MGS		10/17/97		Edited to pass form class to ph
  *  037 GL      10/13/1997      For BATS#486 remove English only ACNA setting
  *  032	tek		13nov97			bats404: new index codes (originally aug97)
  *  033 MFG    04/12/1998 		added phonme tranlation for debug 0x4200
  *  034 MFG    04/29/1998 		added logging to dbglog.txt for debug commands 0x4040,0x4002,0x4008,0x4200
- *  035 MFG		05/19/98		excluded dbglog logging when build 16-bit code (MSDOS)	 
- *	036	MFG		06/09/98		cleaned up 4020 logging screened out eronenous spaces coming through 
+ *  035 MFG		05/19/98		excluded dbglog logging when build 16-bit code (MSDOS)
+ *	036	MFG		06/09/98		cleaned up 4020 logging screened out eronenous spaces coming through
  *  037	mfg		06/22/98		Added support for LANG_latin_american
  *  038	tek		08/20/98		support for ConvertToPhoneme
  *  039	GL		09/01/98		BATS#755 only send one word_class per word.
@@ -104,7 +104,7 @@
  *  043	GL		11/20/1998		BATS#828 use LTS_DEBUG_OLD to replace _DEBUG_OLD
  *  044	MGS		08/22/1999		Change #ifdef LTS_DEBUG_OLD to #if LTS_DEBUG_OLD because of VMS debugging code
  *								that was turned on by accident
- *  045	MGS		04/13/2000		Changes for integrated phoneme set 
+ *  045	MGS		04/13/2000		Changes for integrated phoneme set
  *  046 NAL		05/05/2000		Now recognizes if phoneme is already 2 bytes
  *  047	MGS		07/14/2000		Sapi 5 additions
  *  048 NAL		07/14/2000		Added additional :pron flags for homographs.
@@ -125,26 +125,26 @@
  *	063 CAB		04/30/2002		Updated copyright info
  *	064	CAB		08/13/2002		Removed floating ;
  *	065	MGS		08/29/2002		Fixed indexing with parser
- */   
+ */
 #include "ls_def.h"
-#include	"cm_def.h"
+#include "cm_def.h"
 #include "ph_def.h"
 
 /* Relentlessly, I dare to puke here the data structures that
    Bachus requires. And that's a lot of stuff: a bunch of
    letter tries, a lot of grammar nodes, all in the automatically
-   generated file bachusi.h. REWT  
+   generated file bachusi.h. REWT
    */
- 
+
 #ifdef GERMAN
 #include "bachusi.h"
 // eab updated for bts10187 new junk node
-//#include "trennungstokens.h"
+// #include "trennungstokens.h"
 #endif
 
-extern char *form_class_strings[];
+extern char* form_class_strings[];
 
- /* *****************************************************************
+/* *****************************************************************
  *      Function Name:  ls_util_dump_cword
  *
  *      Description:
@@ -161,35 +161,33 @@ extern char *form_class_strings[];
  *      Comments:
  *              The word must be terminated by an EOS in the l_ch field of the letter
  * *************************************************************** */
-void ls_util_dump_cword(LETTER word[], char *message)
-{
-	FILE *fp;
-	LETTER *llp;
-	llp=&word[0];
+void ls_util_dump_cword(LETTER word[], char* message) {
+	FILE*	fp;
+	LETTER* llp;
+	llp = &word[0];
 
 #ifdef PRINTFDEBUG_OLD
 	printf("%s -- ", message);
-#endif	//	PRINTFDEBUG_OLD
-	fp=fopen("output.log", "a");
-	fprintf(fp,"%s -- ",message);
+#endif //	PRINTFDEBUG_OLD
+	fp = fopen("output.log", "a");
+	fprintf(fp, "%s -- ", message);
 
-	while (llp->l_ch!=EOS)
-	{                          
+	while(llp->l_ch != EOS) {
 #ifdef PRINTFDEBUG_OLD
-		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif	// PRINTFDEBUG_OLD
-		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
-		printf("%c(%02x)",llp->l_ch,llp->l_ch);
+		printf("%c(%02x)", llp->l_ch, llp->l_ch);
+#endif // PRINTFDEBUG_OLD
+		fprintf(fp, "%c(%02x)", llp->l_ch, llp->l_ch);
+		printf("%c(%02x)", llp->l_ch, llp->l_ch);
 		++llp;
-	}          
-	
+	}
+
 #ifdef PRINTFDEBUG_OLD
-	printf ("\n");
-#endif	// PRINTFDEBUG_OLD
-	fprintf(fp,"\n");
+	printf("\n");
+#endif // PRINTFDEBUG_OLD
+	fprintf(fp, "\n");
 	fclose(fp);
-    printf ("\n");
-	printf ("\r");
+	printf("\n");
+	printf("\r");
 }
 
 /* ******************************************************************
@@ -203,41 +201,39 @@ void ls_util_dump_cword(LETTER word[], char *message)
  *          LETTER *llp     INPUT - pointer to the beginning of the word
  *          LETTER *rlp     INPUT - pointer to the EOS at the end of the word
  *          char *message   INPUT - A text message to be printed with the word
- *                                              
+ *
  *      Return Value:
  *          void
  *
  *      Comments:
  *          rlp must be greater than or equal to llp
  * *****************************************************************/
-void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
-{       
+void ls_util_dump_llp_rlp(LETTER* llp, LETTER* rlp, char* message) {
 
-	FILE *fp;
-	fp=fopen("output.log","a");
-	fprintf(fp,"%s -- ",message);
+	FILE* fp;
+	fp = fopen("output.log", "a");
+	fprintf(fp, "%s -- ", message);
 #ifdef PRINTFDEBUG_OLD
-    printf ("%s -- ", message);
-#endif	// PRINTFDEBUG_OLD
-    printf ("%s -- ", message);
+	printf("%s -- ", message);
+#endif // PRINTFDEBUG_OLD
+	printf("%s -- ", message);
 
-	while (llp!=rlp)
-	{
+	while(llp != rlp) {
 #ifdef PRINTFDEBUG_OLD
-		printf("%c(%02x)",llp->l_ch,llp->l_ch);
-#endif	// PRINTFDEBUG_OLD
-		fprintf(fp,"%c(%02x)",llp->l_ch,llp->l_ch);
-		printf("%c(%02x)",llp->l_ch,llp->l_ch);
+		printf("%c(%02x)", llp->l_ch, llp->l_ch);
+#endif // PRINTFDEBUG_OLD
+		fprintf(fp, "%c(%02x)", llp->l_ch, llp->l_ch);
+		printf("%c(%02x)", llp->l_ch, llp->l_ch);
 		++llp;
-	}      
+	}
 #ifdef PRINTFDEBUG_OLD
-	printf ("\n");
-#endif	// PRINTFDEBUG_OLD
-	fprintf(fp,"\n");
+	printf("\n");
+#endif // PRINTFDEBUG_OLD
+	fprintf(fp, "\n");
 	fclose(fp);
-   printf ("\n");
-   printf ("\r");
-}       
+	printf("\n");
+	printf("\r");
+}
 
 /* ******************************************************************
  *      Function Name:  ls_util_dump_lsp_endp()
@@ -253,7 +249,7 @@ void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
  *          PHONE *lsp      INPUT - pointer to the beginning of the word
  *          PHONE *endp     INPUT - pointer to the EOS at the end of the word
  *          char *message   INPUT - A text message to be printed with the word
- *                                              
+ *
  *      Return Value:
  *          void
  *
@@ -261,78 +257,73 @@ void ls_util_dump_llp_rlp(LETTER *llp, LETTER *rlp, char *message)
  *          endp must be greater than or equal to lsp
  * *****************************************************************/
 
-void ls_util_dump_lsp_endp(short type, PHONE *lsp, PHONE *endp, char *message)
-{
-PHONE *pp1;       
+void ls_util_dump_lsp_endp(short type, PHONE* lsp, PHONE* endp, char* message) {
+	PHONE* pp1;
 
-	FILE *fp;
-	fp=fopen("output.log","a");
-	fprintf(fp,"%s -- ",message);
+	FILE* fp;
+	fp = fopen("output.log", "a");
+	fprintf(fp, "%s -- ", message);
 #ifdef PRINTFDEBUG_OLD
-    printf ("%s -- ", message);
-#endif	// PRINTFDEBUG_OLD
-    printf ("%s -- ", message);
+	printf("%s -- ", message);
+#endif // PRINTFDEBUG_OLD
+	printf("%s -- ", message);
 
-    pp1 = lsp;
-	while (pp1 != endp)
-	{
-		switch(type)
-		{
-		  case 0:
+	pp1 = lsp;
+	while(pp1 != endp) {
+		switch(type) {
+		case 0:
 #ifdef PRINTFDEBUG_OLD
-				printf("(%d)",pp1->p_stress);
-#endif	// PRINTFDEBUG_OLD
-				fprintf(fp,"(%d)",pp1->p_stress);
-				printf("(%d)",pp1->p_stress);
-				break;          	    
-		  case 1:
+			printf("(%d)", pp1->p_stress);
+#endif // PRINTFDEBUG_OLD
+			fprintf(fp, "(%d)", pp1->p_stress);
+			printf("(%d)", pp1->p_stress);
+			break;
+		case 1:
 #ifdef PRINTFDEBUG_OLD
-				printf("(%d)",pp1->p_sphone);
+			printf("(%d)", pp1->p_sphone);
 #endif
-				fprintf(fp,"(%d)",pp1->p_sphone);
-				printf("(%d)",pp1->p_sphone);
-				break;          	    
-        }
-        
+			fprintf(fp, "(%d)", pp1->p_sphone);
+			printf("(%d)", pp1->p_sphone);
+			break;
+		}
+
 		pp1 = pp1->p_fp;
-	}      
+	}
 #ifdef PRINTFDEBUG_OLD
-	printf ("\n");
+	printf("\n");
 #endif
-	fprintf(fp,"\n");
+	fprintf(fp, "\n");
 	fclose(fp);
-   printf ("\n");
-   printf ("\r");
+	printf("\n");
+	printf("\r");
 }
-    
+
 /* ******************************************************************
  *      Function Name:
  *              ls_util_is_dot()
  *
- *      Description:      
+ *      Description:
  *      		checks to see if the character in the current item is as dot '.'
  * 				Return TRUE if the character in the
  * 				current item is an ASCII ".". Return FALSE if it
  * 				is anything else. This is used in  few places to decide
  * 				if we are in an abbreviation context.
  *
- *      Arguments:                                         
+ *      Arguments:
  *              PLTS_T pLts_t
  *
  *      Return Value:
  *              TRUE if the current iten is a dot '.'
  *              False otherwise
  *
- *      Comments:          
+ *      Comments:
  *              this function uses the global citem variable
- *              this function is used in a few places to decide if this is 
+ *              this function is used in a few places to decide if this is
  *              an abbreviation context
  *
  * *****************************************************************/
-int ls_util_is_dot(PLTS_T pLts_t)
-{
-	if (pLts_t->citem.i_word[0] == ((PFASCII<<PSFONT)|'.'))
-	{
+int ls_util_is_dot(PLTS_T pLts_t) {
+	if(pLts_t->citem.i_word[0] == ((PFASCII << PSFONT) | '.')) {
 		return (TRUE);
 	}
 	return (FALSE);
@@ -342,9 +333,9 @@ int ls_util_is_dot(PLTS_T pLts_t)
  *      Function Name:
  *              ls_util_is_clause()
  *
- *      Description:      
+ *      Description:
  *
- *      Arguments:                                         
+ *      Arguments:
  *              PLTS_T pLts_t
  *
  *      Return Value:
@@ -354,84 +345,80 @@ int ls_util_is_dot(PLTS_T pLts_t)
  *      Comments:
  *
  * *****************************************************************/
-int ls_util_is_clause(PLTS_T pLts_t)
-{
-	if (char_types[pLts_t->citem.i_word[0]&PVALUE]&MARK_clause)
-	{
+int ls_util_is_clause(PLTS_T pLts_t) {
+	if(char_types[pLts_t->citem.i_word[0] & PVALUE] & MARK_clause) {
 		return (TRUE);
 	}
 	return (FALSE);
 }
 
 /* ******************************************************************
- *      Function Name:             
+ *      Function Name:
  *              ls_util_is_name()
  *
- *      Description:       
+ *      Description:
  *              this function decides weather or not the word is a name
  *
- *      Arguments:                                                 
+ *      Arguments:
  *				LPTTS_HANDLE_T phTTS	Text-to-speech handle
  *              LETTER *llp				The left bounding pointer to the word
  *              LETTER *rlp				The right bounding pointer to the word
  *
- *      Return Value:                                             
+ *      Return Value:
  *              TRUE if the word is a name
  *              FALSE otherwise
  *
- *      Comments:          
+ *      Comments:
  *              this function returns FALSE for non acna
  *
  * *****************************************************************/
-/* for non acna, everything is not a name */    
-int ls_util_is_name(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
-{
+/* for non acna, everything is not a name */
+int ls_util_is_name(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp) {
 #ifdef ACNA
-	PLTS_T  pLts_t;
-	PKSD_T  pKsd_t;
+	PLTS_T pLts_t;
+	PKSD_T pKsd_t;
 
 	pLts_t = phTTS->pLTSThreadData;
-	pKsd_t = phTTS->pKernelShareData;   
+	pKsd_t = phTTS->pKernelShareData;
 	if(pKsd_t->pronflag & PRON_ACNA_NAME)
-		return(TRUE);
-	if (pKsd_t->last_preamble_command==3)
-	{
+		return (TRUE);
+	if(pKsd_t->last_preamble_command == 3) {
 		pKsd_t->pronflag |= PRON_ACNA_NAME;
-		return(TRUE);
+		return (TRUE);
 	}
 	if((pKsd_t->modeflag & MODE_NAME) == 0)
-		return(TRUE);
+		return (TRUE);
 #ifdef NEW_LTS
 	if(pLts_t->cur_word_index == 0)
 #else
 	if(pLts_t->fc_index == 0)
 #endif
-		return(FALSE);
-	if((*llp).l_ch < 64 || (*llp).l_ch > 97 )/*first character upper??*/
-		return(FALSE);
-	for(llp++;llp<rlp;llp++)
-		if( (*llp).l_ch  >122 ||  (*llp).l_ch <97) /*the rest lower*/
-			return(FALSE);
+		return (FALSE);
+	if((*llp).l_ch < 64 || (*llp).l_ch > 97) /*first character upper??*/
+		return (FALSE);
+	for(llp++; llp < rlp; llp++)
+		if((*llp).l_ch > 122 || (*llp).l_ch < 97) /*the rest lower*/
+			return (FALSE);
 	pKsd_t->pronflag |= PRON_ACNA_NAME;
-		return(TRUE);
+	return (TRUE);
 #else
-	return(FALSE);
+	return (FALSE);
 #endif
 }
 
 /* ******************************************************************
- * JDB: this function must be different for Spanish! Push it outside of core code... ? 
- *      Function Name:  
+ * JDB: this function must be different for Spanish! Push it outside of core code... ?
+ *      Function Name:
  *              ls_util_is_ordinal()
  *
- *      Description:          
+ *      Description:
  *              checks to see if the number looks like an ordinal
  *
- *      Arguments:                                           
+ *      Arguments:
  *				LPTTS_HANDLE_T phTTS	Text-to-speech handle
  *              NUM *np					The number
  *
- *      Return Value:             
+ *      Return Value:
  *              TRUE if it looks like a number
  *              FALSE otherwise
  *
@@ -445,65 +432,61 @@ int ls_util_is_name(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp)
  *              bytes in a case insensitive fashion.
  *
  * *****************************************************************/
-int ls_util_is_ordinal(LPTTS_HANDLE_T phTTS, NUM *np)
-{
-	  PLTS_T  pLts_t;
-	  LETTER        *lp;
-	  int   ud;
+int ls_util_is_ordinal(LPTTS_HANDLE_T phTTS, NUM* np) {
+	PLTS_T	pLts_t;
+	LETTER* lp;
+	int	ud;
 
-	  pLts_t = phTTS->pLTSThreadData;
+	pLts_t = phTTS->pLTSThreadData;
 
-	if (np->n_ilp==NULL || np->n_flp!=NULL || np->n_elp!=NULL)
+	if(np->n_ilp == NULL || np->n_flp != NULL || np->n_elp != NULL)
 		return (FALSE);
-	lp = np->n_irp;                         /* Just past right.     */
-	ud = (lp-1)->l_ch;                      /* Unit digit.          */
-	if (ud==0xBC || ud==0xBD)               /* Things like "1 1/2". */
+	lp = np->n_irp;		     /* Just past right.     */
+	ud = (lp - 1)->l_ch;	     /* Unit digit.          */
+	if(ud == 0xBC || ud == 0xBD) /* Things like "1 1/2". */
 		return (FALSE);
-	if (lp>np->n_ilp+1 && (lp-2)->l_ch=='1')
+	if(lp > np->n_ilp + 1 && (lp - 2)->l_ch == '1')
 		ud = '0';
 #ifdef ENGLISH
-	switch (ud) 
-	{
-	case '1':                               /* "st"                 */
-		if (lp->l_ch=='s' && (lp+1)->l_ch=='t')
+	switch(ud) {
+	case '1': /* "st"                 */
+		if(lp->l_ch == 's' && (lp + 1)->l_ch == 't')
 			return (TRUE);
 		break;
 
-	case '2':                               /* "nd"                 */
-		if (lp->l_ch=='n' && (lp+1)->l_ch=='d')
+	case '2': /* "nd"                 */
+		if(lp->l_ch == 'n' && (lp + 1)->l_ch == 'd')
 			return (TRUE);
 		break;
 
-	case '3':                               /* "rd"                 */
-		if (lp->l_ch=='r' && (lp+1)->l_ch=='d')
+	case '3': /* "rd"                 */
+		if(lp->l_ch == 'r' && (lp + 1)->l_ch == 'd')
 			return (TRUE);
 		break;
 
-	default:                                /* "th"                 */
-		if (lp->l_ch=='t' && (lp+1)->l_ch=='h')
+	default: /* "th"                 */
+		if(lp->l_ch == 't' && (lp + 1)->l_ch == 'h')
 			return (TRUE);
 		break;
 	}
-#endif /* #ifdef ENGLISH */ 
+#endif /* #ifdef ENGLISH */
 
 #ifdef SPANISH
-	if (lp->l_ch==186)
-	{
-			pLts_t->ord = 1;
-			return(TRUE);
+	if(lp->l_ch == 186) {
+		pLts_t->ord = 1;
+		return (TRUE);
 	}
-	if (lp->l_ch==170)
-	{
-			pLts_t->ord = 2;
-			return(TRUE);
+	if(lp->l_ch == 170) {
+		pLts_t->ord = 2;
+		return (TRUE);
 	}
 
 #endif /* #ifdef SPANISH */
 	return (FALSE);
-}                
+}
 
 /* ******************************************************************
- *      Function Name:  
+ *      Function Name:
  *          ls_util_is_year()
  *      Description:
  *
@@ -521,33 +504,31 @@ int ls_util_is_ordinal(LPTTS_HANDLE_T phTTS, NUM *np)
  *          LETTER *rlp        	INPUT - pointer to the EOS at the end of the word
  *
  *      Return Value:
- 			int
+			int
  *
  *      Comments:
  *
  * *****************************************************************/
-int ls_util_is_year(LETTER *llp, LETTER *rlp)
-{
-	LETTER        *tlp1;
-	int   ndig;
+int ls_util_is_year(LETTER* llp, LETTER* rlp) {
+	LETTER* tlp1;
+	int	ndig;
 
-	ndig = 0;                               /* Count digits, check. */
-	tlp1 = llp;                             /* for all digits.      */
-	while (tlp1 != rlp) 
-	{
-		if (!IS_DIGIT(tlp1->l_ch))
+	ndig = 0;   /* Count digits, check. */
+	tlp1 = llp; /* for all digits.      */
+	while(tlp1 != rlp) {
+		if(!IS_DIGIT(tlp1->l_ch))
 			return (FALSE);
 		++ndig;
 		++tlp1;
 	}
 	/* MGS 07/22/97 BATS #412 */
-	if ((rlp-1)->l_ch==0xBC || (rlp-1)->l_ch==0xBD) /* don't let years have 1/2 or 1/4 in them */
+	if((rlp - 1)->l_ch == 0xBC || (rlp - 1)->l_ch == 0xBD) /* don't let years have 1/2 or 1/4 in them */
 		return (FALSE);
-	if (ndig != 4)                          /* Must be 4 digits.    */
+	if(ndig != 4) /* Must be 4 digits.    */
 		return (FALSE);
-	if (llp->l_ch == '0')                   /* No initial "0", no   */
-		return (FALSE);                 /* imbedded "00" pair.  */
-	if ((llp+1)->l_ch=='0' && (llp+2)->l_ch=='0')
+	if(llp->l_ch == '0')	/* No initial "0", no   */
+		return (FALSE); /* imbedded "00" pair.  */
+	if((llp + 1)->l_ch == '0' && (llp + 2)->l_ch == '0')
 		return (FALSE);
 	return (TRUE);
 }
@@ -568,15 +549,13 @@ int ls_util_is_year(LETTER *llp, LETTER *rlp)
  *			LETTER        *tlp
  * 			LETTER        *flp
  *
- *      Return Value:    
+ *      Return Value:
  *
  *      Comments:
  *
  * *****************************************************************/
-void ls_util_copyword(LETTER *tlp, LETTER *flp)
-{
-	while (flp->l_ch != EOS) 
-	{
+void ls_util_copyword(LETTER* tlp, LETTER* flp) {
+	while(flp->l_ch != EOS) {
 		tlp->l_ch = flp->l_ch;
 		++tlp;
 		++flp;
@@ -585,17 +564,15 @@ void ls_util_copyword(LETTER *tlp, LETTER *flp)
 	// tlp->l_ip = NULL;
 }
 
-void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char *pp)
-{
-	  int   ph;
+void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char* pp) {
+	int ph;
 
-	while ((ph = *pp++) != SIL && !phTTS->pKernelShareData->halting)
-		ls_util_send_phone(phTTS,phTTS->pKernelShareData->reverse_ascky[ph]);
+	while((ph = *pp++) != SIL && !phTTS->pKernelShareData->halting)
+		ls_util_send_phone(phTTS, phTTS->pKernelShareData->reverse_ascky[ph]);
 }
 
- 
 /* ******************************************************************
- *      Function Name:  
+ *      Function Name:
  *			ls_util_send_phone_list()
  *
  *      Description:
@@ -612,16 +589,15 @@ void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char *pp)
  *      Comments:
  *
  * *****************************************************************/
-void ls_util_send_phone_list(LPTTS_HANDLE_T phTTS, const char *pp)
-{
-	  int   ph;
+void ls_util_send_phone_list(LPTTS_HANDLE_T phTTS, const char* pp) {
+	int ph;
 
-	while ((ph = *pp++) != SIL && !phTTS->pKernelShareData->halting)
-		ls_util_send_phone(phTTS,ph);
+	while((ph = *pp++) != SIL && !phTTS->pKernelShareData->halting)
+		ls_util_send_phone(phTTS, ph);
 }
 
 /* ******************************************************************
- *      Function Name:  
+ *      Function Name:
  *			ls_util_send_phone()
  *
  *      Description:
@@ -642,17 +618,16 @@ void ls_util_send_phone_list(LPTTS_HANDLE_T phTTS, const char *pp)
  *      Comments:
  *
  * *****************************************************************/
-void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
-{
-	short buf[1];
-	short buf2[4];
-	PLTS_T  pLts_t;
-	PKSD_T  pKsd_t;
-	PDPH_T  pDph_t;
-	int pause;
+void ls_util_send_phone(LPTTS_HANDLE_T phTTS, int ph) {
+	short  buf[1];
+	short  buf2[4];
+	PLTS_T pLts_t;
+	PKSD_T pKsd_t;
+	PDPH_T pDph_t;
+	int    pause;
 
 /* GL 09/24/1997  add LDS_BUILD flag for LDS run */
-#if defined (LDS_BUILD)
+#if defined(LDS_BUILD)
 	lds_sendphone(ph);
 	return;
 #endif
@@ -664,108 +639,98 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
 #ifdef NEW_LTS
 	// this code is to inhbit the sending of phonemes while in the first pass of the
 	// sentence parsing.
-	if (pLts_t->first_pass==1)
-	{
+	if(pLts_t->first_pass == 1) {
 		return;
 	}
 #endif
 	pLts_t->lphone = ph;
 
-	if ((ph & 0xff00) || ( ph >= 100))
-		buf[0]=ph;
-	else
-	{
+	if((ph & 0xff00) || (ph >= 100))
+		buf[0] = ph;
+	else {
 
 #ifdef ENGLISH_US
-		buf[0] = (PFUSA<<PSFONT) + ph;
-#endif                 
+		buf[0] = (PFUSA << PSFONT) + ph;
+#endif
 
 #ifdef ENGLISH_UK
-		buf[0] = (PFUK<<PSFONT) + ph;
-#endif                 
+		buf[0] = (PFUK << PSFONT) + ph;
+#endif
 
 #ifdef GERMAN
 		buf[0] = (PFGR << PSFONT) + ph;
 #endif
-        
+
 #ifdef SPANISH_SP
-		buf[0] = (PFSP <<PSFONT) + ph;
-#endif	
+		buf[0] = (PFSP << PSFONT) + ph;
+#endif
 
 #ifdef SPANISH_LA
-		buf[0] = (PFLA <<PSFONT) + ph;
-#endif	
+		buf[0] = (PFLA << PSFONT) + ph;
+#endif
 
 #ifdef FRENCH
-		buf[0] = (PFFR<<PSFONT) + ph;
-#endif  
+		buf[0] = (PFFR << PSFONT) + ph;
+#endif
 	}
 
 	/* debug switch */
-	if (DT_DBG(LTS_DBG,0x040))
-	{
+	if(DT_DBG(LTS_DBG, 0x040)) {
 #ifdef NEW_LTS
-		if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
-		fprintf((FILE *)pKsd_t->dbglog,"\nFC(%d)(%08x)",pLts_t->cur_word_index,pLts_t->word_info[pLts_t->cur_word_index].form_class);
-		printf("\nFC(%d)(%08x)",pLts_t->cur_word_index,pLts_t->word_info[pLts_t->cur_word_index].form_class);
+		if(pKsd_t->dbglog) /*mfg 04/28/98 added debug support*/
+			fprintf((FILE*)pKsd_t->dbglog, "\nFC(%d)(%08x)", pLts_t->cur_word_index, pLts_t->word_info[pLts_t->cur_word_index].form_class);
+		printf("\nFC(%d)(%08x)", pLts_t->cur_word_index, pLts_t->word_info[pLts_t->cur_word_index].form_class);
 #else
-		if (pKsd_t->dbglog)			/*mfg 04/28/98 added debug support*/
-		fprintf((FILE *)pKsd_t->dbglog,"\nFC(%d)(%08x)",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
-		printf("\nFC(%d)(%08x)",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
+		if(pKsd_t->dbglog) /*mfg 04/28/98 added debug support*/
+			fprintf((FILE*)pKsd_t->dbglog, "\nFC(%d)(%08x)", pLts_t->fc_index, pLts_t->fc_struct[pLts_t->fc_index]);
+		printf("\nFC(%d)(%08x)", pLts_t->fc_index, pLts_t->fc_struct[pLts_t->fc_index]);
 #endif // NEW_LTS
 	}
 	/* MGS 10/17/1997, send word class */
 	/* GL 09/01/1998, BATS#755 only send out one word_class per word */
 	/* GL 10/19/1998, BATS#773 don't send formclass if index == 0 */
 #ifndef NEW_LTS
-	if ((pLts_t->fc_index != pLts_t->old_fc_index) && (pLts_t->fc_index != 0))
-	{
-		pLts_t->old_fc_index=pLts_t->fc_index;
-		buf2[0]=WORD_CLASS + (2 << PSNEXTRA);
+	if((pLts_t->fc_index != pLts_t->old_fc_index) && (pLts_t->fc_index != 0)) {
+		pLts_t->old_fc_index = pLts_t->fc_index;
+		buf2[0]		     = WORD_CLASS + (2 << PSNEXTRA);
 #ifdef LTS_PIPE_DEBUG_OLD
-		buf2[1]=0xfcdc;
-		buf2[2]=0xfcdc;
+		buf2[1] = 0xfcdc;
+		buf2[2] = 0xfcdc;
 #else
-		buf2[1]=(unsigned short)((pLts_t->fc_struct[pLts_t->fc_index])>>16);
-		buf2[2]=(unsigned short)((pLts_t->fc_struct[pLts_t->fc_index]) & 0x0000FFFF);
+		buf2[1] = (unsigned short)((pLts_t->fc_struct[pLts_t->fc_index]) >> 16);
+		buf2[2] = (unsigned short)((pLts_t->fc_struct[pLts_t->fc_index]) & 0x0000FFFF);
 #endif // LTS_PIPE_DEBUG_OLD
-	//	printf("\nin lts FC(%d)(%08x)\n",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
-		ls_util_write_pipe(pKsd_t,&buf2[0],3);
+       //	printf("\nin lts FC(%d)(%08x)\n",pLts_t->fc_index,pLts_t->fc_struct[pLts_t->fc_index]);
+		ls_util_write_pipe(pKsd_t, &buf2[0], 3);
 
-		if(pLts_t->length > pLts_t->fc_index +3 )
-		{
-			if (pLts_t->pro_markers[pLts_t->fc_index] & PRO_REQ_BREAK)
-			{
-				pause=pDph_t->compause;
+		if(pLts_t->length > pLts_t->fc_index + 3) {
+			if(pLts_t->pro_markers[pLts_t->fc_index] & PRO_REQ_BREAK) {
+				pause		 = pDph_t->compause;
 				pDph_t->compause = -12;
-				buf2[0] = (PFUSA<<PSFONT) + COMMA;
-				ls_util_write_pipe(pKsd_t,&buf2[0],1);
-				
+				buf2[0]		 = (PFUSA << PSFONT) + COMMA;
+				ls_util_write_pipe(pKsd_t, &buf2[0], 1);
+
 				pDph_t->compause = pause;
-				
 			}
-			
-			if (pLts_t->pro_markers[pLts_t->fc_index] & PRO_OPT_BREAK)
-			{
-				pause=pDph_t->compause;
-				
+
+			if(pLts_t->pro_markers[pLts_t->fc_index] & PRO_OPT_BREAK) {
+				pause = pDph_t->compause;
+
 				pDph_t->compause = -12;
-				
-				buf2[0] = (PFUSA<<PSFONT) + COMMA;
-				ls_util_write_pipe(pKsd_t,&buf2[0],1);
-				
+
+				buf2[0] = (PFUSA << PSFONT) + COMMA;
+				ls_util_write_pipe(pKsd_t, &buf2[0], 1);
+
 				pDph_t->compause = pause;
-				
 			}
 		}
-
 	}
 #endif // NEW_LTS
 
 #ifdef NEW_LTS
 	// HAVE to re-write this code to send hte phone class at the appropriate time
 #endif
-	ls_util_write_pipe(pKsd_t,&buf[0],1);
+	ls_util_write_pipe(pKsd_t, &buf[0], 1);
 }
 
 /* ******************************************************************
@@ -782,24 +747,22 @@ void ls_util_send_phone(LPTTS_HANDLE_T phTTS,int ph)
  *
  *      Arguments:
  *			LPTTS_HANDLE_T phTTS	Text-to-speech handle
- *                                              
+ *
  *      Return Value:
  *          int
  *
  *      Comments:
- *          
+ *
  * *****************************************************************/
-int ls_util_is_might(LPTTS_HANDLE_T phTTS)
-{
-	int   t;
+int ls_util_is_might(LPTTS_HANDLE_T phTTS) {
+	int    t;
 	PLTS_T pLts_t;
-	pLts_t=phTTS->pLTSThreadData;
+	pLts_t = phTTS->pLTSThreadData;
 
 	ls_util_next_item(phTTS);
-	if ((pLts_t->nitem.i_word[0]&PFONT) == (PFASCII<<PSFONT)) 
-	{
-		t = lsctype[pLts_t->nitem.i_word[0]&PVALUE] & TYPE;
-		if (t==BACKUP || t==ALWAYS || t==MIGHT)
+	if((pLts_t->nitem.i_word[0] & PFONT) == (PFASCII << PSFONT)) {
+		t = lsctype[pLts_t->nitem.i_word[0] & PVALUE] & TYPE;
+		if(t == BACKUP || t == ALWAYS || t == MIGHT)
 			return (TRUE);
 	}
 	return (FALSE);
@@ -820,23 +783,14 @@ int ls_util_is_might(LPTTS_HANDLE_T phTTS)
  *          int
  *
  *      Comments:
- *          
+ *
  */
-int ls_util_is_index(ITEM *ip)
-{
-	if (   ip->i_word[0]==INDEX 
-		|| ip->i_word[0]==INDEX_REPLY //tek 01aug97 bats 404 added index types
-//#ifdef _WIN32
-		|| ip->i_word[0]==INDEX_BOOKMARK
-		|| ip->i_word[0]==INDEX_WORDPOS
-		|| ip->i_word[0]==INDEX_START
-		|| ip->i_word[0]==INDEX_STOP
-		|| ip->i_word[0]==INDEX_SENTENCE
-		|| ip->i_word[0]==INDEX_VOLUME
-		|| ip->i_word[0]==INDEX_NOISE
-//#endif //_WIN32
-	   )
-	{
+int ls_util_is_index(ITEM* ip) {
+	if(ip->i_word[0] == INDEX || ip->i_word[0] == INDEX_REPLY // tek 01aug97 bats 404 added index types
+	   // #ifdef _WIN32
+	   || ip->i_word[0] == INDEX_BOOKMARK || ip->i_word[0] == INDEX_WORDPOS || ip->i_word[0] == INDEX_START || ip->i_word[0] == INDEX_STOP || ip->i_word[0] == INDEX_SENTENCE || ip->i_word[0] == INDEX_VOLUME || ip->i_word[0] == INDEX_NOISE
+	   // #endif //_WIN32
+	) {
 		return (TRUE);
 	}
 	return (FALSE);
@@ -861,16 +815,14 @@ int ls_util_is_index(ITEM *ip)
  *          int
  *
  *      Comments:
- *           
+ *
  * *****************************************************************/
-int ls_util_is_white(ITEM *ip)
-{
-	  int   c;
+int ls_util_is_white(ITEM* ip) {
+	int c;
 
-	if ((ip->i_word[0]&PFONT) == (PFASCII<<PSFONT)) 
-	{
+	if((ip->i_word[0] & PFONT) == (PFASCII << PSFONT)) {
 		c = ip->i_word[0] & PVALUE;
-		if (c==' ' || c==0xA0 || c==LF || c==CR || c==FF)
+		if(c == ' ' || c == 0xA0 || c == LF || c == CR || c == FF)
 			return (TRUE);
 	}
 	return (FALSE);
@@ -887,24 +839,23 @@ int ls_util_is_white(ITEM *ip)
  *
  *      Arguments:
  *			LPTTS_HANDLE_T phTTS	Text-to-speech handle
- *                                              
+ *
  *      Return Value:
  *          void
  *
  *      Comments:
- *              
+ *
  * *****************************************************************/
-void ls_util_read_item(LPTTS_HANDLE_T phTTS)
-{
-	int   i;    
-	PLTS_T  pLts_t;
+void ls_util_read_item(LPTTS_HANDLE_T phTTS) {
+	int    i;
+	PLTS_T pLts_t;
 	pLts_t = phTTS->pLTSThreadData;
 
-	if (pLts_t->nitem.i_nword == 0)
+	if(pLts_t->nitem.i_nword == 0)
 		ls_util_next_item(phTTS);
-	pLts_t->citem.i_nword =pLts_t->nitem.i_nword;
+	pLts_t->citem.i_nword = pLts_t->nitem.i_nword;
 	pLts_t->nitem.i_nword = 0;
-	for (i=0; i<4; ++i)
+	for(i = 0; i < 4; ++i)
 		pLts_t->citem.i_word[i] = pLts_t->nitem.i_word[i];
 }
 
@@ -920,213 +871,180 @@ void ls_util_read_item(LPTTS_HANDLE_T phTTS)
  *
  *      Arguments:
  *			LPTTS_HANDLE_T phTTS	Text-to-speech handle
- *                                              
+ *
  *      Return Value:
  *          void
  *
  *      Comments:
- *             
+ *
  * *****************************************************************/
-void ls_util_next_item(LPTTS_HANDLE_T phTTS)
-{
-	PLTS_T  pLts_t=phTTS->pLTSThreadData;
+void ls_util_next_item(LPTTS_HANDLE_T phTTS) {
+	PLTS_T pLts_t = phTTS->pLTSThreadData;
 
-	if (pLts_t->cur_read_pos>=pLts_t->cur_input_pos)
-	{
-		pLts_t->nitem.i_nword = 0;
-		pLts_t->nitem.i_word[0]=0;
-	}
-	else
-	{
-		if (pLts_t->cur_index!=-1 && pLts_t->cur_index<pLts_t->num_indexes && 
-			pLts_t->cur_read_pos==pLts_t->indexes[pLts_t->cur_index].pos)
-		{
-			pLts_t->nitem.i_nword=3;
-			pLts_t->nitem.i_word[0]=(pLts_t->indexes[pLts_t->cur_index].data[0]& ~PNEXTRA);
-			pLts_t->nitem.i_word[1]=pLts_t->indexes[pLts_t->cur_index].data[1];
-			pLts_t->nitem.i_word[2]=pLts_t->indexes[pLts_t->cur_index].data[2];
+	if(pLts_t->cur_read_pos >= pLts_t->cur_input_pos) {
+		pLts_t->nitem.i_nword	= 0;
+		pLts_t->nitem.i_word[0] = 0;
+	} else {
+		if(pLts_t->cur_index != -1 && pLts_t->cur_index < pLts_t->num_indexes &&
+		   pLts_t->cur_read_pos == pLts_t->indexes[pLts_t->cur_index].pos) {
+			pLts_t->nitem.i_nword	= 3;
+			pLts_t->nitem.i_word[0] = (pLts_t->indexes[pLts_t->cur_index].data[0] & ~PNEXTRA);
+			pLts_t->nitem.i_word[1] = pLts_t->indexes[pLts_t->cur_index].data[1];
+			pLts_t->nitem.i_word[2] = pLts_t->indexes[pLts_t->cur_index].data[2];
 			pLts_t->cur_index++;
-		}
-		else
-		{
-			pLts_t->nitem.i_nword = 1;
-			pLts_t->nitem.i_word[0]=pLts_t->input_array[pLts_t->cur_read_pos++];
+		} else {
+			pLts_t->nitem.i_nword	= 1;
+			pLts_t->nitem.i_word[0] = pLts_t->input_array[pLts_t->cur_read_pos++];
 		}
 	}
 }
 
-int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
-{
-	int     nextra, i; 
-	DT_PIPE_T       lts_sync[2];
-	PLTS_T  pLts_t;
-	PKSD_T  pKsd_t;
+int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short* local_buf) {
+	int	  nextra, i;
+	DT_PIPE_T lts_sync[2];
+	PLTS_T	  pLts_t;
+	PKSD_T	  pKsd_t;
 
-	
 	pKsd_t = phTTS->pKernelShareData;
-	pLts_t=phTTS->pLTSThreadData;
+	pLts_t = phTTS->pLTSThreadData;
 
 /*
  *  peek at the pipe words, handle ...
  */
 #ifdef HANG_FIXES
-	if (TRUE)
-	{
+	if(TRUE) {
 #else
-	while(TRUE)
-	{
+	while(TRUE) {
 #endif
-//		read_pipe(linp,&(pLts_t->nitem.i_word[0]), 1);
+		//		read_pipe(linp,&(pLts_t->nitem.i_word[0]), 1);
 		// fake the read_pipe
-		pLts_t->nitem.i_word[0]=local_buf[0];
+		pLts_t->nitem.i_word[0] = local_buf[0];
 
 		/* debug switch */
-		if (DT_DBG(LTS_DBG,0x001))
-		{
-			printf("\nLTS input:%c(%x)",pLts_t->nitem.i_word[0],pLts_t->nitem.i_word[0]);
+		if(DT_DBG(LTS_DBG, 0x001)) {
+			printf("\nLTS input:%c(%x)", pLts_t->nitem.i_word[0], pLts_t->nitem.i_word[0]);
 		}
 
 		/* GL 12/02/1996, pass RESET to PH pipe */
-		if(((pLts_t->nitem.i_word[0]) & (PFONT|PVALUE)) == RESET)
-		{
-			ls_util_write_pipe(pKsd_t,&(pLts_t->nitem.i_word[0]),1);
-					return 0;
-        }
-        
+		if(((pLts_t->nitem.i_word[0]) & (PFONT | PVALUE)) == RESET) {
+			ls_util_write_pipe(pKsd_t, &(pLts_t->nitem.i_word[0]), 1);
+			return 0;
+		}
+
 #ifdef SPANISH
-   		if(pLts_t->got_quote && pLts_t->nitem.i_word[0] == ((PFASCII<<PSFONT)+','))
-		{
-			
+		if(pLts_t->got_quote && pLts_t->nitem.i_word[0] == ((PFASCII << PSFONT) + ',')) {
+
 			/*eab 9/95got quote followed by comma*/
 			/*treat next phrase differently if special word set.*/
 			ls_util_send_phone(phTTS, S3);
 		}
-		if(pLts_t->nitem.i_word[0] == ((PFASCII<<PSFONT)+'"'))
-		{
-			pLts_t->got_quote=1;	
-		}
-		else
-			pLts_t->got_quote=0;
+		if(pLts_t->nitem.i_word[0] == ((PFASCII << PSFONT) + '"')) {
+			pLts_t->got_quote = 1;
+		} else
+			pLts_t->got_quote = 0;
 #endif
 
-		nextra = ((pLts_t->nitem.i_word[0])&PNEXTRA) >> PSNEXTRA;
+		nextra = ((pLts_t->nitem.i_word[0]) & PNEXTRA) >> PSNEXTRA;
 
-/*
- *  commands synchronous to lts ...
- */
+		/*
+		 *  commands synchronous to lts ...
+		 */
 
-		if(((pLts_t->nitem.i_word[0]) & (PFONT|PVALUE)) == LTS_SYNC)
-		{
-			for(i=0;i<nextra;i++)
-			{
-				//read_pipe(linp,&lts_sync[i],1);
-				// fake the read_pipe
-				lts_sync[i]=local_buf[i+1];
+		if(((pLts_t->nitem.i_word[0]) & (PFONT | PVALUE)) == LTS_SYNC) {
+			for(i = 0; i < nextra; i++) {
+				// read_pipe(linp,&lts_sync[i],1);
+				//  fake the read_pipe
+				lts_sync[i] = local_buf[i + 1];
 
-		        /* debug switch */
-		        if (DT_DBG(LTS_DBG,0x001))
-		        {
-			       printf("\nLTS input:%c[%x]",lts_sync[i],lts_sync[i]);
+				/* debug switch */
+				if(DT_DBG(LTS_DBG, 0x001)) {
+					printf("\nLTS input:%c[%x]", lts_sync[i], lts_sync[i]);
 				}
-				if(pKsd_t->halting)
-				{
-					if(lts_sync[i] == SYNC)
-					{
-						pLts_t->nitem.i_nword = 1;
+				if(pKsd_t->halting) {
+					if(lts_sync[i] == SYNC) {
+						pLts_t->nitem.i_nword	= 1;
 						pLts_t->nitem.i_word[0] = SYNC;
-					return 1;
-					}
-					else if(lts_sync[i] == ((PFASCII<<PSFONT)+0xb))
-					{
-						pLts_t->nitem.i_nword = 1;
-						pLts_t->nitem.i_word[0] = (PFASCII<<PSFONT)+0xb;
+						return 1;
+					} else if(lts_sync[i] == ((PFASCII << PSFONT) + 0xb)) {
+						pLts_t->nitem.i_nword	= 1;
+						pLts_t->nitem.i_word[0] = (PFASCII << PSFONT) + 0xb;
 
-					return 1;
-					} 
+						return 1;
+					}
 					break;
 				}
 			}
-			if(pKsd_t->halting == FALSE)
-			{
-				switch(lts_sync[0])
-				{
-					case LTS_MODE_SET:
-						pKsd_t->modeflag |= lts_sync[1];
-						break;
-					case LTS_MODE_CLEAR:
-						pKsd_t->modeflag &= (~lts_sync[1]);
-						break;
-					case LTS_MODE_ABS:
-						pKsd_t->modeflag = lts_sync[1];
-						break;
-					case LTS_DIC_ALTERNATE:
-						pKsd_t->pronflag |= PRON_DIC_ALTERNATE;
-						break;
-					case LTS_DIC_PRIMARY:
-						pKsd_t->pronflag |= PRON_DIC_PRIMARY;
-						break;
-					case LTS_ACNA_NAME:
-						pKsd_t->pronflag |=  PRON_ACNA_NAME;
-						break;
-					case LTS_DIC_NOUN:
-						pKsd_t->pronflag |= PRON_DIC_NOUN;
-						break;
-					case LTS_DIC_VERB:
-						pKsd_t->pronflag |= PRON_DIC_VERB;
-						break;
-					case LTS_DIC_ADJECTIVE:
-						pKsd_t->pronflag |= PRON_DIC_ADJECTIVE;
-						break;
-					case LTS_DIC_FUNCTION:
-						pKsd_t->pronflag |= PRON_DIC_FUNCTION;
-						break;
-					case LTS_DIC_INTERJECTION:
-						pKsd_t->pronflag |= PRON_DIC_INTERJECTION;
-						break;
-
+			if(pKsd_t->halting == FALSE) {
+				switch(lts_sync[0]) {
+				case LTS_MODE_SET:
+					pKsd_t->modeflag |= lts_sync[1];
+					break;
+				case LTS_MODE_CLEAR:
+					pKsd_t->modeflag &= (~lts_sync[1]);
+					break;
+				case LTS_MODE_ABS:
+					pKsd_t->modeflag = lts_sync[1];
+					break;
+				case LTS_DIC_ALTERNATE:
+					pKsd_t->pronflag |= PRON_DIC_ALTERNATE;
+					break;
+				case LTS_DIC_PRIMARY:
+					pKsd_t->pronflag |= PRON_DIC_PRIMARY;
+					break;
+				case LTS_ACNA_NAME:
+					pKsd_t->pronflag |= PRON_ACNA_NAME;
+					break;
+				case LTS_DIC_NOUN:
+					pKsd_t->pronflag |= PRON_DIC_NOUN;
+					break;
+				case LTS_DIC_VERB:
+					pKsd_t->pronflag |= PRON_DIC_VERB;
+					break;
+				case LTS_DIC_ADJECTIVE:
+					pKsd_t->pronflag |= PRON_DIC_ADJECTIVE;
+					break;
+				case LTS_DIC_FUNCTION:
+					pKsd_t->pronflag |= PRON_DIC_FUNCTION;
+					break;
+				case LTS_DIC_INTERJECTION:
+					pKsd_t->pronflag |= PRON_DIC_INTERJECTION;
+					break;
 				}
-			}       
+			}
 
-					return 0;
-		       /* read the next character in the pipe */
-						/* go to while (TRUE) */
+			return 0;
+			/* read the next character in the pipe */
+			/* go to while (TRUE) */
 		}
 
-		pLts_t->nitem.i_nword = nextra+1;
+		pLts_t->nitem.i_nword = nextra + 1;
 		pLts_t->nitem.i_word[0] &= ~PNEXTRA;
-		for(i=1;i<=nextra;i++)
-		{
-			//read_pipe(linp,&(pLts_t->nitem.i_word[i]), 1);
-			// fake the read_pipe
-			pLts_t->nitem.i_word[i]=local_buf[i];
+		for(i = 1; i <= nextra; i++) {
+			// read_pipe(linp,&(pLts_t->nitem.i_word[i]), 1);
+			//  fake the read_pipe
+			pLts_t->nitem.i_word[i] = local_buf[i];
 
-		    /* debug switch */
-		    if (DT_DBG(LTS_DBG,0x001))
-		    {
-			       printf("\nLTS input:*%c[%x]",pLts_t->nitem.i_word[i],pLts_t->nitem.i_word[i]);
+			/* debug switch */
+			if(DT_DBG(LTS_DBG, 0x001)) {
+				printf("\nLTS input:*%c[%x]", pLts_t->nitem.i_word[i], pLts_t->nitem.i_word[i]);
 			}
-			if(pKsd_t->halting)
-			{
-				if(pLts_t->nitem.i_word[i] == SYNC)
-				{
+			if(pKsd_t->halting) {
+				if(pLts_t->nitem.i_word[i] == SYNC) {
 					pLts_t->nitem.i_word[0] = SYNC;
-					pLts_t->nitem.i_nword = 1;
+					pLts_t->nitem.i_nword	= 1;
+
+					return 1;
+				} else if(pLts_t->nitem.i_word[i] == ((PFASCII << PSFONT) + 0xb)) {
+					pLts_t->nitem.i_nword	= 1;
+					pLts_t->nitem.i_word[0] = (PFASCII << PSFONT) + 0xb;
 
 					return 1;
 				}
-				else if(pLts_t->nitem.i_word[i] == ((PFASCII<<PSFONT)+0xb))
-				{
-					pLts_t->nitem.i_nword = 1;
-					pLts_t->nitem.i_word[0] = (PFASCII<<PSFONT)+0xb;
-
-					return 1;
-				} 
 			}
 		}
 		if(pKsd_t->halting == FALSE ||
-		  pLts_t->nitem.i_word[0] == SYNC ||
-		    pLts_t->nitem.i_word[0] == ((PFASCII<<PSFONT)+0xb))
-		{
+		   pLts_t->nitem.i_word[0] == SYNC ||
+		   pLts_t->nitem.i_word[0] == ((PFASCII << PSFONT) + 0xb)) {
 			return 1;
 		}
 	} // while(TRUE)
@@ -1144,23 +1062,22 @@ int ls_util_next_item_new(LPTTS_HANDLE_T phTTS, short *local_buf)
  *
  *      Arguments:
  *			LPTTS_HANDLE_T phTTS	Text-to-speech handle
- *                                              
+ *
  *      Return Value:
  *              void
  *
  *      Comments:
  *              rlp must be greater than or equal to llp
  * *****************************************************************/
-void ls_util_write_item(LPTTS_HANDLE_T phTTS)
-{                                           
-	PLTS_T  pLts_t;
-	PKSD_T  pKsd_t;
+void ls_util_write_item(LPTTS_HANDLE_T phTTS) {
+	PLTS_T pLts_t;
+	PKSD_T pKsd_t;
 
 	pLts_t = phTTS->pLTSThreadData;
 	pKsd_t = phTTS->pKernelShareData;
 
-	pLts_t->citem.i_word[0] |= (pLts_t->citem.i_nword-1) << PSNEXTRA;
-	ls_util_write_pipe(pKsd_t,&(pLts_t->citem.i_word[0]),pLts_t->citem.i_nword);
+	pLts_t->citem.i_word[0] |= (pLts_t->citem.i_nword - 1) << PSNEXTRA;
+	ls_util_write_pipe(pKsd_t, &(pLts_t->citem.i_word[0]), pLts_t->citem.i_nword);
 }
 
 /* ******************************************************************
@@ -1186,73 +1103,64 @@ void ls_util_write_item(LPTTS_HANDLE_T phTTS)
  *              rlp must be greater than or equal to llp
  * *****************************************************************/
 
-int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
-{
-	int     flag;
-	PKSD_T  pKsd_t;
+int ls_util_lookup(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp, int context) {
+	int    flag;
+	PKSD_T pKsd_t;
 
-	//static  int fileflag =0;
-	//static  int fileflag2 =0;
+	// static  int fileflag =0;
+	// static  int fileflag2 =0;
 
 	pKsd_t = phTTS->pKernelShareData;
 
-	flag = ls_dict_blook(phTTS,llp,rlp,context);
-        //char buf[128];
-        //int i = 0;
-        //while (llp[i].l_ch != 0) { // (&llp[i] != rlp) {
-        //    buf[i] = llp[i].l_ch;
-        //    i++;
-        //}
-        //flag = par_dict_lookup(phTTS->pKernelShareData, buf, context);
+	flag = ls_dict_blook(phTTS, llp, rlp, context);
+	// char buf[128];
+	// int i = 0;
+	// while (llp[i].l_ch != 0) { // (&llp[i] != rlp) {
+	//     buf[i] = llp[i].l_ch;
+	//     i++;
+	// }
+	// flag = par_dict_lookup(phTTS->pKernelShareData, buf, context);
 
 	/* debug switch */
-	if (DT_DBG(LTS_DBG,0x002)) 
-    {
-		if (pKsd_t->dbglog)			/*mfg 04/24/98 added debug support*/
-		fprintf((FILE *)pKsd_t->dbglog,"(%d)\n",flag);
-		printf("(%d)\n",flag);
+	if(DT_DBG(LTS_DBG, 0x002)) {
+		if(pKsd_t->dbglog) /*mfg 04/24/98 added debug support*/
+			fprintf((FILE*)pKsd_t->dbglog, "(%d)\n", flag);
+		printf("(%d)\n", flag);
 	}
-	
-/* debug switch */
-	if (DT_DBG(LTS_DBG,0x008))
-	  {
-	    if (flag == 0)
-	      {
-		if (context == FABBREV)
-		  {				
-		    ls_util_dump_llp_rlp(llp,rlp,"Abbr Miss-hit:\n");
-		    
-		    if (pKsd_t->dbglog)		/*see if dbglog.txt is open*/
-		      {
-			fprintf((FILE *)pKsd_t->dbglog,"Abbr Miss-hit:\n");		/*mfg 04/16/1998 dttest logging*/
-			/*mfg 04/16/1998 dttest logging*/
-			while (llp != rlp)
-			  {
-			    fprintf((FILE *)pKsd_t->dbglog,"%c(%02x)",llp->l_ch,llp->l_ch);
-			    ++llp;
-			  }
-		      }
-		}
-		else
-		  {
-		    ls_util_dump_llp_rlp(llp,rlp,"Word Miss-hit:\n");
-		    
-				if (pKsd_t->dbglog)		/*see if dbglog.txt is open*/
-				{	
-				fprintf((FILE *)pKsd_t->dbglog,"Word Miss-hit:\n");		/*mfg 04/16/1998 dttest logging*/	
-					while (llp != rlp)
-					{
-					fprintf((FILE *)pKsd_t->dbglog,"%c(%02x)\n",llp->l_ch,llp->l_ch);
-					++llp;
+
+	/* debug switch */
+	if(DT_DBG(LTS_DBG, 0x008)) {
+		if(flag == 0) {
+			if(context == FABBREV) {
+				ls_util_dump_llp_rlp(llp, rlp, "Abbr Miss-hit:\n");
+
+				if(pKsd_t->dbglog) /*see if dbglog.txt is open*/
+				{
+					fprintf((FILE*)pKsd_t->dbglog, "Abbr Miss-hit:\n"); /*mfg 04/16/1998 dttest logging*/
+					/*mfg 04/16/1998 dttest logging*/
+					while(llp != rlp) {
+						fprintf((FILE*)pKsd_t->dbglog, "%c(%02x)", llp->l_ch, llp->l_ch);
+						++llp;
+					}
+				}
+			} else {
+				ls_util_dump_llp_rlp(llp, rlp, "Word Miss-hit:\n");
+
+				if(pKsd_t->dbglog) /*see if dbglog.txt is open*/
+				{
+					fprintf((FILE*)pKsd_t->dbglog, "Word Miss-hit:\n"); /*mfg 04/16/1998 dttest logging*/
+					while(llp != rlp) {
+						fprintf((FILE*)pKsd_t->dbglog, "%c(%02x)\n", llp->l_ch, llp->l_ch);
+						++llp;
 					}
 				}
 			}
 		}
 	}
-	return(flag);
+	return (flag);
 }
 
- /* *****************************************************************
+/* *****************************************************************
  *      Function Name:  ls_util_pluralize()
  *
  *      Description:
@@ -1264,7 +1172,7 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
  *
  *      Arguments:
  *			LPTTS_HANDLE_T phTTS	Text-to-speech handle
- *                                              
+ *
  *      Return Value:
  *          void
  *
@@ -1272,53 +1180,40 @@ int ls_util_lookup(LPTTS_HANDLE_T phTTS,LETTER *llp, LETTER *rlp, int context)
  *          rlp must be greater than or equal to llp
  * *****************************************************************/
 /* JDB: this is all English specific */
-void ls_util_pluralize(LPTTS_HANDLE_T phTTS)
-{
+void ls_util_pluralize(LPTTS_HANDLE_T phTTS) {
 #ifdef ENGLISH_US
-	int     feats=0;
-    PLTS_T pLts_t;
-    pLts_t = phTTS->pLTSThreadData;
-    
-	if (pLts_t->lphone < US_TOT_ALLOPHONES)
+	int    feats = 0;
+	PLTS_T pLts_t;
+	pLts_t = phTTS->pLTSThreadData;
+
+	if(pLts_t->lphone < US_TOT_ALLOPHONES)
 		feats = pfeat[pLts_t->lphone];
-	if ((feats&(PCONS|PSIB)) == (PCONS|PSIB)) 
-	{
-		ls_util_send_phone(phTTS,US_IX);
-		ls_util_send_phone(phTTS,US_Z);
-	} 
-	else
-	{ 
-		if ((feats&(PCONS|PVOICE)) == PCONS)
-		{
-			ls_util_send_phone(phTTS,US_S);
-		}
-		else
-		{
-			ls_util_send_phone(phTTS,US_Z);
+	if((feats & (PCONS | PSIB)) == (PCONS | PSIB)) {
+		ls_util_send_phone(phTTS, US_IX);
+		ls_util_send_phone(phTTS, US_Z);
+	} else {
+		if((feats & (PCONS | PVOICE)) == PCONS) {
+			ls_util_send_phone(phTTS, US_S);
+		} else {
+			ls_util_send_phone(phTTS, US_Z);
 		}
 	}
 #endif // ENGLISH_US
 #ifdef ENGLISH_UK
-	int     feats=0;
-    PLTS_T pLts_t;
-    pLts_t = phTTS->pLTSThreadData;
-    
-	if (pLts_t->lphone < UK_TOT_ALLOPHONES)
+	int    feats = 0;
+	PLTS_T pLts_t;
+	pLts_t = phTTS->pLTSThreadData;
+
+	if(pLts_t->lphone < UK_TOT_ALLOPHONES)
 		feats = pfeat[pLts_t->lphone];
-	if ((feats&(PCONS|PSIB)) == (PCONS|PSIB)) 
-	{
-		ls_util_send_phone(phTTS,UK_IX);
-		ls_util_send_phone(phTTS,UK_Z);
-	} 
-	else
-	{ 
-		if ((feats&(PCONS|PVOICE)) == PCONS)
-		{
-			ls_util_send_phone(phTTS,UK_S);
-		}
-		else
-		{
-			ls_util_send_phone(phTTS,UK_Z);
+	if((feats & (PCONS | PSIB)) == (PCONS | PSIB)) {
+		ls_util_send_phone(phTTS, UK_IX);
+		ls_util_send_phone(phTTS, UK_Z);
+	} else {
+		if((feats & (PCONS | PVOICE)) == PCONS) {
+			ls_util_send_phone(phTTS, UK_S);
+		} else {
+			ls_util_send_phone(phTTS, UK_Z);
 		}
 	}
 #endif // ENGLISH_UK
@@ -1335,27 +1230,26 @@ void ls_util_pluralize(LPTTS_HANDLE_T phTTS)
  *
  *      Arguments:
  *  		int g		integer code for vowel
- *                                              
+ *
  *      Return Value:
  *          int
  *
  *      Comments:
  *              rlp must be greater than or equal to llp
  * *****************************************************************/
-int ls_util_is_vowel(int g)
-{           
+int ls_util_is_vowel(int g) {
 #ifdef ENGLISH
-	if (g==GA || g==GE || g==GI || g==GO || g==GU || g==GY)
+	if(g == GA || g == GE || g == GI || g == GO || g == GU || g == GY)
 #endif
 #ifdef GERMAN
-	if (g==GGA || g==GGE || g==GGI || g==GGO || g==GGUu || g==GGAx|| g==GGOx || g==GGUx)
-#endif    	
-#ifdef FRENCH
-	if (g==GA || g==GE || g==GI || g==GO || g==GU || g==GY)
+		if(g == GGA || g == GGE || g == GGI || g == GGO || g == GGUu || g == GGAx || g == GGOx || g == GGUx)
 #endif
-		return (TRUE);
+#ifdef FRENCH
+			if(g == GA || g == GE || g == GI || g == GO || g == GU || g == GY)
+#endif
+				return (TRUE);
 	return (FALSE);
-}                                 
+}
 
 /* ******************************************************************
  *      Function Name: ls_util_lts_init()
@@ -1370,26 +1264,25 @@ int ls_util_is_vowel(int g)
  *      Comments:
  *
  * *****************************************************************/
-void ls_util_lts_init( PLTS_T pLts_t, PKSD_T pKsd_t)
-{
-  pLts_t->wstate = UNK_WH;
-  pLts_t->lphone = WBOUND;
-  pLts_t->num_indexes=0;
-  pLts_t->cur_index=-1;
+void ls_util_lts_init(PLTS_T pLts_t, PKSD_T pKsd_t) {
+	pLts_t->wstate	    = UNK_WH;
+	pLts_t->lphone	    = WBOUND;
+	pLts_t->num_indexes = 0;
+	pLts_t->cur_index   = -1;
 
-  pLts_t->first_pass=0;
-  pLts_t->cur_input_pos=0;
-  pLts_t->num_indexes=0;
-  pLts_t->cur_index=-1;
+	pLts_t->first_pass    = 0;
+	pLts_t->cur_input_pos = 0;
+	pLts_t->num_indexes   = 0;
+	pLts_t->cur_index     = -1;
 
 #ifdef NEW_LTS
-  pLts_t->cur_word_index=0;
+	pLts_t->cur_word_index = 0;
 #else
-  pLts_t->fc_index = 0;
-  pLts_t->old_fc_index = -1;
+	pLts_t->fc_index     = 0;
+	pLts_t->old_fc_index = -1;
 #endif
-#ifdef GERMAN    /* REWT BACHUS include June 27,2002 */
-  pLts_t->bachus_wordgrammarinfo = &Bach_WordGrammar;
+#ifdef GERMAN /* REWT BACHUS include June 27,2002 */
+	pLts_t->bachus_wordgrammarinfo = &Bach_WordGrammar;
 //  pLts_t->bachus_trennung = &HyphenTOK;     /* REWT: Mar 27 2003 */
 #endif
 }
@@ -1397,23 +1290,22 @@ void ls_util_lts_init( PLTS_T pLts_t, PKSD_T pKsd_t)
 /* ******************************************************************
  *      Function Name: f_fprintf()
  *
- *  	Description: 
+ *  	Description:
  *
  *      Arguments: char *str
  *
- *      Return Value: void 
+ *      Return Value: void
  *
  *      Comments:
  *
  * *****************************************************************/
 #ifdef _DEBUG_OLD
-void f_fprintf(char *str)
-{
-   FILE *dbgfp;
+void f_fprintf(char* str) {
+	FILE* dbgfp;
 
-   dbgfp = fopen("debug.log", "a");
-   fprintf(dbgfp, str);
-   fclose(dbgfp);
+	dbgfp = fopen("debug.log", "a");
+	fprintf(dbgfp, str);
+	fclose(dbgfp);
 }
 #endif
 /* ******************************************************************
@@ -1433,259 +1325,263 @@ void f_fprintf(char *str)
  *      Comments:
  *
  * *****************************************************************/
-void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
-{
-	int i;
-	short wcbyte0,wcbyte1;
-		//tek 20aug98 we need phTTS to get at the phoneme-logging stuff
-		LPTTS_HANDLE_T phTTS = pKsd_t->phTTS;
+void ls_util_write_pipe(PKSD_T pKsd_t, short* phone, short count) {
+	int   i;
+	short wcbyte0, wcbyte1;
+	// tek 20aug98 we need phTTS to get at the phoneme-logging stuff
+	LPTTS_HANDLE_T phTTS = pKsd_t->phTTS;
 
-		//gl  02sep98 these API codes for non-msdos only
+	// gl  02sep98 these API codes for non-msdos only
 #ifdef LTS_DEBUG_OLD
-		{
-			char szTemp[256]="l_u_w_p: ";
-			int i;
-			for (i=0;i<count;i++)
-			{
-				sprintf(szTemp,"%s %04hx ",szTemp,phone[i]);
-			}
-			strcat(szTemp,"\n");
-			OutputDebugString(szTemp);
+	{
+		char szTemp[256] = "l_u_w_p: ";
+		int  i;
+		for(i = 0; i < count; i++) {
+			sprintf(szTemp, "%s %04hx ", szTemp, phone[i]);
 		}
-#endif //LTS_DEBUG_OLD
-		// tek 20aug98 decide if we need to log and act accordingly
-		// the pointer isn't null, we're logging.
-		if (phTTS->szPhonemeBuffer)
-		{
-			// loop and possibly log each..
-			int iI;
-			for (iI=0;iI<count;iI++)
-			{
-				short sIPhone = phone[iI]; // the whole (input) phone..
-				short sMPhone = phone[iI]&0xFF; // the masked-off phone..
-				// see if it's a phoneme.. (always PFUSA??)
-				/* GL 09/01/1998 BATS#758 use different language tags for each language */
+		strcat(szTemp, "\n");
+		OutputDebugString(szTemp);
+	}
+#endif // LTS_DEBUG_OLD
+       //  tek 20aug98 decide if we need to log and act accordingly
+       //  the pointer isn't null, we're logging.
+	if(phTTS->szPhonemeBuffer) {
+		// loop and possibly log each..
+		int iI;
+		for(iI = 0; iI < count; iI++) {
+			short sIPhone = phone[iI];	  // the whole (input) phone..
+			short sMPhone = phone[iI] & 0xFF; // the masked-off phone..
+							  // see if it's a phoneme.. (always PFUSA??)
+							  /* GL 09/01/1998 BATS#758 use different language tags for each language */
 #ifdef ENGLISH_US
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFUSA || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT) )
-#endif                 
+			if(((sIPhone >> PSFONT) & 0xFF) == PFUSA || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
+#endif
 
 #ifdef ENGLISH_UK
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFUK || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT))
-#endif                 
+				if(((sIPhone >> PSFONT) & 0xFF) == PFUK || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
+#endif
 
 #ifdef GERMAN
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFGR || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT))
+					if(((sIPhone >> PSFONT) & 0xFF) == PFGR || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
 #endif
-        
+
 #ifdef SPANISH_SP
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFSP || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT))
-#endif	
+						if(((sIPhone >> PSFONT) & 0xFF) == PFSP || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
+#endif
 
 #ifdef SPANISH_LA
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFLA || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT))
-#endif	
+							if(((sIPhone >> PSFONT) & 0xFF) == PFLA || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
+#endif
 #ifdef FRENCH
-				if ( ((sIPhone>>PSFONT)&0xFF) == PFFR || (sIPhone>=100 && sIPhone<=PHO_SYM_TOT))
-#endif 
-				{
-					// we only return the "phonemes" that are legal in 
-					// a dictionary; this would be everything < TOT_ALLOPHONES
-					// plus things between BLOCK_RULES and SBOUND
-					if (  (sMPhone >= PHO_SYM_TOT)
-						||((sMPhone <= BLOCK_RULES) && (sMPhone >= MAX_PHONES))
-						)
-						continue; // not one we're interested in.
-					
-					// if we have room
-					//if (phTTS->dwPhonemeBufferPtr < (phTTS->dwPhonemeBufferSize-4))
-					{
-						// index into the arpabet table..
-						int iIndex = sMPhone*2;
-						phTTS->szPhonemeBuffer[phTTS->dwPhonemeBufferPtr++] 
-							= pKsd_t->arpabet[iIndex];
-						phTTS->szPhonemeBuffer[phTTS->dwPhonemeBufferPtr++] 
-							= pKsd_t->arpabet[iIndex+1];
-					}
+								if(((sIPhone >> PSFONT) & 0xFF) == PFFR || (sIPhone >= 100 && sIPhone <= PHO_SYM_TOT))
+#endif
+								{
+									// we only return the "phonemes" that are legal in
+									// a dictionary; this would be everything < TOT_ALLOPHONES
+									// plus things between BLOCK_RULES and SBOUND
+									if((sMPhone >= PHO_SYM_TOT) || ((sMPhone <= BLOCK_RULES) && (sMPhone >= MAX_PHONES)))
+										continue; // not one we're interested in.
 
-				}
-			}
+									// if we have room
+									// if (phTTS->dwPhonemeBufferPtr < (phTTS->dwPhonemeBufferSize-4))
+									{
+										// index into the arpabet table..
+										int iIndex					    = sMPhone * 2;
+										phTTS->szPhonemeBuffer[phTTS->dwPhonemeBufferPtr++] = pKsd_t->arpabet[iIndex];
+										phTTS->szPhonemeBuffer[phTTS->dwPhonemeBufferPtr++] = pKsd_t->arpabet[iIndex + 1];
+									}
+								}
 		}
+	}
 
-		/* debug switch */
-		/* GL 03/21/1997  dump the data before write_pipe */
-		/* MFG 04/12/1998 added phonme tranlation for debug 0x4200 */
-		if (DT_DBG(LTS_DBG,0x200) & ((*phone & 0xff) < PHO_SYM_TOT))
-		{
-			if (pKsd_t->phoneme_mode & PHONEME_ASCKY) 
-               printf("%c",pKsd_t->ascky[(*phone & 0xff)]);
-			else
-			{
-				switch(*phone & 0x1fff)
-				{
-				case BREATH_BREAK:
-					 if (pKsd_t->dbglog)
-					 fprintf((FILE *)pKsd_t->dbglog,"\n[breath_break]");
-					 printf("[breath_break]");
-					 break;
-				case SYNC:
-					 if (pKsd_t->dbglog)
-					 fprintf((FILE *)pKsd_t->dbglog,"\n[sync]");
-					 printf("[sync]");
-					 break;
-				case WORD_CLASS:
+	/* debug switch */
+	/* GL 03/21/1997  dump the data before write_pipe */
+	/* MFG 04/12/1998 added phonme tranlation for debug 0x4200 */
+	if(DT_DBG(LTS_DBG, 0x200) & ((*phone & 0xff) < PHO_SYM_TOT)) {
+		if(pKsd_t->phoneme_mode & PHONEME_ASCKY)
+			printf("%c", pKsd_t->ascky[(*phone & 0xff)]);
+		else {
+			switch(*phone & 0x1fff) {
+			case BREATH_BREAK:
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[breath_break]");
+				printf("[breath_break]");
+				break;
+			case SYNC:
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[sync]");
+				printf("[sync]");
+				break;
+			case WORD_CLASS:
 				//	 if (pKsd_t->dbglog)
-				//mfg_debug	 fprintf((FILE *)pKsd_t->dbglog,"\n");
-					wcbyte0 = phone[2];
-					wcbyte1 = phone[1];
-					for(i=0;i<32;i++)		
-					{
-						if (i < 16)
-						{	
-							if ((wcbyte0 & 0001) == 1)	//check byte 0 in word class		
-							{
-							if (pKsd_t->dbglog)
-							fprintf((FILE *)pKsd_t->dbglog,"[%s]",form_class_strings[i]);
-							printf("[%s]",form_class_strings[i]);
-							}
-							wcbyte0 = wcbyte0 >> 1;
-						}
-						else
+				// mfg_debug	 fprintf((FILE *)pKsd_t->dbglog,"\n");
+				wcbyte0 = phone[2];
+				wcbyte1 = phone[1];
+				for(i = 0; i < 32; i++) {
+					if(i < 16) {
+						if((wcbyte0 & 0001) == 1) // check byte 0 in word class
 						{
-							if ((wcbyte1 & 0001) == 1)	//check byte 1 in word class		
-							{
-							if (pKsd_t->dbglog)
-							fprintf((FILE *)pKsd_t->dbglog,"[%s]",form_class_strings[i]);
-							printf("[%s]",form_class_strings[i]);
-							}
-							wcbyte1 = wcbyte1 >> 1;
+							if(pKsd_t->dbglog)
+								fprintf((FILE*)pKsd_t->dbglog, "[%s]", form_class_strings[i]);
+							printf("[%s]", form_class_strings[i]);
 						}
-					}
-									break;
-				case RATE:			printf("[rate]");
-				  if (pKsd_t->dbglog)
-				    fprintf((FILE *)pKsd_t->dbglog,"\n[rate]");
-									break;
-				case CPAUSE:		printf("[cpause]");
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[cpause]");
-									break;
-				case PPAUSE:		printf("[ppause]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[ppause]");
-									break;
-				case LAST_VOICE:	printf("[last_voice]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[last_voice]");
-									break;
-				case LTS_SYNC:		printf("[lts_sync]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[lts_sync]");
-									break;
-				case NEW_SPEAKER:	printf("[new_speaker]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[new_speaker]");
-									break;
-				case NEW_PARAM:		printf("[new_param]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[new_param]");
-									break;
-				case SAVE:			printf("[save]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[save]");
-									break;
-				case INDEX:			printf("[index]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index]");
-									break;
-				case INDEX_REPLY:	printf("[index_reply]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_reply]");
-									break;
-				case KILL_TASK:		printf("[kill_task]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[kill_task]");
-									break;
-				case FLUSH_SYNC:	printf("[flush_sync]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[flush_sync]");
-									break;
-				case PITCH_CHANGE:	printf("[pitch_change]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[pitch_change]");
-									break;
-				case LATIN:			printf("[latin]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[latin]");
-									break;
-				case PAPAUSE:		printf("[papause]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[papause]");
-									break;
-				case CNTRLK:		printf("[cntrlk]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[cntrlk]");
-									break;
-				case RESET:			printf("[reset]");			
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[reset]");
-									break;
-//#ifdef _WIN32
-				case INDEX_BOOKMARK:printf("[index_bookmark]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_bookmark]");
-									break;
-				case INDEX_WORDPOS:	printf("[index_wordpos]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_wordpos]");
-									break;
-				case INDEX_START:	printf("[index_start]");	
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_start]");
-									break;
-				case INDEX_STOP:	printf("[index_stop]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_stop]");
-									break;
-				case INDEX_SENTENCE:	printf("[index_sentence]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_sentence]");
-									break;
-				case INDEX_VOLUME:	printf("[index_volume]");		
-									if (pKsd_t->dbglog)
-									fprintf((FILE *)pKsd_t->dbglog,"\n[index_volume]");
-									break;
-				case INDEX_NOISE://	printf("[index_noise]");		
-									//if (pKsd_t->dbglog)
-									//fprintf((FILE *)pKsd_t->dbglog,"\n[index_noise]");
-									break;
-//#endif
-				default:
-				if (pKsd_t->dbglog)
-				{
-					if ((int)(pKsd_t->arpabet[(*phone & 0xff)*2]) != 32) /// filter out spaces
-					{
-							fprintf((FILE *)pKsd_t->dbglog,"%c%c",pKsd_t->arpabet[(*phone & 0xff)*2],
-								pKsd_t->arpabet[(*phone & 0xff)*2 + 1]);
+						wcbyte0 = wcbyte0 >> 1;
+					} else {
+						if((wcbyte1 & 0001) == 1) // check byte 1 in word class
+						{
+							if(pKsd_t->dbglog)
+								fprintf((FILE*)pKsd_t->dbglog, "[%s]", form_class_strings[i]);
+							printf("[%s]", form_class_strings[i]);
+						}
+						wcbyte1 = wcbyte1 >> 1;
 					}
 				}
-				printf("%c%c",pKsd_t->arpabet[(*phone & 0xff)*2],pKsd_t->arpabet[(*phone & 0xff)*2 + 1]);			
+				break;
+			case RATE:
+				printf("[rate]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[rate]");
+				break;
+			case CPAUSE:
+				printf("[cpause]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[cpause]");
+				break;
+			case PPAUSE:
+				printf("[ppause]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[ppause]");
+				break;
+			case LAST_VOICE:
+				printf("[last_voice]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[last_voice]");
+				break;
+			case LTS_SYNC:
+				printf("[lts_sync]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[lts_sync]");
+				break;
+			case NEW_SPEAKER:
+				printf("[new_speaker]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[new_speaker]");
+				break;
+			case NEW_PARAM:
+				printf("[new_param]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[new_param]");
+				break;
+			case SAVE:
+				printf("[save]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[save]");
+				break;
+			case INDEX:
+				printf("[index]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index]");
+				break;
+			case INDEX_REPLY:
+				printf("[index_reply]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_reply]");
+				break;
+			case KILL_TASK:
+				printf("[kill_task]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[kill_task]");
+				break;
+			case FLUSH_SYNC:
+				printf("[flush_sync]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[flush_sync]");
+				break;
+			case PITCH_CHANGE:
+				printf("[pitch_change]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[pitch_change]");
+				break;
+			case LATIN:
+				printf("[latin]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[latin]");
+				break;
+			case PAPAUSE:
+				printf("[papause]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[papause]");
+				break;
+			case CNTRLK:
+				printf("[cntrlk]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[cntrlk]");
+				break;
+			case RESET:
+				printf("[reset]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[reset]");
+				break;
+				// #ifdef _WIN32
+			case INDEX_BOOKMARK:
+				printf("[index_bookmark]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_bookmark]");
+				break;
+			case INDEX_WORDPOS:
+				printf("[index_wordpos]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_wordpos]");
+				break;
+			case INDEX_START:
+				printf("[index_start]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_start]");
+				break;
+			case INDEX_STOP:
+				printf("[index_stop]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_stop]");
+				break;
+			case INDEX_SENTENCE:
+				printf("[index_sentence]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_sentence]");
+				break;
+			case INDEX_VOLUME:
+				printf("[index_volume]");
+				if(pKsd_t->dbglog)
+					fprintf((FILE*)pKsd_t->dbglog, "\n[index_volume]");
+				break;
+			case INDEX_NOISE: //	printf("[index_noise]");
+				// if (pKsd_t->dbglog)
+				// fprintf((FILE *)pKsd_t->dbglog,"\n[index_noise]");
+				break;
+				// #endif
+			default:
+				if(pKsd_t->dbglog) {
+					if((int)(pKsd_t->arpabet[(*phone & 0xff) * 2]) != 32) /// filter out spaces
+					{
+						fprintf((FILE*)pKsd_t->dbglog, "%c%c", pKsd_t->arpabet[(*phone & 0xff) * 2],
+							pKsd_t->arpabet[(*phone & 0xff) * 2 + 1]);
+					}
+				}
+				printf("%c%c", pKsd_t->arpabet[(*phone & 0xff) * 2], pKsd_t->arpabet[(*phone & 0xff) * 2 + 1]);
 			} // switch
 		} // else
 
-			if ((*phone & 0xff) == 111)
-			   printf("\n"); 
-		}
-		/* debug switch */  
-		if (DT_DBG(LTS_DBG,0x800))
-		{			
-			/*mfg 04/27/98 when pipe is drained let the following pass through*/ 
-			if ((*phone != SYNC) && (*phone != BREATH_BREAK) 
-				&& (*phone != KILL_TASK) && (*phone != FLUSH_SYNC))
+		if((*phone & 0xff) == 111)
+			printf("\n");
+	}
+	/* debug switch */
+	if(DT_DBG(LTS_DBG, 0x800)) {
+		/*mfg 04/27/98 when pipe is drained let the following pass through*/
+		if((*phone != SYNC) && (*phone != BREATH_BREAK) && (*phone != KILL_TASK) && (*phone != FLUSH_SYNC))
 			return;
-		}
+	}
 
-		ph_loop(phTTS,(unsigned short*)phone);
-        return;
+	ph_loop(phTTS, (unsigned short*)phone);
+	return;
 }
 
 /* ******************************************************************
@@ -1698,7 +1594,7 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
  *      Arguments:
  *          LETTER *llp     INPUT - pointer to the beginning of the word
  *          LETTER *rlp     INPUT - pointer to the EOS at the end of the word
- *                                              
+ *
  *      Return Value:
  *          TRUE   is an alphabet word with vowel
  *          FALSE  not an alphabet word or word without vowel
@@ -1706,16 +1602,14 @@ void ls_util_write_pipe(PKSD_T pKsd_t, short *phone, short count)
  *      Comments:
  *          rlp must be greater than or equal to llp
  * *****************************************************************/
-int ls_util_is_aword(LETTER *llp, LETTER *rlp)
-{
-	int flag=FALSE;
-	       
-	if (llp >= rlp) return(FALSE);
-	while (llp!=rlp)
-	{
-		if (!(IS_ALPHA(llp->l_ch))) return(FALSE);
-		if (IS_VOWEL(llp->l_ch)) flag=TRUE;
+int ls_util_is_aword(LETTER* llp, LETTER* rlp) {
+	int flag = FALSE;
+
+	if(llp >= rlp) return (FALSE);
+	while(llp != rlp) {
+		if(!(IS_ALPHA(llp->l_ch))) return (FALSE);
+		if(IS_VOWEL(llp->l_ch)) flag = TRUE;
 		++llp;
 	}
-	return(flag);      
+	return (flag);
 }

@@ -3,7 +3,7 @@
  *
  *                           Copyright ©
  *    © Digital Equipment Corporation 1996, 1997, 1998. All rights reserved.
- *    © SMART Modular Technologies, 2000. All rights reserved.	
+ *    © SMART Modular Technologies, 2000. All rights reserved.
  *    Copyright © 2000, 2001 Force Computers, Inc., a Solectron company. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -19,14 +19,14 @@
  *
  ***********************************************************************
  *    File Name:    ph_vdefi.c
- *    Author:       Matthew Schnee                                       
- *    Creation Date:06/04/1996                                           
- *                                                                       
- *    Functionality:                                                     
+ *    Author:       Matthew Schnee
+ *    Creation Date:06/04/1996
+ *
+ *    Functionality:
  *  	Speaker voice definition file for multi language
- *                                                                       
- *********************************************************************** 
- *                                                                       
+ *
+ ***********************************************************************
+ *
  *  Rev 	Who     Date        	Description
  *  --- 	-----   ----------- 	---------------------------------------
  *  001 	MGS		07/18/1996	    Merged from ph_vdef.c, sph_vdef.c, gph_vdef.c
@@ -51,10 +51,8 @@
  * 	015		CAB		06/01/2001		Updated copyright info
  */
 
-
 #include "dectalkf.h"
 #include "ph_def.h"
-
 
 #ifdef HLSYN
 #ifdef FRENCH
@@ -75,13 +73,13 @@
 #include "p_us_vdf_dectalkexpress_42cd.c"
 #elif defined(VDF_DECTALKEXPRESS_43)
 #include "p_us_vdf_dectalkexpress_43.c"
-#elif defined (VDF_DECTALK_41)
+#elif defined(VDF_DECTALK_41)
 #include "p_us_vdf_dectalk41.c"
-#elif defined (VDF_DECTALK_43)
+#elif defined(VDF_DECTALK_43)
 #include "p_us_vdf_dectalk43.c"
-#elif defined (VDF_DECTALK_44)
+#elif defined(VDF_DECTALK_44)
 #include "p_us_vdf_dectalk44.c"
-#elif defined (VDF_DTC_03_03JAN89)
+#elif defined(VDF_DTC_03_03JAN89)
 #include "p_us_vdf_dtc_03_03Jan89.c"
 #else
 #error No voice definition defined! Please select a VDF.
@@ -89,7 +87,6 @@
 #endif
 #endif
 #endif
-
 
 #ifdef HLSYN
 #include "p_us_vdf_tunehl.c"
@@ -114,11 +111,10 @@
 #endif
 #endif
 
-
 #endif
 
-const short			default_tune[SPDEF] =
-{
+const short default_tune[SPDEF] =
+    {
 	0,
 	0,
 	0,
@@ -156,11 +152,9 @@ const short			default_tune[SPDEF] =
 	0,
 	0,
 	0,
-	0
-};
+	0};
 
 #ifndef HLSYN
-
 
 #ifdef outfornow
 
@@ -189,11 +183,7 @@ const short			default_tune[SPDEF] =
 
 #endif
 
-
-
-
-#endif //HLSYN
-
+#endif // HLSYN
 
 /*
  * This table, indexed by the
@@ -201,49 +191,49 @@ const short			default_tune[SPDEF] =
  * is used to range check user specified voice
  * definition ":dv" commands.
  */
-	//EAB 11/16/98 Changed some limits that were incorrect (ZAPF is the largest value not 4950 (which is
-	//only true at 10 Khz anyway plus amptable goes to 97 not 86
-	// Part of BATS 804
+// EAB 11/16/98 Changed some limits that were incorrect (ZAPF is the largest value not 4950 (which is
+// only true at 10 Khz anyway plus amptable goes to 97 not 86
+//  Part of BATS 804
 const LIMIT limit[] =
-{
-	0, 1,							   /* SEX                  */
-	0, 100,							   /* SM                   */
-	0, 200,							   /* AS                   */
-	50, 350,						   /* AP                   */
-	0, 250,							   /* PR                   */
-	0, 72,							   /* BR                   */
-	0, 100,							   /* RI                   */
-	0, 100,							   /* NF                   */
-	0, 100,							   /* LA                   */
-	65, 145,						   /* HS                   */
-	2000, ZAPF,						   /* F4                   */
-	100, ZAPB,						   /* B4                   */
-	2500, ZAPF,						   /* F5                   */
-	100, ZAPB,						   /* B5                   */
-	2500, ZAPF,						   /* P4                   */
-	2500, ZAPF,						   /* P5                   */
-	0, 87,							   /* GF                   */
-	0, 87,							   /* GH                   */
-	0, 87,							   /* GV                   */
-	0, 87,							   /* GN                   */
-	0, 87,							   /* G1                   */
-	0, 87,							   /* G2                   */
-	0, 87,							   /* G3                   */
-	0, 87,							   /* G4                   */
-	0, 87,							   /* LO                   */
-	0, 100,							   /* FT                   */
-	0, 90,							   /* BF                   */
-	0, 100,							   /* LX                   */
-	0, 100,							   /* QU                   */
-	2, 100,							   /* HR                   */
-	1, 100,							   /* SR                   */
-	0, 1500,                           /* ago                   */
-	0, 1800,                           /* agvo                   */
-	0, 3000,						   /* aguo                   */
-	0, 3000,							   /* area of chink                   */
-	1, 100,							   /* open quotient                  */
-	-32768, 32767,					   /* OS                   */
-	0, 8							   /* NM				   */
+    {
+	0, 1,	       /* SEX                  */
+	0, 100,	       /* SM                   */
+	0, 200,	       /* AS                   */
+	50, 350,       /* AP                   */
+	0, 250,	       /* PR                   */
+	0, 72,	       /* BR                   */
+	0, 100,	       /* RI                   */
+	0, 100,	       /* NF                   */
+	0, 100,	       /* LA                   */
+	65, 145,       /* HS                   */
+	2000, ZAPF,    /* F4                   */
+	100, ZAPB,     /* B4                   */
+	2500, ZAPF,    /* F5                   */
+	100, ZAPB,     /* B5                   */
+	2500, ZAPF,    /* P4                   */
+	2500, ZAPF,    /* P5                   */
+	0, 87,	       /* GF                   */
+	0, 87,	       /* GH                   */
+	0, 87,	       /* GV                   */
+	0, 87,	       /* GN                   */
+	0, 87,	       /* G1                   */
+	0, 87,	       /* G2                   */
+	0, 87,	       /* G3                   */
+	0, 87,	       /* G4                   */
+	0, 87,	       /* LO                   */
+	0, 100,	       /* FT                   */
+	0, 90,	       /* BF                   */
+	0, 100,	       /* LX                   */
+	0, 100,	       /* QU                   */
+	2, 100,	       /* HR                   */
+	1, 100,	       /* SR                   */
+	0, 1500,       /* ago                   */
+	0, 1800,       /* agvo                   */
+	0, 3000,       /* aguo                   */
+	0, 3000,       /* area of chink                   */
+	1, 100,	       /* open quotient                  */
+	-32768, 32767, /* OS                   */
+	0, 8	       /* NM				   */
 
 };
 
@@ -253,4 +243,3 @@ const LIMIT limit[] =
  * MVP : The following arrays are now made instance specific for MI:
  * voidef_8[], voidef[]
  */
-

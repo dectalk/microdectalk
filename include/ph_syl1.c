@@ -1,9 +1,9 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
  *    Copyright © 2000 Force Computer, Inc., a Solectron company. All rights reserved.
- *    © Digital Equipment Corporation 1996, 1997. All rights reserved.  
+ *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
@@ -22,14 +22,14 @@
  *    Creation Date:
  *
  *    Functionality:
- *    language specific syllabification and output 
+ *    language specific syllabification and output
  *
  ***********************************************************************
  *
  *  Rev Name    Date        Description
  *  --- -----   ----------- --------------------------------------------
  *  001 MGS     03/25/1996  Merged WIN 95 code to 42c
- *  002	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if" 
+ *  002	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if"
  *  003 DR		09/30/1997	UK BUILD: added UK STUFF
  *  004	MFG		06/18/1998	SPANISH_SP & SPANISH_LA support added
  *	005	CHJ		07/20/2000	FRENCH support

@@ -22,8 +22,8 @@
  *    Author:		Matthew Schnee
  *    Creation Date:7/26/96
  *
- *	  Functionality:       
- *		this file is here to be able to compile the rule table 
+ *	  Functionality:
+ *		this file is here to be able to compile the rule table
  *		by itself and link it with the rest of the parser.
  *
  ***********************************************************************
@@ -31,8 +31,8 @@
  *
  *	Rev	Who		Date    	Description
  *	---	-----	-----------	-----------------------------------------------
- *	001	SIK		10/10/1996	Add VOCAL #ifndef switch to support the VOCAL build 
- *	002	GL		10/22/1997	Add NWSNOAA #ifdef switch to support the NWSNOAA build 
+ *	001	SIK		10/10/1996	Add VOCAL #ifndef switch to support the VOCAL build
+ *	002	GL		10/22/1997	Add NWSNOAA #ifdef switch to support the NWSNOAA build
  *	003	MGS		03/12/1998	Added code for the new binary parser
  *	004	CJL		03/18/1998	Removed specific path for dectalkf.h.
  *	005	MGS		06/08/1998	Added code for German Compound Nouns
@@ -45,18 +45,17 @@
  *
  */
 
-
 #include "dectalkf.h"
 
-#include 	"port.h"
+#include "port.h"
 
-#include	"par_def.h"
+#include "par_def.h"
 
 #ifdef NEW_BINARY_PARSER
 
 #ifdef GERMAN_COMPOUND_NOUNS
 #include "comp_dum.h"
-#endif //GERMAN_COMPOUND_NOUNS
+#endif // GERMAN_COMPOUND_NOUNS
 
 #ifdef _BIGENDIAN_
 #include "par_rule2b.h"
@@ -66,8 +65,7 @@
 
 #else // NEW_BINARY_PARSER
 
-#include 	"par_rule.h"
-
+#include "par_rule.h"
 
 #endif // NEW_BINARY_PARSER
-#endif //vocal
+#endif // vocal

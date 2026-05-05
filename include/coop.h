@@ -112,7 +112,7 @@
  * 040	28oct98	cjl		Change to 4.60 and B001.
  * 041	06jan99	mfg		Added Windows CE registry support
  * 042	27jan99	cjl     Change R006 to B002
- * 043	08feb99	gl		Separate NWSNOAA to NWS_US and NWS_LA 
+ * 043	08feb99	gl		Separate NWSNOAA to NWS_US and NWS_LA
  * 044	31mar99 cjl     Change B002 to R003
  * 045	10jun99 cjl     Change R003 to R004
  * 046	02jul99 cjl     Change R004 to R005
@@ -159,8 +159,8 @@
 #ifdef TYPING_MODE
 #ifndef ACCESS32
 #define ACCESS32
-#endif	// ACCESS32
-#endif	// TYPING_MODE
+#endif // ACCESS32
+#endif // TYPING_MODE
 
 #if (defined CUP28PROJECT) || (defined SMARTMEDIA)
 #define NOWIN
@@ -173,48 +173,47 @@
 
 #ifdef ACI_LICENSE
 // ACI License Key
-//#define LICENSE_KEY 20023
+// #define LICENSE_KEY 20023
 // 28jul97              cjl          Change Build keys for all products.
-//#define LICENSE_KEY 31951
-//10mar98 
-//#define LICENSE_KEY 29247
-//26jan99 Active  ***************************
+// #define LICENSE_KEY 31951
+// 10mar98
+// #define LICENSE_KEY 29247
+// 26jan99 Active  ***************************
 #define LICENSE_KEY 24547
 #else // ACI_LICENSE
 
-#ifdef ACCESS32 //tek 15sep97 SMIT licensing
+#ifdef ACCESS32 // tek 15sep97 SMIT licensing
 #define DEFAULT_ACCESS32_KEY (11119)
-#endif //ACCESS32
-
+#endif // ACCESS32
 
 #ifdef WILLOWPOND
 // Willowpond License Key
-//#define LICENSE_KEY 31129
+// #define LICENSE_KEY 31129
 // 28jul97              cjl          Change Build keys for all products.
-//#define LICENSE_KEY 31453
-//10mar98 
-//#define LICENSE_KEY 29289
-//26jan99 Active  ***************************
+// #define LICENSE_KEY 31453
+// 10mar98
+// #define LICENSE_KEY 29289
+// 26jan99 Active  ***************************
 #define LICENSE_KEY 24103
 #else // WILLOWPOND
 
 // DECtalk License Key
-//#define LICENSE_KEY 31125
+// #define LICENSE_KEY 31125
 // 28jul97              cjl          Change Build keys for all products.
-//#define LICENSE_KEY 31237
-//10mar98 
-//#define LICENSE_KEY 29323
-//26jan99 Active  ***************************
+// #define LICENSE_KEY 31237
+// 10mar98
+// #define LICENSE_KEY 29323
+// 26jan99 Active  ***************************
 #define LICENSE_KEY 24851
 
 #endif // WILLOWPOND
 #endif // ACI_LICENSE
 
 #ifdef _DEBUG_OLD
-#define DTALK_DBG_VERSION               1                       // NCS - DBG Version
+#define DTALK_DBG_VERSION 1 // NCS - DBG Version
 #else
-#define DTALK_DBG_VERSION               0                       // NCS - DBG Version
-#endif	// _DEBUG_OLD
+#define DTALK_DBG_VERSION 0 // NCS - DBG Version
+#endif			    // _DEBUG_OLD
 
 /***********************************************************************************/
 /* DECtalk TTSVersion Data Information: 03/10/1998
@@ -233,62 +232,60 @@
 /* DECtalk Version Numbers *********************************************************/
 /***********************************************************************************/
 #ifdef HLSYN
-#define VERSION					"5.00"							// CAB - Moved here
+#define VERSION "5.00" // CAB - Moved here
 #else
-#define VERSION					"4.99"
+#define VERSION "4.99"
 #endif
 
 #ifdef HLSYN
-#define DTALK_MAJ_VERSION       5                               // KSB - DTALK Version Check-dec
-#define DTALK_MIN_VERSION       0                               // KSB - DTALK Version Check-dec
-//#define DTALK_MAJ_VERSION_CHAR  DTALK_MAJ_VERSION               // CJL - DTALK Version Check-char
-//#define DTALK_MIN_VERSION_CHAR  0                               // CJL - DTALK Version Check-char
+#define DTALK_MAJ_VERSION 5 // KSB - DTALK Version Check-dec
+#define DTALK_MIN_VERSION 0 // KSB - DTALK Version Check-dec
+// #define DTALK_MAJ_VERSION_CHAR  DTALK_MAJ_VERSION               // CJL - DTALK Version Check-char
+// #define DTALK_MIN_VERSION_CHAR  0                               // CJL - DTALK Version Check-char
 #else
-#define DTALK_MAJ_VERSION       4                               // KSB - DTALK Version Check-dec
-#define DTALK_MIN_VERSION       99                               // KSB - DTALK Version Check-dec
+#define DTALK_MAJ_VERSION 4  // KSB - DTALK Version Check-dec
+#define DTALK_MIN_VERSION 99 // KSB - DTALK Version Check-dec
 #endif
 
-#define DLL_MAJ_VERSION         3                               // KSB - DLL Version Check
-#define DLL_MIN_VERSION         0                               // KSB - DLL Version Check
-
+#define DLL_MAJ_VERSION 3 // KSB - DLL Version Check
+#define DLL_MIN_VERSION 0 // KSB - DLL Version Check
 
 /* ******************* NOT USED ******************************************** */
 #if 0
-#ifdef	ACCESS32
-#define DLL_MAJ_VERSION         2                               // KSB - DLL Version Check
-#define DLL_MIN_VERSION         3                               // KSB - DLL Version Check
+#ifdef ACCESS32
+#define DLL_MAJ_VERSION 2 // KSB - DLL Version Check
+#define DLL_MIN_VERSION 3 // KSB - DLL Version Check
 #else
-#define DLL_MAJ_VERSION         1                               // KSB - DLL Version Check
-#define DLL_MIN_VERSION         9                               // KSB - DLL Version Check
-#endif //Access32
+#define DLL_MAJ_VERSION 1 // KSB - DLL Version Check
+#define DLL_MIN_VERSION 9 // KSB - DLL Version Check
+#endif			  // Access32
 #endif
 /* ************************************************************************* */
 
-#define RELEASE					"Github"
-//#define PRODUCT_BUILD_TYPE      "R"                               // CJL - Production Build Type B or R
-//#define PRODUCT_BUILD_VERSION   002                               // CJL - Production Build Version xxx
+#define RELEASE "Github"
+// #define PRODUCT_BUILD_TYPE      "R"                               // CJL - Production Build Type B or R
+// #define PRODUCT_BUILD_VERSION   002                               // CJL - Production Build Version xxx
 
-#ifdef	ACCESS32 //Identify as ACCESS32
-#ifndef DEMO    // DTDemo uses similar, but D006
-#define DTALK_STR_VERSION "v" VERSION " " RELEASE " NORMAL ACCESS32"            // KSB - Version String
+#ifdef ACCESS32							     // Identify as ACCESS32
+#ifndef DEMO							     // DTDemo uses similar, but D006
+#define DTALK_STR_VERSION "v" VERSION " " RELEASE " NORMAL ACCESS32" // KSB - Version String
 #else
-#define DTALK_STR_VERSION "v" VERSION " D" RELEASE " NORMAL ACCESS32"		   // KSB - Version String (Req by Anne)
-#endif	// DEMO 
+#define DTALK_STR_VERSION "v" VERSION " D" RELEASE " NORMAL ACCESS32" // KSB - Version String (Req by Anne)
+#endif								      // DEMO
 
-#else	//Otherwise it is NORMAL
-#ifndef DEMO    // DTDemo uses similar, but D006
-#define DTALK_STR_VERSION       "v" VERSION " " RELEASE " NORMAL"              // KSB - Version String
+#else							    // Otherwise it is NORMAL
+#ifndef DEMO						    // DTDemo uses similar, but D006
+#define DTALK_STR_VERSION "v" VERSION " " RELEASE " NORMAL" // KSB - Version String
 #else
-#define DTALK_STR_VERSION       "v" VERSION " D" RELEASE " NORMAL"              // KSB - Version String (Req by Anne)
-#endif	//DEMO
-#endif //of ACCESS32
+#define DTALK_STR_VERSION "v" VERSION " D" RELEASE " NORMAL" // KSB - Version String (Req by Anne)
+#endif							     // DEMO
+#endif							     // of ACCESS32
 
 #endif /* COOP_H */
 
 /***********************************************************************************/
 /* End of COOP_H *******************************************************************/
 /***********************************************************************************/
-
 
 /***********************************************************************************/
 /* Registry Entries ****************************************************************/
@@ -298,7 +295,6 @@
 /* HERE IS LICENINC_C **************************************************************/
 /* Information about the location of the license key to be incremented *************/
 /***********************************************************************************/
-
 
 #ifdef ACI_LICENCE
 
@@ -317,7 +313,6 @@
 #define PRODUCT "DECtalk-OEM"
 #define CURRENT_USER_PRODUCT "DECtalk\\" VERSION
 
-
 #else
 
 #define COMPANY "DECtalk Software"
@@ -325,33 +320,32 @@
 
 #define CURRENT_USER_PRODUCT "DECtalk\\" VERSION
 
-#endif	// ACI_LICENCE
-
+#endif // ACI_LICENCE
 
 #if ENGLISH_US
-    #define DECTALK_LANGUAGE "US"
+#define DECTALK_LANGUAGE "US"
 #elif ENGLISH_UK
-    #define DECTALK_LANGUAGE  "UK"
+#define DECTALK_LANGUAGE "UK"
 #elif SPANISH
-    #ifdef SPANISH_LA
-        #define DECTALK_LANGUAGE "LA"
-    #else
-        #define DECTALK_LANGUAGE "SP"
-    #endif
-#elif GERMAN
-    #define DECTALK_LANGUAGE "GR"
-#elif FRENCH
-    #define DECTALK_LANGUAGE "FR"
+#ifdef SPANISH_LA
+#define DECTALK_LANGUAGE "LA"
 #else
-    #define DECTALK_LANGUAGE "US"
-#endif // LANGUAGES 
+#define DECTALK_LANGUAGE "SP"
+#endif
+#elif GERMAN
+#define DECTALK_LANGUAGE "GR"
+#elif FRENCH
+#define DECTALK_LANGUAGE "FR"
+#else
+#define DECTALK_LANGUAGE "US"
+#endif // LANGUAGES
 
 #ifdef LICENINC_C
 
 CHAR gszLicenseKeyValueName[] = "Licenses";
 
-CHAR gszLicenseKey[] = 
-      "Software\\" COMPANY "\\" PRODUCT  "\\" VERSION;
+CHAR gszLicenseKey[] =
+    "Software\\" COMPANY "\\" PRODUCT "\\" VERSION;
 #endif // LICENINC_C
 
 /***********************************************************************************/
@@ -359,7 +353,7 @@ CHAR gszLicenseKey[] =
 /* Information about the location of the dictionary files **************************/
 /***********************************************************************************/
 
-#if defined (LSWMAIN_DIC) || defined (SPEAK_C) || defined (WINDIC_C) || defined (TTSSRV_C)
+#if defined(LSWMAIN_DIC) || defined(SPEAK_C) || defined(WINDIC_C) || defined(TTSSRV_C)
 #ifndef DTDEMO
 
 #ifdef WINDIC_C_STATIC
@@ -368,28 +362,26 @@ LPSTR szLocalMachineDECtalk;
 #else
 
 LPSTR szLocalMachineDECtalk =
-	"SOFTWARE\\" COMPANY "\\" PRODUCT "\\" VERSION "\\" DECTALK_LANGUAGE;
+    "SOFTWARE\\" COMPANY "\\" PRODUCT "\\" VERSION "\\" DECTALK_LANGUAGE;
 
 LPSTR szCurrentUsersDECtalk =
     "Software\\" COMPANY "\\" CURRENT_USER_PRODUCT "\\" DECTALK_LANGUAGE;
 
-
 /* GL 09/25/1997 add abbreviation dict entry and UK_english support */
 /* GL 11/03/1997 add NWSNOAA dictionary entry */
 /* CAB 08/07/2002 Added for TTSStarupEXFonix() */
-LPSTR szMainDictDef = "DTALK_" DECTALK_LANGUAGE ".DIC";
-LPSTR szUserDictDef = "USER_" DECTALK_LANGUAGE ".DIC";
-LPSTR szAbbrDictDef = "ABBR_" DECTALK_LANGUAGE ".DIC";
+LPSTR szMainDictDef    = "DTALK_" DECTALK_LANGUAGE ".DIC";
+LPSTR szUserDictDef    = "USER_" DECTALK_LANGUAGE ".DIC";
+LPSTR szAbbrDictDef    = "ABBR_" DECTALK_LANGUAGE ".DIC";
 LPSTR szForeignDictDef = "DTALK_FL_" DECTALK_LANGUAGE ".DIC";
 
-#ifdef GERMAN	// Bats 987 12/03/01
+#ifdef GERMAN // Bats 987 12/03/01
 #define FOREIGNDICT_DTDIC_LOG
 #endif /* GERMAN */
 
 #endif /* WINDIC_C_STATIC */
 #endif /* !DTDEMO */
 #endif /* LSWMAIN_DIC or SPEAK_C or WINDIC_C */
-
 
 /***********************************************************************************/
 /* HERE IS SPEAK_C *****************************************************************/
@@ -402,10 +394,8 @@ LPSTR szForeignDictDef = "DTALK_FL_" DECTALK_LANGUAGE ".DIC";
 LPSTR szCurrentUsersSpeak =
     "Software\\" COMPANY "\\" PRODUCT "\\" VERSION "\\Applications\\Speak\\" DECTALK_LANGUAGE;
 
-
 #endif /* DEMO    */
 #endif /* SPEAK_C */
-
 
 /***********************************************************************************/
 /* HERE IS TTSSRV_C ****************************************************************/
@@ -413,10 +403,9 @@ LPSTR szCurrentUsersSpeak =
 /***********************************************************************************/
 
 #ifdef TTSSRV_C
-	
 
 LPSTR szCurrentUsersTTSsrv =
-  "Software\\" COMPANY "\\" PRODUCT "\\Applications\\TTSsrv";
+    "Software\\" COMPANY "\\" PRODUCT "\\Applications\\TTSsrv";
 
 #endif
 
@@ -427,10 +416,9 @@ LPSTR szCurrentUsersTTSsrv =
 
 #ifdef UPDATERG_C
 
-CHAR szLicenseKey[] = 
-      "Software\\" COMPANY "\\" PRODUCT "\\" VERSION;
+CHAR szLicenseKey[] =
+    "Software\\" COMPANY "\\" PRODUCT "\\" VERSION;
 #endif /* UPDATERG_C  */
-
 
 /***********************************************************************************/
 /* HERE IS WINDIC_C ****************************************************************/
@@ -439,12 +427,10 @@ CHAR szLicenseKey[] =
 
 #ifdef WINDIC_C
 
-
 LPSTR szCurrentUsersWindic =
-  "Software\\" COMPANY "\\" PRODUCT "\\Applications\\Windic";
+    "Software\\" COMPANY "\\" PRODUCT "\\Applications\\Windic";
 
 #endif /* WINDIC_C */
-
 
 /***********************************************************************************/
 /* End of Registry Entries *********************************************************/

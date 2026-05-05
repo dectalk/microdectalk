@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -28,17 +28,16 @@
  *    Revision History:
  *
  * Rev  Who     Date            Description
- * ---  -----   -----------     -------------------------------------------- 
- * 001	GL		04/21/1997		BATS#357 Add/remove code for __osf__ build 
+ * ---  -----   -----------     --------------------------------------------
+ * 001	GL		04/21/1997		BATS#357 Add/remove code for __osf__ build
  * 002  EAB		04/29/1998 		Remove old non-functioning German code I'll
  *								also add a Bat report to really remove this
  *								and the non-function phsyl.c code.
- * 003	MGS		04/13/2000		Changes for integrated phoneme set 
- * 004  EAB     06/28/2000     	Unified Phoneme Set Changes 
+ * 003	MGS		04/13/2000		Changes for integrated phoneme set
+ * 004  EAB     06/28/2000     	Unified Phoneme Set Changes
  * 005 	CAB		10/18/2000		Changed copyright info
  */
 
-#define NOCLUSTER   	0
-#define CLUSTER      	1
-#define CLUSTER_TRYS   	2 
-
+#define NOCLUSTER 0
+#define CLUSTER 1
+#define CLUSTER_TRYS 2

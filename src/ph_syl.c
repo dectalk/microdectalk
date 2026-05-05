@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -31,35 +31,34 @@
  *  --- -----   ----------- --------------------------------------------
  *  001 MGS     03/25/1996  Merged WIN 95 code to 42c
  *	002 MGS		03/06/1996	Merged Spanish with english
- *	003 MGS		05/06/1996	fixed 2 bugs with syllable logging 
+ *	003 MGS		05/06/1996	fixed 2 bugs with syllable logging
  *	004	MGS		06/06/1996	Changed file name from phsyl.c to ph_syl.c
  *  005 SIK		07/09/1996  Cleaning up and maintenance
  *  006 GL		09/18/1996	Add WIN95 logging handler.
- *  007	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
- *  008	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if" 
+ *  007	GL		04/21/1997	BATS#357  Add the code for __osf__ build
+ *  008	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if"
  *  009 DR		09/30/1997	UK BUILD: added UK STUFF
  *  010	MFG		05/04/1998	added dbglog.txt logging for debug switch[:debug 2004]
- *  011 MFG		05/19/1998	excluded dbglog logging when build 16-bit code (MSDOS)	 
+ *  011 MFG		05/19/1998	excluded dbglog logging when build 16-bit code (MSDOS)
  *  012 ETT		10/05/1998	Added Linux code.
  *  013	MGS		12/17/1999	Fixed Printing of syllablesso that the last ones would actually print.
- *  014	MGS		04/13/2000	Changes for integrated phoneme set 
+ *  014	MGS		04/13/2000	Changes for integrated phoneme set
  *  015 CHJ		07/20/2000	French added
  *  016	MGS		10/05/2000	Redhat 6.2 and linux warning removal
  *  017 CAB		10/16/2000	Changed copyright info
  *  018	MGS		11/16/2000	Fixed sylable logging for single language
  *  019	MGS		05/09/2001	Some VxWorks porting BATS#972
  *  020 CAB		05/14/2001	Updated copyright
- *  021 MFG		05/29/2001	Incuded dectalkf.h	
+ *  021 MFG		05/29/2001	Incuded dectalkf.h
  *  022	MGS		06/19/2001	Solaris Port BATS#972
  *  023	MGS		03/20/2002	Single threaded vtm
  *  021	MGS		04/11/2002	ARM7 port
  *	022	CAB		09/17/2002	Removed warnings
  */
 
+#include "ph_def.h"
 
-#include   "ph_def.h" 
-
-#if defined (ENGLISH) || defined (SPANISH) || defined (FRENCH)
+#if defined(ENGLISH) || defined(SPANISH) || defined(FRENCH)
 
 #ifdef ENGLISH_US
 #include "usa_def.h"
@@ -91,15 +90,15 @@
 /***************************************************************************/
 
 /* Static function declarartions : MVP */
-static void syl_clause_init (PDPH_T);
-static void speak_syllable (LPTTS_HANDLE_T phTTS);
-static int  ph_syllab (PDPH_T pDph_t, int j);
-static short syl_find_affix (PDPH_T pDph_t, int *ph);
+static void  syl_clause_init(PDPH_T);
+static void  speak_syllable(LPTTS_HANDLE_T phTTS);
+static int   ph_syllab(PDPH_T pDph_t, int j);
+static short syl_find_affix(PDPH_T pDph_t, int* ph);
 
-#include "ph_syl1.c"	/* include the language dependent stuff */
+#include "ph_syl1.c" /* include the language dependent stuff */
 /*
- *      Function Name: syl_find_vowel()      
- *  
+ *      Function Name: syl_find_vowel()
+ *
  *  	Description: Finds a vowel in the input arg ph.
  *
  *      Arguments: int *ph
@@ -110,12 +109,11 @@ static short syl_find_affix (PDPH_T pDph_t, int *ph);
  *
  */
 
-short syl_find_vowel (int *ph)
-{
+short syl_find_vowel(int* ph) {
 #ifdef SPANISH
-	int	vc, hit = 0;
+	int vc, hit = 0;
 #endif
-#if defined ENGLISH_US || defined ENGLISH_UK// NAL warning removal
+#if defined ENGLISH_US || defined ENGLISH_UK // NAL warning removal
 	int l;
 #endif
 #ifndef FRENCH
@@ -123,31 +121,26 @@ short syl_find_vowel (int *ph)
 #endif
 	int i, off;
 #ifdef ENGLISH
-	int k=0;
+	int k = 0;
 #endif
 
 	off = 1;
-	for (i = 0; ph[i] != WBOUND; i--)
-	{
-		if (ascky_check[ph[i] & PVALUE])
-		{
+	for(i = 0; ph[i] != WBOUND; i--) {
+		if(ascky_check[ph[i] & PVALUE]) {
 #ifdef ENGLISH_US
-			for (j = 0; syl_vowels[j] != 0; j++)
-			{
-				if (ascky_check[ph[i] & PVALUE] == syl_vowels[j])
-				{
-					for (k = 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
-					if (ph[i - k] != US_YU)
+			for(j = 0; syl_vowels[j] != 0; j++) {
+				if(ascky_check[ph[i] & PVALUE] == syl_vowels[j]) {
+					for(k = 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
+					if(ph[i - k] != US_YU)
 						return (off);
-					for (l = k + 1; ascky_check[ph[i - l] & PVALUE] == 0 && ph[i - l] != WBOUND; l++);
-					if (ph[i - l] != WBOUND)
+					for(l = k + 1; ascky_check[ph[i - l] & PVALUE] == 0 && ph[i - l] != WBOUND; l++);
+					if(ph[i - l] != WBOUND)
 						return (off);
 					return (off);
 				}
-				if (ph[i] == US_YU)
-				{
-					for (k += 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
-					if (ph[i - k] != WBOUND)
+				if(ph[i] == US_YU) {
+					for(k += 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
+					if(ph[i - k] != WBOUND)
 						return (off);
 					else
 						return (0);
@@ -155,22 +148,19 @@ short syl_find_vowel (int *ph)
 			}
 #endif
 #ifdef ENGLISH_UK
-			for (j = 0; syl_vowels[j] != 0; j++)
-			{
-				if (ascky_check[ph[i] & PVALUE] == syl_vowels[j])
-				{
-					for (k = 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
-					if (ph[i - k] != UKP_YU)
+			for(j = 0; syl_vowels[j] != 0; j++) {
+				if(ascky_check[ph[i] & PVALUE] == syl_vowels[j]) {
+					for(k = 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
+					if(ph[i - k] != UKP_YU)
 						return (off);
-					for (l = k + 1; ascky_check[ph[i - l] & PVALUE] == 0 && ph[i - l] != WBOUND; l++);
-					if (ph[i - l] != WBOUND)
+					for(l = k + 1; ascky_check[ph[i - l] & PVALUE] == 0 && ph[i - l] != WBOUND; l++);
+					if(ph[i - l] != WBOUND)
 						return (off);
 					return (off);
 				}
-				if (ph[i] == UKP_YU)
-				{
-					for (k += 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
-					if (ph[i - k] != WBOUND)
+				if(ph[i] == UKP_YU) {
+					for(k += 1; ascky_check[ph[i - k] & PVALUE] == 0 && ph[i - k] != WBOUND; k++);
+					if(ph[i - k] != WBOUND)
 						return (off);
 					else
 						return (0);
@@ -178,34 +168,29 @@ short syl_find_vowel (int *ph)
 			}
 #endif
 #ifdef SPANISH
-			for (j = 0; syl_vowels[j] != 0; j++)
-			{
-				if (ascky_check[ph[i] & PVALUE] == syl_vowels[j])
-				{
-					/* 
+			for(j = 0; syl_vowels[j] != 0; j++) {
+				if(ascky_check[ph[i] & PVALUE] == syl_vowels[j]) {
+					/*
 					 * any vowel before i and u or Y and W become one.
-					 * also if this or any vowel preceed by iuYW it also 
-					 * becomes one vowel as with ia ana iai 
+					 * also if this or any vowel preceed by iuYW it also
+					 * becomes one vowel as with ia ana iai
 					 */
 					vc = i;
-					if (ph[i] == 3 || (ph[i] >= 5 && ph[i] <= 7))
-					{
-						if (ascky_check[ph[i - 1] & PVALUE] == syl_vowels[j])
+					if(ph[i] == 3 || (ph[i] >= 5 && ph[i] <= 7)) {
+						if(ascky_check[ph[i - 1] & PVALUE] == syl_vowels[j])
 							hit = 1;
 						vc--;
 					}
 					vc--;
-					while (ph[vc] >= BLOCK_RULES && ph[vc] < SBOUND)
-					{
+					while(ph[vc] >= BLOCK_RULES && ph[vc] < SBOUND) {
 						hit = 1;
 						vc--;
 					}
 					/* if preceeded by 'i' || 'u' ||'y' || 'w' */
-					if (ph[vc] == 3 || (ph[vc] >= 5 && ph[vc] <= 7))
-					{
+					if(ph[vc] == 3 || (ph[vc] >= 5 && ph[vc] <= 7)) {
 						hit = 1;
 					}
-					if (hit)
+					if(hit)
 						off += i - vc;
 					return (off);
 				}
@@ -217,9 +202,9 @@ short syl_find_vowel (int *ph)
 	return (0);
 }
 /*
- *      Function Name: syl_find_cons()      
+ *      Function Name: syl_find_cons()
  *
- *  	Description: 
+ *  	Description:
  *
  *      Arguments: short *ph
  *
@@ -228,19 +213,15 @@ short syl_find_vowel (int *ph)
  *      Comments:
  *
  */
-short syl_find_cons (int *ph)
-{
-	int                   *tp;
-	int                     i= 0 , j = 0, len = 0;
+short syl_find_cons(int* ph) {
+	int* tp;
+	int  i = 0, j = 0, len = 0;
 
 #ifdef ENGLISH_US
 	tp = ph;
-	if (*tp-- == 26+ (PFUSA<<PSFONT))
-	{
-		for (j = 0; syl_vowels[j] != 0; j++)
-		{
-			if (ascky_check[(*tp) & PVALUE] == syl_vowels[j])
-			{
+	if(*tp-- == 26 + (PFUSA << PSFONT)) {
+		for(j = 0; syl_vowels[j] != 0; j++) {
+			if(ascky_check[(*tp) & PVALUE] == syl_vowels[j]) {
 				return (0);
 			}
 		}
@@ -248,12 +229,9 @@ short syl_find_cons (int *ph)
 #endif
 #ifdef ENGLISH_UK
 	tp = ph;
-	if (*tp-- == 26 + (PFUK << PSFONT))
-	{
-		for (j = 0; syl_vowels[j] != 0; j++)
-		{
-			if (ascky_check[(*tp) & PVALUE] == syl_vowels[j])
-			{
+	if(*tp-- == 26 + (PFUK << PSFONT)) {
+		for(j = 0; syl_vowels[j] != 0; j++) {
+			if(ascky_check[(*tp) & PVALUE] == syl_vowels[j]) {
 				return (0);
 			}
 		}
@@ -261,66 +239,57 @@ short syl_find_cons (int *ph)
 #endif
 #ifdef FRENCH
 	tp = ph;
-	if (*tp-- == 26 + (PFFR<<PSFONT))
-	{
-		for (j = 0; syl_vowels[j] != 0; j++)
-		{
-			if (ascky_check[(*tp) & PVALUE] == syl_vowels[j])
-			{
+	if(*tp-- == 26 + (PFFR << PSFONT)) {
+		for(j = 0; syl_vowels[j] != 0; j++) {
+			if(ascky_check[(*tp) & PVALUE] == syl_vowels[j]) {
 				return (0);
 			}
 		}
 	}
 #endif
-	for (j = 0; syl_cons[j]; j++)
-	{
-		for (i = 0; syl_cons[j][i]; i++);
-/* printf(" %s ons %d \n",syl_cons[j],len); */
+	for(j = 0; syl_cons[j]; j++) {
+		for(i = 0; syl_cons[j][i]; i++);
+		/* printf(" %s ons %d \n",syl_cons[j],len); */
 		len = i;
-		tp = ph;
-		while (true)
-		{
-			if (ascky_check[(*tp) & PVALUE] == 0)
-			{
+		tp  = ph;
+		while(true) {
+			if(ascky_check[(*tp) & PVALUE] == 0) {
 #ifdef ENGLISH_US
 				tp++;
-#endif      
+#endif
 #ifdef ENGLISH_UK
 				tp++;
-#endif      
+#endif
 #ifdef SPANISH
 				tp--;
 #endif
 #ifdef FRENCH
 				tp++;
-#endif 
+#endif
 				len += 1;
 
-			}
-			else
-			{
+			} else {
 
-/* 
- * printf("asc = %c \n",syl_cons[j][i-1]);
- * 
- * printf("look at   %d %c \n",ascky_check[*tp],ascky_check[*tp]); 
- */
+				/*
+				 * printf("asc = %c \n",syl_cons[j][i-1]);
+				 *
+				 * printf("look at   %d %c \n",ascky_check[*tp],ascky_check[*tp]);
+				 */
 				--i;
-				if (syl_cons[j][i] != ascky_check[(*tp) & PVALUE])
-				{
+				if(syl_cons[j][i] != ascky_check[(*tp) & PVALUE]) {
 					tp--;
 					break;
 				}
 				tp--;
 			}
-			if (i == 0)
+			if(i == 0)
 				return (len);
 		}
 	}
 	return (0);
 }
 /*
- *      Function Name: syl_find_affix()      
+ *      Function Name: syl_find_affix()
  *
  *  	Description: Finds common english affix.
  *
@@ -331,20 +300,16 @@ short syl_find_cons (int *ph)
  *      Comments:
  *
  */
-static short syl_find_affix (PDPH_T pDph_t, int *ph)
-{
-	int *tp;
-	int i, j, len = 0;
+static short syl_find_affix(PDPH_T pDph_t, int* ph) {
+	int* tp;
+	int  i, j, len = 0;
 
-	for (j = 0; common_affixes[j]; j++)
-	{
-		for (i = 0; common_affixes[j][i]; i++);
+	for(j = 0; common_affixes[j]; j++) {
+		for(i = 0; common_affixes[j][i]; i++);
 		len = i;
-		tp = ph;
-		while (true)
-		{
-			if (ascky_check[(*tp) & PVALUE] == 0)
-			{
+		tp  = ph;
+		while(true) {
+			if(ascky_check[(*tp) & PVALUE] == 0) {
 #ifdef ENGLISH_US
 				tp++;
 #endif
@@ -358,18 +323,15 @@ static short syl_find_affix (PDPH_T pDph_t, int *ph)
 				tp++;
 #endif
 				len += 1;
-			}
-			else
-			{
+			} else {
 				--i;
-				if ((common_affixes[j][i]) != (ascky_check[(*tp) & PVALUE]))
-				{
+				if((common_affixes[j][i]) != (ascky_check[(*tp) & PVALUE])) {
 					tp--;
 					break;
 				}
 				tp--;
 			}
-			if (i == 0)
+			if(i == 0)
 				return (len);
 		}
 	}
@@ -380,9 +342,9 @@ static short syl_find_affix (PDPH_T pDph_t, int *ph)
 
 /* LPTTS_HANDLE_T TextToSpeechGetHandle(void); */
 
-void TextToSpeechErrorHandler (LPTTS_HANDLE_T, UINT, MMRESULT);
+void TextToSpeechErrorHandler(LPTTS_HANDLE_T, UINT, MMRESULT);
 /*
- *      Function Name: logsyllable()      
+ *      Function Name: logsyllable()
  *
  *  	Description: Writes sylables to output specified by phTTS->pLogFile
  *
@@ -393,120 +355,103 @@ void TextToSpeechErrorHandler (LPTTS_HANDLE_T, UINT, MMRESULT);
  *      Comments:
  *
  */
-void logsyllable (LPTTS_HANDLE_T phTTS)
-{
-	int                     i, j, k;
-	PDPH_T                  pDph_t = phTTS->pPHThreadData;
-	PKSD_T                  pKsd_t = phTTS->pKernelShareData;
+void logsyllable(LPTTS_HANDLE_T phTTS) {
+	int    i, j, k;
+	PDPH_T pDph_t = phTTS->pPHThreadData;
+	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-	for (i = 1; i < pDph_t->nsymbtot; i++)
-	{
-		/* 
+	for(i = 1; i < pDph_t->nsymbtot; i++) {
+		/*
 		 *  first, isolate phonemic words ...
 		 */
 		pDph_t->phone_struct[0] = WBOUND;
-		for (j = 0; pDph_t->symbols[i + j] != WBOUND && i + j < pDph_t->nsymbtot && j < 256; j++)
-		{
+		for(j = 0; pDph_t->symbols[i + j] != WBOUND && i + j < pDph_t->nsymbtot && j < 256; j++) {
 			pDph_t->phone_struct[j + 1] = pDph_t->symbols[i + j];
 		}
-		j++;    
-		pDph_t->phone_struct[j]=0;
-		pDph_t->phone_struct[j+1]=0;
+		j++;
+		pDph_t->phone_struct[j]	    = 0;
+		pDph_t->phone_struct[j + 1] = 0;
 		i += j - 1;
-		k = ph_syllab (pDph_t, j);
+		k = ph_syllab(pDph_t, j);
 #ifdef PRINTFDEBUG_OLD
-		printf ("[:syll ");
+		printf("[:syll ");
 #endif
-		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
-			fprintf(pKsd_t->dbglog,"[:syll ");
-		if (pKsd_t->logflag & LOG_SYLLABLES)
-		{
-			if (fprintf (phTTS->pLogFile, "[:syll ") < 0)
-			{
-				//TextToSpeechErrorHandler (phTTS,
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt logging support*/
+			fprintf(pKsd_t->dbglog, "[:syll ");
+		if(pKsd_t->logflag & LOG_SYLLABLES) {
+			if(fprintf(phTTS->pLogFile, "[:syll ") < 0) {
+				// TextToSpeechErrorHandler (phTTS,
 				//						  ERROR_WRITING_FILE,
 				//						  0L);
 			}
 		}
 
-		for (j = 0; pDph_t->phone_struct[j]; j++)
-		{
+		for(j = 0; pDph_t->phone_struct[j]; j++) {
 
 #ifdef PRINTFDEBUG_OLD
-			printf ("%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
+			printf("%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
 #endif
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
-				fprintf(pKsd_t->dbglog,"%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
+			if(pKsd_t->dbglog) /* mfg added for dbglog.txt logging support*/
+				fprintf(pKsd_t->dbglog, "%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]);
 
-			if (pKsd_t->logflag & LOG_SYLLABLES)
-			{
+			if(pKsd_t->logflag & LOG_SYLLABLES) {
 
-
-				if (fprintf (phTTS->pLogFile,
-							 "%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]) < 0)
-				{
-					//TextToSpeechErrorHandler (phTTS,
+				if(fprintf(phTTS->pLogFile,
+					   "%c", pKsd_t->ascky[pDph_t->phone_struct[j] & PVALUE]) < 0) {
+					// TextToSpeechErrorHandler (phTTS,
 					//						  ERROR_WRITING_FILE,
 					//						  0L);
 				}
 			}
 		}
 #ifdef PRINTFDEBUG_OLD
-		printf (" --> ");
+		printf(" --> ");
 #endif
-		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
-				fprintf(pKsd_t->dbglog, " --> ");
-		if (pKsd_t->logflag & LOG_SYLLABLES)
-		{
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt logging support*/
+			fprintf(pKsd_t->dbglog, " --> ");
+		if(pKsd_t->logflag & LOG_SYLLABLES) {
 
-			if (fprintf (phTTS->pLogFile, " --> ") < 0)
-			{
-				//TextToSpeechErrorHandler (phTTS,
+			if(fprintf(phTTS->pLogFile, " --> ") < 0) {
+				// TextToSpeechErrorHandler (phTTS,
 				//						  ERROR_WRITING_FILE,
 				//						  0L);
 			}
 		}
-		while (--k)
-		{
+		while(--k) {
 #ifdef PRINTFDEBUG_OLD
-			printf ("%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
+			printf("%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
 #endif
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
-				fprintf(pKsd_t->dbglog,"%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
-			if (pKsd_t->logflag & LOG_SYLLABLES)
-			{
-				if (fprintf (phTTS->pLogFile,
-							 "%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]) < 0)
-				{
-					//TextToSpeechErrorHandler (phTTS,
+			if(pKsd_t->dbglog) /* mfg added for dbglog.txt logging support*/
+				fprintf(pKsd_t->dbglog, "%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]);
+			if(pKsd_t->logflag & LOG_SYLLABLES) {
+				if(fprintf(phTTS->pLogFile,
+					   "%c", pKsd_t->ascky[pDph_t->syllable_struct[k] & PVALUE]) < 0) {
+					// TextToSpeechErrorHandler (phTTS,
 					//						  ERROR_WRITING_FILE,
 					//						  0L);
 				}
 			}
 		}
 #ifdef PRINTFDEBUG_OLD
-		printf ("]\n");
+		printf("]\n");
 #endif
-		if (pKsd_t->dbglog)		/* mfg added for dbglog.txt logging support*/
-			fprintf(pKsd_t->dbglog,"]\n");
-		if (pKsd_t->logflag & LOG_SYLLABLES)
-		{
-			if (fprintf (phTTS->pLogFile, "]\n") < 0)
-			{
-				//TextToSpeechErrorHandler (phTTS,
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt logging support*/
+			fprintf(pKsd_t->dbglog, "]\n");
+		if(pKsd_t->logflag & LOG_SYLLABLES) {
+			if(fprintf(phTTS->pLogFile, "]\n") < 0) {
+				// TextToSpeechErrorHandler (phTTS,
 				//						  ERROR_WRITING_FILE,
 				//						  0L);
 			}
 		}
 	}
-
 }
 /*
  *      Function Name: ph_syllab()
  *
- *  	Description: 
+ *  	Description:
  *
- *      Arguments: PDPH_T pDph_t, 
+ *      Arguments: PDPH_T pDph_t,
  *				   int j
  *
  *      Return Value: int
@@ -514,118 +459,93 @@ void logsyllable (LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  */
-static int ph_syllab (PDPH_T pDph_t, int j)
-{
-	int k; 
+static int ph_syllab(PDPH_T pDph_t, int j) {
+	int   k;
 	short len;
 
-	/* 
+	/*
 	 *  first, strip off any  ...
 	 */
 
 	k = 0;
-	while (true)
-	{
-		len = syl_find_affix (pDph_t, (int*)&(pDph_t->phone_struct[j]));
-		if (len == 0)
+	while(true) {
+		len = syl_find_affix(pDph_t, (int*)&(pDph_t->phone_struct[j]));
+		if(len == 0)
 			break;
-		while (len-- && j)
+		while(len-- && j)
 			pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
-		if (j == 0)
+		if(j == 0)
 			break;
-		while (j && ascky_check[pDph_t->phone_struct[j] & PVALUE] == 0)
+		while(j && ascky_check[pDph_t->phone_struct[j] & PVALUE] == 0)
 			pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
-		if (pDph_t->syllable_struct[k-1] != SBOUND)		/* fix duplicated syllable boundries */
+		if(pDph_t->syllable_struct[k - 1] != SBOUND) /* fix duplicated syllable boundries */
 			pDph_t->syllable_struct[k++] = SBOUND;
-		
 	}
-	/* 
+	/*
 	 *  Now, syllablify the rest of it ...
 	 */
-	if (j != 0)
-	{
-		while (true)
-		{
-			/* 
+	if(j != 0) {
+		while(true) {
+			/*
 			 *  Find vowel ...
 			 */
-			len = syl_find_vowel ((int*)&(pDph_t->phone_struct[j]));
-			if (len)
-			{
-				while (len-- && j)
-				{
+			len = syl_find_vowel((int*)&(pDph_t->phone_struct[j]));
+			if(len) {
+				while(len-- && j) {
 					pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
 				}
-				if (j == 0)
+				if(j == 0)
 					break;
-				while (j && ascky_check[pDph_t->phone_struct[j] & PVALUE] == 0)
+				while(j && ascky_check[pDph_t->phone_struct[j] & PVALUE] == 0)
 					pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
-			}
-			else
-			{
-				while (j)
+			} else {
+				while(j)
 					pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
 				break;
 			}
 
-
-			/* 
+			/*
 			 *  head cons ...
 			 */
-			len = syl_find_cons( (int*)&(pDph_t->phone_struct[j]));
+			len = syl_find_cons((int*)&(pDph_t->phone_struct[j]));
 
-			if (len)
-			{
-				while (len-- && j)
+			if(len) {
+				while(len-- && j)
 
 					pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
 
-				if (j == 0)
+				if(j == 0)
 
 					break;
-
 			}
 
-
-			/* 
+			/*
 			 *  syllable break must be here ... if we are not word initial ...
 			 */
-
 
 			while(j && ascky_check[pDph_t->phone_struct[j] & PVALUE] == 0)
 				pDph_t->syllable_struct[k++] = pDph_t->phone_struct[j--];
 
-
-			if(j == 0)
-			{
+			if(j == 0) {
 				break;
 			}
 
+			if(pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE) {
 
-			if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
-			{
-
-				if(pDph_t->syllable_struct[k-1] != SBOUND)	/* fix duplicated syllable boundries */	
+				if(pDph_t->syllable_struct[k - 1] != SBOUND) /* fix duplicated syllable boundries */
 					pDph_t->syllable_struct[k++] = SBOUND;
 
-			}
-			else
-			{
+			} else {
 
 				pDph_t->syllable_struct[k++] = SBOUND;
-
 			}
-
 		}
-
 	}
 	return (k);
 }
 
-
-
 /*
- *      Function Name: syl_clause_init()       
+ *      Function Name: syl_clause_init()
  *
  *  	Description: Initializes vars. used for clause processing
  *
@@ -637,26 +557,23 @@ static int ph_syllab (PDPH_T pDph_t, int j)
  *
  */
 
+static void syl_clause_init(PDPH_T pDph_t) {
 
-static void syl_clause_init (PDPH_T pDph_t)
-{
-
-	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
-	{
-		pDph_t->symbols[0] = COMMA;
+	if(pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE) {
+		pDph_t->symbols[0]   = COMMA;
 		pDph_t->user_durs[0] = 0;
-		pDph_t->user_f0[0] = 0;
-		pDph_t->bound = COMMA;
-		pDph_t->lastoffs = 0;
-		pDph_t->nphone = 0;
-		pDph_t->asperation = 0;
-		pDph_t->nsymbtot = 1;
-		pDph_t->nphone = 0;
+		pDph_t->user_f0[0]   = 0;
+		pDph_t->bound	     = COMMA;
+		pDph_t->lastoffs     = 0;
+		pDph_t->nphone	     = 0;
+		pDph_t->asperation   = 0;
+		pDph_t->nsymbtot     = 1;
+		pDph_t->nphone	     = 0;
 	}
 }
 
 /*
- *      Function Name: speak_syllable()      
+ *      Function Name: speak_syllable()
  *  	Description: Calls phclause() to pronounce clause, then writes to
  *					 VTM pipe.
  *      Arguments: LPTTS_HANDLE_T phTTS
@@ -664,36 +581,29 @@ static void syl_clause_init (PDPH_T pDph_t)
  *      Comments:
  *
  */
-static void speak_syllable (LPTTS_HANDLE_T phTTS)
-{
-/* GL 04/21/1997  change this as the latest OSF code */
-	DT_PIPE_T               pipe_item[1];
-	PDPH_T                  pDph_t = phTTS->pPHThreadData;
+static void speak_syllable(LPTTS_HANDLE_T phTTS) {
+	/* GL 04/21/1997  change this as the latest OSF code */
+	DT_PIPE_T pipe_item[1];
+	PDPH_T	  pDph_t = phTTS->pPHThreadData;
 
-	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
-	{
+	if(pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE) {
 		pDph_t->symbols[pDph_t->nsymbtot] = COMMA;
-	}
-	else
-	{
+	} else {
 		pDph_t->symbols[pDph_t->nsymbtot] = SBOUND;
 	}
 	pDph_t->user_durs[pDph_t->nsymbtot] = 0;
 	pDph_t->user_f0[pDph_t->nsymbtot++] = 0;
-	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
-	{
-		phclause (phTTS);
-		syl_clause_init (pDph_t);
+	if(pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE) {
+		phclause(phTTS);
+		syl_clause_init(pDph_t);
 	}
 
-/* write forced clause boundary symbol to VTM */
-	if (pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE)
-	{
-//#if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
-	pipe_item[0] = SPC_type_force;
-	vtm_loop(phTTS,pipe_item);
+	/* write forced clause boundary symbol to VTM */
+	if(pDph_t->phTTS->pKernelShareData->sayflag == SAY_SYLLABLE) {
+		// #if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
+		pipe_item[0] = SPC_type_force;
+		vtm_loop(phTTS, pipe_item);
 	}
-
 }
 
 #endif /* #if defined ENGLISH_US || SPANISH */

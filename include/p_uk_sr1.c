@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -19,7 +19,7 @@
  ***********************************************************************
  *    File Name:    p_uk_sr1.c
  *    Author:       Matthew Schnee
- *    Creation Date:05-Jun-1995 
+ *    Creation Date:05-Jun-1995
  *
  *    Functionality:
  *		English code from phsort.c
@@ -28,89 +28,84 @@
  *    Revision History:
  *	Rev	Who		Date			Description
  *	---	-----	-----------		--------------------------------------------
- *  001	MGS		06/19/1996		Moved init_med_final,find_syll_to_stress to 
+ *  001	MGS		06/19/1996		Moved init_med_final,find_syll_to_stress to
  *								ph_sort2.c English and German
  *								Moved get_next_bound_type, move_stdangle  to
  *								ph_sort2.c English and Spanish
  *	002 SIK		07/12/1996  	Cleaning up and maintenance
- *  003	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
- *  004	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ *  003	GL		04/21/1997		BATS#357  Add the code for __osf__ build
+ *  004	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  *	005	DR		07/21/1997		file created, copied from p_us_st1.c for older revisions go to that file
  *  006	MGS		04/13/2000		Changes for integrated phoneme set
  *  007 CAB		10/18/2000		Changed copyright info
  *
  */
 
-/* 
- * Scan forward to see if this consonant is followed by a stress symbol 
- * before encounter vowel or boundary.  If so, check to see if legal cluster 
+/*
+ * Scan forward to see if this consonant is followed by a stress symbol
+ * before encounter vowel or boundary.  If so, check to see if legal cluster
  */
 
-#define NOCLUSTER   	0
-#define CLUSTER      	1
-#define CLUSTER_TRYS   	2
-
+#define NOCLUSTER 0
+#define CLUSTER 1
+#define CLUSTER_TRYS 2
 
 /*
  *      Function Name: phcluster()
  *
- *  	Description: If f & s are first and second elements of potential cluster, return 
- * 					 either CLUSTER, NOCLUSTER, or CLUSTER_TRYS 
- *					 (true and look for prior [s]) 
+ *  	Description: If f & s are first and second elements of potential cluster, return
+ * 					 either CLUSTER, NOCLUSTER, or CLUSTER_TRYS
+ *					 (true and look for prior [s])
  *
  *      Arguments: short f,
- *				   chort s	
+ *				   chort s
  *
- *      Return Value: 
+ *      Return Value:
  *
  *      Comments:
  *
  */
-short uk_phcluster (short f, short s)
-{
-	switch (f)
-	{
+short uk_phcluster(short f, short s) {
+	switch(f) {
 	case UKP_P:
-		if ((s == UKP_LL) || (s == UKP_R))
+		if((s == UKP_LL) || (s == UKP_R))
 			return (CLUSTER_TRYS);
 		break;
 	case UKP_B:
-		if ((s == UKP_LL) || (s == UKP_R))
+		if((s == UKP_LL) || (s == UKP_R))
 			return (CLUSTER);
 		break;
 	case UKP_F:
-		if (s == UKP_R)
+		if(s == UKP_R)
 			return (CLUSTER_TRYS);
-		if (s == UKP_LL)
+		if(s == UKP_LL)
 			return (CLUSTER);
 		break;
 	case UKP_T:
-		if (s == UKP_R)
+		if(s == UKP_R)
 			return (CLUSTER_TRYS);
-		if (s == UKP_W)
+		if(s == UKP_W)
 			return (CLUSTER);
 		break;
 	case UKP_D:
 	case UKP_TH:
-		if ((s == UKP_R) || (s == UKP_W))
+		if((s == UKP_R) || (s == UKP_W))
 			return (CLUSTER);
 		break;
 	case UKP_K:
-		if ((s == UKP_R) || (s == UKP_LL) || (s == UKP_W))
+		if((s == UKP_R) || (s == UKP_LL) || (s == UKP_W))
 			return (CLUSTER_TRYS);
 		break;
 	case UKP_G:
-		if ((s == UKP_R) || (s == UKP_LL) || (s == UKP_W))
+		if((s == UKP_R) || (s == UKP_LL) || (s == UKP_W))
 			return (CLUSTER);
 		break;
 	case UKP_S:
-		if ((s == UKP_W) || (s == UKP_LL) || (s == UKP_P) || (s == UKP_T)
-			|| (s == UKP_K) || (s == UKP_M) || (s == UKP_N) || (s == UKP_F))
+		if((s == UKP_W) || (s == UKP_LL) || (s == UKP_P) || (s == UKP_T) || (s == UKP_K) || (s == UKP_M) || (s == UKP_N) || (s == UKP_F))
 			return (CLUSTER);
 		break;
 	case UKP_SH:
-		if ((s == UKP_W) || (s == UKP_LL) || (s == UKP_P) || (s == UKP_T)
-			|| (s == UKP_R) || (s == UKP_M) || (s == UKP_N))
+		if((s == UKP_W) || (s == UKP_LL) || (s == UKP_P) || (s == UKP_T) || (s == UKP_R) || (s == UKP_M) || (s == UKP_N))
 			return (CLUSTER);
 		break;
 	}

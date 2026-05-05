@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Coryright (c)
@@ -22,7 +22,7 @@
  *    Creation Date:06/17/1996
  *
  *    Functionality:
- *		ph_draw langiage dependent include file 
+ *		ph_draw langiage dependent include file
  *
  ***********************************************************************
  *    Revision History:
@@ -30,7 +30,7 @@
  */
 /* GL 03/05/1997  comment out this, don't need it any more */
 /*                will remove this file in next release */
-/* 
+/*
 #ifdef GERMAN
 #include "p_gr_dr1.c"
 #endif

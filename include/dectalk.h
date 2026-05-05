@@ -30,7 +30,7 @@
  *    Revision History:
  *
  * Rev  Who     Date            Description
- * ---  -----   -----------     -------------------------------------------- 
+ * ---  -----   -----------     --------------------------------------------
  * 01   DGC		01/19/1985		Removed "undef vax" for DHK.
  * 02   DGC		01/31/1985		Added "PTSYNC".
  * 03   DGC		02/12/1985		Modified error syndromes. Deleted "NTASK".
@@ -85,25 +85,24 @@
 #ifndef DECTALKH
 #define DECTALKH 1
 
-#define EOS               0             /* Some folks like to use this  */
-#define NINTER           10             /* Intermediates, ANSI sequence */
-#define NPARAM           10             /* Parameters, ANSI sequence    */
-#define NSTRING         254             /* Control string, < 256        */
-#define NUDPHON         100             /* User phonemes,  < 128 (byte) */
-#define NLPIPE          250             /* # of words in LTS pipe       */
-#define NKPIPE          250             /* # of words in KLSYN pipe     */
-#define MSHZ             10             /* Basic clock is 10 ms.        */
-#define TANDY             0             /* TRUE for the Tandy.          */
-#define DTCXX             0             /* TRUE for DECtalk 3.5         */
+#define EOS 0	    /* Some folks like to use this  */
+#define NINTER 10   /* Intermediates, ANSI sequence */
+#define NPARAM 10   /* Parameters, ANSI sequence    */
+#define NSTRING 254 /* Control string, < 256        */
+#define NUDPHON 100 /* User phonemes,  < 128 (byte) */
+#define NLPIPE 250  /* # of words in LTS pipe       */
+#define NKPIPE 250  /* # of words in KLSYN pipe     */
+#define MSHZ 10	    /* Basic clock is 10 ms.        */
+#define TANDY 0	    /* TRUE for the Tandy.          */
+#define DTCXX 0	    /* TRUE for DECtalk 3.5         */
 
-#define KRM               0             /* Defined if Kurzweil.         */
-#define KRMMOD            0             /* TRUE if Kurzweil hardware.   */
+#define KRM 0	 /* Defined if Kurzweil.         */
+#define KRMMOD 0 /* TRUE if Kurzweil hardware.   */
 
-#define NKR               0             /* define foR new krm           */
-#define FWREV            13             /* V1.0, VT240 style.           */
+#define NKR 0	 /* define foR new krm           */
+#define FWREV 13 /* V1.0, VT240 style.           */
 
-typedef char    FLAG;                   /* A nice type for a Boolean    */
-
+typedef char FLAG; /* A nice type for a Boolean    */
 
 /*
  * This structure is used to
@@ -115,17 +114,17 @@ typedef char    FLAG;                   /* A nice type for a Boolean    */
  * information.
  */
 
-typedef struct  SEQ  {
-	int             s_type;         /* Type code.                   */
-	char    s_badf;                 /* TRUE if sequence is bad.     */
-	char    s_pintro;               /* Non zero if private intro.   */
-	short   s_nparam;               /* # of parameters.             */
-	short   s_ninter;               /* # of intermediates.          */
-	short   s_param[NPARAM];        /* Parameters.                  */
-	char    s_dflag[NPARAM];        /* Default parameter flags.     */
-	char    s_inter[NINTER];        /* Intermediates.               */
-	char    s_final;                /* Final.                       */
-}       SEQ;
+typedef struct SEQ {
+	int   s_type;	       /* Type code.                   */
+	char  s_badf;	       /* TRUE if sequence is bad.     */
+	char  s_pintro;	       /* Non zero if private intro.   */
+	short s_nparam;	       /* # of parameters.             */
+	short s_ninter;	       /* # of intermediates.          */
+	short s_param[NPARAM]; /* Parameters.                  */
+	char  s_dflag[NPARAM]; /* Default parameter flags.     */
+	char  s_inter[NINTER]; /* Intermediates.               */
+	char  s_final;	       /* Final.                       */
+} SEQ;
 
 /*
  * The "PPARSE" structure defines the
@@ -135,35 +134,34 @@ typedef struct  SEQ  {
  * It will be used soon by the local terminal task.
  */
 
-typedef struct PPARSE_struc     {
-	short   p_state;                /* Parse state.                 */
-	short   p_nbuf;                 /* # of entries in "p_buf".     */
-	short   p_buf[4];               /* "dhx<1,2>" is the longest.   */
-} PPARSE;       
+typedef struct PPARSE_struc {
+	short p_state;	/* Parse state.                 */
+	short p_nbuf;	/* # of entries in "p_buf".     */
+	short p_buf[4]; /* "dhx<1,2>" is the longest.   */
+} PPARSE;
 
-
-#define PERFECT_PAUL            0   /* Index into voice tables      */
-#define BEAUTIFUL_BETTY         1
-#define HUGE_HARRY              2
-#define FRAIL_FRANK             3
-#define DOCTOR_DENNIS           4
-#define KIT_THE_KID             5
-#define UPPITY_URSULA           6
-#define ROUGH_RITA              7
-#define WHISPERY_WILLY          8
+#define PERFECT_PAUL 0 /* Index into voice tables      */
+#define BEAUTIFUL_BETTY 1
+#define HUGE_HARRY 2
+#define FRAIL_FRANK 3
+#define DOCTOR_DENNIS 4
+#define KIT_THE_KID 5
+#define UPPITY_URSULA 6
+#define ROUGH_RITA 7
+#define WHISPERY_WILLY 8
 #if defined(HLSYN) || defined(CHANGES_AFTER_V43)
-#define CRAFTY_CHRIS            9
-#define VARIABLE_VAL            10
+#define CRAFTY_CHRIS 9
+#define VARIABLE_VAL 10
 #else
-#define VARIABLE_VAL            9
+#define VARIABLE_VAL 9
 #endif
 
 /*
  *  pipe connection codes ...   supports up to 32 languages
  */
 
-#define LTS_PIPE                0x00
-#define PH_PIPE                 0x20
+#define LTS_PIPE 0x00
+#define PH_PIPE 0x20
 
 /*
  * debug switch :
@@ -174,17 +172,15 @@ typedef struct PPARSE_struc     {
  *    11-0  12 debug points
  */
 
-#define CMD_DBG       0x8000
-#define LTS_DBG       0x4000
-#define PH_DBG        0x2000
-#define VTM_DBG       0x1000
+#define CMD_DBG 0x8000
+#define LTS_DBG 0x4000
+#define PH_DBG 0x2000
+#define VTM_DBG 0x1000
 
 #define DT_DBG(section, code) \
-		((pKsd_t->debug_switch & section) && (pKsd_t->debug_switch & code))
+	((pKsd_t->debug_switch & section) && (pKsd_t->debug_switch & code))
 
 #define DTT_DBG(section, code) \
-                ((KS.debug_switch & section) && (KS.debug_switch & code))
-
-
+	((KS.debug_switch & section) && (KS.debug_switch & code))
 
 #endif

@@ -2,7 +2,7 @@
  ***********************************************************************
  *
  *                           Copyright ©
- *    Copyright © 2000 Force Computer, Inc., a Solectron company. All rights reserved. 
+ *    Copyright © 2000 Force Computer, Inc., a Solectron company. All rights reserved.
  *    © Digital Equipment Corporation 1995. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -35,10 +35,10 @@
 #ifndef _TTS_FEATS_HEADER
 #define _TTS_FEATS_HEADER
 
-#define TTS_FEATS_MULTILANG     0x00000001L
-#define TTS_FEATS_TYPINGMODE    0x00000002L
-#define TTS_FEATS_FASTTALK      0x00000004L
+#define TTS_FEATS_MULTILANG 0x00000001L
+#define TTS_FEATS_TYPINGMODE 0x00000002L
+#define TTS_FEATS_FASTTALK 0x00000004L
 #define TTS_FEATS_HIGHTLIGHTING 0x00000008L
-#define TTS_FEATS_MENUTALK      0x00000010L
+#define TTS_FEATS_MENUTALK 0x00000010L
 
-#endif  // _TTS_FEATS_HEADER
+#endif // _TTS_FEATS_HEADER

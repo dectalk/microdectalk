@@ -28,9 +28,9 @@
  *    Revision History:
  *
  * Rev  Who     Date            Description
- * ---  -----   -----------     -------------------------------------------- 
+ * ---  -----   -----------     --------------------------------------------
  * 001	GL		09/01/98	    BATS#758 change PFD to PFGR.
- * 002	MGS		04/13/2000		Changes for integrated phoneme set 
+ * 002	MGS		04/13/2000		Changes for integrated phoneme set
  * 003 	CAB		10/16/00		Changed copyright info
  */
 
@@ -40,7 +40,6 @@
 #include "l_all_ph.h"
 #include "cmd.h"
 
-//#define NULL    0
-#define	NULL_ASCKY		0xffff
-#define	PGR(x)			((PFGR<<PSFONT) | (x)) 
-
+// #define NULL    0
+#define NULL_ASCKY 0xffff
+#define PGR(x) ((PFGR << PSFONT) | (x))

@@ -4,9 +4,9 @@
  *    Copyright (c) 2001 Force Computers Inc., A Solectron company. All rights reserved.
  *    Copyright (c)1998 Digital Equipment Corporation. all rights reserved.
  *
- *    This is an unpublished work, and is confidential and proprietary: 
+ *    This is an unpublished work, and is confidential and proprietary:
  *    technology and information of Fonix corporation.  No part of this
- *    code may be reproduced, used or disclosed without written consent of 
+ *    code may be reproduced, used or disclosed without written consent of
  *    Fonix corporation in each and every instance.
  * ***********************************************************************************
  *    File Name:        dt_abort.h.c
@@ -15,7 +15,7 @@
  *
  *    Functionality:
  *					macros to cause a serious error abort
- *					this is done as a macro so that, at least on win32/u*ix we can get 
+ *					this is done as a macro so that, at least on win32/u*ix we can get
  *					some info as to where we died..
  *					these are platform specific, with the following behaviors:
  *					Win32:       cause an assertion failure.
@@ -33,34 +33,34 @@
  *	004	CAB		05/14/2001		Updated copyright info.
  *	005	MGS		06/19/2001		Solaris Port BATS#972
  *	006	CAB		06/17/2002		Removed assert.h for UNDER_CE
-*/
+ */
 
 #include <assert.h>
 #define dt_abort \
-{ \
-    assert(0); \
-}
+	{ \
+		assert(0); \
+	}
 
 #ifdef DTPC1
 #include "pcport.h"
 #include "libp.h"
 #define dt_abort \
 	{ \
-	status_clear(0xFFFF); \
-	status_set_update(MODE_error); \
-	error_hang(); \
-	}\
+		status_clear(0xFFFF); \
+		status_set_update(MODE_error); \
+		error_hang(); \
+	}
 
-#endif //DTPC1
+#endif // DTPC1
 
 #ifdef DTPC2
 #include "pcport.h"
 #include "libp.h"
 #define dt_abort \
 	{ \
-	status_clear(0xFFFF); \
-	status_set_update(MODE_error); \
-	error_hang(); \
-	}\
+		status_clear(0xFFFF); \
+		status_set_update(MODE_error); \
+		error_hang(); \
+	}
 
-#endif //DTPC2
+#endif // DTPC2

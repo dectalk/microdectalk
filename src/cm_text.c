@@ -26,16 +26,16 @@
  *    Rule and Clause based parser routines.
  *
  ***********************************************************************
- *    Revision History:                                        
+ *    Revision History:
  *
  * Rev  Who 	Date        Description
  * ---  -----   ----------- --------------------------------------------
  * 001  MGS 	03/21/1996	Added this revision history header.
  * 002	MGS		05/15/1996	Removed Ed's parser and added the call to the new parser
  * 003	MGS		05/20/1996	Added ginger's dictinonary search routine to getclause
- * 004	MGS		05/20/1996	Added cm_text_get_word to pick up the word from the input 
- *							so the dictionary search fgets a properly formatted word 
- * 005	MGS		05/21/1996	Added code for SAY_LINE mode in getclause so clause boundry 
+ * 004	MGS		05/20/1996	Added cm_text_get_word to pick up the word from the input
+ *							so the dictionary search fgets a properly formatted word
+ * 005	MGS		05/21/1996	Added code for SAY_LINE mode in getclause so clause boundry
  *							characters dont trigger it
  * 006	MGS		05/21/1996	removed cm_text_ablook and #include cm_text.h
  * 007  SIK		07/12/1996  Cleaning up and maintenance
@@ -50,7 +50,7 @@
  * 015	GL		09/27/1996  change XON(0x11) to a space.
  * 016	GL		09/30/1996  add "-" as part of word in get_word()
  * 017  GL		10/10/1996  add code to handle the illegal cluster.
- * 018  SIK		10/10/1996	Add VOCAL #ifndef switch to support the VOCAL build 
+ * 018  SIK		10/10/1996	Add VOCAL #ifndef switch to support the VOCAL build
  * 019	GL		10/25/1996  Fix SARAW hanging problem.
  * 020  GL		10/29/1996	move the mode_table processing code to getclause()
  * 021	GL		11/11/1996	Add US_AND_SP build flag to set par_lang_code to lang_curr.
@@ -70,8 +70,8 @@
  * 031	GL		02/07/1997	don't remove ")" if it is part of smiling face
  *							in mode_email
  * 032	GL		02/07/1997	get_word() should not catch 0x82
- * 033  GL		02/08/1997  catch record line by line in email mode. 
- * 034  GL		02/11/1997  fix the e-mail high-light mode problem. 
+ * 033  GL		02/08/1997  catch record line by line in email mode.
+ * 034  GL		02/11/1997  fix the e-mail high-light mode problem.
  * 035  GL		02/18/1997  add crying face's mouth support "("
  * 036  GL		02/27/1997  need to continue after replacing type_quot with space.
  *                          so this space can be place into clause buffer
@@ -81,12 +81,12 @@
  *							we need to use the rule to handle "(test)," and "(test)test"
  *                          differently.
  * 039  GL		04/02/1997  for BATS#331
- *                          add " in the TYPE_quot handling code 
+ *                          add " in the TYPE_quot handling code
  * 040  GL		04/03/1997  for BATS#334
- *                          fix DM mode problem in high light mode 
- * 041	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
- * 042	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if" 
- * 043	GL		05/14/1997	BATS#373-376  fix the parser problem 
+ *                          fix DM mode problem in high light mode
+ * 041	GL		04/21/1997	BATS#357  Add the code for __osf__ build
+ * 042	GL		04/21/1997	BATS#360  remove spaces before "#define" or "#if"
+ * 043	GL		05/14/1997	BATS#373-376  fix the parser problem
  * 044	MGS		08/22/1997	Added timing for parser debug switch 8100
  * 045	MGS		09/24/1997	BATS#469 Fix for NWS parserr problem
  * 046	GL		09/30/1997	BATS#475 Fix the e-mail header detection problem
@@ -96,11 +96,11 @@
  * 048	MGS		03/12/1998	Added code for the new binary parser
  * 049  CJL     03/18/1998  Removed specific path for dectalkf.h.
  * 050	GL		03/20/1998	BATS #631 to support the German abbreviation hit and
- *                          also support DM, DH 
- * 051	MFG		04/28/1998	added dbglog.txt logging for debug 
+ *                          also support DM, DH
+ * 051	MFG		04/28/1998	added dbglog.txt logging for debug
  *							switch 0x8008,0x8100,0x8004,0x8080,0x8040
  * 052	GL		05/15/1998	BATS #676 fix get_word routine to fix "test,test"
- * 053  MFG		05/19/1998	excluded dbglog logging when build 16-bit code (MSDOS)	 
+ * 053  MFG		05/19/1998	excluded dbglog logging when build 16-bit code (MSDOS)
  * 054	GL		06/16/1998	BATS #697 fix "Chrysler" spelling problem.  It is a logical error
  *                          in #676 fix
  * 055  ETT     10/05/1998  added linux code
@@ -108,7 +108,7 @@
  * 057  MFG		01/08/1998	WINprintf not supported under Windows CE
  * 058  GL		03/03/1999	BATS#676,697 and 744 fix the coding error
  * 059	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
- * 060	MGS		10/14/1999	BATS#876 fix for UK phone numbers (part of it) 
+ * 060	MGS		10/14/1999	BATS#876 fix for UK phone numbers (part of it)
  * 061  NAL		05/23/2000	Fixed a bunch of warnings
  * 062  CAB		05/23/2000	Added comment for sh4 debug fix
  * 063	MGS		07/14/2000	indexing fix found by sapi 5 work
@@ -130,7 +130,7 @@
  * 079	CAB		08/08/2002	Removed warnings
  */
 
-/* #define DEBUG_OLD_PARSER  */ 
+/* #define DEBUG_OLD_PARSER  */
 /* #define SKIP_PARSER */
 
 #include "dectalkf.h"
@@ -141,46 +141,41 @@
 #define PAR_LANG_CODE pKsd_t->lang_curr
 
 extern const unsigned short parser_char_types[];
-extern const unsigned char *par_illegal_cluster[];
-extern const unsigned char par_lower[];
+extern const unsigned char* par_illegal_cluster[];
+extern const unsigned char  par_lower[];
 
-// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
-extern int _far par_dict_lookup(LPTTS_HANDLE_T, char *, int);
+// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+extern int _far par_dict_lookup(LPTTS_HANDLE_T, char*, int);
 
 void par_copy_index_list_cm_text(pindex_data_t dest_index,
-								  int		    dest_pos,
-								  pindex_data_t src_index,
-								  int		    src_pos,
-								  int		    length)
-{
-	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,length*sizeof(index_data_t));
+				 int	       dest_pos,
+				 pindex_data_t src_index,
+				 int	       src_pos,
+				 int	       length) {
+	memcpy(dest_index[dest_pos].index, src_index[src_pos].index, length * sizeof(index_data_t));
 }
 void par_copy_index_cm_text(pindex_data_t dest_index,
-							 int		   dest_pos,
-							 pindex_data_t src_index,
-							 int		   src_pos)
-{
-	memcpy(dest_index[dest_pos].index,src_index[src_pos].index,sizeof(index_data_t));
+			    int		  dest_pos,
+			    pindex_data_t src_index,
+			    int		  src_pos) {
+	memcpy(dest_index[dest_pos].index, src_index[src_pos].index, sizeof(index_data_t));
 }
 int par_is_index_set_cm_text(pindex_data_t indexes,
-								int pos)
-{
-	if (indexes[pos].index[0]!=0 || indexes[pos].index[1]!=0 || indexes[pos].index[2]!=0)
-	{
-		return(1);
+			     int	   pos) {
+	if(indexes[pos].index[0] != 0 || indexes[pos].index[1] != 0 || indexes[pos].index[2] != 0) {
+		return (1);
 	}
-	return(0);
+	return (0);
 }
 
-
 /*
- *  Function Name: cm_text_get_word()  
+ *  Function Name: cm_text_get_word()
  *
  *  Description:
  *		this function gets the next word from clausebuf and copies it to buf
  *
- *  Arguments: 
- *		INPUT	unsigned char *clausebuf	the input buffer 
+ *  Arguments:
+ *		INPUT	unsigned char *clausebuf	the input buffer
  *		OUTPUT	unsigned char *buf			the output buffer
  *		INPUT	int			   which		0 process the word without the clause boundry
  *											1 leave the period on the word
@@ -191,56 +186,48 @@ int par_is_index_set_cm_text(pindex_data_t indexes,
  *  Comments:
  *		Which == 1 is only used for the abbreviation lookup in the dictionary
  */
-unsigned char *cm_text_get_word(unsigned char *clausebuf,unsigned char *buf,int which)
-{
-	int i=0,j=0;
-	
-	while ((char_types[clausebuf[i]] & MARK_space)!=0)
+unsigned char* cm_text_get_word(unsigned char* clausebuf, unsigned char* buf, int which) {
+	int i = 0, j = 0;
+
+	while((char_types[clausebuf[i]] & MARK_space) != 0)
 		i++;
-	if (which==0)
-	{
+	if(which == 0) {
 		/* GL 03/20/1998 BATS#631  include "." at mode 0 */
 		/* GL 05/15/1998 BATS#676  "test,test"  should be treated as a one word for word catch */
 		/* GL 06/16/1998 BATS#697   check "\0" to fix "chrysler" spelling problem */
 		/* GL 03/03/1999 BATS#676,697,744   fix the coding error */
-		while ((((char_types[clausebuf[i]] & (MARK_space | MARK_clause))==0) && (clausebuf[i]!='\0')) ||
-			     (clausebuf[i] == '-') || (clausebuf[i] == '.') ||
-			     (((char_types[clausebuf[i]] & MARK_punct) != 0) && (clausebuf[i+1]!='\0') && ((char_types[clausebuf[i+1]] & (MARK_space | MARK_clause))==0)) )
-		{
-//printf("#%c\n",clausebuf[i]);
+		while((((char_types[clausebuf[i]] & (MARK_space | MARK_clause)) == 0) && (clausebuf[i] != '\0')) ||
+		      (clausebuf[i] == '-') || (clausebuf[i] == '.') ||
+		      (((char_types[clausebuf[i]] & MARK_punct) != 0) && (clausebuf[i + 1] != '\0') && ((char_types[clausebuf[i + 1]] & (MARK_space | MARK_clause)) == 0))) {
+			// printf("#%c\n",clausebuf[i]);
 			/* GL 02/07/1997  don't save control key */
-			if (clausebuf[i] != 0x82)
-			{
-				buf[j]=clausebuf[i];
+			if(clausebuf[i] != 0x82) {
+				buf[j] = clausebuf[i];
+				j++;
+			}
+			i++;
+		}
+	} else {
+		while((((char_types[clausebuf[i]] & (MARK_space)) == 0) && (clausebuf[i] != '\0')) || (clausebuf[i] == '-')) {
+			// printf("*%c\n",clausebuf[i]);
+			/* GL 02/07/1997  don't save control key */
+			if(clausebuf[i] != 0x82) {
+				buf[j] = clausebuf[i];
 				j++;
 			}
 			i++;
 		}
 	}
-	else
-	{
-		while ((((char_types[clausebuf[i]] & (MARK_space))==0) && (clausebuf[i]!='\0')) || (clausebuf[i] == '-'))
-		{
-//printf("*%c\n",clausebuf[i]);
-			/* GL 02/07/1997  don't save control key */
-			if (clausebuf[i] != 0x82)
-			{
-				buf[j]=clausebuf[i];
-				j++;
-			}
-			i++;
-		}
-	}
-	
-	buf[j]='\0';
-	return(buf);
+
+	buf[j] = '\0';
+	return (buf);
 }
 
 /*
- *  Function Name: cm_text_getclause()  
+ *  Function Name: cm_text_getclause()
  *
  *  Description:
- *		This function does the clause based rule processing.  
+ *		This function does the clause based rule processing.
  *
  *  Arguments: LPTTS_HANDLE_T phTTS
  *
@@ -249,7 +236,7 @@ unsigned char *cm_text_get_word(unsigned char *clausebuf,unsigned char *buf,int 
  *  Comments:
  *		The input to the clause buffer is attained from the instance pointer variable
  *		ParseChar
- *		
+ *
  *		pCmd_t->done is a flag that tells when to rin the preprocessor on the clause
  *		values and their meanings
  *			0		Add more charcters to the clause
@@ -260,61 +247,55 @@ unsigned char *cm_text_get_word(unsigned char *clausebuf,unsigned char *buf,int 
  *			any text between 0x80 and 0x81 in the output string is sent out usinf asck phonemes
  *			to LTS
  */
-void cm_text_getclause(LPTTS_HANDLE_T phTTS)
-{
+void cm_text_getclause(LPTTS_HANDLE_T phTTS) {
 	unsigned short int pipe_value;
-	PCMD_T pCmd_t;
-	PKSD_T  pKsd_t; 
-	int i,j, mode,didit;
+	PCMD_T		   pCmd_t;
+	PKSD_T		   pKsd_t;
+	int		   i, j, mode, didit;
 #ifdef SIMPLE_UMLAUT_CONVERSIONS
 	int relook;
 #endif
-	unsigned int k;	// NAL warning removal
-	U32 temp_mode=0;
-	U16 parser_flag;
+	unsigned int k; // NAL warning removal
+	U32	     temp_mode = 0;
+	U16	     parser_flag;
 
 #ifdef CMD_DEBUG_OLD // NAL warning removal
-        U32 ulStartTime,ulEndTime;
+	U32 ulStartTime, ulEndTime;
 #endif
 
-	pCmd_t=phTTS->pCMDThreadData;
-	pKsd_t=phTTS->pKernelShareData;
+	pCmd_t = phTTS->pCMDThreadData;
+	pKsd_t = phTTS->pKernelShareData;
 	/* save the current parser_flag */
-	parser_flag = pCmd_t->ret_value.parser_flag;	
-	
+	parser_flag = pCmd_t->ret_value.parser_flag;
 
 	/* checking cmd_flushing */
-	if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-	{
+	if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
 		cm_util_flush_init(phTTS);
 		return;
-	}              
+	}
 #ifdef SKIP_PARSER
-		if (pCmd_t->ParseChar=='\0')
-		{
-			pCmd_t->ParseChar=' ';
-		}
-		if (pCmd_t->ParseChar== 0x0fff)
-		{
-			pCmd_t->ParseChar=' ';
-		}			                                     
-		if(pCmd_t->ParseChar == 0x11)
-		{
-			pCmd_t->ParseChar=' ';
-		}			
-		pipe_value = (PFASCII<<PSFONT)+pCmd_t->ParseChar;
-		cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,&pipe_value,1);
-		return;
-#endif /* end of skip_parser */ 
+	if(pCmd_t->ParseChar == '\0') {
+		pCmd_t->ParseChar = ' ';
+	}
+	if(pCmd_t->ParseChar == 0x0fff) {
+		pCmd_t->ParseChar = ' ';
+	}
+	if(pCmd_t->ParseChar == 0x11) {
+		pCmd_t->ParseChar = ' ';
+	}
+	pipe_value = (PFASCII << PSFONT) + pCmd_t->ParseChar;
+	cm_util_write_pipe(pKsd_t, pKsd_t->lts_pipe, &pipe_value, 1);
+	return;
+#endif /* end of skip_parser */
 
-	/* 
+	/*
 	   GL 05/14/1997 BATS# 374-376 fix the e-mail parsing problem, need to
 	   disable the <tab> function in the e-mail mode, to handle the e-mail
 	   header like "From: <tab>....
 	*/
-	if ((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
-		(pCmd_t->email_header == 1) &&
-		(pCmd_t->ParseChar == 0x9))
+	if((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
+	   (pCmd_t->email_header == 1) &&
+	   (pCmd_t->ParseChar == 0x9))
 		pCmd_t->ParseChar = ' ';
 
 	/* try to flush data for TAB, GL. 9/13/1996	*/
@@ -322,258 +303,223 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 	/* it should take care of regular text with leading TAB */
 	/* GL. 10/29/1996,  implement the mode_table to force HT, CR and LF to become
 	   a contol-k.  Move the code to cm_text.c getclause() */
-	if ((pKsd_t->modeflag & MODE_TABLE) == 0)
-	{
-		if (pCmd_t->ParseChar == 0x9)
-		{
-//			if (pCmd_t->last_char != 0xd && pCmd_t->last_char != 0x9)
+	if((pKsd_t->modeflag & MODE_TABLE) == 0) {
+		if(pCmd_t->ParseChar == 0x9) {
+			//			if (pCmd_t->last_char != 0xd && pCmd_t->last_char != 0x9)
 			/* GL 03/03/1997  also check last_punct for issuing 0xb */
-			if ((char_types[pCmd_t->last_char] & MARK_space) == 0 ||
-			    pCmd_t->last_punct != 0)
+			if((char_types[pCmd_t->last_char] & MARK_space) == 0 ||
+			   pCmd_t->last_punct != 0)
 				pCmd_t->ParseChar = 0xb;
 			else
 				pCmd_t->ParseChar = ' ';
 		}
-	}
-	else
-	{
-		if (pCmd_t->ParseChar == 0x9 || pCmd_t->ParseChar == 0xa || pCmd_t->ParseChar == 0xd)
-		{
+	} else {
+		if(pCmd_t->ParseChar == 0x9 || pCmd_t->ParseChar == 0xa || pCmd_t->ParseChar == 0xd) {
 			pCmd_t->ParseChar = 0xb;
-		}		
-	}		
-
-	if (pCmd_t->punct_mode==PUNCT_pass || pCmd_t->skip_mode==SKIP_all)
-	{
-		if (pCmd_t->ParseChar=='\0')
-		{
-			pCmd_t->ParseChar=' ';
 		}
-		if (pCmd_t->ParseChar== 0x0fff)
-		{
-			pCmd_t->ParseChar=' ';
-		}			
-		if(pCmd_t->ParseChar == 0x11)
-		{
-			pCmd_t->ParseChar=' ';
-		}			
-		pipe_value = (PFASCII<<PSFONT)+pCmd_t->ParseChar;
-		lts_loop(phTTS,&pipe_value);
+	}
+
+	if(pCmd_t->punct_mode == PUNCT_pass || pCmd_t->skip_mode == SKIP_all) {
+		if(pCmd_t->ParseChar == '\0') {
+			pCmd_t->ParseChar = ' ';
+		}
+		if(pCmd_t->ParseChar == 0x0fff) {
+			pCmd_t->ParseChar = ' ';
+		}
+		if(pCmd_t->ParseChar == 0x11) {
+			pCmd_t->ParseChar = ' ';
+		}
+		pipe_value = (PFASCII << PSFONT) + pCmd_t->ParseChar;
+		lts_loop(phTTS, &pipe_value);
 		return;
-	}	
+	}
 	// add for double line breaking MGS
 	// add fix for email mode BATS#985
-	if (!(pKsd_t->modeflag & MODE_EMAIL) && pCmd_t->email_header != 1)
-	if(	(pCmd_t->last_char == 0x0a && pCmd_t->ParseChar == 0x0a )|| 
-		(pCmd_t->last_char == 0x0d && pCmd_t->ParseChar == 0x0d )|| 
-		(pCmd_t->last_char == 0x0a && pCmd_t->ParseChar == 0x0d ))
-	{
-		pCmd_t->done=1;
-		pCmd_t->ParseChar= 0xb;
-	}
-    /* GL 9/30/96  remove all TYPE_quot character for PUNCT_some mode */
+	if(!(pKsd_t->modeflag & MODE_EMAIL) && pCmd_t->email_header != 1)
+		if((pCmd_t->last_char == 0x0a && pCmd_t->ParseChar == 0x0a) ||
+		   (pCmd_t->last_char == 0x0d && pCmd_t->ParseChar == 0x0d) ||
+		   (pCmd_t->last_char == 0x0a && pCmd_t->ParseChar == 0x0d)) {
+			pCmd_t->done	  = 1;
+			pCmd_t->ParseChar = 0xb;
+		}
+	/* GL 9/30/96  remove all TYPE_quot character for PUNCT_some mode */
 	/* GL 11/22/96 can not check 0x0fff */
-	if (pCmd_t->ParseChar <= 0xff && (parser_char_types[pCmd_t->ParseChar] & TYPE_quot) && (pCmd_t->punct_mode == PUNCT_some))
-	{
+	if(pCmd_t->ParseChar <= 0xff && (parser_char_types[pCmd_t->ParseChar] & TYPE_quot) && (pCmd_t->punct_mode == PUNCT_some)) {
 		/* GL 02/18/1997  add smiling and crying face support */
 		/* let these symbol go through */
-	    if ((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
+		if((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
 		   ((pCmd_t->last_char == '^' && (pCmd_t->ParseChar == ')' || pCmd_t->ParseChar == '(')) ||
 		    (pCmd_t->last_char == '-' && (pCmd_t->ParseChar == ')' || pCmd_t->ParseChar == '(')) ||
 		    (pCmd_t->last_char == ':' && (pCmd_t->ParseChar == ')' || pCmd_t->ParseChar == '('))))
-			pCmd_t->ParseChar=pCmd_t->ParseChar;
-		else
-		{
+			pCmd_t->ParseChar = pCmd_t->ParseChar;
+		else {
 			/* GL 03/03/1997 save the orignal character before change it to space */
-			pCmd_t->last_punct=pCmd_t->ParseChar;
+			pCmd_t->last_punct = pCmd_t->ParseChar;
 			/* GL 03/11/1997, don't change these right TYPE_quot character to space */
 			/* GL 04/02/1997, BATS#331 add " */
 			/* MGS 01/08/1998 BATS #446 add \ */
-			if (pCmd_t->ParseChar != ')' &&
-			    pCmd_t->ParseChar != ']' &&
-			    pCmd_t->ParseChar != '}' &&
-			    pCmd_t->ParseChar != '"' &&
-			    pCmd_t->ParseChar != '\\' &&
-			    pCmd_t->ParseChar != '>')
-			pCmd_t->ParseChar=' ';
+			if(pCmd_t->ParseChar != ')' &&
+			   pCmd_t->ParseChar != ']' &&
+			   pCmd_t->ParseChar != '}' &&
+			   pCmd_t->ParseChar != '"' &&
+			   pCmd_t->ParseChar != '\\' &&
+			   pCmd_t->ParseChar != '>')
+				pCmd_t->ParseChar = ' ';
 
-		    /* GL 05/14/1997 BATS# 374-376 fix the e-mail parsing problem */
+			/* GL 05/14/1997 BATS# 374-376 fix the e-mail parsing problem */
 			/* force all " to space in the header section */
-		    if ((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
-				(pCmd_t->email_header == 1) &&
-				(pCmd_t->ParseChar == '"'))
-				pCmd_t->ParseChar=' ';
+			if((pKsd_t->modeflag & MODE_EMAIL) != 0 &&
+			   (pCmd_t->email_header == 1) &&
+			   (pCmd_t->ParseChar == '"'))
+				pCmd_t->ParseChar = ' ';
 
 			/* GL 02/27/1997 need to continue from here */
-		    /* return; */
+			/* return; */
 		}
-	}
-	else
-	{
+	} else {
 		/* GL 03/03/1997 set last_punct to zero if ParseChar is not a TYPE_quot */
-		pCmd_t->last_punct=0;
+		pCmd_t->last_punct = 0;
 	}
-    
-    /* GL 9/27/96  change XON(0x11) to a space */
-	if (pCmd_t->ParseChar=='\0' || pCmd_t->ParseChar == 0x11)
-	{
-		pCmd_t->ParseChar=' ';
+
+	/* GL 9/27/96  change XON(0x11) to a space */
+	if(pCmd_t->ParseChar == '\0' || pCmd_t->ParseChar == 0x11) {
+		pCmd_t->ParseChar = ' ';
 	}
-	if( pCmd_t->ParseChar== 0x0fff)
-	/* 
+	if(pCmd_t->ParseChar == 0x0fff)
+	/*
 	 * by definition command or phonemes following
- 	 * don't do text proceesing any further
+	 * don't do text proceesing any further
 	 */
 	{
-//printf("*A %x\n",pCmd_t->ParseChar);
-		pCmd_t->done=1;
-		pCmd_t->ParseChar=' ';
-	}
-	else
-	{
-		if (pCmd_t->ParseChar == 0x0b)
-		{
-//printf("*B %x\n",pCmd_t->ParseChar);
-			pCmd_t->done=1;
-			//pCmd_t->clausebuf[pCmd_t->input_counter++] = ' ';
+		// printf("*A %x\n",pCmd_t->ParseChar);
+		pCmd_t->done	  = 1;
+		pCmd_t->ParseChar = ' ';
+	} else {
+		if(pCmd_t->ParseChar == 0x0b) {
+			// printf("*B %x\n",pCmd_t->ParseChar);
+			pCmd_t->done = 1;
+			// pCmd_t->clausebuf[pCmd_t->input_counter++] = ' ';
 		}
 	}
 	pCmd_t->clausebuf[pCmd_t->input_counter++] = (unsigned char)pCmd_t->ParseChar; // NAL warning removal
 #ifdef DEBUG_OLD_PARSER2
-    	printf("at getc ,%c,%d\n",pCmd_t->ParseChar,pCmd_t->ParseChar);
+	printf("at getc ,%c,%d\n", pCmd_t->ParseChar, pCmd_t->ParseChar);
 #endif
 	if(pCmd_t->ParseChar == 0x11)
-	/* 
+	/*
 	 * this char comes at firsxt why??
-	 * but I use it to know when to insert the 
+	 * but I use it to know when to insert the
 	 * first word boundary at start of clause
 	 */
 	{
 		pCmd_t->clausebuf[pCmd_t->input_counter++] = ' ';
 	}
 
-//printf("current value is %d\n",pCmd_t->ret_value.parser_flag);
-	/* 
+	// printf("current value is %d\n",pCmd_t->ret_value.parser_flag);
+	/*
 	 * now check to see if possible end of clause
 	 * by looking for white space character preceeded by a punc
 	 */
-	if ((pKsd_t->modeflag & MODE_EMAIL) == 0)
-	{
-		if (((char_types[pCmd_t->clausebuf[pCmd_t->input_counter-1]] & MARK_space) || (pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0x82))
-		&& (char_types[pCmd_t->clausebuf[pCmd_t->input_counter-2]] & MARK_clause))
-		{
-//printf("*C %x\n",pCmd_t->ParseChar);
-			pCmd_t->done=1;
+	if((pKsd_t->modeflag & MODE_EMAIL) == 0) {
+		if(((char_types[pCmd_t->clausebuf[pCmd_t->input_counter - 1]] & MARK_space) || (pCmd_t->clausebuf[pCmd_t->input_counter - 1] == 0x82)) && (char_types[pCmd_t->clausebuf[pCmd_t->input_counter - 2]] & MARK_clause)) {
+			// printf("*C %x\n",pCmd_t->ParseChar);
+			pCmd_t->done = 1;
 			// fix for another lucent/octel/avaya crash
-			pCmd_t->clausebuf[pCmd_t->input_counter]='\0';
+			pCmd_t->clausebuf[pCmd_t->input_counter] = '\0';
 			/* GL 02/01/1997, check for space instead of 0x0fff */
-		// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
+			// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
 
-			if (pCmd_t->prevword==NULL)
-			{
-				pCmd_t->prevword=pCmd_t->clausebuf;
+			if(pCmd_t->prevword == NULL) {
+				pCmd_t->prevword = pCmd_t->clausebuf;
 			}
 #ifdef ENGLISH
 			/* HACK: Check for Dr. and St. */
-			if (pCmd_t->prevword!=NULL)
-			{
-				char *word = cm_text_get_word(pCmd_t->prevword,pCmd_t->wordbuf,1);
-				if (word != NULL && strlen(word) == 3 &&
-				    (((((word[0] == 'D') || (word[0] == 'd')) &&
-				       ((word[1] == 'R') || (word[1] == 'r'))) ||
-				      (((word[0] == 'S') || (word[0] == 's')) &&
-				       ((word[1] == 'T') || (word[1] == 't')))) &&
-				     word[2] == '.')) {
-					pCmd_t->done=0;
+			if(pCmd_t->prevword != NULL) {
+				char* word = cm_text_get_word(pCmd_t->prevword, pCmd_t->wordbuf, 1);
+				if(word != NULL && strlen(word) == 3 &&
+				   (((((word[0] == 'D') || (word[0] == 'd')) &&
+				      ((word[1] == 'R') || (word[1] == 'r'))) ||
+				     (((word[0] == 'S') || (word[0] == 's')) &&
+				      ((word[1] == 'T') || (word[1] == 't')))) &&
+				    word[2] == '.')) {
+					pCmd_t->done = 0;
 				}
 			}
 #endif
-//			if ((pCmd_t->clausebuf[pCmd_t->input_counter-2] == '.') && (pCmd_t->ParseChar== 0x0fff) &&
-			if ((pCmd_t->clausebuf[pCmd_t->input_counter-2] == '.') && ((char_types[pCmd_t->ParseChar] & MARK_space) || (pCmd_t->ParseChar==0x82)) &&
-		    (par_dict_lookup(phTTS,(char *)cm_text_get_word(pCmd_t->prevword,pCmd_t->wordbuf,1),0)))
-			{
-//printf("*D %x\n",pCmd_t->ParseChar);
-				pCmd_t->done=0;
+			//			if ((pCmd_t->clausebuf[pCmd_t->input_counter-2] == '.') && (pCmd_t->ParseChar== 0x0fff) &&
+			if((pCmd_t->clausebuf[pCmd_t->input_counter - 2] == '.') && ((char_types[pCmd_t->ParseChar] & MARK_space) || (pCmd_t->ParseChar == 0x82)) &&
+			   (par_dict_lookup(phTTS, (char*)cm_text_get_word(pCmd_t->prevword, pCmd_t->wordbuf, 1), 0))) {
+				// printf("*D %x\n",pCmd_t->ParseChar);
+				pCmd_t->done = 0;
 			}
 		}
-		/* GL 05/14/1997 BATS#374-376 make sure to reset email header */ 
-      	pCmd_t->email_header = 0;
-	}
-	else
-	{
+		/* GL 05/14/1997 BATS#374-376 make sure to reset email header */
+		pCmd_t->email_header = 0;
+	} else {
 		/* GL 09/30/1997 BATS# 475 redesign the header detection code */
-		unsigned char header1[]={"From"};
-		unsigned char header2[]={"Return-Path:"};
-		unsigned char header3[]={"%======Internet"};
-		unsigned char header4[]={"Message-ID:"};
-		unsigned char header_buff[36]="";
+		unsigned char header1[]	      = {"From"};
+		unsigned char header2[]	      = {"Return-Path:"};
+		unsigned char header3[]	      = {"%======Internet"};
+		unsigned char header4[]	      = {"Message-ID:"};
+		unsigned char header_buff[36] = "";
 
 		/* GL 09/30/1997 BATS#475 remove all the spaces and 0x82 */
-		for (i=0,j=0;i<=34;++i)
-		{
-			if (pCmd_t->clausebuf[i] != ' ' &&
-				pCmd_t->clausebuf[i] != 0x82)
+		for(i = 0, j = 0; i <= 34; ++i) {
+			if(pCmd_t->clausebuf[i] != ' ' &&
+			   pCmd_t->clausebuf[i] != 0x82)
 				header_buff[j++] = pCmd_t->clausebuf[i];
 		}
 		header_buff[j] = '\0'; // NAL warning removal
 
 		/* catch the empty line as 0xd 0xa or 0xa for OSF */
 		/* this empty line will mark the end of header section */
-		if ((pCmd_t->email_header == 1) && (header_buff[0] == 0xa))
-		{   
-      		/* leave the email header section */
-      	 	pCmd_t->email_header = 0;
-      	}
-		/* GL 09/30/1997 BATS#475 */ 
+		if((pCmd_t->email_header == 1) && (header_buff[0] == 0xa)) {
+			/* leave the email header section */
+			pCmd_t->email_header = 0;
+		}
+		/* GL 09/30/1997 BATS#475 */
 		/* now we can check the header_buff for all the possible e-mail header */
-		if ((pCmd_t->email_header == 0) &&
-      	    (!strncmp(header_buff,header1,4)  ||
-      	     !strncmp(header_buff,header2,12) ||
-      	     !strncmp(header_buff,header3,15) ||
-      	     !strncmp(header_buff,header4,11)))
-      	{   
-      		/* enter the email header section */
-      	 	pCmd_t->email_header = 1;
-      	}
+		if((pCmd_t->email_header == 0) &&
+		   (!strncmp(header_buff, header1, 4) ||
+		    !strncmp(header_buff, header2, 12) ||
+		    !strncmp(header_buff, header3, 15) ||
+		    !strncmp(header_buff, header4, 11))) {
+			/* enter the email header section */
+			pCmd_t->email_header = 1;
+		}
 		/* GL 02/08/1997,  catch record line by line if in email mode */
-      	/* GL 02/11/1997   fix the hight-light mode by catching 0xd, 0x20 as new-line*/
-		if (pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0xa)
-		{
-			pCmd_t->done=1;
+		/* GL 02/11/1997   fix the hight-light mode by catching 0xd, 0x20 as new-line*/
+		if(pCmd_t->clausebuf[pCmd_t->input_counter - 1] == 0xa) {
+			pCmd_t->done = 1;
 		}
 	}
 	/* Remember ptr to beginning of word boundary */
-	// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
-	if(((char_types[pCmd_t->clausebuf[pCmd_t->input_counter-2]] & MARK_space) || pCmd_t->clausebuf[pCmd_t->input_counter-2] == 0x82 )&&  
-		!((char_types[pCmd_t->clausebuf[pCmd_t->input_counter-1]] & MARK_space) || pCmd_t->clausebuf[pCmd_t->input_counter-1] == 0x82  ))
-	{
-		pCmd_t->prevword = &pCmd_t->clausebuf[pCmd_t->input_counter-1];
+	// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+	if(((char_types[pCmd_t->clausebuf[pCmd_t->input_counter - 2]] & MARK_space) || pCmd_t->clausebuf[pCmd_t->input_counter - 2] == 0x82) &&
+	   !((char_types[pCmd_t->clausebuf[pCmd_t->input_counter - 1]] & MARK_space) || pCmd_t->clausebuf[pCmd_t->input_counter - 1] == 0x82)) {
+		pCmd_t->prevword = &pCmd_t->clausebuf[pCmd_t->input_counter - 1];
 	}
-	/* 
-	 * a clause boundry doesn't have to be inserted here because cluasebuf is now a 
+	/*
+	 * a clause boundry doesn't have to be inserted here because cluasebuf is now a
 	 * rolling input buffer, so the clause length can be infinite
 	 */
-	if(pCmd_t->done == 0)
-	{
-		if (pCmd_t->input_counter>PAR_ROLLING_STOP_VALUE)
-		{
-			pCmd_t->done=2;
+	if(pCmd_t->done == 0) {
+		if(pCmd_t->input_counter > PAR_ROLLING_STOP_VALUE) {
+			pCmd_t->done = 2;
 		}
 	}
-	if(pCmd_t->done)
-	{
+	if(pCmd_t->done) {
 		/* timing here */
 #ifdef CMD_DEBUG_OLD
-		if (DT_DBG(CMD_DBG,0x100))
-		{
-			ulStartTime=timeGetTime();
-//			WINprintf("get_clause_parse at %ld.\n", ulStartTime);
+		if(DT_DBG(CMD_DBG, 0x100)) {
+			ulStartTime = timeGetTime();
+			//			WINprintf("get_clause_parse at %ld.\n", ulStartTime);
 		}
-#endif //CMD_DEBUG_OLD
-		
+#endif // CMD_DEBUG_OLD
+
 		/* here we do clause base rule processing */
 		/* set the end of the clausebuf to NULL */
-			pCmd_t->clausebuf[pCmd_t->input_counter]='\0';
+		pCmd_t->clausebuf[pCmd_t->input_counter] = '\0';
 
 		/* here we do clause base rule processing */
 		/*
@@ -586,565 +532,497 @@ void cm_text_getclause(LPTTS_HANDLE_T phTTS)
 		   get sent, So SARAW will wait forever. We need to check the counter for index
 		   buffer as well.   If any index mark has been stored then we need to process
 		   the them even the input_counter is very small
-		*/ 
+		*/
 
-		if ((pCmd_t->index_counter == 0) && (pCmd_t->input_counter < PAR_MIN_INPUT_SIZE) && (pCmd_t->punct_mode != PUNCT_all))
-		{
+		if((pCmd_t->index_counter == 0) && (pCmd_t->input_counter < PAR_MIN_INPUT_SIZE) && (pCmd_t->punct_mode != PUNCT_all)) {
 			/* short clauses bypass text pre-processing*/
-			strcpy(pCmd_t->output_buf,pCmd_t->clausebuf);
-			pCmd_t->ret_value.output_offset=pCmd_t->input_counter;
-		}
-		else
-		{
-		  if ((pCmd_t->skip_mode != SKIP_email) &&
-		      ((pKsd_t->modeflag & MODE_EMAIL) != 0))
-		    {
-				/* cm_text_preproc(pCmd_t); */             
+			strcpy(pCmd_t->output_buf, pCmd_t->clausebuf);
+			pCmd_t->ret_value.output_offset = pCmd_t->input_counter;
+		} else {
+			if((pCmd_t->skip_mode != SKIP_email) &&
+			   ((pKsd_t->modeflag & MODE_EMAIL) != 0)) {
+				/* cm_text_preproc(pCmd_t); */
 #ifdef DEBUG_OLD_PARSER
-		      printf("The input to Email.%s.\n",pCmd_t->clausebuf);		
+				printf("The input to Email.%s.\n", pCmd_t->clausebuf);
 #endif
-		      
-		      temp_mode = temp_mode | 0x20;
-		      temp_mode = temp_mode | parser_flag;
-		      if (pCmd_t->email_header == 1) temp_mode = temp_mode | 0x10;
-		      
+
+				temp_mode = temp_mode | 0x20;
+				temp_mode = temp_mode | parser_flag;
+				if(pCmd_t->email_header == 1) temp_mode = temp_mode | 0x10;
+
 				/* debug switch */
-		      if (DT_DBG(CMD_DBG,0x040))
-			{
-			  printf("\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-			  if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-			    fprintf((FILE *)pKsd_t->dbglog,"\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-			  
-			  printf("\nInput to Email:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-			  for (k=0; k < strlen(pCmd_t->clausebuf); k++)
-			    {
-					if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-						fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-					printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-			  }
+				if(DT_DBG(CMD_DBG, 0x040)) {
+					printf("\nInput to Email:(%d)(%x)", pCmd_t->input_counter, temp_mode);
+					if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+						fprintf((FILE*)pKsd_t->dbglog, "\nInput to Email:(%d)(%x)", pCmd_t->input_counter, temp_mode);
+
+					printf("\nInput to Email:(%d)(%x)", pCmd_t->input_counter, temp_mode);
+					for(k = 0; k < strlen(pCmd_t->clausebuf); k++) {
+						if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+							fprintf((FILE*)pKsd_t->dbglog, "\n%c(%x)", pCmd_t->clausebuf[k], pCmd_t->clausebuf[k]);
+						printf("\n%c(%x)", pCmd_t->clausebuf[k], pCmd_t->clausebuf[k]);
+					}
 				}
 				/* process email mode */
 #ifdef NEW_BINARY_PARSER
-				par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-							  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-							  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-							  temp_mode,0,0,&(pCmd_t->match_array),&(pCmd_t->ret_value));
+				par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+						  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+						  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+						  temp_mode, 0, 0, &(pCmd_t->match_array), &(pCmd_t->ret_value));
 #else
-				par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-							  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-							  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-							  temp_mode,0,0,&(pCmd_t->ret_value));
+				par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+						  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+						  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+						  temp_mode, 0, 0, &(pCmd_t->ret_value));
 #endif
 
 				/* cmd_flush return */
-				if (pCmd_t->input_counter == 0) return;
+				if(pCmd_t->input_counter == 0) return;
 				/* checking cmd_flushing */
-				if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-				{
+				if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
 					cm_util_flush_init(phTTS);
 					return;
-				}              
-				/* debug switch */
-				if (DT_DBG(CMD_DBG,0x080))
-				{   
-				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-					fprintf((FILE *)pKsd_t->dbglog,"\nEmail output:");
-
-				printf("\nEmail output:");
-
-					for (k=0; k < strlen(pCmd_t->output_buf); k++)
-					{
-					if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-						fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-					printf("\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-					}				
 				}
-			
+				/* debug switch */
+				if(DT_DBG(CMD_DBG, 0x080)) {
+					if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+						fprintf((FILE*)pKsd_t->dbglog, "\nEmail output:");
+
+					printf("\nEmail output:");
+
+					for(k = 0; k < strlen(pCmd_t->output_buf); k++) {
+						if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+							fprintf((FILE*)pKsd_t->dbglog, "\n%c(%x)", pCmd_t->output_buf[k], pCmd_t->output_buf[k]);
+						printf("\n%c(%x)", pCmd_t->output_buf[k], pCmd_t->output_buf[k]);
+					}
+				}
+
 				/* put the output back into the input */
-				strcpy(pCmd_t->clausebuf,pCmd_t->output_buf);
+				strcpy(pCmd_t->clausebuf, pCmd_t->output_buf);
 #ifdef NEW_INDEXING
 				/* put the indexes from the output into the input */
-				par_copy_index_list_cm_text(pCmd_t->input_indexes,0,pCmd_t->output_indexes,0,PAR_MAX_INPUT_ARRAY);
+				par_copy_index_list_cm_text(pCmd_t->input_indexes, 0, pCmd_t->output_indexes, 0, PAR_MAX_INPUT_ARRAY);
 #endif
-                /* save parser_flag */
-				parser_flag = pCmd_t->ret_value.parser_flag;	
+				/* save parser_flag */
+				parser_flag = pCmd_t->ret_value.parser_flag;
 				/* reset ret_value */
-				memset(&(pCmd_t->ret_value),0,sizeof(return_value_t));
-        		/* restore parser_flag */
-				pCmd_t->ret_value.parser_flag = parser_flag;	
+				memset(&(pCmd_t->ret_value), 0, sizeof(return_value_t));
+				/* restore parser_flag */
+				pCmd_t->ret_value.parser_flag = parser_flag;
 				/* reinit the new_input buffer */
-				memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
+				memset(pCmd_t->new_input, 0, PAR_MAX_INPUT_ARRAY);
 #ifdef NEW_INDEXING
-				memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-				memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
+				memset(pCmd_t->new_input_indexes, 0, PAR_MAX_INPUT_ARRAY * sizeof(index_data_t));
+				memset(pCmd_t->output_indexes, 0, PAR_MAX_OUTPUT_ARRAY * sizeof(index_data_t));
 #endif
-        	} /* if skip_mode != SKIP_email */
-			if (pCmd_t->skip_mode != SKIP_punct)
-			{
-				/* cm_text_preproc(pCmd_t); */             
+			} /* if skip_mode != SKIP_email */
+			if(pCmd_t->skip_mode != SKIP_punct) {
+				/* cm_text_preproc(pCmd_t); */
 #ifdef DEBUG_OLD_PARSER
-				printf("the input to punct.%s.\n",pCmd_t->clausebuf);		
+				printf("the input to punct.%s.\n", pCmd_t->clausebuf);
 #endif
 				// add protection code for buffer overflows MGS
-				pCmd_t->clausebuf[PAR_MAX_INPUT_ARRAY-1]='\0';
+				pCmd_t->clausebuf[PAR_MAX_INPUT_ARRAY - 1] = '\0';
 				/* GL 03/20/1998 BATS#631  add hit/miss setting before puncturation processing */
 				/* do the dictionary search here for the entire input */
-	        	pCmd_t->input_counter=strlen(pCmd_t->clausebuf);
-				didit=0;
-				for (i=0;i<pCmd_t->input_counter;i++)
-				{
+				pCmd_t->input_counter = strlen(pCmd_t->clausebuf);
+				didit		      = 0;
+				for(i = 0; i < pCmd_t->input_counter; i++) {
 					/* GL 04/03/1997 for BATS#334 fix the DM mode problem in high light mode */
-					if (pCmd_t->clausebuf[i] == 0x82) continue;
-					if (((i==0) || (char_types[pCmd_t->clausebuf[i-1]] & MARK_space) || (pCmd_t->clausebuf[i-1] == 0x82))
-						&& !(char_types[pCmd_t->clausebuf[i]] & MARK_space))
-					{
-						// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
-						pCmd_t->dict_hit_buf[i]=par_dict_lookup(phTTS,(char *)cm_text_get_word(&(pCmd_t->clausebuf[i]),pCmd_t->wordbuf,0),1);
+					if(pCmd_t->clausebuf[i] == 0x82) continue;
+					if(((i == 0) || (char_types[pCmd_t->clausebuf[i - 1]] & MARK_space) || (pCmd_t->clausebuf[i - 1] == 0x82)) && !(char_types[pCmd_t->clausebuf[i]] & MARK_space)) {
+						// MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+						pCmd_t->dict_hit_buf[i] = par_dict_lookup(phTTS, (char*)cm_text_get_word(&(pCmd_t->clausebuf[i]), pCmd_t->wordbuf, 0), 1);
 						// MGS add this for german ae oe ue processing to umlated vowels
-						// MGS added code for qu exception to ue rulw and eab added neue 
-						if (pCmd_t->dict_hit_buf[i]==0)
-						{
+						// MGS added code for qu exception to ue rulw and eab added neue
+						if(pCmd_t->dict_hit_buf[i] == 0) {
 
-#ifdef SIMPLE_UMLAUT_CONVERSIONS  /* BACHUS REWT: I don't want to use Umlaut conversion before the 
-							         splitting into morphs or syllables is done on the grapheme level
-							      */
-							          
-							if (pKsd_t->lang_curr==LANG_german)
-							{
-								relook=0;
-								for (j=i;!(char_types[pCmd_t->clausebuf[j]] & MARK_space);j++)
-								{
-									if (par_lower[pCmd_t->clausebuf[j]] == 'q' && par_lower[pCmd_t->clausebuf[j+1]]=='u')
-									{
+#ifdef SIMPLE_UMLAUT_CONVERSIONS /* BACHUS REWT: I don't want to use Umlaut conversion before the \
+								splitting into morphs or syllables is done on the grapheme level \
+							     */
+
+							if(pKsd_t->lang_curr == LANG_german) {
+								relook = 0;
+								for(j = i; !(char_types[pCmd_t->clausebuf[j]] & MARK_space); j++) {
+									if(par_lower[pCmd_t->clausebuf[j]] == 'q' && par_lower[pCmd_t->clausebuf[j + 1]] == 'u') {
 										j++;
 										continue;
 									}
-									if (par_lower[pCmd_t->clausebuf[j]] == 'e' && par_lower[pCmd_t->clausebuf[j+1]]=='u')
-									{
+									if(par_lower[pCmd_t->clausebuf[j]] == 'e' && par_lower[pCmd_t->clausebuf[j + 1]] == 'u') {
 										j++;
 										continue;
 									}
-									if (par_lower[pCmd_t->clausebuf[j+1]]=='e')
-									{
-										switch(pCmd_t->clausebuf[j])
-										{
+									if(par_lower[pCmd_t->clausebuf[j + 1]] == 'e') {
+										switch(pCmd_t->clausebuf[j]) {
 										case 'a':
-											pCmd_t->clausebuf[j]=(unsigned char)'ä';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'ä';
+											didit		     = 1;
 											break;
 										case 'A':
-											pCmd_t->clausebuf[j]=(unsigned char)'Ä';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'Ä';
+											didit		     = 1;
 											break;
 										case 'o':
-											pCmd_t->clausebuf[j]=(unsigned char)'ö';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'ö';
+											didit		     = 1;
 											break;
 										case 'O':
-											pCmd_t->clausebuf[j]=(unsigned char)'Ö';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'Ö';
+											didit		     = 1;
 											break;
 										case 'u':
-											pCmd_t->clausebuf[j]=(unsigned char)'ü';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'ü';
+											didit		     = 1;
 											break;
 										case 'U':
-											pCmd_t->clausebuf[j]=(unsigned char)'Ü';
-											didit=1;
+											pCmd_t->clausebuf[j] = (unsigned char)'Ü';
+											didit		     = 1;
 											break;
 										}
-										if (didit)
-										{
-											for (k=j+1;!(char_types[pCmd_t->clausebuf[k]] & MARK_space);k++)
-											{
-												pCmd_t->clausebuf[k]=pCmd_t->clausebuf[k+1];
+										if(didit) {
+											for(k = j + 1; !(char_types[pCmd_t->clausebuf[k]] & MARK_space); k++) {
+												pCmd_t->clausebuf[k] = pCmd_t->clausebuf[k + 1];
 											}
-											didit=0;
-											relook=1;
+											didit  = 0;
+											relook = 1;
 										}
 									}
 								}
-								if (relook)
-								{
-									pCmd_t->dict_hit_buf[i]=par_dict_lookup(phTTS,(char *)cm_text_get_word(&(pCmd_t->clausebuf[i]),pCmd_t->wordbuf,0),1);
+								if(relook) {
+									pCmd_t->dict_hit_buf[i] = par_dict_lookup(phTTS, (char*)cm_text_get_word(&(pCmd_t->clausebuf[i]), pCmd_t->wordbuf, 0), 1);
 								}
 							}
-							}  /* German Umlaut transformation taken out for BACHUS REWT */
-#endif                         /* BACHUS */
-						}
-						i+=strlen(pCmd_t->wordbuf);
+						} /* German Umlaut transformation taken out for BACHUS REWT */
+#endif /* BACHUS */
 					}
+					i += strlen(pCmd_t->wordbuf);
 				}
-		
+			}
 
-				temp_mode = 0x00000001 << pCmd_t->punct_mode;
+			temp_mode = 0x00000001 << pCmd_t->punct_mode;
 
-				if ((pKsd_t->modeflag & MODE_EMAIL) != 0)
+			if((pKsd_t->modeflag & MODE_EMAIL) != 0) {
+				temp_mode = temp_mode | 0x20;
+				if(pCmd_t->email_header == 1) temp_mode = temp_mode | 0x10;
+			}
+			/* debug switch */
+			if(DT_DBG(CMD_DBG, 0x002)) {
+				if(pKsd_t->dbglog) /* mfg added for debuglog.txt suport*/
+					fprintf((FILE*)pKsd_t->dbglog, "\nInput to Punct:(%d)(%x)", pCmd_t->input_counter, temp_mode);
+				printf("\nInput to Punct:(%d)(%x)", pCmd_t->input_counter, temp_mode);
+				for(k = 0; k < strlen(pCmd_t->clausebuf); k++)
+					printf("\n%c(%x)", pCmd_t->clausebuf[k], pCmd_t->clausebuf[k]);
 				{
-			   		temp_mode = temp_mode | 0x20;
-			   		if (pCmd_t->email_header == 1) temp_mode = temp_mode | 0x10;
+					if(pKsd_t->dbglog) /* mfg added for debuglog.txt suport*/
+						fprintf((FILE*)pKsd_t->dbglog, "\n%c(%x)", pCmd_t->clausebuf[k], pCmd_t->clausebuf[k]);
+					printf("\n%c(%x)", pCmd_t->clausebuf[k], pCmd_t->clausebuf[k]);
 				}
-				/* debug switch */
-				if (DT_DBG(CMD_DBG,0x002))
-				{
-					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
-						fprintf((FILE *)pKsd_t->dbglog,"\nInput to Punct:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-					printf("\nInput to Punct:(%d)(%x)",pCmd_t->input_counter,temp_mode);
-					for (k=0; k < strlen(pCmd_t->clausebuf); k++)
-					printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-					{
-						if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
-							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-						printf("\n%c(%x)",pCmd_t->clausebuf[k],pCmd_t->clausebuf[k]);
-					}
-				}
-				/* process punctuation mode */
+			}
+			/* process punctuation mode */
 #ifdef NEW_BINARY_PARSER
-				par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-							  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-							  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-							  temp_mode,1,0,&(pCmd_t->match_array),&(pCmd_t->ret_value));
+			par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+					  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+					  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+					  temp_mode, 1, 0, &(pCmd_t->match_array), &(pCmd_t->ret_value));
 #else
-				par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-							  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-							  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-							  temp_mode,1,0,&(pCmd_t->ret_value));
+				par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+						  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+						  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+						  temp_mode, 1, 0, &(pCmd_t->ret_value));
 #endif
 
-				/* cmd_flush return */
-				if (pCmd_t->input_counter == 0) return;
-				/* checking cmd_flushing */
-				if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-				{
-					cm_util_flush_init(phTTS);
-					return;
-				}              
-				/* debug switch */
-				if (DT_DBG(CMD_DBG,0x004))
-				{   
-					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
-						fprintf((FILE *)pKsd_t->dbglog,"\nPunct output:");
-					printf("\nPunct output:");
-					for (k=0; k < strlen(pCmd_t->output_buf); k++)
-					{
-					if (pKsd_t->dbglog)		/* mfg added for debuglog.txt suport*/
-						fprintf(pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-					printf("\n%c(%x)",pCmd_t->output_buf[k],pCmd_t->output_buf[k]);
-					}			
+			/* cmd_flush return */
+			if(pCmd_t->input_counter == 0) return;
+			/* checking cmd_flushing */
+			if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
+				cm_util_flush_init(phTTS);
+				return;
+			}
+			/* debug switch */
+			if(DT_DBG(CMD_DBG, 0x004)) {
+				if(pKsd_t->dbglog) /* mfg added for debuglog.txt suport*/
+					fprintf((FILE*)pKsd_t->dbglog, "\nPunct output:");
+				printf("\nPunct output:");
+				for(k = 0; k < strlen(pCmd_t->output_buf); k++) {
+					if(pKsd_t->dbglog) /* mfg added for debuglog.txt suport*/
+						fprintf(pKsd_t->dbglog, "\n%c(%x)", pCmd_t->output_buf[k], pCmd_t->output_buf[k]);
+					printf("\n%c(%x)", pCmd_t->output_buf[k], pCmd_t->output_buf[k]);
 				}
-			
-				/* put the output back into the input */
-				strcpy(pCmd_t->clausebuf,pCmd_t->output_buf);
-#ifdef NEW_INDEXING
-				/* put the indexes from the output into the input */
-				par_copy_index_list_cm_text(pCmd_t->input_indexes,0,pCmd_t->output_indexes,0,PAR_MAX_INPUT_ARRAY);
-#endif
-        	} /* if skip_mode != SKIP_punct */
-			if (pCmd_t->skip_mode != SKIP_rule)
-			{
-                /* save parser_flag */
-				parser_flag = pCmd_t->ret_value.parser_flag;	
-				/* reset ret_value */
-				memset(&(pCmd_t->ret_value),0,sizeof(return_value_t));
-        		/* restore parser_flag */
-				pCmd_t->ret_value.parser_flag = parser_flag;	
-				/* reinit the new_input buffer */
-				memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
-#ifdef NEW_INDEXING
-				memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-				memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
-				/* checking cmd_flushing */
-				if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-				{
-					cm_util_flush_init(phTTS);
-					return;
-				}
-				// add protection code for buffer overflows MGS
-				pCmd_t->clausebuf[PAR_MAX_INPUT_ARRAY-1]='\0';			              
-				/* GL 03/20/1998 BATS#631  initialize hit/miss arrary */
-				/* do the dictionary search here for the entire input */
-				memset(pCmd_t->dict_hit_buf,0,PAR_MAX_INPUT_ARRAY);
-	        	pCmd_t->input_counter=strlen(pCmd_t->clausebuf);
-				for (i=0;i<pCmd_t->input_counter;i++)
-				{
-					/* GL 04/03/1997 for BATS#334 fix the DM mode problem in high light mode */
-					if (pCmd_t->clausebuf[i] == 0x82) continue;
-					if (((i==0) || (char_types[pCmd_t->clausebuf[i-1]] & MARK_space) || (pCmd_t->clausebuf[i-1] == 0x82))
-						&& !(char_types[pCmd_t->clausebuf[i]] & MARK_space))
-					{
-						//	MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
-						pCmd_t->dict_hit_buf[i]=par_dict_lookup(phTTS,(char *)cm_text_get_word(&(pCmd_t->clausebuf[i]),pCmd_t->wordbuf,0),1);
-						i+=strlen(pCmd_t->wordbuf);
-					}
-				}
-			
-#ifdef DEBUG_OLD_PARSER
-				printf("the input to normal .%s.\n",pCmd_t->clausebuf);		
-				printf("the dict hit buf is  ");
-				for (i=0;i<pCmd_t->input_counter;i++)
-				{
-					putc(pCmd_t->dict_hit_buf[i]+'0');
-				}
-				printf("\n");
-#endif
+			}
 
-				/* 044	MGS		09/24/1997	BATS#469 Fix for NWS parser problem */
-				/*				force mode_flag always set to non-zero          */ 
-#ifdef NEW_BINARY_PARSER
-				if (pCmd_t->done==2)
-				{
-					par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-								  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-								  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-								  pKsd_t->modeflag | MODE_CITATION,2,1,&(pCmd_t->match_array),&(pCmd_t->ret_value));
-   				}
-				else
-				{
-					par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-								  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-								  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-								  pKsd_t->modeflag | MODE_CITATION,2,0,&(pCmd_t->match_array),&(pCmd_t->ret_value));
-				}
-#else
-				if (pCmd_t->done==2)
-				{
-					par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-								  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-								  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-								  pKsd_t->modeflag | MODE_CITATION,2,1,&(pCmd_t->ret_value));
-   				}
-				else
-				{
-					par_process_input(phTTS,pCmd_t->clausebuf,pCmd_t->new_input,pCmd_t->output_buf,
-								  pCmd_t->dict_hit_buf,pCmd_t->input_indexes,pCmd_t->new_input_indexes,
-								  pCmd_t->output_indexes,(0x00000001 << PAR_LANG_CODE),
-								  pKsd_t->modeflag | MODE_CITATION,2,0,&(pCmd_t->ret_value));
-				}
+			/* put the output back into the input */
+			strcpy(pCmd_t->clausebuf, pCmd_t->output_buf);
+#ifdef NEW_INDEXING
+			/* put the indexes from the output into the input */
+			par_copy_index_list_cm_text(pCmd_t->input_indexes, 0, pCmd_t->output_indexes, 0, PAR_MAX_INPUT_ARRAY);
 #endif
-				/* cmd_flush return */
-				if (pCmd_t->input_counter == 0) return;
-				/* checking cmd_flushing */
-				if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-				{
-					cm_util_flush_init(phTTS);
-					return;
-				}              
-			} /* skip_mode != SKIP_rule  */
-		
-		} /* if (pCmd_t->input_counter<PAR_MIN_INPUT_SIZE) */
+		} /* if skip_mode != SKIP_punct */
+		if(pCmd_t->skip_mode != SKIP_rule) {
+			/* save parser_flag */
+			parser_flag = pCmd_t->ret_value.parser_flag;
+			/* reset ret_value */
+			memset(&(pCmd_t->ret_value), 0, sizeof(return_value_t));
+			/* restore parser_flag */
+			pCmd_t->ret_value.parser_flag = parser_flag;
+			/* reinit the new_input buffer */
+			memset(pCmd_t->new_input, 0, PAR_MAX_INPUT_ARRAY);
+#ifdef NEW_INDEXING
+			memset(pCmd_t->new_input_indexes, 0, PAR_MAX_INPUT_ARRAY * sizeof(index_data_t));
+			memset(pCmd_t->output_indexes, 0, PAR_MAX_OUTPUT_ARRAY * sizeof(index_data_t));
+#endif
+			/* checking cmd_flushing */
+			if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
+				cm_util_flush_init(phTTS);
+				return;
+			}
+			// add protection code for buffer overflows MGS
+			pCmd_t->clausebuf[PAR_MAX_INPUT_ARRAY - 1] = '\0';
+			/* GL 03/20/1998 BATS#631  initialize hit/miss arrary */
+			/* do the dictionary search here for the entire input */
+			memset(pCmd_t->dict_hit_buf, 0, PAR_MAX_INPUT_ARRAY);
+			pCmd_t->input_counter = strlen(pCmd_t->clausebuf);
+			for(i = 0; i < pCmd_t->input_counter; i++) {
+				/* GL 04/03/1997 for BATS#334 fix the DM mode problem in high light mode */
+				if(pCmd_t->clausebuf[i] == 0x82) continue;
+				if(((i == 0) || (char_types[pCmd_t->clausebuf[i - 1]] & MARK_space) || (pCmd_t->clausebuf[i - 1] == 0x82)) && !(char_types[pCmd_t->clausebuf[i]] & MARK_space)) {
+					//	MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+					pCmd_t->dict_hit_buf[i] = par_dict_lookup(phTTS, (char*)cm_text_get_word(&(pCmd_t->clausebuf[i]), pCmd_t->wordbuf, 0), 1);
+					i += strlen(pCmd_t->wordbuf);
+				}
+			}
 
 #ifdef DEBUG_OLD_PARSER
-			printf("the output .");
+			printf("the input to normal .%s.\n", pCmd_t->clausebuf);
+			printf("the dict hit buf is  ");
+			for(i = 0; i < pCmd_t->input_counter; i++) {
+				putc(pCmd_t->dict_hit_buf[i] + '0');
+			}
+			printf("\n");
+#endif
+
+			/* 044	MGS		09/24/1997	BATS#469 Fix for NWS parser problem */
+			/*				force mode_flag always set to non-zero          */
+#ifdef NEW_BINARY_PARSER
+			if(pCmd_t->done == 2) {
+				par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+						  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+						  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+						  pKsd_t->modeflag | MODE_CITATION, 2, 1, &(pCmd_t->match_array), &(pCmd_t->ret_value));
+			} else {
+				par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+						  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+						  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+						  pKsd_t->modeflag | MODE_CITATION, 2, 0, &(pCmd_t->match_array), &(pCmd_t->ret_value));
+			}
+#else
+				if(pCmd_t->done == 2) {
+					par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+							  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+							  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+							  pKsd_t->modeflag | MODE_CITATION, 2, 1, &(pCmd_t->ret_value));
+				} else {
+					par_process_input(phTTS, pCmd_t->clausebuf, pCmd_t->new_input, pCmd_t->output_buf,
+							  pCmd_t->dict_hit_buf, pCmd_t->input_indexes, pCmd_t->new_input_indexes,
+							  pCmd_t->output_indexes, (0x00000001 << PAR_LANG_CODE),
+							  pKsd_t->modeflag | MODE_CITATION, 2, 0, &(pCmd_t->ret_value));
+				}
+#endif
+			/* cmd_flush return */
+			if(pCmd_t->input_counter == 0) return;
+			/* checking cmd_flushing */
+			if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
+				cm_util_flush_init(phTTS);
+				return;
+			}
+		} /* skip_mode != SKIP_rule  */
+
+	} /* if (pCmd_t->input_counter<PAR_MIN_INPUT_SIZE) */
+
+#ifdef DEBUG_OLD_PARSER
+	printf("the output .");
 #endif
 /* put timing here */
 #ifdef CMD_DEBUG_OLD
-		if (DT_DBG(CMD_DBG,0x100))
-		{
-			ulEndTime=timeGetTime();
-			WINprintf("\nget_clause_parse at %ld. ms %s\n", ulEndTime-ulStartTime,pCmd_t->output_buf);
+	if(DT_DBG(CMD_DBG, 0x100)) {
+		ulEndTime = timeGetTime();
+		WINprintf("\nget_clause_parse at %ld. ms %s\n", ulEndTime - ulStartTime, pCmd_t->output_buf);
 
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-				fprintf((FILE *)pKsd_t->dbglog,"\nget_clause_parse at %ld. ms %s\n", ulEndTime-ulStartTime,pCmd_t->output_buf);
-		}
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+			fprintf((FILE*)pKsd_t->dbglog, "\nget_clause_parse at %ld. ms %s\n", ulEndTime - ulStartTime, pCmd_t->output_buf);
+	}
 #endif
 
-		mode = PAR_OUTPUT_CHARS;
-		
-		for (i=0;((i<pCmd_t->ret_value.output_offset) && (char_types[pCmd_t->output_buf[i]] & MARK_space));i++);
-		
-		/* debug switch */
-		if (DT_DBG(CMD_DBG,0x008))
-		{
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-				fprintf(pKsd_t->dbglog,"\nNormal output:");
-			printf("\nNormal output:");
-		}
-		/*
-		   GL 09/06/1996, always send a space first, make sure we have space
-		   while handling rolling text
-		*/
-		/*
-		   GL 01/10/1997, remove the space to fix the ["]<string> problem 
-		   GL 01/22/1997, use roll_text to indicate the rolling text state
-		   the extra space will be fired if we are in rolling text state
-		*/
-		if (pCmd_t->roll_text != 0)
-		{
-			pipe_value = (PFASCII<<PSFONT) + ' ';
-			lts_loop(phTTS,&pipe_value);
-		}
-		
-		for(;i<pCmd_t->ret_value.output_offset;i++)
-		{
-			if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-			{
-				cm_util_flush_init(phTTS);
-				return;
-			}              
-			if (pCmd_t->output_buf[i] != PAR_INDEX_DUMMY_CHAR)
-			{
-				if (mode==PAR_OUTPUT_CHARS)
-				{
-					if (pCmd_t->output_buf[i]==PAR_PHONES_ON_D)
-					{
-						mode = PAR_OUTPUT_PHONES;
-						continue;
-					}				
-					/* debug switch */
-					if (DT_DBG(CMD_DBG,0x008))
-					{
-						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-						printf("\n%c(%x)",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-					}
-#ifdef DEBUG_OLD_PARSER
-					putc(pCmd_t->output_buf[i]);
-#endif
-					pipe_value = (PFASCII<<PSFONT)+pCmd_t->output_buf[i];
-					lts_loop(phTTS,&pipe_value);
-				}
-				if (mode==PAR_OUTPUT_PHONES)
-				{
-					if (pCmd_t->output_buf[i]==PAR_PHONES_OFF_D)
-					{
-						mode=PAR_OUTPUT_CHARS;
-						continue;
-					}				
-					/* debug switch */
-					if (DT_DBG(CMD_DBG,0x008))
-					{
-						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-							fprintf((FILE *)pKsd_t->dbglog,"\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-						printf("\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-					}
-#ifdef DEBUG_OLD_PARSER
-						putc(pCmd_t->output_buf[i]);
-#endif
-					pipe_value = pKsd_t->reverse_ascky[pCmd_t->output_buf[i]];
-					lts_loop(phTTS,&pipe_value);
-				}
-			}
-			if (par_is_index_set_cm_text(pCmd_t->output_indexes,i))
-			  {
-			    /* debug switch */
-			    if (DT_DBG(CMD_DBG,0x008))
-			      {
-					// * 059	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
-					if (i>0 && pCmd_t->output_buf[i-1] != ' ' && 
-						(i+2)<pCmd_t->ret_value.output_offset && 
-						!(char_types[pCmd_t->output_buf[i+1]] & MARK_clause) && 
-						!(char_types[pCmd_t->output_buf[i+2]] & MARK_space))
-					{
-						if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-							fprintf((FILE *)pKsd_t->dbglog,"\n%c(%x)",' ',' ');
-						printf("\n%c(%x)",' ',' ');
-					}
-				if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-				  fprintf(pKsd_t->dbglog,"\n%c[%x]",pCmd_t->output_buf[i],pCmd_t->output_buf[i]);
-			      }
-				// MGS 10/14/1999 BATS#900 fixed indexing with spanish phone nubmer rules
-				if (i > 0 && pCmd_t->output_buf[i-1] !=' ' && !par_is_index_set_cm_text(pCmd_t->output_indexes,i-1))
-				{
-					if ((i+2)<pCmd_t->ret_value.output_offset && 
-						!(char_types[pCmd_t->output_buf[i+1]] & MARK_clause) && 
-						!(char_types[pCmd_t->output_buf[i+2]] & MARK_space))
-					{
-						pipe_value = (PFASCII<<PSFONT)+' ';
-						lts_loop(phTTS,&pipe_value);
-					}
-				}
+	mode = PAR_OUTPUT_CHARS;
 
-				lts_loop(phTTS,pCmd_t->output_indexes[i].index);
-			}
-		}                                               
-#ifdef DEBUG_OLD_PARSER
-		printf(".\n output offset=%d\n",pCmd_t->ret_value.output_offset);
-#endif
-		/* 
-		 * fix for typing space ctrl-k 
-		 * ctrl-k is a clause and a space to the parser 
-		 * and is therefore removed, because only the first 
-		 * whitespace is kept in the output buffer 
-		 */
-//		if (pCmd_t->ParseChar == 0xb)   
-		if ((pCmd_t->ParseChar == 0xb || pCmd_t->ParseChar == 0x9)   &&
-			(pCmd_t->clausebuf[pCmd_t->ret_value.output_offset-1]!=0xb))
-		{
-			/* debug switch */
-			if (DT_DBG(CMD_DBG,0x008))
-			{
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-					fprintf((FILE *)pKsd_t->dbglog,"\n%c(*%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-				printf("\n%c(*%x)",pCmd_t->ParseChar,pCmd_t->ParseChar);
-			}
-			pipe_value = (PFASCII<<PSFONT)+pCmd_t->ParseChar;
-			lts_loop(phTTS,&pipe_value);
-		}                                               
-		/* debug switch */
-		if (DT_DBG(CMD_DBG,0x008))
-		{
-			if (pKsd_t->dbglog)		/* mfg added for dbglog.txt support*/
-					fprintf((FILE *)pKsd_t->dbglog,"\n");
-			printf("\n");
-		}
-			
-		/* checking cmd_flushing */
-		if (pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss))
-		{
+	for(i = 0; ((i < pCmd_t->ret_value.output_offset) && (char_types[pCmd_t->output_buf[i]] & MARK_space)); i++);
+
+	/* debug switch */
+	if(DT_DBG(CMD_DBG, 0x008)) {
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+			fprintf(pKsd_t->dbglog, "\nNormal output:");
+		printf("\nNormal output:");
+	}
+	/*
+	   GL 09/06/1996, always send a space first, make sure we have space
+	   while handling rolling text
+	*/
+	/*
+	   GL 01/10/1997, remove the space to fix the ["]<string> problem
+	   GL 01/22/1997, use roll_text to indicate the rolling text state
+	   the extra space will be fired if we are in rolling text state
+	*/
+	if(pCmd_t->roll_text != 0) {
+		pipe_value = (PFASCII << PSFONT) + ' ';
+		lts_loop(phTTS, &pipe_value);
+	}
+
+	for(; i < pCmd_t->ret_value.output_offset; i++) {
+		if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
 			cm_util_flush_init(phTTS);
 			return;
-		}              
-		/* shift the buffers here for the rolling input buffer */
-		if (pCmd_t->done==2)
-		{
-			for (i=pCmd_t->ret_value.input_offset+pCmd_t->ret_value.input_pos,j=0;pCmd_t->clausebuf[i];i++,j++)
-			{
-				pCmd_t->clausebuf[j]=pCmd_t->clausebuf[i];
-#ifdef NEW_INDEXING
-				/* move the indexes too */
-				par_copy_index_cm_text(pCmd_t->input_indexes,j,pCmd_t->input_indexes,i);
+		}
+		if(pCmd_t->output_buf[i] != PAR_INDEX_DUMMY_CHAR) {
+			if(mode == PAR_OUTPUT_CHARS) {
+				if(pCmd_t->output_buf[i] == PAR_PHONES_ON_D) {
+					mode = PAR_OUTPUT_PHONES;
+					continue;
+				}
+				/* debug switch */
+				if(DT_DBG(CMD_DBG, 0x008)) {
+					if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+						fprintf((FILE*)pKsd_t->dbglog, "\n%c(%x)", pCmd_t->output_buf[i], pCmd_t->output_buf[i]);
+					printf("\n%c(%x)", pCmd_t->output_buf[i], pCmd_t->output_buf[i]);
+				}
+#ifdef DEBUG_OLD_PARSER
+				putc(pCmd_t->output_buf[i]);
 #endif
+				pipe_value = (PFASCII << PSFONT) + pCmd_t->output_buf[i];
+				lts_loop(phTTS, &pipe_value);
 			}
-			pCmd_t->roll_text=1;
-			pCmd_t->input_counter=j;
-			pCmd_t->prev_word_index-=pCmd_t->ret_value.input_offset+pCmd_t->ret_value.input_pos;
-			pCmd_t->prevword-=(pCmd_t->ret_value.input_offset+pCmd_t->ret_value.input_pos); 
-			memset(pCmd_t->clausebuf+j,0,PAR_MAX_INPUT_ARRAY-j-1);
-#ifdef NEW_INDEXING
-			memset(&(pCmd_t->input_indexes[j].index[0]),0,(PAR_MAX_INPUT_ARRAY-j-1)*sizeof(index_data_t));
+			if(mode == PAR_OUTPUT_PHONES) {
+				if(pCmd_t->output_buf[i] == PAR_PHONES_OFF_D) {
+					mode = PAR_OUTPUT_CHARS;
+					continue;
+				}
+				/* debug switch */
+				if(DT_DBG(CMD_DBG, 0x008)) {
+					if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+						fprintf((FILE*)pKsd_t->dbglog, "\n%c[%x]", pCmd_t->output_buf[i], pCmd_t->output_buf[i]);
+					printf("\n%c[%x]", pCmd_t->output_buf[i], pCmd_t->output_buf[i]);
+				}
+#ifdef DEBUG_OLD_PARSER
+				putc(pCmd_t->output_buf[i]);
 #endif
+				pipe_value = pKsd_t->reverse_ascky[pCmd_t->output_buf[i]];
+				lts_loop(phTTS, &pipe_value);
+			}
 		}
-		else
-		{
-			memset(pCmd_t->clausebuf,0,PAR_MAX_INPUT_ARRAY);
-			pCmd_t->roll_text=0;
-			pCmd_t->input_counter=0;  
-			pCmd_t->index_counter=0;  
-			pCmd_t->clausebuf[0]=' ';
-            pCmd_t->prev_word_index=0;
-#ifdef NEW_INDEXING
-			memset(pCmd_t->input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-			memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-#endif
-			pCmd_t->prevword=&(pCmd_t->clausebuf[0]);
-		}
-		/*re-init*/
-		memset(pCmd_t->dict_hit_buf,0,PAR_MAX_INPUT_ARRAY);
-        /* save parser_flag */
-		parser_flag = pCmd_t->ret_value.parser_flag;	
-		memset(&(pCmd_t->ret_value),0,sizeof(return_value_t));
-        /* restore parser_flag */
-		pCmd_t->ret_value.parser_flag = parser_flag;	
-		memset(pCmd_t->output_buf,0,PAR_MAX_OUTPUT_ARRAY);
-		memset(pCmd_t->new_input,0,PAR_MAX_INPUT_ARRAY);
-#ifdef NEW_INDEXING
-		memset(pCmd_t->new_input_indexes,0,PAR_MAX_INPUT_ARRAY*sizeof(index_data_t));
-		memset(pCmd_t->output_indexes,0,PAR_MAX_OUTPUT_ARRAY*sizeof(index_data_t));
-#endif
-		pCmd_t->done=0;
+		if(par_is_index_set_cm_text(pCmd_t->output_indexes, i)) {
+			/* debug switch */
+			if(DT_DBG(CMD_DBG, 0x008)) {
+				// * 059	MGS		10/14/1999	BATS#900 Fixed indexing in spanish phone numbers
+				if(i > 0 && pCmd_t->output_buf[i - 1] != ' ' &&
+				   (i + 2) < pCmd_t->ret_value.output_offset &&
+				   !(char_types[pCmd_t->output_buf[i + 1]] & MARK_clause) &&
+				   !(char_types[pCmd_t->output_buf[i + 2]] & MARK_space)) {
+					if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+						fprintf((FILE*)pKsd_t->dbglog, "\n%c(%x)", ' ', ' ');
+					printf("\n%c(%x)", ' ', ' ');
+				}
+				if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+					fprintf(pKsd_t->dbglog, "\n%c[%x]", pCmd_t->output_buf[i], pCmd_t->output_buf[i]);
+			}
+			// MGS 10/14/1999 BATS#900 fixed indexing with spanish phone nubmer rules
+			if(i > 0 && pCmd_t->output_buf[i - 1] != ' ' && !par_is_index_set_cm_text(pCmd_t->output_indexes, i - 1)) {
+				if((i + 2) < pCmd_t->ret_value.output_offset &&
+				   !(char_types[pCmd_t->output_buf[i + 1]] & MARK_clause) &&
+				   !(char_types[pCmd_t->output_buf[i + 2]] & MARK_space)) {
+					pipe_value = (PFASCII << PSFONT) + ' ';
+					lts_loop(phTTS, &pipe_value);
+				}
+			}
 
+			lts_loop(phTTS, pCmd_t->output_indexes[i].index);
+		}
 	}
+#ifdef DEBUG_OLD_PARSER
+	printf(".\n output offset=%d\n", pCmd_t->ret_value.output_offset);
+#endif
+	/*
+	 * fix for typing space ctrl-k
+	 * ctrl-k is a clause and a space to the parser
+	 * and is therefore removed, because only the first
+	 * whitespace is kept in the output buffer
+	 */
+	//		if (pCmd_t->ParseChar == 0xb)
+	if((pCmd_t->ParseChar == 0xb || pCmd_t->ParseChar == 0x9) &&
+	   (pCmd_t->clausebuf[pCmd_t->ret_value.output_offset - 1] != 0xb)) {
+		/* debug switch */
+		if(DT_DBG(CMD_DBG, 0x008)) {
+			if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+				fprintf((FILE*)pKsd_t->dbglog, "\n%c(*%x)", pCmd_t->ParseChar, pCmd_t->ParseChar);
+			printf("\n%c(*%x)", pCmd_t->ParseChar, pCmd_t->ParseChar);
+		}
+		pipe_value = (PFASCII << PSFONT) + pCmd_t->ParseChar;
+		lts_loop(phTTS, &pipe_value);
+	}
+	/* debug switch */
+	if(DT_DBG(CMD_DBG, 0x008)) {
+		if(pKsd_t->dbglog) /* mfg added for dbglog.txt support*/
+			fprintf((FILE*)pKsd_t->dbglog, "\n");
+		printf("\n");
+	}
+
+	/* checking cmd_flushing */
+	if(pKsd_t->text_flush || (pKsd_t->cmd_flush == CMD_flush_toss)) {
+		cm_util_flush_init(phTTS);
+		return;
+	}
+	/* shift the buffers here for the rolling input buffer */
+	if(pCmd_t->done == 2) {
+		for(i = pCmd_t->ret_value.input_offset + pCmd_t->ret_value.input_pos, j = 0; pCmd_t->clausebuf[i]; i++, j++) {
+			pCmd_t->clausebuf[j] = pCmd_t->clausebuf[i];
+#ifdef NEW_INDEXING
+			/* move the indexes too */
+			par_copy_index_cm_text(pCmd_t->input_indexes, j, pCmd_t->input_indexes, i);
+#endif
+		}
+		pCmd_t->roll_text     = 1;
+		pCmd_t->input_counter = j;
+		pCmd_t->prev_word_index -= pCmd_t->ret_value.input_offset + pCmd_t->ret_value.input_pos;
+		pCmd_t->prevword -= (pCmd_t->ret_value.input_offset + pCmd_t->ret_value.input_pos);
+		memset(pCmd_t->clausebuf + j, 0, PAR_MAX_INPUT_ARRAY - j - 1);
+#ifdef NEW_INDEXING
+		memset(&(pCmd_t->input_indexes[j].index[0]), 0, (PAR_MAX_INPUT_ARRAY - j - 1) * sizeof(index_data_t));
+#endif
+	} else {
+		memset(pCmd_t->clausebuf, 0, PAR_MAX_INPUT_ARRAY);
+		pCmd_t->roll_text	= 0;
+		pCmd_t->input_counter	= 0;
+		pCmd_t->index_counter	= 0;
+		pCmd_t->clausebuf[0]	= ' ';
+		pCmd_t->prev_word_index = 0;
+#ifdef NEW_INDEXING
+		memset(pCmd_t->input_indexes, 0, PAR_MAX_INPUT_ARRAY * sizeof(index_data_t));
+		memset(pCmd_t->new_input_indexes, 0, PAR_MAX_INPUT_ARRAY * sizeof(index_data_t));
+#endif
+		pCmd_t->prevword = &(pCmd_t->clausebuf[0]);
+	}
+	/*re-init*/
+	memset(pCmd_t->dict_hit_buf, 0, PAR_MAX_INPUT_ARRAY);
+	/* save parser_flag */
+	parser_flag = pCmd_t->ret_value.parser_flag;
+	memset(&(pCmd_t->ret_value), 0, sizeof(return_value_t));
+	/* restore parser_flag */
+	pCmd_t->ret_value.parser_flag = parser_flag;
+	memset(pCmd_t->output_buf, 0, PAR_MAX_OUTPUT_ARRAY);
+	memset(pCmd_t->new_input, 0, PAR_MAX_INPUT_ARRAY);
+#ifdef NEW_INDEXING
+	memset(pCmd_t->new_input_indexes, 0, PAR_MAX_INPUT_ARRAY * sizeof(index_data_t));
+	memset(pCmd_t->output_indexes, 0, PAR_MAX_OUTPUT_ARRAY * sizeof(index_data_t));
+#endif
+	pCmd_t->done = 0;
+}
 }
 
 #endif /* end #ifndef VOCAL */

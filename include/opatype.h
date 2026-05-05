@@ -23,7 +23,7 @@
 /**********************************************************************/
 /*  Digital UNIX. and Linux                                           */
 /**********************************************************************/
-typedef  long  ATYPE_T;
-typedef  ATYPE_T *  LPATYPE_T;
+typedef long	 ATYPE_T;
+typedef ATYPE_T* LPATYPE_T;
 
 #endif

@@ -1,119 +1,119 @@
- /*
- ***********************************************************************
- *
- *                           Copyright ©
- *	  Copyright © 2002 Fonix Corporation. All rights reserved. 
- *	  Copyright © 2000, 2001 Force Computers, Inc., a Solectron Company. All rights reserved. 
- *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
- *
- *    Restricted Rights: Use, duplication, or disclosure by the U.S.
- *    Government is subject to restrictions as set forth in subparagraph
- *    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
- *    52.227-14 Alt. III, as applicable.
- *
- *    This software is proprietary to and embodies the confidential
- *    technology of Fonix Corporation and other parties.
- *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Fonix or an
- *    authorized sublicensor.
- *
- ***********************************************************************
- *    File Name:        cm_copt.c
- *    Author:
- *    Creation Date:
- *
- *    Functionality:
- *  
- *
- ***********************************************************************
- *    Revision History:
- *
- * Rev  Who     Date            Description
- * ---  -----   -----------     --------------------------------------------  
- * 0001 sik		03/21/1996		Merged from old source files:
- *								cmd_cmd.c
- *								cmd_err.c 
- *								cmd_lts.c
- *								cmd_ph.c
- * 0002 sik     03/22/1996      RE-structured to new code format and merged with the win95 code.
- * 0003 gl      04/03/1996      handle cmd_number same as cmd_count to fix setv command problem.
- * 0004 gl      04/04/1996      add cm_cmd_debug() for new debug command
- * 0005 MGS     04/24/1996      changed cmd_sync to cm_cmd_sync
- *   	                        added ifdef's for MSDOS stuff left in error
- * 0006	MGS		06/13/1996		Put back the old phomeme mode and made timeout an instance variable.
- * 0007 SIK		07/08/1996		Cleaning up and maintenance
- * 0008 GL      07/31/1996      Add code to handle getc() for WIN95 in loadv() function.
- * 0009 GL      08/05/1996      Add pKsd_t for WIN95 in loadv() function.
- * 0010 GL		08/06/1996		use Sleep(100) for WIN95 
- * 0011	MGS		08/07/1996		Added new_indexing stuff
- * 0012 GL		09/04/1996		Add SKIP_all flag.  And also insert one space before
- *								index mark for parser.
- *								change send_index handling.
- * 0013 SIK		09/09/1996		Added return statement in cm_cmd_define().
- * 0014 GL		12/25/1996		increment index_counter for index command
- * 0015 GL		12/29/1996		Add [:mode table on/off] option
- * 0016 GL		10/30/1996		merge the change from V43 code base.
- * 0017	GL		11/25/1996		add language switch to support dual language DTEX
- * 0018 GL		11/27/1996	    pass mode argument while calling say_string() function
- * 0019 GL		12/04/1996		implement [:skip cpg] to skip code page translation.
- * 0020	GL		12/05/1996		remove the language pipe hack for DTEX
- * 0021 GL		12/11/1996		change the way WIN32_OLD handle cmd_remove()
- * 0022 GL		01/28/1997		force SYNC for mode command
- * 0023 GL		02/04/1997		add MODE_EMAIL mode switch
- * 0024 GL		02/06/1997		add SKIP_email mode switch
- * 0025 GL      03/27/1997		for BATS#317
- *                              add "us" option for [:lang] command
- * 0026	GL		04/21/1997	    BATS#357  Add the code for __osf__ build 
- *                              also clean out the wrong switch setting
- * 0027	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
- * 0028 NS		05/02/1997		Removed form-feed characters.  Needed for stripper
- *								to work properly.
- * 0029 GL		10/22/1997      remove some code for NWS build to cut down the image size
- *                              code removed from cm_cmd_language()
- *                                                cm_cmd_remove()
- *                                                cm_cmd_plang()
- *                                                cm_cmd_latin()
- *                                                cm_cmd_gender()
- *                              need to restore these code if NWS need other language.
- * 0030 tek     13nov97         BATS404: new index types (was 01aug97)
- * 0031 cjl     18nov97         Add ifdef for 32bit only index types.
- * 0032	gl		03/25/1998		Added DBGV command for debug variable passing
- * 0033	mfg		3/30/98			BATS#638 set insertflag equalto 2 on VOCAL build
- * 0034	mfg		04/28/98		added [:log dbglog (on/off)] command for logging into dbglog.txt 
- * 0035	mfg		06/29/98		added LANG_latin_american and LANG_british conditional feedback
- * 0036	gl		07/29/98		BATS#728 remove NWSNOAA conditional switch
- * 0037 ETT     05oct98         added linux code
- * 0038 mfg		10/15/98		modified cm_cmd_dial() to work for Windows CE
- * 0039 ETT		11/04/98		for BATS#345 change OpenLogFile and CloseLogFile from static 
- *								so we can use them in cm_cmd.c for [:error text] command.
- * 0040	gl		12/02/1998		BATS#751 add more language support for [:lang] command 
- * 0041	GL		12/17/1998		BATS#846 add say_fletter mode to skip control character 
- * 0042	MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
- * 0043	EAB		10/28/99		Modified to support Lookheed-Martin chnages with ifdef SW_VOLUME
- * 0044	MGS		04/13/2000		Changes for integrated phoneme set 
- * 0045	MGS		07/14/2000		Sapi 5 additions
- * 0046 NAL		07/14/2000		Added additional :pron flags for homographs
- * 0047	MGS		07/26/2000		Realtime rate
- * 0048 CHJ     07/20/2000      French Added
- * 0049 CAB		08/04/2000		Removed () from _flushall() for CEdll. 
- * 0050	MGS		10/05/2000		Redhat 6.2 and linux warning removal
- * 0051	MFG		10/10/2000		include cemm.h for windows CE build		
- * 0052 CAB		10/16/2000		Changed copyright info
- * 0053	MFG		02/27/2001		Fixed flushalll to build under all Win CE enviorments
- * 0054	MGS		05/09/2001		Some VxWorks porting BATS#972
- * 0055 CAB		05/14/2001		Updated copyright info
- * 0056	MFG		05/29/2001		Included dectalkf.h
- * 0057	MGS		06/19/2001		Solaris Port BATS#972
- * 0059	MGS		03/20/2002		Single threaded vtm
- * 0060	MGS		03/21/2002		Single threaded ph
- * 0061	MGS		04/03/2002		Single threaded lts
- * 0062	MGS		04/11/2002		ARM7 port
- * 0063	CAB		05/01/2002		Updated copyright info
- * 0064	CAB		05/01/2002		Removed warnings by typecast
- * 0065	CAB		07/30/2002		Condense repeated code for __osf__
- * 0016	MFG		07/16/2003		added Period Pause limits for bug BTS#10100
- ************************************************************************************************/
-  
+/*
+***********************************************************************
+*
+*                           Copyright ©
+*	  Copyright © 2002 Fonix Corporation. All rights reserved.
+*	  Copyright © 2000, 2001 Force Computers, Inc., a Solectron Company. All rights reserved.
+*    © Digital Equipment Corporation 1996, 1997. All rights reserved.
+*
+*    Restricted Rights: Use, duplication, or disclosure by the U.S.
+*    Government is subject to restrictions as set forth in subparagraph
+*    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
+*    52.227-14 Alt. III, as applicable.
+*
+*    This software is proprietary to and embodies the confidential
+*    technology of Fonix Corporation and other parties.
+*    Possession, use, or copying of this software and media is authorized
+*    only pursuant to a valid written license from Fonix or an
+*    authorized sublicensor.
+*
+***********************************************************************
+*    File Name:        cm_copt.c
+*    Author:
+*    Creation Date:
+*
+*    Functionality:
+*
+*
+***********************************************************************
+*    Revision History:
+*
+* Rev  Who     Date            Description
+* ---  -----   -----------     --------------------------------------------
+* 0001 sik		03/21/1996		Merged from old source files:
+*								cmd_cmd.c
+*								cmd_err.c
+*								cmd_lts.c
+*								cmd_ph.c
+* 0002 sik     03/22/1996      RE-structured to new code format and merged with the win95 code.
+* 0003 gl      04/03/1996      handle cmd_number same as cmd_count to fix setv command problem.
+* 0004 gl      04/04/1996      add cm_cmd_debug() for new debug command
+* 0005 MGS     04/24/1996      changed cmd_sync to cm_cmd_sync
+*   	                        added ifdef's for MSDOS stuff left in error
+* 0006	MGS		06/13/1996		Put back the old phomeme mode and made timeout an instance variable.
+* 0007 SIK		07/08/1996		Cleaning up and maintenance
+* 0008 GL      07/31/1996      Add code to handle getc() for WIN95 in loadv() function.
+* 0009 GL      08/05/1996      Add pKsd_t for WIN95 in loadv() function.
+* 0010 GL		08/06/1996		use Sleep(100) for WIN95
+* 0011	MGS		08/07/1996		Added new_indexing stuff
+* 0012 GL		09/04/1996		Add SKIP_all flag.  And also insert one space before
+*								index mark for parser.
+*								change send_index handling.
+* 0013 SIK		09/09/1996		Added return statement in cm_cmd_define().
+* 0014 GL		12/25/1996		increment index_counter for index command
+* 0015 GL		12/29/1996		Add [:mode table on/off] option
+* 0016 GL		10/30/1996		merge the change from V43 code base.
+* 0017	GL		11/25/1996		add language switch to support dual language DTEX
+* 0018 GL		11/27/1996	    pass mode argument while calling say_string() function
+* 0019 GL		12/04/1996		implement [:skip cpg] to skip code page translation.
+* 0020	GL		12/05/1996		remove the language pipe hack for DTEX
+* 0021 GL		12/11/1996		change the way WIN32_OLD handle cmd_remove()
+* 0022 GL		01/28/1997		force SYNC for mode command
+* 0023 GL		02/04/1997		add MODE_EMAIL mode switch
+* 0024 GL		02/06/1997		add SKIP_email mode switch
+* 0025 GL      03/27/1997		for BATS#317
+*                              add "us" option for [:lang] command
+* 0026	GL		04/21/1997	    BATS#357  Add the code for __osf__ build
+*                              also clean out the wrong switch setting
+* 0027	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
+* 0028 NS		05/02/1997		Removed form-feed characters.  Needed for stripper
+*								to work properly.
+* 0029 GL		10/22/1997      remove some code for NWS build to cut down the image size
+*                              code removed from cm_cmd_language()
+*                                                cm_cmd_remove()
+*                                                cm_cmd_plang()
+*                                                cm_cmd_latin()
+*                                                cm_cmd_gender()
+*                              need to restore these code if NWS need other language.
+* 0030 tek     13nov97         BATS404: new index types (was 01aug97)
+* 0031 cjl     18nov97         Add ifdef for 32bit only index types.
+* 0032	gl		03/25/1998		Added DBGV command for debug variable passing
+* 0033	mfg		3/30/98			BATS#638 set insertflag equalto 2 on VOCAL build
+* 0034	mfg		04/28/98		added [:log dbglog (on/off)] command for logging into dbglog.txt
+* 0035	mfg		06/29/98		added LANG_latin_american and LANG_british conditional feedback
+* 0036	gl		07/29/98		BATS#728 remove NWSNOAA conditional switch
+* 0037 ETT     05oct98         added linux code
+* 0038 mfg		10/15/98		modified cm_cmd_dial() to work for Windows CE
+* 0039 ETT		11/04/98		for BATS#345 change OpenLogFile and CloseLogFile from static
+*								so we can use them in cm_cmd.c for [:error text] command.
+* 0040	gl		12/02/1998		BATS#751 add more language support for [:lang] command
+* 0041	GL		12/17/1998		BATS#846 add say_fletter mode to skip control character
+* 0042	MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+* 0043	EAB		10/28/99		Modified to support Lookheed-Martin chnages with ifdef SW_VOLUME
+* 0044	MGS		04/13/2000		Changes for integrated phoneme set
+* 0045	MGS		07/14/2000		Sapi 5 additions
+* 0046 NAL		07/14/2000		Added additional :pron flags for homographs
+* 0047	MGS		07/26/2000		Realtime rate
+* 0048 CHJ     07/20/2000      French Added
+* 0049 CAB		08/04/2000		Removed () from _flushall() for CEdll.
+* 0050	MGS		10/05/2000		Redhat 6.2 and linux warning removal
+* 0051	MFG		10/10/2000		include cemm.h for windows CE build
+* 0052 CAB		10/16/2000		Changed copyright info
+* 0053	MFG		02/27/2001		Fixed flushalll to build under all Win CE enviorments
+* 0054	MGS		05/09/2001		Some VxWorks porting BATS#972
+* 0055 CAB		05/14/2001		Updated copyright info
+* 0056	MFG		05/29/2001		Included dectalkf.h
+* 0057	MGS		06/19/2001		Solaris Port BATS#972
+* 0059	MGS		03/20/2002		Single threaded vtm
+* 0060	MGS		03/21/2002		Single threaded ph
+* 0061	MGS		04/03/2002		Single threaded lts
+* 0062	MGS		04/11/2002		ARM7 port
+* 0063	CAB		05/01/2002		Updated copyright info
+* 0064	CAB		05/01/2002		Removed warnings by typecast
+* 0065	CAB		07/30/2002		Condense repeated code for __osf__
+* 0016	MFG		07/16/2003		added Period Pause limits for bug BTS#10100
+************************************************************************************************/
+
 #include "dectalkf.h"
 #include "cm_def.h"
 #include "cm_cdef.h"
@@ -124,26 +124,26 @@
 /* pick up the definition of MAXI_PHONES and COMMA */
 #include "l_com_ph.h"
 
-extern short tlitone0[];    /* added 4/22/96 MGS */
+extern short tlitone0[]; /* added 4/22/96 MGS */
 extern short tlitone1[];
 
-#if defined (__APPLE__)
+#if defined(__APPLE__)
 #include <string.h>
 #endif
 
 #ifdef __cplusplus
-extern "C" { 
+extern "C" {
 #endif //__cplusplus
 #include <ctype.h>
-//#include <opthread.h>
+// #include <opthread.h>
 #include <stdlib.h>
 #include "tts.h"
-void wait_semaphore( P_SEMAPHORE ); 
+void wait_semaphore(P_SEMAPHORE);
 #ifdef __cplusplus
 }
 #endif //__cplusplus
 
-/* ETT 11/04/98 for BATS#345 
+/* ETT 11/04/98 for BATS#345
 	change open and close from static  */
 int OpenLogFile(LPTTS_HANDLE_T phTTS);
 
@@ -173,51 +173,53 @@ static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS);
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_phoneme(LPTTS_HANDLE_T phTTS)
-{
-	int value, i;
+int cm_cmd_phoneme(LPTTS_HANDLE_T phTTS) {
+	int    value, i;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;	
-	for(i=0; i < (int)(pCmd_t->param_index); i++)
-	{
-		value = cm_util_string_match(phoneme_modes,pCmd_t->pString[i]);
-		if(value == NO_STRING_MATCH)
-		{
-			return(CMD_bad_string);
+	PKSD_T pKsd_t = phTTS->pKernelShareData;
+	for(i = 0; i < (int)(pCmd_t->param_index); i++) {
+		value = cm_util_string_match(phoneme_modes, pCmd_t->pString[i]);
+		if(value == NO_STRING_MATCH) {
+			return (CMD_bad_string);
 		}
-		switch(value)
-		{         
-			case 0:
-				pKsd_t->phoneme_mode |= PHONEME_ASCKY; break;   /* ascky */
-				break;
-			case 1: 
-				pKsd_t->phoneme_mode &= (~PHONEME_ASCKY); break;/* arpa */
-				break;
-			case 2:       
-				pKsd_t->phoneme_mode |= PHONEME_SPEAK; break;   /* speak */ 
-				break;
-			case 3:       
-				pKsd_t->phoneme_mode &= (~PHONEME_SPEAK); break;/* silent */
-				break;
-			case 4:       
-				pKsd_t->phoneme_mode |= PHONEME_OFF; break;     /* off */
-				break;
-			case 5:       
-				pKsd_t->phoneme_mode &= (~PHONEME_OFF); break;  /* on */
-				break;
-			default:
-				return(CMD_bad_param);    
-		}  /* Matches switch(value) */
+		switch(value) {
+		case 0:
+			pKsd_t->phoneme_mode |= PHONEME_ASCKY;
+			break; /* ascky */
+			break;
+		case 1:
+			pKsd_t->phoneme_mode &= (~PHONEME_ASCKY);
+			break; /* arpa */
+			break;
+		case 2:
+			pKsd_t->phoneme_mode |= PHONEME_SPEAK;
+			break; /* speak */
+			break;
+		case 3:
+			pKsd_t->phoneme_mode &= (~PHONEME_SPEAK);
+			break; /* silent */
+			break;
+		case 4:
+			pKsd_t->phoneme_mode |= PHONEME_OFF;
+			break; /* off */
+			break;
+		case 5:
+			pKsd_t->phoneme_mode &= (~PHONEME_OFF);
+			break; /* on */
+			break;
+		default:
+			return (CMD_bad_param);
+		} /* Matches switch(value) */
 	} /* Matches for(i=0; i < (int)param_index; i++) */
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_log()     
+ *      Function Name: cm_cmd_log()
  *
  *      Description: Searches through parameters given to the
  *      log command stored in pCmd_t->pString[]
- *      and looks for TEXT, FORMS, PHONEME, TYPES, SYLLABLES, OUTPHON followed by ON, OFF or SET. 
+ *      and looks for TEXT, FORMS, PHONEME, TYPES, SYLLABLES, OUTPHON followed by ON, OFF or SET.
  *      Uses constants LOG_TEXT, LOG_PHONEMES, LOG_NAME_TYPES,
  *      LOG_FORM_TYPES, LOG_SYLLABLES, LOG_OUTPHON
  *      to set bits in flag_mask which is used to modify
@@ -233,132 +235,115 @@ int cm_cmd_phoneme(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_log(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_log(LPTTS_HANDLE_T phTTS) {
 	int i, value;
 
 #ifdef DEBUG_OLDPARS
-	int	p, q;
+	int p, q;
 #endif
 	unsigned int flag_mask;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
+	PKSD_T	     pKsd_t = phTTS->pKernelShareData;
+	PCMD_T	     pCmd_t = phTTS->pCMDThreadData;
+
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
-	  return(CMD_flushing);
-	
+		return (CMD_flushing);
+
 	flag_mask = 0;
-	for(i=0; i < (int)pCmd_t->param_index; i++)
-	{
+	for(i = 0; i < (int)pCmd_t->param_index; i++) {
 		/*
-		 * 3/6/96 SIK This command only takes 2 parameters:  TEXT, FORMS, PHONEME, TYPES, SYLLABLES, 
+		 * 3/6/96 SIK This command only takes 2 parameters:  TEXT, FORMS, PHONEME, TYPES, SYLLABLES,
 		 * OUTPHON followed by ON
 		 * OFF or SET
 		 */
 #ifdef DEBUG_OLDPARS
-		for (p=0;log_options[p];p++)
-		{
+		for(p = 0; log_options[p]; p++) {
 			putc('l');
 			putc('o');
 			putc('g');
 			putc('=');
-			for (q=0;log_options[p][q];q++)
-			{
+			for(q = 0; log_options[p][q]; q++) {
 				putc(log_options[p][q]);
 			}
 			putc('\n');
 			putc('\r');
 		}
 #endif
-			     
-		value = cm_util_string_match(log_options,pCmd_t->pString[i]);
-		if(value == NO_STRING_MATCH)
-		{
-			return(CMD_bad_string);
+
+		value = cm_util_string_match(log_options, pCmd_t->pString[i]);
+		if(value == NO_STRING_MATCH) {
+			return (CMD_bad_string);
 		}
-		switch(i)
-		{
-			case 0: /* First parameter */
-				switch(value)
-				{
-					case 0:                               /* text */
-						flag_mask |= LOG_TEXT;
-						break;
-					case 1:                               /* phoneme */
-						flag_mask |= LOG_PHONEMES;
-						break;
-					case 2:                               /* name types */
-						flag_mask |= LOG_NAME_TYPES;
-						break;
-					case 3:                               /* word form classes */
-						flag_mask |= LOG_FORM_TYPES;
-						break;
-					case 4:                               /* word syllable structure */
-						flag_mask |= LOG_SYLLABLES;
-						break;
-					case 5:                               /* word outphon structure */
-						flag_mask |= LOG_OUTPHON;
-				   		break;
-					case 6:                               /* word dbglog structure */
-						flag_mask |= LOG_DBGLOG;		  /*mfg*/
-						break;
-					default:
-						return(CMD_bad_param);
-				}
+		switch(i) {
+		case 0: /* First parameter */
+			switch(value) {
+			case 0: /* text */
+				flag_mask |= LOG_TEXT;
 				break;
-			case 1: /* Second parameter */
-				switch(value)
-				{ 
-					case 7: /* on */
-						if ((flag_mask | LOG_DBGLOG) == LOG_DBGLOG)
-						{  						
-							OpenDbgLogFile(phTTS);
-							flag_mask = 0;
-						}
-						else
-						{		
-							if ( OpenLogFile(phTTS))
-								pKsd_t->logflag |= flag_mask;
-							flag_mask = 0;
-						}
-
-						break;
-					case 8:	/* off */
-						pKsd_t->logflag &= (~flag_mask);
-						flag_mask = 0;
-
-						if ((flag_mask | LOG_DBGLOG) == LOG_DBGLOG)
-						{  						
-							CloseDbgLogFile(phTTS);
-							flag_mask = 0;
-						}
-						else
-						{
-							if ( pKsd_t->logflag & (~flag_mask))
-							{
-								pKsd_t->logflag &= (~flag_mask);
-							}
-							else
-							{
-								CloseLogFile(phTTS);
-							}
-							flag_mask = 0;
-						}
-						break;
-					case 9:	/* set */
-						if ( OpenLogFile(phTTS))
-								pKsd_t->logflag = flag_mask;
-						flag_mask = 0;
-						break;
-					default:
-						return(CMD_bad_param);
-				}
+			case 1: /* phoneme */
+				flag_mask |= LOG_PHONEMES;
+				break;
+			case 2: /* name types */
+				flag_mask |= LOG_NAME_TYPES;
+				break;
+			case 3: /* word form classes */
+				flag_mask |= LOG_FORM_TYPES;
+				break;
+			case 4: /* word syllable structure */
+				flag_mask |= LOG_SYLLABLES;
+				break;
+			case 5: /* word outphon structure */
+				flag_mask |= LOG_OUTPHON;
+				break;
+			case 6:				 /* word dbglog structure */
+				flag_mask |= LOG_DBGLOG; /*mfg*/
 				break;
 			default:
-				return(CMD_bad_param);
-		}       /* switch(i) */
+				return (CMD_bad_param);
+			}
+			break;
+		case 1: /* Second parameter */
+			switch(value) {
+			case 7: /* on */
+				if((flag_mask | LOG_DBGLOG) == LOG_DBGLOG) {
+					OpenDbgLogFile(phTTS);
+					flag_mask = 0;
+				} else {
+					if(OpenLogFile(phTTS))
+						pKsd_t->logflag |= flag_mask;
+					flag_mask = 0;
+				}
+
+				break;
+			case 8: /* off */
+				pKsd_t->logflag &= (~flag_mask);
+				flag_mask = 0;
+
+				if((flag_mask | LOG_DBGLOG) == LOG_DBGLOG) {
+					CloseDbgLogFile(phTTS);
+					flag_mask = 0;
+				} else {
+					if(pKsd_t->logflag & (~flag_mask)) {
+						pKsd_t->logflag &= (~flag_mask);
+					} else {
+						CloseLogFile(phTTS);
+					}
+					flag_mask = 0;
+				}
+				break;
+			case 9: /* set */
+				if(OpenLogFile(phTTS))
+					pKsd_t->logflag = flag_mask;
+				flag_mask = 0;
+				break;
+			default:
+				return (CMD_bad_param);
+			}
+			break;
+		default:
+			return (CMD_bad_param);
+		} /* switch(i) */
 	} /* for(i=0; i < param_index; i++) */
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
@@ -375,14 +360,12 @@ int cm_cmd_log(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS)
-{
+static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-	if ((pKsd_t->dbglog = fopen("dbglog.txt","w"))==NULL)
-		return(FALSE);
-	return( TRUE );
-
+	if((pKsd_t->dbglog = fopen("dbglog.txt", "w")) == NULL)
+		return (FALSE);
+	return (TRUE);
 }
 
 /* ******************************************************************
@@ -398,16 +381,13 @@ static int OpenDbgLogFile(LPTTS_HANDLE_T phTTS)
  *
  * *****************************************************************/
 
-static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS)
-{
+static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	
-	if(pKsd_t->dbglog)
-	{
-	fclose((FILE *)pKsd_t->dbglog);
+
+	if(pKsd_t->dbglog) {
+		fclose((FILE*)pKsd_t->dbglog);
 	}
 }
-
 
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS OpenLogFile()
@@ -423,60 +403,53 @@ static void CloseDbgLogFile(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *			ETT: 11/04/98 for BATS#345
  *				change this from static so we can use it and close
- *				in cm_cmd.c to open and close log.txt for 
+ *				in cm_cmd.c to open and close log.txt for
  *				[:error text] command.
  * *****************************************************************/
 
-int OpenLogFile(LPTTS_HANDLE_T phTTS)
-{
-  /*
-  LPTTS_HANDLE_T phTTS;                                 MVP MI 
+int OpenLogFile(LPTTS_HANDLE_T phTTS) {
+	/*
+	LPTTS_HANDLE_T phTTS;                                 MVP MI
 
-  phTTS = TextToSpeechGetHandle();
-  */
+	phTTS = TextToSpeechGetHandle();
+	*/
 
-  /********************************************************************/
-  /*  If a file is already open, then don't try to open another one.  */
-  /********************************************************************/
+	/********************************************************************/
+	/*  If a file is already open, then don't try to open another one.  */
+	/********************************************************************/
 
-  if ( phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE )
-  {
-	return( TRUE );
-  }
+	if(phTTS->dwOutputState == STATE_OUTPUT_LOG_FILE) {
+		return (TRUE);
+	}
 
-  /********************************************************************/
-  /*  If not in NULL output state or AUDIO Output state then return   */
-  /*  an error.                                                       */
-  /********************************************************************/
+	/********************************************************************/
+	/*  If not in NULL output state or AUDIO Output state then return   */
+	/*  an error.                                                       */
+	/********************************************************************/
 
-  if (( phTTS->dwOutputState != STATE_OUTPUT_AUDIO )
-   && ( phTTS->dwOutputState != STATE_OUTPUT_NULL ))
-  {
-	return( FALSE );
-  }
+	if((phTTS->dwOutputState != STATE_OUTPUT_AUDIO) && (phTTS->dwOutputState != STATE_OUTPUT_NULL)) {
+		return (FALSE);
+	}
 
-  /********************************************************************/
-  /*  Open the log file.                                              */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Open the log file.                                              */
+	/********************************************************************/
 
-  if (( phTTS->pLogFile = fopen( "log.txt", "w" )) == NULL )
-  {
-  	//TextToSpeechErrorHandler( phTTS,
-	//			  ERROR_WRITING_FILE,
-	//			  0L );
-	return( FALSE );
-  }
-  else
-  {
-	cm_cmd_sync(phTTS);
+	if((phTTS->pLogFile = fopen("log.txt", "w")) == NULL) {
+		// TextToSpeechErrorHandler( phTTS,
+		//			  ERROR_WRITING_FILE,
+		//			  0L );
+		return (FALSE);
+	} else {
+		cm_cmd_sync(phTTS);
 
-	phTTS->dwOutputState = STATE_OUTPUT_LOG_FILE;
-  }
-  return( TRUE );
+		phTTS->dwOutputState = STATE_OUTPUT_LOG_FILE;
+	}
+	return (TRUE);
 }
 
 /* ******************************************************************
- *      Function Name: #ifndef MSDOS CloseLogFile()   
+ *      Function Name: #ifndef MSDOS CloseLogFile()
  *
  *      Description: Closes a log file
  *
@@ -485,104 +458,96 @@ int OpenLogFile(LPTTS_HANDLE_T phTTS)
  *
  *      Return Value: void
  *
- *      Comments: 
+ *      Comments:
  *			ETT: 11/04/98 for BATS#345
  *				change this from static so we can use it and open
- *				in cm_cmd.c to open and close log.txt for 
+ *				in cm_cmd.c to open and close log.txt for
  *				[:error text] command.
  * *****************************************************************/
-void CloseLogFile(LPTTS_HANDLE_T phTTS)
-{
-  PKSD_T pKsd_t = phTTS->pKernelShareData;
-  /*
-  LPTTS_HANDLE_T phTTS;                 MVP MI
+void CloseLogFile(LPTTS_HANDLE_T phTTS) {
+	PKSD_T pKsd_t = phTTS->pKernelShareData;
+	/*
+	LPTTS_HANDLE_T phTTS;                 MVP MI
 
-  phTTS = TextToSpeechGetHandle();
-  */
+	phTTS = TextToSpeechGetHandle();
+	*/
 
-  /********************************************************************/
-  /*  Wait for all data to complete before closing the log file.      */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Wait for all data to complete before closing the log file.      */
+	/********************************************************************/
 
-  cm_cmd_sync(phTTS);
+	cm_cmd_sync(phTTS);
 
-  /********************************************************************/
-  /*  Exit if the log file is not open.                               */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Exit if the log file is not open.                               */
+	/********************************************************************/
 
-  if ( phTTS->dwOutputState != STATE_OUTPUT_LOG_FILE )
-  {
+	if(phTTS->dwOutputState != STATE_OUTPUT_LOG_FILE) {
+		return;
+	}
+
+	/********************************************************************/
+	/*  Set the system output state to audio if it is enabled.          */
+	/********************************************************************/
+
+	if((phTTS->dwDeviceOptions & DO_NOT_USE_AUDIO_DEVICE) == 0)
+		phTTS->dwOutputState = STATE_OUTPUT_AUDIO;
+	else
+		phTTS->dwOutputState = STATE_OUTPUT_NULL;
+
+	/********************************************************************/
+	/*  Close the log file.                                             */
+	/********************************************************************/
+
+	if(fclose(phTTS->pLogFile)) {
+		// TextToSpeechErrorHandler( phTTS,
+		//			  ERROR_WRITING_FILE,
+		//			  0L );
+	} else {
+		pKsd_t->logflag = 0;
+	}
 	return;
-  }
-
-  /********************************************************************/
-  /*  Set the system output state to audio if it is enabled.          */
-  /********************************************************************/
-
-  if (( phTTS->dwDeviceOptions & DO_NOT_USE_AUDIO_DEVICE ) == 0 )
-	phTTS->dwOutputState = STATE_OUTPUT_AUDIO;
-  else
-	phTTS->dwOutputState = STATE_OUTPUT_NULL;
-
-  /********************************************************************/
-  /*  Close the log file.                                             */
-  /********************************************************************/
-
-  if ( fclose( phTTS->pLogFile ))
-  {
-  	//TextToSpeechErrorHandler( phTTS,
-	//			  ERROR_WRITING_FILE,
-	//			  0L );
-  }
-  else
-  {
-	pKsd_t->logflag = 0;
-  }
-  return;
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_break() 
+ *      Function Name: cm_cmd_break()
  *
  *      Description: Function break() is used to instruct the ph code to generate a autopause at
  *      every wbound.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS	Pointer to structure containing PKSD_T
  *										and PCMD_T data structures.
- *				   						 
+ *
  *
  *      Return Value: int CMD_success
  *
  *      Comments:
  *
  * ******************************************************************/
-int cm_cmd_break(LPTTS_HANDLE_T phTTS)
-{
-	int     i,value;
+int cm_cmd_break(LPTTS_HANDLE_T phTTS) {
+	int	     i, value;
 	unsigned int flag_mask;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	flag_mask = 0;
-	for(i = 0; i < (int)pCmd_t->param_index; i++)
-	{
-		value = cm_util_string_match(log_options,pCmd_t->pString[i]);
+	PKSD_T	     pKsd_t = phTTS->pKernelShareData;
+	PCMD_T	     pCmd_t = phTTS->pCMDThreadData;
+	flag_mask	    = 0;
+	for(i = 0; i < (int)pCmd_t->param_index; i++) {
+		value = cm_util_string_match(log_options, pCmd_t->pString[i]);
 		if(value == NO_STRING_MATCH)
-			return(CMD_bad_string);
-		switch(value)
-		{
-			case 0:/* on */
-				pKsd_t->wbreak = TRUE;
-				break;
-			case 1:/* off */
-				pKsd_t->wbreak = FALSE;
-				break;
+			return (CMD_bad_string);
+		switch(value) {
+		case 0: /* on */
+			pKsd_t->wbreak = TRUE;
+			break;
+		case 1: /* off */
+			pKsd_t->wbreak = FALSE;
+			break;
 		}
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_say()     
+ *      Function Name: cm_cmd_say()
  *
  *      Description: Searches through parameters given to the
  *      say command stored in pCmd_t->pString[]
@@ -598,48 +563,46 @@ int cm_cmd_break(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_say(LPTTS_HANDLE_T phTTS)
-{
-	int     value; 
+int cm_cmd_say(LPTTS_HANDLE_T phTTS) {
+	int    value;
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-	value = cm_util_string_match(say_options,pCmd_t->pString[0]);
+	value = cm_util_string_match(say_options, pCmd_t->pString[0]);
 	if(value == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	switch(value)
-	{
-		case 0:	/* clause */
-			pKsd_t->sayflag = SAY_CLAUSE;
-			break;
-		case 1:	/* word */
-			pKsd_t->sayflag = SAY_WORD;
-			break;
-		case 2:	/* letter */
-			if(cm_cmd_sync(phTTS) == CMD_flushing)
-				return(CMD_flushing);
-			pKsd_t->sayflag = SAY_LETTER;
-			break;
-		case 3:	/* fletter */
-			if(cm_cmd_sync(phTTS) == CMD_flushing)
-				return(CMD_flushing);
-			pKsd_t->sayflag = SAY_FLETTER;
-			break;
-		case 4:	/* line */
-			pKsd_t->sayflag = SAY_LINE;
-			break;
-		case 5:	/* syllables */
-			pKsd_t->sayflag = SAY_SYLLABLE;
-			break;
+		return (CMD_bad_string);
+	switch(value) {
+	case 0: /* clause */
+		pKsd_t->sayflag = SAY_CLAUSE;
+		break;
+	case 1: /* word */
+		pKsd_t->sayflag = SAY_WORD;
+		break;
+	case 2: /* letter */
+		if(cm_cmd_sync(phTTS) == CMD_flushing)
+			return (CMD_flushing);
+		pKsd_t->sayflag = SAY_LETTER;
+		break;
+	case 3: /* fletter */
+		if(cm_cmd_sync(phTTS) == CMD_flushing)
+			return (CMD_flushing);
+		pKsd_t->sayflag = SAY_FLETTER;
+		break;
+	case 4: /* line */
+		pKsd_t->sayflag = SAY_LINE;
+		break;
+	case 5: /* syllables */
+		pKsd_t->sayflag = SAY_SYLLABLE;
+		break;
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
  *      Function Name: cm_cmd_error()
  *
  *      Description: Searches through parameters given to the error command stored in pCmd_t->pString[]
- *      and looks for IGNORE, TEXT, ESCAPE, SPEAK or TONE. Uses constants ERROR_ignore, ERROR_text, ERROR_escape, 
+ *      and looks for IGNORE, TEXT, ESCAPE, SPEAK or TONE. Uses constants ERROR_ignore, ERROR_text, ERROR_escape,
  *      ERROR_speak and ERROR_tone used to modify the bits in flag pKsd_t->error_mode.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS	Pointer to structure containing PKSD_T
@@ -653,38 +616,36 @@ int cm_cmd_say(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_error(LPTTS_HANDLE_T phTTS)
-{
-	int     value;
-	//PKSD_T pKsd_t = phTTS->pKernelShareData;
+int cm_cmd_error(LPTTS_HANDLE_T phTTS) {
+	int value;
+	// PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-	value = cm_util_string_match(error_options,pCmd_t->pString[0]);
+	value = cm_util_string_match(error_options, pCmd_t->pString[0]);
 	if(value == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	switch(value)
-	{
-		case 0: /* ignore */
-			pCmd_t->error_mode = ERROR_ignore;
-			break;
-		case 1: /* text */
-			pCmd_t->error_mode = ERROR_text;
-			break;
-		case 2: /* escape */
-			pCmd_t->error_mode = ERROR_escape;
-			break;
-		case 3: /* speak */
-			pCmd_t->error_mode = ERROR_speak;
-			break;
-		case 4:	/* tone */
-			pCmd_t->error_mode = ERROR_tone;
-			break;
+		return (CMD_bad_string);
+	switch(value) {
+	case 0: /* ignore */
+		pCmd_t->error_mode = ERROR_ignore;
+		break;
+	case 1: /* text */
+		pCmd_t->error_mode = ERROR_text;
+		break;
+	case 2: /* escape */
+		pCmd_t->error_mode = ERROR_escape;
+		break;
+	case 3: /* speak */
+		pCmd_t->error_mode = ERROR_speak;
+		break;
+	case 4: /* tone */
+		pCmd_t->error_mode = ERROR_tone;
+		break;
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_pause()   
+ *      Function Name: cm_cmd_pause()
  *
  *      Description: Pauses for a time interval specified by pCmd_t->params[0]
  *
@@ -696,41 +657,36 @@ int cm_cmd_error(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_pause(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-  /*LPTTS_HANDLE_T phTTS; */
-  DWORD dwDelay;
+	/*LPTTS_HANDLE_T phTTS; */
+	DWORD dwDelay;
 
-/* GL 10/30/1996, comment out this as V43 code
-  if( cm_cmd_sync(phTTS) == CMD_flushing )
-	return(CMD_flushing);
-*/
-  dwDelay = (DWORD)(pCmd_t->params[0]);
+	/* GL 10/30/1996, comment out this as V43 code
+	  if( cm_cmd_sync(phTTS) == CMD_flushing )
+		return(CMD_flushing);
+	*/
+	dwDelay = (DWORD)(pCmd_t->params[0]);
 
-  if ( dwDelay != 0 )
-  {
-	//TextToSpeechPause( phTTS );
+	if(dwDelay != 0) {
+		// TextToSpeechPause( phTTS );
 
-    while ((dwDelay > 0) && ( ! pKsd_t->halting))
-    {	if ( dwDelay > 10)
-        {	//OP_Sleep(10);
-            dwDelay -= 10;
-        }
-        else
-        {	//OP_Sleep(dwDelay);
-            dwDelay = 0;
-        }
-    }
-    //TextToSpeechResume( phTTS );
-  }
-  return(CMD_success);
+		while((dwDelay > 0) && (!pKsd_t->halting)) {
+			if(dwDelay > 10) { // OP_Sleep(10);
+				dwDelay -= 10;
+			} else { // OP_Sleep(dwDelay);
+				dwDelay = 0;
+			}
+		}
+		// TextToSpeechResume( phTTS );
+	}
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_resume()  
+ *      Function Name: cm_cmd_resume()
  *
  *      Description: Interrupts the pause command.
  *
@@ -741,84 +697,79 @@ int cm_cmd_pause(LPTTS_HANDLE_T phTTS)
  *						CMD_success
  *						CMD_flushing
  *
- *      Comments:          
+ *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_resume(LPTTS_HANDLE_T phTTS)
-{
-  if( cm_cmd_sync(phTTS) == CMD_flushing )
-	return(CMD_flushing);
+int cm_cmd_resume(LPTTS_HANDLE_T phTTS) {
+	if(cm_cmd_sync(phTTS) == CMD_flushing)
+		return (CMD_flushing);
 
-  //TextToSpeechResume( phTTS );
+	// TextToSpeechResume( phTTS );
 
-  return(CMD_success);          
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_flush()   
+ *      Function Name: cm_cmd_flush()
  *
  *      Description:
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int: 
+ *      Return Value: int:
  *						CMD_success
  *						CMD_bad_value
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_flush(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_flush(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-	if(pCmd_t->defaults[0] == TRUE || pCmd_t->defaults[1] == TRUE)
-	{
-		return(CMD_success);
+	if(pCmd_t->defaults[0] == TRUE || pCmd_t->defaults[1] == TRUE) {
+		return (CMD_success);
 	}
 	pCmd_t->params[0] = cm_util_string_match(flush_options, pCmd_t->pString[0]);
 	if(pCmd_t->params[0] == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	if(pCmd_t->params[0] >= (sizeof(flush_options)/2))
-		return(CMD_bad_value);
-	switch(pCmd_t->params[0])
-	{
-		case 0:	/* all */
-			return(CMD_success);
-			break;
-		case 1:	/* until */
-			pKsd_t->spc_flush_type = SPC_flush_until;
+		return (CMD_bad_string);
+	if(pCmd_t->params[0] >= (sizeof(flush_options) / 2))
+		return (CMD_bad_value);
+	switch(pCmd_t->params[0]) {
+	case 0: /* all */
+		return (CMD_success);
+		break;
+	case 1: /* until */
+		pKsd_t->spc_flush_type	= SPC_flush_until;
+		pKsd_t->spc_flush_value = pCmd_t->params[1];
+		pKsd_t->spc_flush	= TRUE;
+		break;
+	case 2: /* mask */
+		pKsd_t->spc_flush_type	= SPC_flush_mask;
+		pKsd_t->spc_flush_value = pCmd_t->params[1];
+		pKsd_t->spc_flush	= TRUE;
+		break;
+	case 3: /* after */
+		if(pKsd_t->halting == FALSE) {
+			pKsd_t->spc_flush_type	= SPC_flush_after;
 			pKsd_t->spc_flush_value = pCmd_t->params[1];
-			pKsd_t->spc_flush = TRUE;
-			break;
-		case 2:/* mask */
-			pKsd_t->spc_flush_type = SPC_flush_mask;
-			pKsd_t->spc_flush_value = pCmd_t->params[1];
-			pKsd_t->spc_flush = TRUE;
-			break;
-		case 3:	/* after */
-			if(pKsd_t->halting == FALSE)
-			{
-				pKsd_t->spc_flush_type = SPC_flush_after;
-				pKsd_t->spc_flush_value = pCmd_t->params[1];
-				pKsd_t->spc_flush = TRUE;
-				pKsd_t->spc_sync.value = 0;
-			}
-			start_flush(TRUE);
-			break;
-		case 4:	/* text */
-			pKsd_t->spc_flush_type = SPC_flush_all;
-			pKsd_t->spc_flush = TRUE;
-			pKsd_t->text_flush = TRUE;
-			break;
+			pKsd_t->spc_flush	= TRUE;
+			pKsd_t->spc_sync.value	= 0;
+		}
+		start_flush(TRUE);
+		break;
+	case 4: /* text */
+		pKsd_t->spc_flush_type = SPC_flush_all;
+		pKsd_t->spc_flush      = TRUE;
+		pKsd_t->text_flush     = TRUE;
+		break;
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_sync()    
+ *      Function Name: cm_cmd_sync()
  *
  *      Description: Sends a SYNCH down the pipe.
  *
@@ -832,72 +783,68 @@ int cm_cmd_flush(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_sync(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_sync(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
-  DT_PIPE_T pipe_value;
+	DT_PIPE_T pipe_value;
 
-/*  LPTTS_HANDLE_T phTTS; */    /* MVP MI earlier the value of phTTS used to get by
-									TextToSpeechGetHandle()
-								*/
+	/*  LPTTS_HANDLE_T phTTS; */ /* MVP MI earlier the value of phTTS used to get by
+									     TextToSpeechGetHandle()
+								     */
 
-  if(pKsd_t->halting == FALSE)
-  {
-	/*phTTS = TextToSpeechGetHandle();*/   /*MVP MI */
+	if(pKsd_t->halting == FALSE) {
+		/*phTTS = TextToSpeechGetHandle();*/ /*MVP MI */
 
-	pKsd_t->spc_sync.value = 0;
-	pipe_value = (PFASCII<<PSFONT)+0xb;
-	lts_loop(phTTS,&pipe_value);
+		pKsd_t->spc_sync.value = 0;
+		pipe_value	       = (PFASCII << PSFONT) + 0xb;
+		lts_loop(phTTS, &pipe_value);
 
-	pipe_value = SYNC;
-	lts_loop(phTTS,&pipe_value);
-  }
+		pipe_value = SYNC;
+		lts_loop(phTTS, &pipe_value);
+	}
 
-  if(pKsd_t->cmd_flush)
-	return(CMD_flushing);
+	if(pKsd_t->cmd_flush)
+		return (CMD_flushing);
 
-  return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
  *      Function Name: cm_cmd_enable()
- * 
+ *
  *      Description: Selective enable of the flush
  *
  *      Arguments: PKSD_T pKsd_t
  *
- *      Return Value: int 
+ *      Return Value: int
  *						CMD_success
  *
  *      Comments:
  *
  * *****************************************************************/
 
-int cm_cmd_enable(PKSD_T pKsd_t)
-{
+int cm_cmd_enable(PKSD_T pKsd_t) {
 	DT_PIPE_T pipe_value;
-	if(pKsd_t->halting == FALSE)
-	{
+	if(pKsd_t->halting == FALSE) {
 		pKsd_t->spc_sync.value = 0;
-		pipe_value = (PFASCII<<PSFONT)+0xb;
-		lts_loop(pKsd_t->phTTS,&pipe_value);
+		pipe_value	       = (PFASCII << PSFONT) + 0xb;
+		lts_loop(pKsd_t->phTTS, &pipe_value);
 		pipe_value = SYNC;
-		lts_loop(pKsd_t->phTTS,&pipe_value);
+		lts_loop(pKsd_t->phTTS, &pipe_value);
 
 		wait_semaphore(&pKsd_t->spc_sync);
 	}
-	pKsd_t->spc_flush = FALSE;
+	pKsd_t->spc_flush  = FALSE;
 	pKsd_t->text_flush = FALSE;
 	reset_spc();
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_punct()   
+ *      Function Name: cm_cmd_punct()
  *
- *      Description: Sets punctuation pronunciation mode. Takes a single parameter stored in 
- *					 pCmd_t->pString[0] whici is either NONE, SOME, ALL or PASS. Sets 
+ *      Description: Sets punctuation pronunciation mode. Takes a single parameter stored in
+ *					 pCmd_t->pString[0] whici is either NONE, SOME, ALL or PASS. Sets
  *					 pCmd_t->punct_mode to appropriate value.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
@@ -909,41 +856,39 @@ int cm_cmd_enable(PKSD_T pKsd_t)
  *
  * *****************************************************************/
 
-int cm_cmd_punct(LPTTS_HANDLE_T phTTS)
-{
-	int     value;
+int cm_cmd_punct(LPTTS_HANDLE_T phTTS) {
+	int    value;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	value = cm_util_string_match(punct_options,pCmd_t->pString[0]);
+
+	value = cm_util_string_match(punct_options, pCmd_t->pString[0]);
 	if(value == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	switch(value)
-    {
-		case PUNCT_none:
-			pCmd_t->punct_mode = PUNCT_none;
-			break;
-		case PUNCT_some:
-			pCmd_t->punct_mode = PUNCT_some;
-			break;
-		case PUNCT_all:
-			pCmd_t->punct_mode = PUNCT_all;
-			break;
-		case PUNCT_pass:
-			pCmd_t->punct_mode = PUNCT_pass;
-			break;
-		default:
-			return(CMD_bad_value);
-			break;
-	}         
-		/* pCmd_t->punct_mode=value; duplicate code? cjl 26-sep-95 */
-		return(CMD_success);
+		return (CMD_bad_string);
+	switch(value) {
+	case PUNCT_none:
+		pCmd_t->punct_mode = PUNCT_none;
+		break;
+	case PUNCT_some:
+		pCmd_t->punct_mode = PUNCT_some;
+		break;
+	case PUNCT_all:
+		pCmd_t->punct_mode = PUNCT_all;
+		break;
+	case PUNCT_pass:
+		pCmd_t->punct_mode = PUNCT_pass;
+		break;
+	default:
+		return (CMD_bad_value);
+		break;
+	}
+	/* pCmd_t->punct_mode=value; duplicate code? cjl 26-sep-95 */
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_punct()   
+ *      Function Name: cm_cmd_punct()
  *
- *      Description: Sets punctuation pronunciation mode. Takes a single parameter stored in 
- *					 pCmd_t->pString[0] whici is either NONE, SOME, ALL or PASS. Sets 
+ *      Description: Sets punctuation pronunciation mode. Takes a single parameter stored in
+ *					 pCmd_t->pString[0] whici is either NONE, SOME, ALL or PASS. Sets
  *					 pCmd_t->punct_mode to appropriate value.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
@@ -954,47 +899,45 @@ int cm_cmd_punct(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_skip(LPTTS_HANDLE_T phTTS)
-{
-	int     value;
+int cm_cmd_skip(LPTTS_HANDLE_T phTTS) {
+	int    value;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	value = cm_util_string_match(skip_options,pCmd_t->pString[0]);
-	if(value == NO_STRING_MATCH)
-		return(CMD_bad_string);
-	switch(value)
-    {
-		case SKIP_none:
-			pCmd_t->skip_mode = SKIP_none;
-			break;
-		case SKIP_email:
-			pCmd_t->skip_mode = SKIP_email;
-			break;
-		case SKIP_punct:
-			pCmd_t->skip_mode = SKIP_punct;
-			break;
-		case SKIP_rule:
-			pCmd_t->skip_mode = SKIP_rule;
-			break;
-		case SKIP_all:
-			pCmd_t->skip_mode = SKIP_all;
-			break;
-		case SKIP_cpg:
-			pCmd_t->skip_mode = SKIP_cpg;
-			break;
-		default:
-			return(CMD_bad_value);
-			break;
-	}         
 
-		return(CMD_success);
+	value = cm_util_string_match(skip_options, pCmd_t->pString[0]);
+	if(value == NO_STRING_MATCH)
+		return (CMD_bad_string);
+	switch(value) {
+	case SKIP_none:
+		pCmd_t->skip_mode = SKIP_none;
+		break;
+	case SKIP_email:
+		pCmd_t->skip_mode = SKIP_email;
+		break;
+	case SKIP_punct:
+		pCmd_t->skip_mode = SKIP_punct;
+		break;
+	case SKIP_rule:
+		pCmd_t->skip_mode = SKIP_rule;
+		break;
+	case SKIP_all:
+		pCmd_t->skip_mode = SKIP_all;
+		break;
+	case SKIP_cpg:
+		pCmd_t->skip_mode = SKIP_cpg;
+		break;
+	default:
+		return (CMD_bad_value);
+		break;
+	}
+
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_timeout() 
+ *      Function Name: cm_cmd_timeout()
  *
- *      Description: Sets pCmd_t->timeout equal to the parameter stored in 
- *					 pCmd_t->params[0]. 
+ *      Description: Sets pCmd_t->timeout equal to the parameter stored in
+ *					 pCmd_t->params[0].
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
@@ -1004,23 +947,22 @@ int cm_cmd_skip(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_timeout(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_timeout(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
+
 	if(pCmd_t->defaults[0] == TRUE)
 		pCmd_t->params[0] = 0;
 
-	pCmd_t->timeout = pCmd_t->params[0];
+	pCmd_t->timeout	      = pCmd_t->params[0];
 	pKsd_t->input_timeout = pCmd_t->timeout;
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_cpu_rate()        
+ *      Function Name: cm_cmd_cpu_rate()
  *
- *      Description: Calls module_clocks() passing the parameter, or 10 as the 
+ *      Description: Calls module_clocks() passing the parameter, or 10 as the
  *					 default value.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
@@ -1031,13 +973,12 @@ int cm_cmd_timeout(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS)
-{   
-	return(CMD_success);
+int cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS) {
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_setv()    
+ *      Function Name: cm_cmd_setv()
  *
  *      Description: Executes command stored in the pCmd_t->setv[] array indexed
  *                   by pCmd_t->params[0].
@@ -1050,31 +991,30 @@ int cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_setv(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_setv(LPTTS_HANDLE_T phTTS) {
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-    //short cmd_number = pCmd_t->params[0]; /*MVP MI New*/
-	
+	// short cmd_number = pCmd_t->params[0]; /*MVP MI New*/
+
 	if((pCmd_t->params[0]) < 0 || pCmd_t->params[0] > 9)
-		return(CMD_bad_value);
-	pCmd_t->cmd_count=0;
+		return (CMD_bad_value);
+	pCmd_t->cmd_count  = 0;
 	pCmd_t->cmd_number = pCmd_t->params[0];
-	/* 
-     * Tells command parser that its time to process                   
-	 * internally stored command string 
+	/*
+	 * Tells command parser that its time to process
+	 * internally stored command string
 	 */
 	// BATS#638 mfg 3/30/98 set insertflag equalto 2 on VOCAL build
 #ifdef VOCAL
-	pCmd_t->insertflag=2;
+	pCmd_t->insertflag = 2;
 #else
-	pCmd_t->insertflag=1;
+	pCmd_t->insertflag = 1;
 #endif
 
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_loadv()   
+ *      Function Name: cm_cmd_loadv()
  *
  *      Description: Stores a command in the pCmd_t->setv[] array.
  *
@@ -1086,32 +1026,30 @@ int cm_cmd_setv(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_loadv(LPTTS_HANDLE_T phTTS) {
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
-   /* 
-    *this will probably crash and burn if a flush happens 
-	* in the middle.. (tek 1/3/96)
-	*/
-   unsigned char temp[60];
-   int j=0;
-   int flag=1;
-   //short cmd_number = pCmd_t->params[0];  /* MVP MI new */
-   
-   if((pCmd_t->params[0]) < 0 || pCmd_t->params[0] > 9)
-		return(CMD_bad_value);
-   pCmd_t->cmd_count=0;
-   pCmd_t->cmd_number = pCmd_t->params[0];
-   while (flag) 
-   {
-	  if (temp[j] == ']')
-		flag = 0;
-	  j++;
-   }
-   temp[j] = '\0';
-   strcpy(pCmd_t->setv[pCmd_t->cmd_number].cmd,temp); 
-   return(CMD_success);
+	/*
+	 *this will probably crash and burn if a flush happens
+	 * in the middle.. (tek 1/3/96)
+	 */
+	unsigned char temp[60];
+	int	      j	   = 0;
+	int	      flag = 1;
+	// short cmd_number = pCmd_t->params[0];  /* MVP MI new */
+
+	if((pCmd_t->params[0]) < 0 || pCmd_t->params[0] > 9)
+		return (CMD_bad_value);
+	pCmd_t->cmd_count  = 0;
+	pCmd_t->cmd_number = pCmd_t->params[0];
+	while(flag) {
+		if(temp[j] == ']')
+			flag = 0;
+		j++;
+	}
+	temp[j] = '\0';
+	strcpy(pCmd_t->setv[pCmd_t->cmd_number].cmd, temp);
+	return (CMD_success);
 }
 
 /* ******************************************************************
@@ -1129,13 +1067,12 @@ int cm_cmd_loadv(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_code_page(LPTTS_HANDLE_T phTTS)
-{         
-	return(CMD_bad_value);
+int cm_cmd_code_page(LPTTS_HANDLE_T phTTS) {
+	return (CMD_bad_value);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_vs() 
+ *      Function Name: cm_cmd_vs()
  *
  *      Description: cmd_vs implements the short form of the volume command that is no longer
  *  				 always unique but happened to work before.
@@ -1148,25 +1085,24 @@ int cm_cmd_code_page(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_vs(LPTTS_HANDLE_T phTTS)
-{
-	PCMD_T pCmd_t=phTTS->pCMDThreadData;
-	StereoVolumeControl( phTTS,
-						 pCmd_t->params[0],
-						 VOLUME_SET,
-						 TRUE,
-						 TRUE );
-	return(CMD_success);
-}                              
+int cm_cmd_vs(LPTTS_HANDLE_T phTTS) {
+	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	StereoVolumeControl(phTTS,
+			    pCmd_t->params[0],
+			    VOLUME_SET,
+			    TRUE,
+			    TRUE);
+	return (CMD_success);
+}
 
 /* ******************************************************************
- *      Function Name: #ifndef MSDOS cm_cmd_volume()  
+ *      Function Name: #ifndef MSDOS cm_cmd_volume()
  *
- *      Description: Calls StereoVolumeControl() passing different parameters 
- *					 depending on whether the command is DCS_VOLUME_SET, 
- *					 DCS_VOLUME_UP, DCS_VOLUME_DOWN, DCS_VOLUME_LSET, 
- *					 DCS_VOLUME_LUP, DCS_VOLUME_LDOWN, DCS_VOLUME_RSET, 
- *					 DCS_VOLUME_RUP, DCS_VOLUME_RDOWN, or DCS_VOLUME_SSET. 
+ *      Description: Calls StereoVolumeControl() passing different parameters
+ *					 depending on whether the command is DCS_VOLUME_SET,
+ *					 DCS_VOLUME_UP, DCS_VOLUME_DOWN, DCS_VOLUME_LSET,
+ *					 DCS_VOLUME_LUP, DCS_VOLUME_LDOWN, DCS_VOLUME_RSET,
+ *					 DCS_VOLUME_RUP, DCS_VOLUME_RDOWN, or DCS_VOLUME_SSET.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
@@ -1176,106 +1112,104 @@ int cm_cmd_vs(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_volume(LPTTS_HANDLE_T phTTS)
-{
-	int     cmd_type, cmd_value;
+int cm_cmd_volume(LPTTS_HANDLE_T phTTS) {
+	int    cmd_type, cmd_value;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
 	cmd_type = cm_util_string_match(volume_options, pCmd_t->pString[0]);
 	if(cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
+		return (CMD_bad_string);
 	cmd_type += DCS_VOLUME_SET;
 	cmd_value = pCmd_t->params[1];
 
-	if( cm_cmd_sync(phTTS) == CMD_flushing )
-		return(CMD_flushing);
+	if(cm_cmd_sync(phTTS) == CMD_flushing)
+		return (CMD_flushing);
 
-	switch(cmd_type)
-	{
-		case DCS_VOLUME_SET:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_SET,
-								 TRUE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_UP:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_UP,
-								 TRUE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_DOWN:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_DOWN,
-								 TRUE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_LSET:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_SET,
-								 TRUE,
-								 FALSE );
-			break;
-		case DCS_VOLUME_LUP:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_UP,
-								 TRUE,
-								 FALSE );
-			break;
-		case DCS_VOLUME_LDOWN:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_DOWN,
-								 TRUE,
-								 FALSE );
-			break;
-		case DCS_VOLUME_RSET:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_SET,
-								 FALSE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_RUP:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_UP,
-								 FALSE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_RDOWN:
-			StereoVolumeControl( phTTS,
-								 cmd_value,
-								 VOLUME_DOWN,
-								 FALSE,
-								 TRUE );
-			break;
-		case DCS_VOLUME_SSET:
-			SetStereoVolume( phTTS, cmd_value, pCmd_t->params[2] );
-			break;
-		case DCS_VOLUME_ATT:
-			phTTS->pKernelShareData->vol_att=cmd_value;
-			break;
-		default:
-			return(CMD_bad_value);
+	switch(cmd_type) {
+	case DCS_VOLUME_SET:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_SET,
+				    TRUE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_UP:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_UP,
+				    TRUE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_DOWN:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_DOWN,
+				    TRUE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_LSET:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_SET,
+				    TRUE,
+				    FALSE);
+		break;
+	case DCS_VOLUME_LUP:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_UP,
+				    TRUE,
+				    FALSE);
+		break;
+	case DCS_VOLUME_LDOWN:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_DOWN,
+				    TRUE,
+				    FALSE);
+		break;
+	case DCS_VOLUME_RSET:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_SET,
+				    FALSE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_RUP:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_UP,
+				    FALSE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_RDOWN:
+		StereoVolumeControl(phTTS,
+				    cmd_value,
+				    VOLUME_DOWN,
+				    FALSE,
+				    TRUE);
+		break;
+	case DCS_VOLUME_SSET:
+		SetStereoVolume(phTTS, cmd_value, pCmd_t->params[2]);
+		break;
+	case DCS_VOLUME_ATT:
+		phTTS->pKernelShareData->vol_att = cmd_value;
+		break;
+	default:
+		return (CMD_bad_value);
 	};
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ********************************************************
- *      Function Name: cm_cmd_language()        
+ *      Function Name: cm_cmd_language()
  *
  *      Description: Switches language between English, French and Spanish.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int: 
+ *      Return Value: int:
  *						CMD_bad_string
  *						CMD_bad_value
  *						CMD_flushing
@@ -1284,89 +1218,85 @@ int cm_cmd_volume(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *******************************************************/
-int cm_cmd_language(LPTTS_HANDLE_T phTTS)
-{   
+int cm_cmd_language(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	int     cmd_type;
+
+	int	  cmd_type;
 	DT_PIPE_T pipe_value;
 
-	if(pCmd_t->esc_command == FALSE)
-	{
-		cmd_type = cm_util_string_match(lang_options,pCmd_t->pString[0]);
+	if(pCmd_t->esc_command == FALSE) {
+		cmd_type = cm_util_string_match(lang_options, pCmd_t->pString[0]);
 		if(cmd_type == NO_STRING_MATCH)
-			return(CMD_bad_string);
-	}
-	else
+			return (CMD_bad_string);
+	} else
 		cmd_type = pCmd_t->params[0];
-				  
+
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-	switch(cmd_type)
-	{
-		/* GL 03/27/1997 for BATS#317 add "us" option */
-		/* GL 012/02/1998 for BATS#751 add more language option */
-		case 0:/* english */
-		case 6:/* us */
-			if(pKsd_t->lang_ready[LANG_english] == LANG_both_ready)
-				cmd_type = LANG_english;
-			else
-				return(CMD_bad_value);
-			break;
+		return (CMD_flushing);
+	switch(cmd_type) {
+	/* GL 03/27/1997 for BATS#317 add "us" option */
+	/* GL 012/02/1998 for BATS#751 add more language option */
+	case 0: /* english */
+	case 6: /* us */
+		if(pKsd_t->lang_ready[LANG_english] == LANG_both_ready)
+			cmd_type = LANG_english;
+		else
+			return (CMD_bad_value);
+		break;
 
-		case 1:	/* british */
-		case 7:	/* uk */
-			if(pKsd_t->lang_ready[LANG_british] == LANG_both_ready)
-				cmd_type = LANG_british;
-			else
-				return(CMD_bad_value);
-			break;
-		case 2:	/* french */
-		case 8: /* fr */
-			if(pKsd_t->lang_ready[LANG_french] == LANG_both_ready)
-				cmd_type = LANG_french;
-			else
-				return(CMD_bad_value);
-			break;
-		case 3:	/* german */
-		case 9: /* gr */
-			if(pKsd_t->lang_ready[LANG_german] == LANG_both_ready)
-				cmd_type = LANG_german;
-			else
-				return(CMD_bad_value);
-			break;
-		case 4:		/* spanish */
-		case 10:    /* sp */
-			if(pKsd_t->lang_ready[LANG_spanish] == LANG_both_ready)
-				cmd_type = LANG_spanish;
-			else
-				return(CMD_bad_value);
-			break;
-		case 5:		/* latin american */
-		case 11:    /* la */
-			if(pKsd_t->lang_ready[LANG_latin_american] == LANG_both_ready)
-				cmd_type = LANG_latin_american;
-			else
-				return(CMD_bad_value);
-			break;
+	case 1: /* british */
+	case 7: /* uk */
+		if(pKsd_t->lang_ready[LANG_british] == LANG_both_ready)
+			cmd_type = LANG_british;
+		else
+			return (CMD_bad_value);
+		break;
+	case 2: /* french */
+	case 8: /* fr */
+		if(pKsd_t->lang_ready[LANG_french] == LANG_both_ready)
+			cmd_type = LANG_french;
+		else
+			return (CMD_bad_value);
+		break;
+	case 3: /* german */
+	case 9: /* gr */
+		if(pKsd_t->lang_ready[LANG_german] == LANG_both_ready)
+			cmd_type = LANG_german;
+		else
+			return (CMD_bad_value);
+		break;
+	case 4:	 /* spanish */
+	case 10: /* sp */
+		if(pKsd_t->lang_ready[LANG_spanish] == LANG_both_ready)
+			cmd_type = LANG_spanish;
+		else
+			return (CMD_bad_value);
+		break;
+	case 5:	 /* latin american */
+	case 11: /* la */
+		if(pKsd_t->lang_ready[LANG_latin_american] == LANG_both_ready)
+			cmd_type = LANG_latin_american;
+		else
+			return (CMD_bad_value);
+		break;
 
-		default:
-			return(CMD_bad_value);
+	default:
+		return (CMD_bad_value);
 	};
 
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
+		return (CMD_flushing);
 
-	default_lang(pKsd_t,cmd_type,0);
+	default_lang(pKsd_t, cmd_type, 0);
 
 	pipe_value = LAST_VOICE;
-	lts_loop(phTTS,&pipe_value);
-	return(CMD_success);
+	lts_loop(phTTS, &pipe_value);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_remove()  
+ *      Function Name: cm_cmd_remove()
  *
  *      Description:  Removes current language.
  *
@@ -1377,20 +1307,19 @@ int cm_cmd_language(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_remove(PKSD_T pKsd_t)
-{
+int cm_cmd_remove(PKSD_T pKsd_t) {
 	DT_PIPE_T pipe_value;
 
 	pKsd_t->lang_ready[LANG_english] = 0;
 
 	pipe_value = KILL_TASK;
-	lts_loop(pKsd_t->phTTS,&pipe_value);
+	lts_loop(pKsd_t->phTTS, &pipe_value);
 
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* *****************************************************************
- *      Function Name: #ifdef DTEX cm_cmd_version() 
+ *      Function Name: #ifdef DTEX cm_cmd_version()
  *
  *      Description: Speaks the DecTalk version
  *
@@ -1399,79 +1328,77 @@ int cm_cmd_remove(PKSD_T pKsd_t)
  *
  *      Return Value: int:
  *						CMD_bad_string
- *						CMD_flushing 
+ *						CMD_flushing
  *						CMD_success
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_version(LPTTS_HANDLE_T phTTS)
-{
-	int cmd_type,cmd_value;
-	unsigned int old_sayflag;
-    PCMD_T pCmd_t = phTTS->pCMDThreadData;           
-    PKSD_T pKsd_t = phTTS->pKernelShareData;
-        unsigned char versionstr[512] = { 0 };
-	char datestr[] = __DATE__;
-	char *datepart[2];
-	int i;
-	int j=0;
-	int skip = 0;
-    
-	cmd_type =  cm_util_string_match(version_options,pCmd_t->pString[0]);
-	if (cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
+int cm_cmd_version(LPTTS_HANDLE_T phTTS) {
+	int	      cmd_type, cmd_value;
+	unsigned int  old_sayflag;
+	PCMD_T	      pCmd_t	      = phTTS->pCMDThreadData;
+	PKSD_T	      pKsd_t	      = phTTS->pKernelShareData;
+	unsigned char versionstr[512] = {0};
+	char	      datestr[]	      = __DATE__;
+	char*	      datepart[2];
+	int	      i;
+	int	      j	   = 0;
+	int	      skip = 0;
+
+	cmd_type = cm_util_string_match(version_options, pCmd_t->pString[0]);
+	if(cmd_type == NO_STRING_MATCH)
+		return (CMD_bad_string);
 
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
+		return (CMD_flushing);
 
-	switch (cmd_type)
-	{
-		case 0: /*speak*/
-			if(cm_cmd_sync(phTTS) == CMD_flushing)
-				return(CMD_flushing);
+	switch(cmd_type) {
+	case 0: /*speak*/
+		if(cm_cmd_sync(phTTS) == CMD_flushing)
+			return (CMD_flushing);
 
-			for (i = 0; datestr[i] != '\0'; i++) {
-				if (datestr[i] == ' ' && !skip) {
-					datestr[i] = '\0';
-					datepart[j] = &(datestr[i+1]);
-					j++;
-					if (j > 1) break;
-					skip = 1;
-				} else if (datestr[i] != ' ') {
-					skip = 0;
-				}
+		for(i = 0; datestr[i] != '\0'; i++) {
+			if(datestr[i] == ' ' && !skip) {
+				datestr[i]  = '\0';
+				datepart[j] = &(datestr[i + 1]);
+				j++;
+				if(j > 1) break;
+				skip = 1;
+			} else if(datestr[i] != ' ') {
+				skip = 0;
 			}
-			/* Taken from DTC-01 firmware, including misspelling(?) of hear */
-			sprintf(versionstr, "\rHello. This is DECtalk. The software version is %d point %d %s. The code memories were generated on %s-%s-%s. The dictionary memories were generated on %s-%s-%s. There are many bytes free. If you can here this, there is a good chance that your DECtalk is working.\r",
-				DTALK_MAJ_VERSION, DTALK_MIN_VERSION, RELEASE,
-				datepart[0], datestr, datepart[1], datepart[0], datestr, datepart[1]);
+		}
+		/* Taken from DTC-01 firmware, including misspelling(?) of hear */
+		sprintf(versionstr, "\rHello. This is DECtalk. The software version is %d point %d %s. The code memories were generated on %s-%s-%s. The dictionary memories were generated on %s-%s-%s. There are many bytes free. If you can here this, there is a good chance that your DECtalk is working.\r",
+			DTALK_MAJ_VERSION, DTALK_MIN_VERSION, RELEASE,
+			datepart[0], datestr, datepart[1], datepart[0], datestr, datepart[1]);
 
-			cm_util_say_string(pKsd_t, versionstr, 1);
-			if(cm_cmd_sync(phTTS) == CMD_flushing)
-				return(CMD_flushing);
-			return(CMD_success);
-			break;
-		case 1: /* status */
-			sprintf(versionstr, "Version %s %s", VERSION, RELEASE);
-			printf("[:version %s]\n",versionstr);
-			return(CMD_success);
-			break;
-		default:
-			return(CMD_bad_string);
+		cm_util_say_string(pKsd_t, versionstr, 1);
+		if(cm_cmd_sync(phTTS) == CMD_flushing)
+			return (CMD_flushing);
+		return (CMD_success);
+		break;
+	case 1: /* status */
+		sprintf(versionstr, "Version %s %s", VERSION, RELEASE);
+		printf("[:version %s]\n", versionstr);
+		return (CMD_success);
+		break;
+	default:
+		return (CMD_bad_string);
 	}
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_mode()    
+ *      Function Name: cm_cmd_mode()
  *
  *      Description: Searches through parameters given to the
  *      mode command stored in pCmd_t->pString[]
  *      and looks for MATH, EUROPE, SPELL, NAME, HOMOGRAPH,
- *      CITATION or LATIN followed by ON, OFF or SET. 
+ *      CITATION or LATIN followed by ON, OFF or SET.
  *      Uses constants MODE_MATH, MODE_EUROPE, MODE_SPELL,
  *      MODE_NAME, MODE_HOMOGRAPH, MODE_CITATION,
- *      MODE_LATIN, LTS_MODE_SET (to turn on), 
+ *      MODE_LATIN, LTS_MODE_SET (to turn on),
  *      LTS_MODE_CLEAR (to turn off) and LTS_MODE_ABS (to set bits)
  *      to modify the bits in pipe_value.
  *
@@ -1483,153 +1410,144 @@ int cm_cmd_version(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_mode(LPTTS_HANDLE_T phTTS)
-{
-	unsigned int    i, value;
-	DT_PIPE_T pipe_value[3];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+int cm_cmd_mode(LPTTS_HANDLE_T phTTS) {
+	unsigned int i, value;
+	DT_PIPE_T    pipe_value[3];
+	PCMD_T	     pCmd_t = phTTS->pCMDThreadData;
 
-	pipe_value[0] = (2<<PSNEXTRA)+LTS_SYNC;
+	pipe_value[0] = (2 << PSNEXTRA) + LTS_SYNC;
 	pipe_value[1] = 0;
 	pipe_value[2] = 0;
-	for(i=0; i < pCmd_t->param_index; i++)
-	{
-		value = cm_util_string_match(mode_options,(unsigned char *)pCmd_t->pString[i]);
-		if(value == NO_STRING_MATCH)
-		{
-			return(CMD_bad_string);
-		}       
+	for(i = 0; i < pCmd_t->param_index; i++) {
+		value = cm_util_string_match(mode_options, (unsigned char*)pCmd_t->pString[i]);
+		if(value == NO_STRING_MATCH) {
+			return (CMD_bad_string);
+		}
 		/*
-		 * 3/6/96 SIK This command only takes 2 parameters:  MATH, EUROPE, SPELL, NAME, 
-		 * HOMOGRAPH, CITATION or LATIN followed by ON, OFF or SET 
+		 * 3/6/96 SIK This command only takes 2 parameters:  MATH, EUROPE, SPELL, NAME,
+		 * HOMOGRAPH, CITATION or LATIN followed by ON, OFF or SET
 		 */
-		switch(i)
-		{         
-			case 0:    /* First param */
-				switch(value)
-				{                               
-					case 0: /* minus */
-						pipe_value[2] |= MODE_MATH;  
-						break;
-					case 1: /* europe */
-						pipe_value[2] |= MODE_EUROPE; 
-						break;
-					case 2: /* spell */
-						pipe_value[2] |= MODE_SPELL;       
-						break;
-					case 3: /* name determination */
-						pipe_value[2] |= MODE_NAME;       
-						break;
-					case 4: /* homograph determination */
-						pipe_value[2] |= MODE_HOMOGRAPH;
-						break;
-					case 5: /* citation mode */
-						pipe_value[2] |= MODE_CITATION;
-						break;
-					case 6: /* latin mode */
-						pipe_value[2] |= MODE_LATIN;
-                        break;
-					case 7: /* table reading mode */
-						pipe_value[2] |= MODE_TABLE;
-						break;
-					case 8: /* email reading mode */
-						pipe_value[2] |= MODE_EMAIL;
-						break;
-					default:
-						return(CMD_bad_param);
-				}
+		switch(i) {
+		case 0: /* First param */
+			switch(value) {
+			case 0: /* minus */
+				pipe_value[2] |= MODE_MATH;
 				break;
-			case 1:    /* Second param */
-				switch(value)
-				{               
-					case 9:                         /* on */
-						pipe_value[1] = LTS_MODE_SET;
-						lts_loop(phTTS,pipe_value);
-						break;
-					case 10:                         /* off */
-						pipe_value[1] = LTS_MODE_CLEAR;
-						lts_loop(phTTS,pipe_value);
-						break;
-					case 11:                         /* set */
-						pipe_value[1] = LTS_MODE_ABS;
-						lts_loop(phTTS,pipe_value);
-						break;
-					default:
-						return(CMD_bad_param);    
-				}
-				/* 
-				   GL 01/28/1997, force SYNC here to fix the race condition in
-				   DECtalk software
-				*/
-				cm_cmd_sync(phTTS);
+			case 1: /* europe */
+				pipe_value[2] |= MODE_EUROPE;
+				break;
+			case 2: /* spell */
+				pipe_value[2] |= MODE_SPELL;
+				break;
+			case 3: /* name determination */
+				pipe_value[2] |= MODE_NAME;
+				break;
+			case 4: /* homograph determination */
+				pipe_value[2] |= MODE_HOMOGRAPH;
+				break;
+			case 5: /* citation mode */
+				pipe_value[2] |= MODE_CITATION;
+				break;
+			case 6: /* latin mode */
+				pipe_value[2] |= MODE_LATIN;
+				break;
+			case 7: /* table reading mode */
+				pipe_value[2] |= MODE_TABLE;
+				break;
+			case 8: /* email reading mode */
+				pipe_value[2] |= MODE_EMAIL;
 				break;
 			default:
-				return(CMD_bad_param);
-		}  /* Matches switch(i) */
-	}       /* Matches for(i=0; i < pCmd_t->param_index; i++) */
-	return(CMD_success);
+				return (CMD_bad_param);
+			}
+			break;
+		case 1: /* Second param */
+			switch(value) {
+			case 9: /* on */
+				pipe_value[1] = LTS_MODE_SET;
+				lts_loop(phTTS, pipe_value);
+				break;
+			case 10: /* off */
+				pipe_value[1] = LTS_MODE_CLEAR;
+				lts_loop(phTTS, pipe_value);
+				break;
+			case 11: /* set */
+				pipe_value[1] = LTS_MODE_ABS;
+				lts_loop(phTTS, pipe_value);
+				break;
+			default:
+				return (CMD_bad_param);
+			}
+			/*
+			   GL 01/28/1997, force SYNC here to fix the race condition in
+			   DECtalk software
+			*/
+			cm_cmd_sync(phTTS);
+			break;
+		default:
+			return (CMD_bad_param);
+		} /* Matches switch(i) */
+	} /* Matches for(i=0; i < pCmd_t->param_index; i++) */
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_pronounce()       
+ *      Function Name: cm_cmd_pronounce()
  *
- *      Description: Sets the pronunciation mode; either LTS_DIC_ALTERNATE, 
+ *      Description: Sets the pronunciation mode; either LTS_DIC_ALTERNATE,
  *					 LTS_ACNA_NAME, or LTS_DIC_PRIMARY.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int; Either CMD_bad_string, CMD_bad_value or CMD_success  
+ *      Return Value: int; Either CMD_bad_string, CMD_bad_value or CMD_success
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_pronounce(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_pronounce(LPTTS_HANDLE_T phTTS) {
 	unsigned int i, value;
-	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	DT_PIPE_T    pipe_value[2];
+	PCMD_T	     pCmd_t = phTTS->pCMDThreadData;
 
-	pipe_value[0] = (1<<PSNEXTRA)+LTS_SYNC;
-	for(i=0;i<pCmd_t->param_index;i++)
-	{
-		value = cm_util_string_match(pronounce_options, (unsigned char *)pCmd_t->pString[i]);
+	pipe_value[0] = (1 << PSNEXTRA) + LTS_SYNC;
+	for(i = 0; i < pCmd_t->param_index; i++) {
+		value = cm_util_string_match(pronounce_options, (unsigned char*)pCmd_t->pString[i]);
 		if(value == NO_STRING_MATCH)
-			return(CMD_bad_string);
-		switch(value)
-		{
-			case 0:	/* alternate */
-				pipe_value[1] = LTS_DIC_ALTERNATE;
-				break;
-			case 1:	/* acna name */
-				pipe_value[1] = LTS_ACNA_NAME;
-				break;
-			case 2:	/* primary */
-				pipe_value[1] = LTS_DIC_PRIMARY;
-				break;
-			case 3:	/* noun */
-				pipe_value[1] = LTS_DIC_NOUN;
-				break;
-			case 4:	/* verb */
-				pipe_value[1] = LTS_DIC_VERB;
-				break;
-			case 5:	/* adjective */
-				pipe_value[1] = LTS_DIC_ADJECTIVE;
-				break;
-			case 6:	/* function */
-				pipe_value[1] = LTS_DIC_FUNCTION;
-				break;
-			case 7:	/* interjection */
-				pipe_value[1] = LTS_DIC_INTERJECTION;
-				break;
+			return (CMD_bad_string);
+		switch(value) {
+		case 0: /* alternate */
+			pipe_value[1] = LTS_DIC_ALTERNATE;
+			break;
+		case 1: /* acna name */
+			pipe_value[1] = LTS_ACNA_NAME;
+			break;
+		case 2: /* primary */
+			pipe_value[1] = LTS_DIC_PRIMARY;
+			break;
+		case 3: /* noun */
+			pipe_value[1] = LTS_DIC_NOUN;
+			break;
+		case 4: /* verb */
+			pipe_value[1] = LTS_DIC_VERB;
+			break;
+		case 5: /* adjective */
+			pipe_value[1] = LTS_DIC_ADJECTIVE;
+			break;
+		case 6: /* function */
+			pipe_value[1] = LTS_DIC_FUNCTION;
+			break;
+		case 7: /* interjection */
+			pipe_value[1] = LTS_DIC_INTERJECTION;
+			break;
 		}
-				lts_loop(phTTS,pipe_value);
+		lts_loop(phTTS, pipe_value);
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_rate()    
+ *      Function Name: cm_cmd_rate()
  *
  *      Description: set the speaking rate ...
  *
@@ -1642,27 +1560,26 @@ int cm_cmd_pronounce(LPTTS_HANDLE_T phTTS)
  *
  * *****************************************************************/
 
-int cm_cmd_rate(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_rate(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
 
-	//BTS10102 clamp high and low rate values
+	// BTS10102 clamp high and low rate values
 
-	if ( pCmd_t->params[0] < MIN_SPEAKING_RATE )
-			pCmd_t->params[0] = MIN_SPEAKING_RATE;
-		
-	else if( pCmd_t->params[0] > MAX_SPEAKING_RATE )
-			pCmd_t->params[0] = MAX_SPEAKING_RATE;
+	if(pCmd_t->params[0] < MIN_SPEAKING_RATE)
+		pCmd_t->params[0] = MIN_SPEAKING_RATE;
 
-		pipe_value[0] = (1<<PSNEXTRA) + RATE;
+	else if(pCmd_t->params[0] > MAX_SPEAKING_RATE)
+		pCmd_t->params[0] = MAX_SPEAKING_RATE;
+
+	pipe_value[0] = (1 << PSNEXTRA) + RATE;
 	pipe_value[1] = pCmd_t->params[0];
-	lts_loop(phTTS,pipe_value);
-	return(CMD_success);
+	lts_loop(phTTS, pipe_value);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_name()    
+ *      Function Name: cm_cmd_name()
  *
  *      Description: Switches between the different voices.
  *
@@ -1674,30 +1591,25 @@ int cm_cmd_rate(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_name(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_name(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
 
-	if(CT[pCmd_t->cmd_index].esc_value == DCS_NAME)
-	{
-		pipe_value[1] = cm_util_string_match(voice_names,pCmd_t->pString[0]);
-	}
-	else
-	{
+	if(CT[pCmd_t->cmd_index].esc_value == DCS_NAME) {
+		pipe_value[1] = cm_util_string_match(voice_names, pCmd_t->pString[0]);
+	} else {
 		pipe_value[1] = CT[pCmd_t->cmd_index].esc_value & ESCAPE_CODE;
-	}	
-	if(((pipe_value[1]) >= 0) && (pipe_value[1] < MAX_VOICES))
-	{
-		pipe_value[0] = (1<<PSNEXTRA) + NEW_SPEAKER;
-		lts_loop(phTTS,pipe_value);
-		return(CMD_success);
 	}
-	return(CMD_bad_string);
+	if(((pipe_value[1]) >= 0) && (pipe_value[1] < MAX_VOICES)) {
+		pipe_value[0] = (1 << PSNEXTRA) + NEW_SPEAKER;
+		lts_loop(phTTS, pipe_value);
+		return (CMD_success);
+	}
+	return (CMD_bad_string);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_latin()   
+ *      Function Name: cm_cmd_latin()
  *
  *      Description: Sets speaking rate to pCmd_t->params[0]
  *
@@ -1709,21 +1621,20 @@ int cm_cmd_name(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_latin(LPTTS_HANDLE_T phTTS)
-{
-	DT_PIPE_T pipe_value[2]; 
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+int cm_cmd_latin(LPTTS_HANDLE_T phTTS) {
+	DT_PIPE_T pipe_value[2];
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
 
-	pipe_value[0] = (1<<PSNEXTRA) + LATIN;
+	pipe_value[0] = (1 << PSNEXTRA) + LATIN;
 	pipe_value[1] = pCmd_t->params[0];
-		lts_loop(phTTS,pipe_value);
-		return(CMD_success);
+	lts_loop(phTTS, pipe_value);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_comma()   
+ *      Function Name: cm_cmd_comma()
  *
- *      Description: set the comma pause 
+ *      Description: set the comma pause
  *
  *      Arguments:
  *
@@ -1732,19 +1643,18 @@ int cm_cmd_latin(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_comma(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_comma(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
 
-	pipe_value[0] = (1<<PSNEXTRA) + CPAUSE;
+	pipe_value[0] = (1 << PSNEXTRA) + CPAUSE;
 	pipe_value[1] = pCmd_t->params[0];
-	lts_loop(phTTS,pipe_value);
-	return(CMD_success);
+	lts_loop(phTTS, pipe_value);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_period()  
+ *      Function Name: cm_cmd_period()
  *
  *      Description: set the period pause ...
  *
@@ -1756,279 +1666,256 @@ int cm_cmd_comma(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_period(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_period(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-//fix for BTS#10100
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
+	// fix for BTS#10100
 
-	if((int)pCmd_t->params[0] < MIN_PERIOD_PAUSE )
-			pCmd_t->params[0] = MIN_PERIOD_PAUSE;
-		
+	if((int)pCmd_t->params[0] < MIN_PERIOD_PAUSE)
+		pCmd_t->params[0] = MIN_PERIOD_PAUSE;
+
 	else if((int)pCmd_t->params[0] > MAX_PERIOD_PAUSE)
-			pCmd_t->params[0] = MAX_PERIOD_PAUSE;
+		pCmd_t->params[0] = MAX_PERIOD_PAUSE;
 
-
-	pipe_value[0] = (1<<PSNEXTRA) + PPAUSE;
+	pipe_value[0] = (1 << PSNEXTRA) + PPAUSE;
 	pipe_value[1] = pCmd_t->params[0];
-	lts_loop(phTTS,pipe_value);
-	return(CMD_success);
+	lts_loop(phTTS, pipe_value);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_mark()    
+ *      Function Name: cm_cmd_mark()
  *
  *      Description: Handles mark index, mark repy and mark query commands.
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int; Either CMD_bad_string, CMD_bad_value or CMD_success. 
+ *      Return Value: int; Either CMD_bad_string, CMD_bad_value or CMD_success.
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_mark(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_mark(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[3];
-	short cmd_type, cmd_value;
-	short temp;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	cmd_type = cm_util_string_match(index_options,pCmd_t->pString[0]);
-	if(cmd_type == NO_STRING_MATCH)
-	{
-	    /* change for the parser index buffer */
-    	/* force the parser buffer to be sent */
+	short	  cmd_type, cmd_value;
+	short	  temp;
+	PKSD_T	  pKsd_t = phTTS->pKernelShareData;
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
+
+	cmd_type = cm_util_string_match(index_options, pCmd_t->pString[0]);
+	if(cmd_type == NO_STRING_MATCH) {
+		/* change for the parser index buffer */
+		/* force the parser buffer to be sent */
 #ifdef NEW_INDEXING
-	 	temp=pCmd_t->ParseChar; 
-	 	pCmd_t->ParseChar=0x0fff;
- 		cm_pars_proc_char(phTTS,' ');
-	 	pCmd_t->ParseChar=temp;
+		temp		  = pCmd_t->ParseChar;
+		pCmd_t->ParseChar = 0x0fff;
+		cm_pars_proc_char(phTTS, ' ');
+		pCmd_t->ParseChar = temp;
 #endif
-		return(CMD_bad_string);
+		return (CMD_bad_string);
 	}
 
-	if(cmd_type == 3)
-	{
-		cmd_type = DCS_INDEX;
+	if(cmd_type == 3) {
+		cmd_type      = DCS_INDEX;
 		pipe_value[2] = SPC_INDEX_PAUSE;
-	}
-	else
-	{
+	} else {
 		cmd_type += DCS_INDEX;
 		pipe_value[2] = TEXT_OUTPUT;
 	}
 	cmd_value = pCmd_t->params[1];
 
-	switch(cmd_type)
-	{
-		case DCS_INDEX:
-			pipe_value[0] = (2<<PSNEXTRA) + INDEX;
-			break;
-		case DCS_INDEX_REPLY:
-			pipe_value[0] = (2<<PSNEXTRA) + INDEX_REPLY;
-			break;
-		case DCS_INDEX_QUERY:
-	    /* change for the parser index buffer */
-    	/* force the parser buffer to be sent */
+	switch(cmd_type) {
+	case DCS_INDEX:
+		pipe_value[0] = (2 << PSNEXTRA) + INDEX;
+		break;
+	case DCS_INDEX_REPLY:
+		pipe_value[0] = (2 << PSNEXTRA) + INDEX_REPLY;
+		break;
+	case DCS_INDEX_QUERY:
+		/* change for the parser index buffer */
+		/* force the parser buffer to be sent */
 #ifdef NEW_INDEXING
-		 	temp=pCmd_t->ParseChar; 
-		 	pCmd_t->ParseChar=0x0fff;
-			cm_pars_proc_char(phTTS,' ');
-		 	pCmd_t->ParseChar=temp;
+		temp		  = pCmd_t->ParseChar;
+		pCmd_t->ParseChar = 0x0fff;
+		cm_pars_proc_char(phTTS, ' ');
+		pCmd_t->ParseChar = temp;
 #endif
 
-			send_index(pipe_value[2],pKsd_t->lastindex);
-			return(CMD_success);
-		//tek 01aug97 bats 404
-		// handle these new index types.
-                //cjl 18nov97 Add ifdef for 32bit only.
+		send_index(pipe_value[2], pKsd_t->lastindex);
+		return (CMD_success);
+		// tek 01aug97 bats 404
+		//  handle these new index types.
+		// cjl 18nov97 Add ifdef for 32bit only.
 
-		default:
-	    /* change for the parser index buffer */
-    	/* force the parser buffer to be sent */
+	default:
+		/* change for the parser index buffer */
+		/* force the parser buffer to be sent */
 #ifdef NEW_INDEXING
-		 	temp=pCmd_t->ParseChar; 
-		 	pCmd_t->ParseChar=0x0fff;
-	 		cm_pars_proc_char(phTTS,' ');
-		 	pCmd_t->ParseChar=temp;
+		temp		  = pCmd_t->ParseChar;
+		pCmd_t->ParseChar = 0x0fff;
+		cm_pars_proc_char(phTTS, ' ');
+		pCmd_t->ParseChar = temp;
 #endif
 
-			return(CMD_bad_string);
+		return (CMD_bad_string);
 	}
-    /* change for the parser index buffer */
-    /* make it place the index command into the buffer and not write it to the output */
+	/* change for the parser index buffer */
+	/* make it place the index command into the buffer and not write it to the output */
 	pipe_value[1] = cmd_value;
 #ifdef NEW_INDEXING
 	/* add the space to the clause buffer */
-    if (pCmd_t->input_counter>=PAR_ROLLING_STOP_VALUE)
-    {
-	 	temp=pCmd_t->ParseChar; 
-	 	pCmd_t->ParseChar=' ';
-		cm_pars_proc_char(phTTS,' ');
-	 	pCmd_t->ParseChar=' ';
-		cm_pars_proc_char(phTTS,' ');
-	 	pCmd_t->ParseChar=temp;                     
+	if(pCmd_t->input_counter >= PAR_ROLLING_STOP_VALUE) {
+		temp		  = pCmd_t->ParseChar;
+		pCmd_t->ParseChar = ' ';
+		cm_pars_proc_char(phTTS, ' ');
+		pCmd_t->ParseChar = ' ';
+		cm_pars_proc_char(phTTS, ' ');
+		pCmd_t->ParseChar = temp;
 	}
-	if (pCmd_t->punct_mode==PUNCT_pass || pCmd_t->skip_mode==SKIP_all)
-	{
-		lts_loop(phTTS,pipe_value);
-		return(CMD_success);
+	if(pCmd_t->punct_mode == PUNCT_pass || pCmd_t->skip_mode == SKIP_all) {
+		lts_loop(phTTS, pipe_value);
+		return (CMD_success);
 	}
 	/* GL 09/04/1996 insert a dummy space before the index marker */
 	/* MGS 10/14/1999 BATS #876 fix for UK phone numbers (part of it) */
 	/* comment out next line, it adds a second dummy space and breaks things */
 	//	pCmd_t->clausebuf[pCmd_t->input_counter++]=' ';
 	/* insert a dummy character for the index */
-	pCmd_t->clausebuf[pCmd_t->input_counter]=PAR_INDEX_DUMMY_CHAR;
+	pCmd_t->clausebuf[pCmd_t->input_counter] = PAR_INDEX_DUMMY_CHAR;
 	/* put the index into the index buffer */
-	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index,pipe_value,sizeof(index_data_t));
+	memcpy(pCmd_t->input_indexes[pCmd_t->input_counter].index, pipe_value, sizeof(index_data_t));
 	/* add 1 for the counter updating */
 	pCmd_t->input_counter++;
 	pCmd_t->index_counter++;
 #endif // NEW_INDEXING
 
 #ifndef NEW_INDEXING
-        cm_util_write_pipe(pKsd_t,pKsd_t->lts_pipe,pipe_value,3);
+	cm_util_write_pipe(pKsd_t, pKsd_t->lts_pipe, pipe_value, 3);
 #endif
-	return(CMD_success);
+	return (CMD_success);
 }
 
-typedef struct phoneme_s
-{
+typedef struct phoneme_s {
 	unsigned short phone;
 	unsigned short dur;
 	unsigned short pitch;
 	unsigned short nextra;
 } phoneme_t;
 
-
 const phoneme_t preamble_1[] = {
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_M,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | S2,		0,	0,	0},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_EH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_S,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IX,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_JH,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_Z,	0, 0,	2},
-	{                (PFUSA<<PSFONT) | COMMA,	0,	0,	0},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0}
-};
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_M, 0, 0, 2},
+    {(PFUSA << PSFONT) | S2, 0, 0, 0},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_EH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_S, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IX, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_JH, 0, 0, 2},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_Z, 0, 0, 2},
+    {(PFUSA << PSFONT) | COMMA, 0, 0, 0},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0}};
 const phoneme_t preamble_2a[] = {
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_M,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | S2,		0,	0,	0},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_EH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_S,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IX,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_JH,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0}
-};
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_M, 0, 0, 2},
+    {(PFUSA << PSFONT) | S2, 0, 0, 0},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_EH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_S, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IX, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_JH, 0, 0, 2},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0}};
 const phoneme_t preamble_2b[] = {
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_Z,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | COMMA,	0,	0,	0},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0}
-};
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_Z, 0, 0, 2},
+    {(PFUSA << PSFONT) | COMMA, 0, 0, 0},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0}};
 const phoneme_t preamble_3a[] = {
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_M,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | S2,		0,	0,	0},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_EH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_S,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IX,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_JH,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_F,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_R,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_AH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_M,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0}
-};
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_M, 0, 0, 2},
+    {(PFUSA << PSFONT) | S2, 0, 0, 0},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_EH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_S, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IX, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_JH, 0, 0, 2},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_F, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_R, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_AH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_M, 0, 0, 2},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0}};
 const phoneme_t preamble_3b[] = {
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_IH,	0,	0,	2},
-	{(2<<PSNEXTRA) | (PFUSA<<PSFONT) | US_Z,	0,	0,	2},
-	{                (PFUSA<<PSFONT) | COMMA,	0,	0,	0},
-	{                (PFUSA<<PSFONT) | WBOUND,	0,	0,	0}
-};
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_IH, 0, 0, 2},
+    {(2 << PSNEXTRA) | (PFUSA << PSFONT) | US_Z, 0, 0, 2},
+    {(PFUSA << PSFONT) | COMMA, 0, 0, 0},
+    {(PFUSA << PSFONT) | WBOUND, 0, 0, 0}};
 
+int cm_cmd_preamble(LPTTS_HANDLE_T phTTS) {
+	DT_PIPE_T  pipe_value[2];
+	PKSD_T	   pKsd_t = phTTS->pKernelShareData;
+	PCMD_T	   pCmd_t = phTTS->pCMDThreadData;
+	int	   i;
+	phoneme_t* list;
+	int	   length;
 
-int cm_cmd_preamble(LPTTS_HANDLE_T phTTS)
-{
-	DT_PIPE_T pipe_value[2];
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	int i;
-	phoneme_t *list;
-	int length;
-	
-	pipe_value[0] = (1<<PSNEXTRA) + PREAMBLE;
+	pipe_value[0] = (1 << PSNEXTRA) + PREAMBLE;
 	pipe_value[1] = pCmd_t->params[0];
 
 	// flush the parser
-	pCmd_t->ParseChar=0x0fff;
-	cm_pars_proc_char(phTTS,' ');
+	pCmd_t->ParseChar = 0x0fff;
+	cm_pars_proc_char(phTTS, ' ');
 
-	lts_loop(phTTS,pipe_value);
-	list=NULL;
-	switch (pCmd_t->params[0])
-	{
+	lts_loop(phTTS, pipe_value);
+	list = NULL;
+	switch(pCmd_t->params[0]) {
+	case 0:
+		switch(pKsd_t->last_preamble_command) {
 		case 0:
-			switch (pKsd_t->last_preamble_command)
-			{
-				case 0:
-					break;
-				case 1:
-					// nothing more
-					break;
-				case 2:
-					// "is"
-					// CAB Removed warnings by typecast
-					list = (phoneme_t *)preamble_2b;
-					length=sizeof(preamble_2b)/sizeof(phoneme_t);
-					break;
-				case 3:
-					// "is"
-					// CAB Removed warnings by typecast
-					list = (phoneme_t *)preamble_3b;
-					length=sizeof(preamble_3b)/sizeof(phoneme_t);
-					break;
-			}
-			// shut off preamble
 			break;
 		case 1:
-			// "Message is [text]"
-			// CAB Removed warnings by typecast
-			list = (phoneme_t *)preamble_1;
-			length=sizeof(preamble_1)/sizeof(phoneme_t);
+			// nothing more
 			break;
 		case 2:
-			// "Message [number] is [text]"
+			// "is"
 			// CAB Removed warnings by typecast
-			list = (phoneme_t *)preamble_2a;
-			length=sizeof(preamble_2a)/sizeof(phoneme_t);
+			list   = (phoneme_t*)preamble_2b;
+			length = sizeof(preamble_2b) / sizeof(phoneme_t);
 			break;
 		case 3:
-			// "Message from [name] is [text]"
+			// "is"
 			// CAB Removed warnings by typecast
-			list = (phoneme_t *)preamble_3a;
-			length=sizeof(preamble_3a)/sizeof(phoneme_t);
+			list   = (phoneme_t*)preamble_3b;
+			length = sizeof(preamble_3b) / sizeof(phoneme_t);
 			break;
+		}
+		// shut off preamble
+		break;
+	case 1:
+		// "Message is [text]"
+		// CAB Removed warnings by typecast
+		list   = (phoneme_t*)preamble_1;
+		length = sizeof(preamble_1) / sizeof(phoneme_t);
+		break;
+	case 2:
+		// "Message [number] is [text]"
+		// CAB Removed warnings by typecast
+		list   = (phoneme_t*)preamble_2a;
+		length = sizeof(preamble_2a) / sizeof(phoneme_t);
+		break;
+	case 3:
+		// "Message from [name] is [text]"
+		// CAB Removed warnings by typecast
+		list   = (phoneme_t*)preamble_3a;
+		length = sizeof(preamble_3a) / sizeof(phoneme_t);
+		break;
 	}
 
-	pKsd_t->last_preamble_command=pCmd_t->params[0];	
+	pKsd_t->last_preamble_command = pCmd_t->params[0];
 
-	if (list!=NULL)
-	{
-		for (i=0;i<length;i++)
-		{
-			lts_loop(phTTS,(unsigned short *)&(list[i]));
+	if(list != NULL) {
+		for(i = 0; i < length; i++) {
+			lts_loop(phTTS, (unsigned short*)&(list[i]));
 		}
 	}
 
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
@@ -2041,54 +1928,48 @@ int cm_cmd_preamble(LPTTS_HANDLE_T phTTS)
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int; Either CMD_bad_value, CMD_bad_string, or CMD_success 
+ *      Return Value: int; Either CMD_bad_value, CMD_bad_string, or CMD_success
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_define(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_define(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[3];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
+
 	if(pCmd_t->param_index == 0)
-		return(CMD_success);
-	pipe_value[1] = cm_util_string_match(define_options,pCmd_t->pString[0]);
-	
+		return (CMD_success);
+	pipe_value[1] = cm_util_string_match(define_options, pCmd_t->pString[0]);
+
 	/* 09/09/1996 SIK Fix for this command */
 	if(pipe_value[1] == NO_STRING_MATCH)
-		return(CMD_bad_string);
+		return (CMD_bad_string);
 	/*
- 	 *  do the save first ...
- 	 */
+	 *  do the save first ...
+	 */
 
-	if(pipe_value[1] == 0)
-	{
+	if(pipe_value[1] == 0) {
 		if(pCmd_t->defaults[1] == FALSE)
-			return(CMD_bad_value);
-		else
-		{
+			return (CMD_bad_value);
+		else {
 			pipe_value[0] = SAVE;
-			lts_loop(phTTS,pipe_value);
+			lts_loop(phTTS, pipe_value);
 		}
-	}
-	else
-	{
+	} else {
 		if(pCmd_t->defaults[1] == TRUE)
-			return(CMD_bad_value);
-		else
-		{
-			pipe_value[0] = (2<<PSNEXTRA)+NEW_PARAM;
+			return (CMD_bad_value);
+		else {
+			pipe_value[0] = (2 << PSNEXTRA) + NEW_PARAM;
 			pipe_value[1] -= 1;
 			pipe_value[2] = pCmd_t->params[1];
-			lts_loop(phTTS,pipe_value);
+			lts_loop(phTTS, pipe_value);
 		}
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_plang()   
+ *      Function Name: cm_cmd_plang()
  *
  *      Description: Corresponds to [:plang] Speak and print the phonemic table ...
  *
@@ -2100,81 +1981,71 @@ int cm_cmd_define(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_plang(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value;
-	int     i;
-	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	int phoneme_code_add=0;
+	int	  i;
+	PKSD_T	  pKsd_t	   = phTTS->pKernelShareData;
+	PCMD_T	  pCmd_t	   = phTTS->pCMDThreadData;
+	int	  phoneme_code_add = 0;
 
-	switch (pKsd_t->lang_curr)
-	{
-		case LANG_english:
-			phoneme_code_add=(PFUSA<<PSFONT);
-			break;
-		case LANG_british:
-			phoneme_code_add=(PFUK<<PSFONT);
-			break;
-		case LANG_german:
-			phoneme_code_add=(PFGR<<PSFONT);
-			break;
-		case LANG_spanish:
-			phoneme_code_add=(PFSP<<PSFONT);
-			break;
-		case LANG_latin_american:
-			phoneme_code_add=(PFLA<<PSFONT);
-			break;
-		case LANG_french:					//chj 7/20/00
-			phoneme_code_add=(PFFR<<PSFONT);
-			break;
+	switch(pKsd_t->lang_curr) {
+	case LANG_english:
+		phoneme_code_add = (PFUSA << PSFONT);
+		break;
+	case LANG_british:
+		phoneme_code_add = (PFUK << PSFONT);
+		break;
+	case LANG_german:
+		phoneme_code_add = (PFGR << PSFONT);
+		break;
+	case LANG_spanish:
+		phoneme_code_add = (PFSP << PSFONT);
+		break;
+	case LANG_latin_american:
+		phoneme_code_add = (PFLA << PSFONT);
+		break;
+	case LANG_french: // chj 7/20/00
+		phoneme_code_add = (PFFR << PSFONT);
+		break;
 	}
 
-	
 	if(cm_cmd_sync(phTTS) == CMD_flushing)
-		return(CMD_flushing);
-	if(pCmd_t->params[0] == 0 || pCmd_t->defaults[0] == TRUE)
-	{
-		for(i=1; i < MAXI_PHONES; i++)
-		{
-			if(pKsd_t->arpabet[i*2])
-			{
+		return (CMD_flushing);
+	if(pCmd_t->params[0] == 0 || pCmd_t->defaults[0] == TRUE) {
+		for(i = 1; i < MAXI_PHONES; i++) {
+			if(pKsd_t->arpabet[i * 2]) {
 				WAIT_PRINT;
 				printf("\n  %d arpabet (%c%c)  asky (%c)",
-					i,pKsd_t->arpabet[i*2],pKsd_t->arpabet[i*2+1],pKsd_t->ascky[i]);
+				       i, pKsd_t->arpabet[i * 2], pKsd_t->arpabet[i * 2 + 1], pKsd_t->ascky[i]);
 				SIGNAL_PRINT;
 				pipe_value = phoneme_code_add | i;
-				ph_loop(phTTS,&pipe_value);
+				ph_loop(phTTS, &pipe_value);
 				pipe_value = phoneme_code_add | COMMA;
-				ph_loop(phTTS,&pipe_value);
-				
-				//OP_Sleep(100);
-				
+				ph_loop(phTTS, &pipe_value);
+
+				// OP_Sleep(100);
 			}
 		}
-	}
-	else 
-	{
-		if(pCmd_t->params[0] < MAXI_PHONES)
-		{
+	} else {
+		if(pCmd_t->params[0] < MAXI_PHONES) {
 			i = pCmd_t->params[0];
 			WAIT_PRINT;
 			printf("\n  %d arpabet (%c%c)  asky (%c)",
-				i,pKsd_t->arpabet[i*2],pKsd_t->arpabet[i*2+1],pKsd_t->ascky[i]);
+			       i, pKsd_t->arpabet[i * 2], pKsd_t->arpabet[i * 2 + 1], pKsd_t->ascky[i]);
 			SIGNAL_PRINT;
 			pipe_value = phoneme_code_add | i;
-			ph_loop(phTTS,&pipe_value);
+			ph_loop(phTTS, &pipe_value);
 			pipe_value = phoneme_code_add | COMMA;
-			ph_loop(phTTS,&pipe_value);
+			ph_loop(phTTS, &pipe_value);
 		}
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
  *      Function Name: cm_cmd_stress()
  *
- *      Description: Corresponds to [:pitch command. Parameter for command is read 
+ *      Description: Corresponds to [:pitch command. Parameter for command is read
  *      			 from pCmd_t->params[0].
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
@@ -2185,26 +2056,25 @@ int cm_cmd_plang(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_stress(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_stress(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
-	PCMD_T pCmd_t = phTTS->pCMDThreadData; 
-	
+	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+
 	if(pCmd_t->defaults[0] == TRUE)
 		pKsd_t->pitch_delta = 0;
 	else
 		pKsd_t->pitch_delta = (int)pCmd_t->params[0];
-	return(CMD_success);
+	return (CMD_success);
 }
 
-#define  TONE_AMPLITUDE  32767
+#define TONE_AMPLITUDE 32767
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS cm_cmd_tone()
  *
  *      Description: Calls cm_util_dtpc_tones() to play a certain
  *      frequency for a certain duration.
  *      The frequency (hz) is given by pCmd_t->params[0]
- *      and duration (ms) by pCmd_t->params[1]. 
+ *      and duration (ms) by pCmd_t->params[1].
  *      Returns either CMD_success or status returned by cm_util_dtpc_tones().
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
@@ -2215,29 +2085,27 @@ int cm_cmd_stress(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_tone(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe[6];
-	/*LPTTS_HANDLE_T phTTS;*/             /*MVP MI */
+	/*LPTTS_HANDLE_T phTTS;*/ /*MVP MI */
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
-	
-	
+
 	/********************************************************************/
 	/*  Get the text to speech handle.                                  */
 	/********************************************************************/
-	
+
 	/*phTTS = TextToSpeechGetHandle();*/
-	
+
 	/********************************************************************/
 	/*  Wait for all characters previously queued to LTS to be          */
 	/*  processed.                                                      */
 	/********************************************************************/
-	
-	if ( cm_cmd_sync(phTTS) == CMD_flushing )
-		return( CMD_flushing );
-	
-	//WaitForLtsFlush( phTTS, 0xFFFFFFFF );
+
+	if(cm_cmd_sync(phTTS) == CMD_flushing)
+		return (CMD_flushing);
+
+	// WaitForLtsFlush( phTTS, 0xFFFFFFFF );
 	/********************************************************************/
 	/*  The packet format here is different than the DTC07. The ramp    */
 	/*  duration has been eliminated. The tone generation software      */
@@ -2254,15 +2122,15 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	/*      5            Tone 1 Amplitude          0 to 32767           */
 	/*                                                                  */
 	/********************************************************************/
-	
+
 	/********************************************************************/
 	/*  params[1] is a character pointer to the duration in msec.       */
 	/*  params[0] is a character pointer to the frequency in Hertz.     */
 	/********************************************************************/
-	
-	if ( pCmd_t->params[0] > ( pKsd_t->uiSampleRate >> 1 ))
-		return( CMD_bad_value );
-	
+
+	if(pCmd_t->params[0] > (pKsd_t->uiSampleRate >> 1))
+		return (CMD_bad_value);
+
 	pipe[0] = SPC_type_tone;
 	pipe[1] = pCmd_t->params[1];
 	pipe[2] = pCmd_t->params[0];
@@ -2270,21 +2138,21 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
 	/********************************************************************/
 	/*  Disable the second tone.                                        */
 	/********************************************************************/
-	
+
 	pipe[3] = TONE_AMPLITUDE;
 	pipe[4] = 1000;
 	pipe[5] = 0;
-	
-	vtm_loop(phTTS,pipe);
 
-	return( CMD_success );
+	vtm_loop(phTTS, pipe);
+
+	return (CMD_success);
 }
 
-#define  DTMF_PAUSE_TIME_IN_MSEC            100
-#define  DTMF_DIGIT_TIME_IN_MSEC            100
-#define  DTMF_INTER_DIGITAL_TIME_IN_MSEC    100
-#define  DTMF_HIGH_TONE_AMPLITUDE         20090
-#define  DTMF_LOW_TONE_AMPLITUDE          12676
+#define DTMF_PAUSE_TIME_IN_MSEC 100
+#define DTMF_DIGIT_TIME_IN_MSEC 100
+#define DTMF_INTER_DIGITAL_TIME_IN_MSEC 100
+#define DTMF_HIGH_TONE_AMPLITUDE 20090
+#define DTMF_LOW_TONE_AMPLITUDE 12676
 /* ******************************************************************
  *      Function Name: #ifndef MSDOS cm_cmd_dial()
  *
@@ -2293,58 +2161,55 @@ int cm_cmd_tone(LPTTS_HANDLE_T phTTS)
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
  *
- *      Return Value: int 
- *						CMD_flushing  
- *						CMD_bad_string  
+ *      Return Value: int
+ *						CMD_flushing
+ *						CMD_bad_string
  *						CMD_success
  *
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
-{
-  int iIndex;
-  unsigned char *pChar;
-  unsigned char szSingleDigit[2];
-  DT_PIPE_T pipe[6];
-  PCMD_T pCmd_t = phTTS->pCMDThreadData;
-  /*
-  LPTTS_HANDLE_T phTTS;
-  */
-  /********************************************************************/
-  /*  Get the text to speech handle.                                  */
-  /********************************************************************/
-  /*
-  phTTS = TextToSpeechGetHandle();
-  */
-  /********************************************************************/
-  /*  Wait for all characters previously queued to LTS to be          */
-  /*  processed.                                                      */
-  /********************************************************************/
+int cm_cmd_dial(LPTTS_HANDLE_T phTTS) {
+	int	       iIndex;
+	unsigned char* pChar;
+	unsigned char  szSingleDigit[2];
+	DT_PIPE_T      pipe[6];
+	PCMD_T	       pCmd_t = phTTS->pCMDThreadData;
+	/*
+	LPTTS_HANDLE_T phTTS;
+	*/
+	/********************************************************************/
+	/*  Get the text to speech handle.                                  */
+	/********************************************************************/
+	/*
+	phTTS = TextToSpeechGetHandle();
+	*/
+	/********************************************************************/
+	/*  Wait for all characters previously queued to LTS to be          */
+	/*  processed.                                                      */
+	/********************************************************************/
 
-  if ( cm_cmd_sync(phTTS) == CMD_flushing )
-	return( CMD_flushing );
+	if(cm_cmd_sync(phTTS) == CMD_flushing)
+		return (CMD_flushing);
 
-  //WaitForLtsFlush( phTTS, 0xFFFFFFFF );
+	// WaitForLtsFlush( phTTS, 0xFFFFFFFF );
 
-  /********************************************************************/
-  /*  Write a tone packet to the VTM thread for each character in the */
-  /*  dial string.                                                    */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Write a tone packet to the VTM thread for each character in the */
+	/*  dial string.                                                    */
+	/********************************************************************/
 
-  pChar = pCmd_t->pString[0];
+	pChar = pCmd_t->pString[0];
 
-  while ( *pChar != '\0' )
-  {
-	/******************************************************************/
-	/*  Convert the character to an index.                            */
-	/******************************************************************/
+	while(*pChar != '\0') {
+		/******************************************************************/
+		/*  Convert the character to an index.                            */
+		/******************************************************************/
 
-	szSingleDigit[0] = *pChar;
-	szSingleDigit[1] = '\0';
+		szSingleDigit[0] = *pChar;
+		szSingleDigit[1] = '\0';
 
-	switch ( szSingleDigit[0] )
-	{
+		switch(szSingleDigit[0]) {
 		case '0':
 			iIndex = 0;
 			break;
@@ -2398,100 +2263,91 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
 			iIndex = 15;
 			break;
 		default:
-			if  (( szSingleDigit[0] == '-' )
-				|| ( szSingleDigit[0] == ',' )
-				|| ( szSingleDigit[0] == ' ' ))
-			{
+			if((szSingleDigit[0] == '-') || (szSingleDigit[0] == ',') || (szSingleDigit[0] == ' ')) {
 				iIndex = 16;
+			} else {
+				return (CMD_bad_string);
 			}
-			else
-			{
-				return( CMD_bad_string );
-			}
-			
+
 			break;
-	} /* switch ( szSingleDigit[0] ) */
+		} /* switch ( szSingleDigit[0] ) */
 
-	/******************************************************************/
-	/*  If the index == 16 then send a tone packet with a duration of */
-	/*  DTMF_PAUSE_TIME_IN_MSEC and both tone amplitudes set to zero. */
-	/*  Otherwise send DTMF Tones with the default high tone and low  */
-	/*  tone amplitudes.                                              */
-	/*                                                                */
-	/*  The packet format here is different than the DTC07. The ramp  */
-	/*  duration has been eliminated. The tone generation software    */
-	/*  automatically provides 3 msec. cosine squared tapering for    */
-	/*  the tone pulse rise and fall time.                            */
-	/*                                                                */
-	/*  Packet Index     Packet Data                 Value            */
-	/*                                                                */
-	/*      0            Command Word              SPC_type_tone      */
-	/*      1            Tone Duration (msec.)     0 to ?             */
-	/*      2            Tone 0 Frequency          0 to Fs/2          */
-	/*      3            Tone 0 Amplitude          0 to 32767         */
-	/*      4            Tone 1 Frequency          0 to Fs/2          */
-	/*      5            Tone 1 Amplitude          0 to 32767         */
-	/*                                                                */
-	/******************************************************************/
+		/******************************************************************/
+		/*  If the index == 16 then send a tone packet with a duration of */
+		/*  DTMF_PAUSE_TIME_IN_MSEC and both tone amplitudes set to zero. */
+		/*  Otherwise send DTMF Tones with the default high tone and low  */
+		/*  tone amplitudes.                                              */
+		/*                                                                */
+		/*  The packet format here is different than the DTC07. The ramp  */
+		/*  duration has been eliminated. The tone generation software    */
+		/*  automatically provides 3 msec. cosine squared tapering for    */
+		/*  the tone pulse rise and fall time.                            */
+		/*                                                                */
+		/*  Packet Index     Packet Data                 Value            */
+		/*                                                                */
+		/*      0            Command Word              SPC_type_tone      */
+		/*      1            Tone Duration (msec.)     0 to ?             */
+		/*      2            Tone 0 Frequency          0 to Fs/2          */
+		/*      3            Tone 0 Amplitude          0 to 32767         */
+		/*      4            Tone 1 Frequency          0 to Fs/2          */
+		/*      5            Tone 1 Amplitude          0 to 32767         */
+		/*                                                                */
+		/******************************************************************/
 
-	if ( iIndex == 16 )
-	{
-	  /****************************************************************/
-	  /*  Silent interval.                                            */
-	  /****************************************************************/
+		if(iIndex == 16) {
+			/****************************************************************/
+			/*  Silent interval.                                            */
+			/****************************************************************/
 
-	  pipe[0] = SPC_type_tone;
-	  pipe[1] = DTMF_PAUSE_TIME_IN_MSEC;
-	  pipe[2] = 1000;
-	  pipe[3] = 0;
-	  pipe[4] = 1000;
-	  pipe[5] = 0;
+			pipe[0] = SPC_type_tone;
+			pipe[1] = DTMF_PAUSE_TIME_IN_MSEC;
+			pipe[2] = 1000;
+			pipe[3] = 0;
+			pipe[4] = 1000;
+			pipe[5] = 0;
 
-	  vtm_loop(phTTS,pipe);
+			vtm_loop(phTTS, pipe);
 
+		} else {
+			/****************************************************************/
+			/*  DTMF digit.                                                 */
+			/****************************************************************/
+
+			pipe[0] = SPC_type_tone;
+			pipe[1] = DTMF_DIGIT_TIME_IN_MSEC;
+			pipe[2] = tlitone0[iIndex];
+			pipe[3] = DTMF_HIGH_TONE_AMPLITUDE;
+			pipe[4] = tlitone1[iIndex];
+			pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
+
+			vtm_loop(phTTS, pipe);
+
+			/****************************************************************/
+			/*  Interdigital space.                                         */
+			/****************************************************************/
+
+			pipe[0] = SPC_type_tone;
+			pipe[1] = DTMF_INTER_DIGITAL_TIME_IN_MSEC;
+			pipe[2] = 1000;
+			pipe[3] = 0;
+			pipe[4] = 1000;
+			pipe[5] = 0;
+
+			vtm_loop(phTTS, pipe);
+		}
+
+		/******************************************************************/
+		/*  Increment to the next character.                              */
+		/******************************************************************/
+
+		pChar++;
 	}
-	else
-	{
-	  /****************************************************************/
-	  /*  DTMF digit.                                                 */
-	  /****************************************************************/
 
-	  pipe[0] = SPC_type_tone;
-	  pipe[1] = DTMF_DIGIT_TIME_IN_MSEC;
-	  pipe[2] = tlitone0[iIndex];
-	  pipe[3] = DTMF_HIGH_TONE_AMPLITUDE;
-	  pipe[4] = tlitone1[iIndex];
-	  pipe[5] = DTMF_LOW_TONE_AMPLITUDE;
-
-	  vtm_loop(phTTS,pipe);
-
-	  /****************************************************************/
-	  /*  Interdigital space.                                         */
-	  /****************************************************************/
-
-	  pipe[0] = SPC_type_tone;
-	  pipe[1] = DTMF_INTER_DIGITAL_TIME_IN_MSEC;
-	  pipe[2] = 1000;
-	  pipe[3] = 0;
-	  pipe[4] = 1000;
-	  pipe[5] = 0;
-
-	  vtm_loop(phTTS,pipe);
-
-	}
-
-	/******************************************************************/
-	/*  Increment to the next character.                              */
-	/******************************************************************/
-
-	pChar++;
-  }
-
-  return( CMD_success );
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_digitized()       
+ *      Function Name: cm_cmd_digitized()
  *
  *      Description:
  *
@@ -2503,15 +2359,14 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS)
  *      Comments: int
  *
  * ******************************************************************/
-int cm_cmd_digitized(LPTTS_HANDLE_T phTTS)
-{   
-	return(CMD_success);
+int cm_cmd_digitized(LPTTS_HANDLE_T phTTS) {
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_debug()       
+ *      Function Name: cm_cmd_debug()
  *
- *      Description: Debug command; described in dectalk.h 
+ *      Description: Debug command; described in dectalk.h
  *
  *      Arguments: LPTTS_HANDLE_T phTTS; Pointer to structure containing PKSD_T
  *										 and PCMD_T data structures.
@@ -2521,20 +2376,19 @@ int cm_cmd_digitized(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_debug(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_debug(LPTTS_HANDLE_T phTTS) {
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-	cm_cmd_sync(phTTS);				/* mfg 04/27/1998 added 2 cm_cmd_sync*/
+	cm_cmd_sync(phTTS); /* mfg 04/27/1998 added 2 cm_cmd_sync*/
 	pKsd_t->debug_switch = pCmd_t->params[0];
-	//cm_cmd_sync(phTTS);
+	// cm_cmd_sync(phTTS);
 
-	return(CMD_success);
+	return (CMD_success);
 }
 
 /* ******************************************************************
- *      Function Name: cm_cmd_gender()    
+ *      Function Name: cm_cmd_gender()
  *
  *      Description: Swt up.
  *
@@ -2546,35 +2400,33 @@ int cm_cmd_debug(LPTTS_HANDLE_T phTTS)
  *      Comments:
  *
  * *****************************************************************/
-int cm_cmd_gender(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_gender(LPTTS_HANDLE_T phTTS) {
 	int cmd_type;
-	
+
 	PKSD_T pKsd_t = phTTS->pKernelShareData;
 	PCMD_T pCmd_t = phTTS->pCMDThreadData;
 
-	cmd_type =  cm_util_string_match(gender_options,pCmd_t->pString[0]);
-	if (cmd_type == NO_STRING_MATCH)
-		return(CMD_bad_string);
+	cmd_type = cm_util_string_match(gender_options, pCmd_t->pString[0]);
+	if(cmd_type == NO_STRING_MATCH)
+		return (CMD_bad_string);
 
-	switch (cmd_type)
-	{
-		case 0: /* masculine */
-			pKsd_t->gender_switch = 1;
-			return(CMD_success);
-			break;
-		case 1: /* neuter */
-			pKsd_t->gender_switch = 2;
-			return(CMD_success);
-			break;
-		case 2: /* feminine */
-			pKsd_t->gender_switch = 3;
-			return(CMD_success);
-			break;
-		default:
-			return(CMD_bad_string);
+	switch(cmd_type) {
+	case 0: /* masculine */
+		pKsd_t->gender_switch = 1;
+		return (CMD_success);
+		break;
+	case 1: /* neuter */
+		pKsd_t->gender_switch = 2;
+		return (CMD_success);
+		break;
+	case 2: /* feminine */
+		pKsd_t->gender_switch = 3;
+		return (CMD_success);
+		break;
+	default:
+		return (CMD_bad_string);
 	}
-	return(CMD_success);
+	return (CMD_success);
 }
 
 #ifdef SW_VOLUME
@@ -2594,12 +2446,11 @@ int cm_cmd_gender(LPTTS_HANDLE_T phTTS)
  *
  * *****************************************************************/
 
-void vol_tone(int volume)
-{
-	if (volume>100)
-		volume=100;
-	if (volume<0)
-		volume=0;
+void vol_tone(int volume) {
+	if(volume > 100)
+		volume = 100;
+	if(volume < 0)
+		volume = 0;
 	KS.ToneVolume = volume;
 }
 #endif /*SW_VOLUME*/
@@ -2620,20 +2471,19 @@ void vol_tone(int volume)
  *
  * *****************************************************************/
 
-int cm_cmd_samples_per_frame(LPTTS_HANDLE_T phTTS)
-{
+int cm_cmd_samples_per_frame(LPTTS_HANDLE_T phTTS) {
 	DT_PIPE_T pipe_value[2];
-	PCMD_T pCmd_t = phTTS->pCMDThreadData;
+	PCMD_T	  pCmd_t = phTTS->pCMDThreadData;
 
-	if ( pCmd_t->params[0] < 1)
-			pCmd_t->params[0] = 1;
+	if(pCmd_t->params[0] < 1)
+		pCmd_t->params[0] = 1;
 
-	else if( pCmd_t->params[0] > 500)
-			pCmd_t->params[0] = 500;
+	else if(pCmd_t->params[0] > 500)
+		pCmd_t->params[0] = 500;
 
 	pipe_value[0] = SPC_type_samples_per_frame;
 	pipe_value[1] = pCmd_t->params[0];
 
-	vtm_loop(phTTS,pipe_value);
-	return(CMD_success);
+	vtm_loop(phTTS, pipe_value);
+	return (CMD_success);
 }

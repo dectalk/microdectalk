@@ -42,64 +42,63 @@
 /*                                                                    */
 /**********************************************************************/
 
-  volatile char standard_notices[2048] = 
+volatile char standard_notices[2048] =
 #ifdef THIRD_PARTY
-"\n" \
-"COPYRIGHT NOTICE                                                   \n" \
-"\n" \
-"@ Copyright SMART Modular Technologies, Inc., 1999. All Righhts Reserved.\n" \
-"\n" \
-"Unpublished rights reserved under the copyright laws of the United    \n" \
-"States. Copyright is claimed in the computer program and user         \n" \
-"interface thereof.                                                   \n" \
-"\n" \
-"Restricted Rights: Use, duplication, or disclosure by the U.S.        \n" \
-"is subject to restrictions as set forth in subparagraph (c) (1) (ii)  \n" \
-"of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR 52.227-14 Alt.  \n" \
-"III, as applicable.                                                  \n" \
-"\n" \
-"This software is proprietary to and embodies the confidential         \n" \
-"technology of SMART Modular Technoogies, Inc. Possession, use, or      \n" \
-"copying of this software and media is authorized only pursuant to a   \n" \
-"valid written license from SMART Modular Technologies, Inc. or an        \n" \
-"authorized sublicensor.                                               \n" \
-"The name of SMART Modular Technologies, Inc. may not be used to endorse  \n" \
-"or promote products derived from this software without specific prior \n" \
-"written permission. All other rights reserved.                       \n" \
-"\n" \
-"THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED  \n" \
-"WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF      \n" \
-"NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.\n" \
-"Digital assumes no responsibility AT ALL for the use or reliability of\n" \
-"this software.                                                       \n" \
-"\n";
+    "\n"
+    "COPYRIGHT NOTICE                                                   \n"
+    "\n"
+    "@ Copyright SMART Modular Technologies, Inc., 1999. All Righhts Reserved.\n"
+    "\n"
+    "Unpublished rights reserved under the copyright laws of the United    \n"
+    "States. Copyright is claimed in the computer program and user         \n"
+    "interface thereof.                                                   \n"
+    "\n"
+    "Restricted Rights: Use, duplication, or disclosure by the U.S.        \n"
+    "is subject to restrictions as set forth in subparagraph (c) (1) (ii)  \n"
+    "of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR 52.227-14 Alt.  \n"
+    "III, as applicable.                                                  \n"
+    "\n"
+    "This software is proprietary to and embodies the confidential         \n"
+    "technology of SMART Modular Technoogies, Inc. Possession, use, or      \n"
+    "copying of this software and media is authorized only pursuant to a   \n"
+    "valid written license from SMART Modular Technologies, Inc. or an        \n"
+    "authorized sublicensor.                                               \n"
+    "The name of SMART Modular Technologies, Inc. may not be used to endorse  \n"
+    "or promote products derived from this software without specific prior \n"
+    "written permission. All other rights reserved.                       \n"
+    "\n"
+    "THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED  \n"
+    "WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF      \n"
+    "NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.\n"
+    "Digital assumes no responsibility AT ALL for the use or reliability of\n"
+    "this software.                                                       \n"
+    "\n";
 
 #else
 
-"\n" \
-"COPYRIGHT NOTICE                                                   \n" \
-"\n" \
-"@ Copyright SMART Modular Technologies, Inc., 1999. All Righhts Reserved.\n" \
-"\n" \
-"Unpublished rights reserved under the copyright laws of the United    \n" \
-"States. Copyright is claimed in the computer program and user         \n" \
-"interface thereof.                                                   \n" \
-"\n" \
-"This software is proprietary to and embodies the confidential         \n" \
-"technology of SMART Modular Technoogies, Inc. Possession, use, or      \n" \
-"copying of this software and media is authorized only pursuant to a   \n" \
-"valid written license from SMART Modular Technologies, Inc. or an        \n" \
-"authorized sublicensor.                                               \n" \
-"The name of SMART Modular Technologies, Inc. may not be used to endorse  \n" \
-"or promote products derived from this software without specific prior \n" \
-"written permission. All other rights reserved.                       \n" \
-"\n" \
-"THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED  \n" \
-"WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF      \n" \
-"NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.\n" \
-"Digital assumes no responsibility AT ALL for the use or reliability of\n" \
-"this software.                                                       \n" \
-"\n";
-
+    "\n"
+    "COPYRIGHT NOTICE                                                   \n"
+    "\n"
+    "@ Copyright SMART Modular Technologies, Inc., 1999. All Righhts Reserved.\n"
+    "\n"
+    "Unpublished rights reserved under the copyright laws of the United    \n"
+    "States. Copyright is claimed in the computer program and user         \n"
+    "interface thereof.                                                   \n"
+    "\n"
+    "This software is proprietary to and embodies the confidential         \n"
+    "technology of SMART Modular Technoogies, Inc. Possession, use, or      \n"
+    "copying of this software and media is authorized only pursuant to a   \n"
+    "valid written license from SMART Modular Technologies, Inc. or an        \n"
+    "authorized sublicensor.                                               \n"
+    "The name of SMART Modular Technologies, Inc. may not be used to endorse  \n"
+    "or promote products derived from this software without specific prior \n"
+    "written permission. All other rights reserved.                       \n"
+    "\n"
+    "THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED  \n"
+    "WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF      \n"
+    "NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.\n"
+    "Digital assumes no responsibility AT ALL for the use or reliability of\n"
+    "this software.                                                       \n"
+    "\n";
 
 #endif

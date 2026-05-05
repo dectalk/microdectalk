@@ -29,7 +29,7 @@
  *  Rev    	Who     Date            Description
  *  ---    	-----   -----------     --------------------------------------------
  *  001		MGS		04/23/1996		changed a few prototypes
- *									added an MSDOS ifdef            
+ *									added an MSDOS ifdef
  *  002		MGS		05/15/1996		Added the parser's prototypes
  *  003		MGS		05/21/1996		removed cm_text_ablook prototype
  *  004		MGS		08/07/1996		Added and changed protos for new_indexing
@@ -43,7 +43,7 @@
  *  010		CJL		03/18/1998		Removed specific path for dectalkf.h.
  *  011		gl		03/25/1998		Added cm_cmd_dbgv() function declaration
  *  012		ETT		10/05/1998		added linux code
- *  013		MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
+ *  013		MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
  *  014		MGS		05/09/2001		Some VxWorks porting BATS#972
  *  015		CAB		05/14/2001		Added Force copyright
  *  015		MGS		06/19/2001		Solaris Port BATS#972
@@ -58,205 +58,204 @@
 
 #include "dectalkf.h"
 
-//#include "ttsapi.h"
+// #include "ttsapi.h"
 
-extern int      cm_cmd_rate(LPTTS_HANDLE_T phTTS);      		/* set the speaking rate */
-extern int      cm_cmd_name(LPTTS_HANDLE_T phTTS);              /* change the voice */
-extern int      cm_cmd_latin(LPTTS_HANDLE_T phTTS);             /* theta to s */
-extern int      cm_cmd_comma(LPTTS_HANDLE_T phTTS);             /* comma pause time */
-extern int      cm_cmd_period(LPTTS_HANDLE_T phTTS);            /* period pause time */
-extern int      cm_cmd_volume(LPTTS_HANDLE_T phTTS);            /* volume setting */
-extern int      cm_cmd_mark(LPTTS_HANDLE_T phTTS);              /* set index marks in text */
-extern int      cm_cmd_preamble(LPTTS_HANDLE_T phTTS);              /* set index marks in text */
-extern int      cm_cmd_error(LPTTS_HANDLE_T phTTS);             /* set error mode */
-extern int      cm_cmd_phoneme(LPTTS_HANDLE_T phTTS);           /* set phonemic mode */
-extern int      cm_cmd_log(LPTTS_HANDLE_T phTTS);               /* set event logging */
-extern int      cm_cmd_mode(LPTTS_HANDLE_T phTTS);              /* set text interpretations */
-extern int      cm_cmd_punct(LPTTS_HANDLE_T phTTS);             /* set punctuation interpretations */
-extern int      cm_cmd_skip(LPTTS_HANDLE_T phTTS);              /* set skip interpretations */
-extern int      cm_cmd_pause(LPTTS_HANDLE_T phTTS);             /* pause speech output */
-extern int      cm_cmd_play(LPTTS_HANDLE_T phTTS);              /* play a wave file */
-extern int      cm_cmd_resume(LPTTS_HANDLE_T phTTS);            /* resume speech output */
-extern int      cm_cmd_sync(LPTTS_HANDLE_T phTTS);              /* sync cmd/lts/ph */
-extern int      cm_cmd_flush(LPTTS_HANDLE_T phTTS);             /* flush all bufered text and commands */
-extern int      cm_cmd_enable(PKSD_T pKsd_t);                   /* selective enable of the flush */
-extern int      cm_cmd_dial(LPTTS_HANDLE_T phTTS);              /* generate dial tones */
-extern int      cm_cmd_tone(LPTTS_HANDLE_T phTTS);              /* generate user tone */
-extern int      cm_cmd_define(LPTTS_HANDLE_T phTTS);            /* define custom voices */
-extern int      cm_cmd_say(LPTTS_HANDLE_T phTTS);               /* how to break up text */
-extern int      cm_cmd_timeout(LPTTS_HANDLE_T phTTS);           /* when to flush text */
-extern int      cm_cmd_pronounce(LPTTS_HANDLE_T phTTS);         /* how to say certain things */
-extern int      cm_cmd_digitized(LPTTS_HANDLE_T phTTS);         /* switch to digitized mode */
-extern int      cm_cmd_language(LPTTS_HANDLE_T phTTS);          /* switch to an alternate language */
-extern int      cm_cmd_remove(PKSD_T pKsd_t);                   /* remove a language from the board */
-extern int      cm_cmd_stress(LPTTS_HANDLE_T phTTS);            /* set typing table stress */
-extern int      cm_cmd_break(LPTTS_HANDLE_T phTTS);             /* word bound pauses */
-extern int      cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS);          /* change default clock rates */
-extern int      cm_cmd_code_page(LPTTS_HANDLE_T phTTS);         /* change default code page table */
-extern int      cm_cmd_plang(LPTTS_HANDLE_T phTTS);             /* show and speak the phonemic alphabet */
-extern int      cm_cmd_debug(LPTTS_HANDLE_T phTTS);             /* debug command */
-extern int      cm_cmd_gender(LPTTS_HANDLE_T phTTS);            /* gender command */
-extern int      cm_cmd_gender(LPTTS_HANDLE_T phTTS);            /* gender command */
+extern int cm_cmd_rate(LPTTS_HANDLE_T phTTS);	   /* set the speaking rate */
+extern int cm_cmd_name(LPTTS_HANDLE_T phTTS);	   /* change the voice */
+extern int cm_cmd_latin(LPTTS_HANDLE_T phTTS);	   /* theta to s */
+extern int cm_cmd_comma(LPTTS_HANDLE_T phTTS);	   /* comma pause time */
+extern int cm_cmd_period(LPTTS_HANDLE_T phTTS);	   /* period pause time */
+extern int cm_cmd_volume(LPTTS_HANDLE_T phTTS);	   /* volume setting */
+extern int cm_cmd_mark(LPTTS_HANDLE_T phTTS);	   /* set index marks in text */
+extern int cm_cmd_preamble(LPTTS_HANDLE_T phTTS);  /* set index marks in text */
+extern int cm_cmd_error(LPTTS_HANDLE_T phTTS);	   /* set error mode */
+extern int cm_cmd_phoneme(LPTTS_HANDLE_T phTTS);   /* set phonemic mode */
+extern int cm_cmd_log(LPTTS_HANDLE_T phTTS);	   /* set event logging */
+extern int cm_cmd_mode(LPTTS_HANDLE_T phTTS);	   /* set text interpretations */
+extern int cm_cmd_punct(LPTTS_HANDLE_T phTTS);	   /* set punctuation interpretations */
+extern int cm_cmd_skip(LPTTS_HANDLE_T phTTS);	   /* set skip interpretations */
+extern int cm_cmd_pause(LPTTS_HANDLE_T phTTS);	   /* pause speech output */
+extern int cm_cmd_play(LPTTS_HANDLE_T phTTS);	   /* play a wave file */
+extern int cm_cmd_resume(LPTTS_HANDLE_T phTTS);	   /* resume speech output */
+extern int cm_cmd_sync(LPTTS_HANDLE_T phTTS);	   /* sync cmd/lts/ph */
+extern int cm_cmd_flush(LPTTS_HANDLE_T phTTS);	   /* flush all bufered text and commands */
+extern int cm_cmd_enable(PKSD_T pKsd_t);	   /* selective enable of the flush */
+extern int cm_cmd_dial(LPTTS_HANDLE_T phTTS);	   /* generate dial tones */
+extern int cm_cmd_tone(LPTTS_HANDLE_T phTTS);	   /* generate user tone */
+extern int cm_cmd_define(LPTTS_HANDLE_T phTTS);	   /* define custom voices */
+extern int cm_cmd_say(LPTTS_HANDLE_T phTTS);	   /* how to break up text */
+extern int cm_cmd_timeout(LPTTS_HANDLE_T phTTS);   /* when to flush text */
+extern int cm_cmd_pronounce(LPTTS_HANDLE_T phTTS); /* how to say certain things */
+extern int cm_cmd_digitized(LPTTS_HANDLE_T phTTS); /* switch to digitized mode */
+extern int cm_cmd_language(LPTTS_HANDLE_T phTTS);  /* switch to an alternate language */
+extern int cm_cmd_remove(PKSD_T pKsd_t);	   /* remove a language from the board */
+extern int cm_cmd_stress(LPTTS_HANDLE_T phTTS);	   /* set typing table stress */
+extern int cm_cmd_break(LPTTS_HANDLE_T phTTS);	   /* word bound pauses */
+extern int cm_cmd_cpu_rate(LPTTS_HANDLE_T phTTS);  /* change default clock rates */
+extern int cm_cmd_code_page(LPTTS_HANDLE_T phTTS); /* change default code page table */
+extern int cm_cmd_plang(LPTTS_HANDLE_T phTTS);	   /* show and speak the phonemic alphabet */
+extern int cm_cmd_debug(LPTTS_HANDLE_T phTTS);	   /* debug command */
+extern int cm_cmd_gender(LPTTS_HANDLE_T phTTS);	   /* gender command */
+extern int cm_cmd_gender(LPTTS_HANDLE_T phTTS);	   /* gender command */
 
-extern int      cm_cmd_setv(LPTTS_HANDLE_T phTTS);              /* send a stored set of changes */
-extern int      cm_cmd_loadv(LPTTS_HANDLE_T phTTS);             /* load changes to setv */  
-extern int      cm_cmd_vs(LPTTS_HANDLE_T phTTS);                /* special entry for :vs */
+extern int cm_cmd_setv(LPTTS_HANDLE_T phTTS);  /* send a stored set of changes */
+extern int cm_cmd_loadv(LPTTS_HANDLE_T phTTS); /* load changes to setv */
+extern int cm_cmd_vs(LPTTS_HANDLE_T phTTS);    /* special entry for :vs */
 
-extern int      cm_cmd_version(LPTTS_HANDLE_T phTTS);        /* say/return version.*/
-extern int      cm_cmd_samples_per_frame(LPTTS_HANDLE_T phTTS);  /* samples per frame (speed) in the vtm */
+extern int cm_cmd_version(LPTTS_HANDLE_T phTTS);	   /* say/return version.*/
+extern int cm_cmd_samples_per_frame(LPTTS_HANDLE_T phTTS); /* samples per frame (speed) in the vtm */
 
-extern  int OpenLogFile(LPTTS_HANDLE_T phTTS);
-extern  void CloseLogFile(LPTTS_HANDLE_T phTTS);
-void StereoVolumeControl( LPTTS_HANDLE_T,int, int, BOOL, BOOL );
-void SetStereoVolume( LPTTS_HANDLE_T,int, int );
+extern int  OpenLogFile(LPTTS_HANDLE_T phTTS);
+extern void CloseLogFile(LPTTS_HANDLE_T phTTS);
+void	    StereoVolumeControl(LPTTS_HANDLE_T, int, int, BOOL, BOOL);
+void	    SetStereoVolume(LPTTS_HANDLE_T, int, int);
 
 extern void cm_util_flush_init(LPTTS_HANDLE_T phTTS);
 extern void cm_util_initialize(LPTTS_HANDLE_T phTTS);
 extern void cm_util_init_type(PKSD_T pKsd_t);
 
-extern void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far *instr, short mode);
+extern void cm_util_say_string(PKSD_T pKsd_t, unsigned char _far* instr, short mode);
 
-extern int 	cm_util_dtpc_tones(LPTTS_HANDLE_T phTTS,
-				 			  unsigned int key,
-				 			  unsigned int iFrequency,
-				 			  unsigned int iDuration);
-extern int 	cm_util_dtpc_tones_reset(LPTTS_HANDLE_T phTTS);
+extern int  cm_util_dtpc_tones(LPTTS_HANDLE_T phTTS,
+			       unsigned int   key,
+			       unsigned int   iFrequency,
+			       unsigned int   iDuration);
+extern int  cm_util_dtpc_tones_reset(LPTTS_HANDLE_T phTTS);
 extern void cm_util_type_out(LPTTS_HANDLE_T phTTS, unsigned int c);
-extern int 	cm_util_string_match(const unsigned char *sa[],unsigned char *s);
+extern int  cm_util_string_match(const unsigned char* sa[], unsigned char* s);
 
-extern unsigned long get_clock(void);                                   
-extern int 	cm_pars_icommand(PCMD_T pCmd_t);
+extern unsigned long get_clock(void);
+extern int	     cm_pars_icommand(PCMD_T pCmd_t);
 
 extern void _far cm_pars_loop(LPTTS_HANDLE_T phTTS);
 
 #ifdef VOCAL
-void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,unsigned int c, 
-						char *cbuf,int *cbufcnt,
-						int *pcnt,int *isAdigit,
-						int *sndtel,int *modechng,
-						int *posord, char laschar);
-extern void cm_util_sendit(LPTTS_HANDLE_T phTTS,char cbuf[], int *cbufcnt,
-					int *sndtel,int *modechng,int posord, char laschar);
-extern int cm_util_sendat(LPTTS_HANDLE_T phTTS,char cbuf[],
-				  int *cbufcnt,int *pcnt,
-				  int *isAdigit,int *sndtel,
-				  int *modechng,int posord, char laschar);						
+void	    cm_pars_proc_char(LPTTS_HANDLE_T phTTS, unsigned int c,
+			      char* cbuf, int* cbufcnt,
+			      int* pcnt, int* isAdigit,
+			      int* sndtel, int* modechng,
+			      int* posord, char laschar);
+extern void cm_util_sendit(LPTTS_HANDLE_T phTTS, char cbuf[], int* cbufcnt,
+			   int* sndtel, int* modechng, int posord, char laschar);
+extern int  cm_util_sendat(LPTTS_HANDLE_T phTTS, char cbuf[],
+			   int* cbufcnt, int* pcnt,
+			   int* isAdigit, int* sndtel,
+			   int* modechng, int posord, char laschar);
 #else
 extern void cm_pars_proc_char(LPTTS_HANDLE_T phTTS,
-							  unsigned short c);
+			      unsigned short c);
 #endif /* end of #ifndef VOCAL */
 
-extern void cm_pars_new_state(PCMD_T pCmd_t, int state);
+extern void	    cm_pars_new_state(PCMD_T pCmd_t, int state);
 extern unsigned int cm_pars_getseq(LPTTS_HANDLE_T phTTS, unsigned char inchar);
-extern void cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c);
-extern void cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state);
-extern void cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c);
-extern void cm_cmd_reset_comm(PCMD_T pCmd_t, unsigned int state);
-extern void cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type);
-extern int  cm_phon_lookup_asc(LPTTS_HANDLE_T phTTS, unsigned int ph);
-extern int 	cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2);
-extern int 	cm_phon_param_check(LPTTS_HANDLE_T phTTS, unsigned int c);
-extern void cm_phon_flush(LPTTS_HANDLE_T phTTS);
-extern void cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c);
-extern int 	cm_cmd_sync(LPTTS_HANDLE_T phTTS); 
-extern void cm_text_getclause(LPTTS_HANDLE_T phTTS);
+extern void	    cm_cmd_match_comm(LPTTS_HANDLE_T phTTS, unsigned int c);
+extern void	    cm_cmd_do_command(LPTTS_HANDLE_T phTTS, unsigned int new_state);
+extern void	    cm_cmd_build_param(LPTTS_HANDLE_T phTTS, unsigned int c);
+extern void	    cm_cmd_reset_comm(PCMD_T pCmd_t, unsigned int state);
+extern void	    cm_cmd_error_comm(LPTTS_HANDLE_T phTTS, int type);
+extern int	    cm_phon_lookup_asc(LPTTS_HANDLE_T phTTS, unsigned int ph);
+extern int	    cm_phon_lookup_arpa(LPTTS_HANDLE_T phTTS, unsigned int ph1, unsigned int ph2);
+extern int	    cm_phon_param_check(LPTTS_HANDLE_T phTTS, unsigned int c);
+extern void	    cm_phon_flush(LPTTS_HANDLE_T phTTS);
+extern void	    cm_phon_match(LPTTS_HANDLE_T phTTS, unsigned int c);
+extern int	    cm_cmd_sync(LPTTS_HANDLE_T phTTS);
+extern void	    cm_text_getclause(LPTTS_HANDLE_T phTTS);
 
-extern void OutputCharacter( LPTTS_HANDLE_T phTTS,unsigned char c );
+extern void OutputCharacter(LPTTS_HANDLE_T phTTS, unsigned char c);
 
-extern  void save_index(PKSD_T pKsd_t,unsigned int sym,unsigned int type,unsigned int value,unsigned int how);
-/* 
+extern void save_index(PKSD_T pKsd_t, unsigned int sym, unsigned int type, unsigned int value, unsigned int how);
+/*
  * MVP : This function is used only in PH subsystem
  * extern  void check_index(unsigned int which_phone);
  */
-extern  void send_index(int how, int value );
-extern  void start_flush(int serial_mode);
-extern  void reset_spc(void);
-extern  void default_lang(PKSD_T pKsd_t,unsigned int lang_code,unsigned int ready_code);
-extern  void flush_done(PKSD_T pKsd_t);
-extern  void set_gpio( int );
-extern  void clr_gpio( int );
+extern void send_index(int how, int value);
+extern void start_flush(int serial_mode);
+extern void reset_spc(void);
+extern void default_lang(PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
+extern void flush_done(PKSD_T pKsd_t);
+extern void set_gpio(int);
+extern void clr_gpio(int);
 
-extern  int putn(unsigned int n);
-extern  int puthex(unsigned int n);
+extern int putn(unsigned int n);
+extern int puthex(unsigned int n);
 
 #ifdef NEW_BINARY_PARSER
-preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
-                                  unsigned char *input_array, 
-                                  unsigned char *new_input,
-                                  unsigned char *output_array,                                  
-                                  unsigned char *dict_hit_array,
-                                  pindex_data_t input_indexes,
-                                  pindex_data_t	new_input_indexes,
-                                  pindex_data_t	output_indexes,
-                                  U32 in_lang_flag,
-                                  U32 in_mode_flag,
-                                  int rule,
-                                  int go_until,
-                                  pmatch_arrays_t match_array,
-                                  preturn_value_t ret_value);
+preturn_value_t par_process_input(LPTTS_HANDLE_T  phTTS,
+				  unsigned char*  input_array,
+				  unsigned char*  new_input,
+				  unsigned char*  output_array,
+				  unsigned char*  dict_hit_array,
+				  pindex_data_t	  input_indexes,
+				  pindex_data_t	  new_input_indexes,
+				  pindex_data_t	  output_indexes,
+				  U32		  in_lang_flag,
+				  U32		  in_mode_flag,
+				  int		  rule,
+				  int		  go_until,
+				  pmatch_arrays_t match_array,
+				  preturn_value_t ret_value);
 #define __inline
 __inline void par_copy_index(pindex_data_t dest_index,
-					int		  dest_pos,
-					pindex_data_t src_index,
-					int		  src_pos);
+			     int	   dest_pos,
+			     pindex_data_t src_index,
+			     int	   src_pos);
 __inline void par_copy_index_list(pindex_data_t dest_index,
-						 int		   dest_pos,
-						 pindex_data_t src_index,
-						 int		   src_pos,
-						 int		   length);
-__inline int par_is_index_set(pindex_data_t indexes,
-					   int pos);
+				  int		dest_pos,
+				  pindex_data_t src_index,
+				  int		src_pos,
+				  int		length);
+__inline int  par_is_index_set(pindex_data_t indexes,
+			       int	     pos);
 #undef __inline
 
 #else
-preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
-                                  unsigned char *input_array, 
-                                  unsigned char *new_input,
-                                  unsigned char *output_array,                                  
-                                  unsigned char *dict_hit_array,
-                                  pindex_data_t input_indexes,
-                                  pindex_data_t	new_input_indexes,
-                                  pindex_data_t	output_indexes,
-                                  U32 in_lang_flag,
-                                  U32 in_mode_flag,
-                                  short rule,
-                                  short go_until,
-                                  preturn_value_t ret_value);
-void par_copy_index(pindex_data_t dest_index,
-					short		  dest_pos,
-					pindex_data_t src_index,
-					short		  src_pos);
-void par_copy_index_list(pindex_data_t dest_index,
-						 short		   dest_pos,
-						 pindex_data_t src_index,
-						 short		   src_pos,
-						 short		   length);
-short par_is_index_set(pindex_data_t indexes,
-					   short pos);
+preturn_value_t par_process_input(LPTTS_HANDLE_T  phTTS,
+				  unsigned char*  input_array,
+				  unsigned char*  new_input,
+				  unsigned char*  output_array,
+				  unsigned char*  dict_hit_array,
+				  pindex_data_t	  input_indexes,
+				  pindex_data_t	  new_input_indexes,
+				  pindex_data_t	  output_indexes,
+				  U32		  in_lang_flag,
+				  U32		  in_mode_flag,
+				  short		  rule,
+				  short		  go_until,
+				  preturn_value_t ret_value);
+void		par_copy_index(pindex_data_t dest_index,
+			       short	     dest_pos,
+			       pindex_data_t src_index,
+			       short	     src_pos);
+void		par_copy_index_list(pindex_data_t dest_index,
+				    short	  dest_pos,
+				    pindex_data_t src_index,
+				    short	  src_pos,
+				    short	  length);
+short		par_is_index_set(pindex_data_t indexes,
+				 short	       pos);
 #endif // NEW_BINARY_PARSER
 
-//  MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it) 
-int _far par_dict_lookup(LPTTS_HANDLE_T phTTS,  char *word,int in_flag);
-int par_dict_dlook(PKSD_T pKsd_t,
-		   		   long index,
-		   		   int *hit_type,
-		   		   struct dic_entry far **ppent,
-		   		   char *word);
-int par_dict_find_word(PKSD_T pKsd_t,
-		       		   char *word,
-		       		   int *hit_type);
-int par_dict_dlook(PKSD_T pKsd_t,
-		   		   long index,
-		   		   int *hit_type,
-		   		   struct dic_entry far **ppent,
-		   		   char *word);
-int par_dict_where_to_look(struct dic_entry far *pent,
-			   			   char *word);
+//  MGS		10/14/1999		BATS#876 fix for UK phone numbers (part of it)
+int _far par_dict_lookup(LPTTS_HANDLE_T phTTS, char* word, int in_flag);
+int	 par_dict_dlook(PKSD_T		       pKsd_t,
+			long		       index,
+			int*		       hit_type,
+			struct dic_entry far** ppent,
+			char*		       word);
+int	 par_dict_find_word(PKSD_T pKsd_t,
+			    char*  word,
+			    int*   hit_type);
+int	 par_dict_dlook(PKSD_T		       pKsd_t,
+			long		       index,
+			int*		       hit_type,
+			struct dic_entry far** ppent,
+			char*		       word);
+int	 par_dict_where_to_look(struct dic_entry far* pent,
+				char*		      word);
 
-int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
+int  vtm_loop(LPTTS_HANDLE_T phTTS, unsigned short* input);
+void ph_loop(LPTTS_HANDLE_T phTTS, unsigned short* input);
 
-void lts_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-
+void lts_loop(LPTTS_HANDLE_T phTTS, unsigned short* input);
 
 #endif // CMPROTH

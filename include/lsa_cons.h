@@ -1,40 +1,40 @@
 /*
  ***********************************************************************
- *                                                                      
- *                           Coryright (c)                              
- *    © Digital Equipment Corporation 1996, 1997. All rights reserved.        
- *                                                                      
- *    Restricted Rights: Use, duplication, or disclosure by the U.S.    
+ *
+ *                           Coryright (c)
+ *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
+ *
+ *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
  *    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
- *    52.227-14 Alt. III, as applicable.                                
- *                                                                      
- *    This software is proprietary to and embodies the confidential     
- *    technology of Digital Equipment Corporation and other parties.    
+ *    52.227-14 Alt. III, as applicable.
+ *
+ *    This software is proprietary to and embodies the confidential
+ *    technology of Digital Equipment Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
- *    only pursuant to a valid written license from Digital or an        
- *    authorized sublicensor.                                            
- *                                                                       
- *********************************************************************** 
+ *    only pursuant to a valid written license from Digital or an
+ *    authorized sublicensor.
+ *
+ ***********************************************************************
  *    File Name:	ls_cons.h
- *    Author:		Matthew Schnee                                         
- *    Creation Date:02/06/96                                                   
- *                                                                             
- *    Functionality:                                                           
+ *    Author:		Matthew Schnee
+ *    Creation Date:02/06/96
+ *
+ *    Functionality:
  *    DECtalk-pc include file for constants ...
  *
- ***********************************************************************       
- *                                                                             
- * Rev	Who		Date			Description                    
+ ***********************************************************************
+ *
+ * Rev	Who		Date			Description
  * ---	-----	-------			---------------------------------------
  * 001	MGS		02/07/1996		Moved data from lsconst.h to ls_cons.h
  * 002	MGS		02/26/2002		ACNA changes and threading fixes
  * 003	MGS		04/11/2002		ARM7 port
- *      
+ *
  */
 
 #ifndef LSACONSH
-#define LSACONSH  
+#define LSACONSH
 
 extern const unsigned char far english[];
 extern const unsigned char far irish[];
@@ -58,10 +58,7 @@ extern const unsigned int spanish_entries;
 extern int name_size;
 extern struct langs lp[];
 */
-extern const unsigned char *name_types[];
-extern const unsigned char *elim_rules[];  
-
+extern const unsigned char* name_types[];
+extern const unsigned char* elim_rules[];
 
 #endif
-
-          

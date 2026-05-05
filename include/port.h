@@ -28,7 +28,7 @@
  *
  *  Rev Name    Date        Description
  *  --- -----   ----------- --------------------------------------------
- *  001	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
+ *  001	GL		04/21/1997	BATS#357  Add the code for __osf__ build
  *  002 MGS		09/08/1997	Made change for osf build
  *				11/13/1997	bats423: correct LP_AUDIO_HANDLE_T (aug97)
  *  003 GL 		05/04/1998	Add dectalkf.h here to make sure every file catch
@@ -62,49 +62,49 @@
 #include <stdint.h>
 
 typedef uint16_t DT_PIPE_T;
-typedef int32_t S32;
+typedef int32_t	 S32;
 typedef uint32_t U32;
-typedef int16_t S16;
+typedef int16_t	 S16;
 typedef uint16_t U16;
-typedef int8_t S8;
-typedef uint8_t U8;
+typedef int8_t	 S8;
+typedef uint8_t	 U8;
 typedef uint64_t QWORD;
 typedef uint32_t DWORD;
 typedef uint16_t USHORT;
-typedef void * PVOID;
+typedef void*	 PVOID;
 typedef uint32_t UINT;
 #define IsBadWritePtr(ptr, size) ((ptr == NULL) ? 1 : 0)
-//#define _stricmp strcasecmp
-extern int portstricmp(const char *a, const char *b);
+// #define _stricmp strcasecmp
+extern int portstricmp(const char* a, const char* b);
 
 #define PRINTFDEBUG_OLD
 typedef uint64_t PTRINT;
 
-/* SWAP_dd_eeeeeee */ 
+/* SWAP_dd_eeeeeee */
 /* dd is 16 or 32 bits */
-/* eeeeee is 
-   BIG for big-endian numbers 
+/* eeeeee is
+   BIG for big-endian numbers
    LITTLE for little-endian numbers */
 /* ex on intel SWAP_32_LITTLE(x) does nothing
    but on sparc SWAP_32_LITTLE(x) swaps the bytes */
 
 #ifndef _BIGENDIAN_
-#define SWAP_16_BIG(x) (((((U16)(x))&0xff00)>>8) | \
-                        ((((U16)(x))&0x00ff)<<8))
+#define SWAP_16_BIG(x) (((((U16)(x)) & 0xff00) >> 8) | \
+			((((U16)(x)) & 0x00ff) << 8))
 #define SWAP_16_LITTLE(x) (x)
-#define SWAP_32_BIG(x) (((((U32)(x))&0xff000000)>>24) | \
-                        ((((U32)(x))&0x00ff0000)>>8) | \
-                        ((((U32)(x))&0x0000ff00)<<8) | \
-                        ((((U32)(x))&0x000000ff)<<24))
+#define SWAP_32_BIG(x) (((((U32)(x)) & 0xff000000) >> 24) | \
+			((((U32)(x)) & 0x00ff0000) >> 8) | \
+			((((U32)(x)) & 0x0000ff00) << 8) | \
+			((((U32)(x)) & 0x000000ff) << 24))
 #define SWAP_32_LITTLE(x) (x)
 #else
-#define SWAP_16_LITTLE(x) (((((U16)(x))&0xff00)>>8) | \
-                           ((((U16)(x))&0x00ff)<<8))
+#define SWAP_16_LITTLE(x) (((((U16)(x)) & 0xff00) >> 8) | \
+			   ((((U16)(x)) & 0x00ff) << 8))
 #define SWAP_16_BIG(x) (x)
-#define SWAP_32_LITTLE(x) (((((U32)(x))&0xff000000)>>24) | \
-                           ((((U32)(x))&0x00ff0000)>>8) | \
-                           ((((U32)(x))&0x0000ff00)<<8) | \
-                           ((((U32)(x))&0x000000ff)<<24))
+#define SWAP_32_LITTLE(x) (((((U32)(x)) & 0xff000000) >> 24) | \
+			   ((((U32)(x)) & 0x00ff0000) >> 8) | \
+			   ((((U32)(x)) & 0x0000ff00) << 8) | \
+			   ((((U32)(x)) & 0x000000ff) << 24))
 #define SWAP_32_BIG(x) (x)
 #endif
 
@@ -118,6 +118,5 @@ typedef uint64_t PTRINT;
 #define __inline
 
 #endif
-
 
 #endif /* _PORT_H */

@@ -1,28 +1,28 @@
-/*                       COPYRIGHT NOTICE 
-   Copyright © 2001 Force Computers Inc. A Solectron company. All rights reserved.    
-   © SMART Modular Technologies 1999. All rights reserved.    
+/*                       COPYRIGHT NOTICE
+   Copyright © 2001 Force Computers Inc. A Solectron company. All rights reserved.
+   © SMART Modular Technologies 1999. All rights reserved.
 
-   All Rights reserved. Unpublished rights reserved under the 
-   copyright laws of the United States. Copyright is claimed in 
-   the computer program and user interface thereof. 
- 
-   The software contained on this media is proprietary to and 
+   All Rights reserved. Unpublished rights reserved under the
+   copyright laws of the United States. Copyright is claimed in
+   the computer program and user interface thereof.
+
+   The software contained on this media is proprietary to and
    embodies the confidential technology of Force Computers Incorporated.
-   Possession, use, duplication or dissemination of 
+   Possession, use, duplication or dissemination of
    the software and media is authorized only pursuant to a valid
    written license from Force Computers Incorporated.
-  
-   The name of Force Computers Incorporated may not be used to endorse or 
-   promote products derived from this software without specific prior 
+
+   The name of Force Computers Incorporated may not be used to endorse or
+   promote products derived from this software without specific prior
    written permission. All other rights reserved.
-  
-   THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED 
+
+   THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
    WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF
-   NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
-   Force assumes no responsibility AT ALL for the use or reliability of 
+   NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+   Force assumes no responsibility AT ALL for the use or reliability of
    this software.
 */
-/* 
+/*
  * HISTORY
  * Revision 1.1.2.3  1996/09/25  13:43:43  Cathy_Page
  * 	Modified PA_GetFormat - changed approved by Bill H
@@ -31,7 +31,7 @@
  * Revision 1.1.2.2  1996/01/05  21:54:54  Bill_Hallahan
  * 	Initial creation
  * 	[1996/01/05  21:53:14  Bill_Hallahan]
- * 
+ *
  * Rev Name Date		Comment
  * --- ---- ----------  ---------------------------
  * 003 MGS	05/18/2001	Added PA_DoSync for VxWorks
@@ -40,16 +40,16 @@
  */
 /*******************************************************************
 **++
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
+**
 ** FILE NAME:   playstub.c
-** MODULE NAME: 
+** MODULE NAME:
 **
 ** MODULE DESCRIPTION: This file implements a stub for the portable
 **                     audio API.
-** 
+**
 ** DESIGN OVERVIEW:
-** 
+**
 **--
 */
 /**********************************************************************/
@@ -132,7 +132,7 @@
 /**********************************************************************/
 /**********************************************************************/
 
-//#include "playaudd.h"
+// #include "playaudd.h"
 #include "playaud.h"
 
 /**********************************************************************/
@@ -222,17 +222,16 @@
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_CreatePlayHandle( HPLAY_AUDIO_T * ppPlayAudio,
-                    unsigned int uiWaveOutDeviceID,
-                    LPWAVEFORMATEX pWaveFormat,
-                    DWORD dwDeviceOptions,
-                    unsigned int ( * CallbackRoutine )( HPLAY_AUDIO_T,
-                                                        ATYPE_T,
-                                                        ATYPE_T,
-                                                        ATYPE_T ),
-                    ATYPE_T aInstance )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_CreatePlayHandle(HPLAY_AUDIO_T* ppPlayAudio,
+			     unsigned int   uiWaveOutDeviceID,
+			     LPWAVEFORMATEX pWaveFormat,
+			     DWORD	    dwDeviceOptions,
+			     unsigned int (*CallbackRoutine)(HPLAY_AUDIO_T,
+							     ATYPE_T,
+							     ATYPE_T,
+							     ATYPE_T),
+			     ATYPE_T aInstance) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -261,9 +260,8 @@ MMRESULT PA_CreatePlayHandle( HPLAY_AUDIO_T * ppPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_DestroyPlayHandle( HPLAY_AUDIO_T pPlayAudio )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_DestroyPlayHandle(HPLAY_AUDIO_T pPlayAudio) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -334,11 +332,10 @@ MMRESULT PA_DestroyPlayHandle( HPLAY_AUDIO_T pPlayAudio )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_Queue( HPLAY_AUDIO_T pPlayAudio,
-                   LPAUDIO_T pBuffer,
-                   DWORD dwLength )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_Queue(HPLAY_AUDIO_T pPlayAudio,
+		  LPAUDIO_T	pBuffer,
+		  DWORD		dwLength) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -368,9 +365,8 @@ MMRESULT PA_Queue( HPLAY_AUDIO_T pPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_Reset( HPLAY_AUDIO_T pPlayAudio )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_Reset(HPLAY_AUDIO_T pPlayAudio) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -397,9 +393,8 @@ MMRESULT PA_Reset( HPLAY_AUDIO_T pPlayAudio )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_Pause( HPLAY_AUDIO_T pPlayAudio )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_Pause(HPLAY_AUDIO_T pPlayAudio) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -426,9 +421,8 @@ MMRESULT PA_Pause( HPLAY_AUDIO_T pPlayAudio )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_Resume( HPLAY_AUDIO_T pPlayAudio )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_Resume(HPLAY_AUDIO_T pPlayAudio) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -460,9 +454,8 @@ MMRESULT PA_Resume( HPLAY_AUDIO_T pPlayAudio )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_GetFormat( HPLAY_AUDIO_T pPlayAudio,
-                       LPWAVEFORMATEX pWaveFormat )
-{
+MMRESULT PA_GetFormat(HPLAY_AUDIO_T  pPlayAudio,
+		      LPWAVEFORMATEX pWaveFormat) {
 #if 0
   pWaveFormat->wFormatTag = WAVE_FORMAT_PCM;
   pWaveFormat->nSamplesPerSec = uiSampleRate;
@@ -483,7 +476,7 @@ MMRESULT PA_GetFormat( HPLAY_AUDIO_T pPlayAudio,
   pWaveFormat->cbSize = 0;
 #endif
 
-  return MMSYSERR_NOERROR;
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -518,10 +511,9 @@ MMRESULT PA_GetFormat( HPLAY_AUDIO_T pPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_SetFormat( HPLAY_AUDIO_T pPlayAudio,
-                       LPWAVEFORMATEX pWaveFormat )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_SetFormat(HPLAY_AUDIO_T  pPlayAudio,
+		      LPWAVEFORMATEX pWaveFormat) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -552,10 +544,9 @@ MMRESULT PA_SetFormat( HPLAY_AUDIO_T pPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_GetVolume( HPLAY_AUDIO_T pPlayAudio, LPDWORD pdwVolume )
-{
-  *pdwVolume = 0;
-  return MMSYSERR_NOERROR;
+MMRESULT PA_GetVolume(HPLAY_AUDIO_T pPlayAudio, LPDWORD pdwVolume) {
+	*pdwVolume = 0;
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -584,9 +575,8 @@ MMRESULT PA_GetVolume( HPLAY_AUDIO_T pPlayAudio, LPDWORD pdwVolume )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_SetVolume( HPLAY_AUDIO_T pPlayAudio, DWORD dwVolume )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_SetVolume(HPLAY_AUDIO_T pPlayAudio, DWORD dwVolume) {
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -654,12 +644,11 @@ MMRESULT PA_SetVolume( HPLAY_AUDIO_T pPlayAudio, DWORD dwVolume )
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_GetPosition( HPLAY_AUDIO_T pPlayAudio,
-                         LPDWORD pdwPosition,
-                         unsigned int bFast )
-{
-  *pdwPosition = 0xFFFFFFFF;
-  return MMSYSERR_NOERROR;
+MMRESULT PA_GetPosition(HPLAY_AUDIO_T pPlayAudio,
+			LPDWORD	      pdwPosition,
+			unsigned int  bFast) {
+	*pdwPosition = 0xFFFFFFFF;
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -731,40 +720,37 @@ MMRESULT PA_GetPosition( HPLAY_AUDIO_T pPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-#define  MAXIMUM_STATUS_VALUES  2
+#define MAXIMUM_STATUS_VALUES 2
 
-MMRESULT PA_Status( HPLAY_AUDIO_T pPlayAudio,
-                    DWORD dwIdentifierArray[],
-                    DWORD dwStatusArray[],
-                    DWORD dwNumberOfStatusValues )
-{
-  unsigned int uiI;
-  MMRESULT mmStatus;
+MMRESULT PA_Status(HPLAY_AUDIO_T pPlayAudio,
+		   DWORD	 dwIdentifierArray[],
+		   DWORD	 dwStatusArray[],
+		   DWORD	 dwNumberOfStatusValues) {
+	unsigned int uiI;
+	MMRESULT     mmStatus;
 
-  /********************************************************************/
-  /*  Range check the number of status values requested.              */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Range check the number of status values requested.              */
+	/********************************************************************/
 
-  if (( dwNumberOfStatusValues == 0 )
-    || ( dwNumberOfStatusValues > MAXIMUM_STATUS_VALUES ))
-    return MMSYSERR_INVALPARAM;
+	if((dwNumberOfStatusValues == 0) || (dwNumberOfStatusValues > MAXIMUM_STATUS_VALUES))
+		return MMSYSERR_INVALPARAM;
 
-  /********************************************************************/
-  /*  Set the default error return value to indicate success.         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Set the default error return value to indicate success.         */
+	/********************************************************************/
 
-  mmStatus = MMSYSERR_NOERROR;
+	mmStatus = MMSYSERR_NOERROR;
 
-  /********************************************************************/
-  /*  Loop and fill in array puiStatus[].                             */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Loop and fill in array puiStatus[].                             */
+	/********************************************************************/
 
-  for ( uiI = 0; uiI < dwNumberOfStatusValues; uiI++ )
-  {
-    dwStatusArray[uiI] = 0;
-  }
+	for(uiI = 0; uiI < dwNumberOfStatusValues; uiI++) {
+		dwStatusArray[uiI] = 0;
+	}
 
-  return MMSYSERR_NOERROR;
+	return MMSYSERR_NOERROR;
 }
 
 /**********************************************************************/
@@ -793,12 +779,9 @@ MMRESULT PA_Status( HPLAY_AUDIO_T pPlayAudio,
 /**********************************************************************/
 /**********************************************************************/
 
-MMRESULT PA_WaitForPlayToComplete( HPLAY_AUDIO_T pPlayAudio )
-{
-  return MMSYSERR_NOERROR;
+MMRESULT PA_WaitForPlayToComplete(HPLAY_AUDIO_T pPlayAudio) {
+	return MMSYSERR_NOERROR;
 }
 
-
-void PA_DoSync(HPLAY_AUDIO_T pPlayAudio)
-{
+void PA_DoSync(HPLAY_AUDIO_T pPlayAudio) {
 }

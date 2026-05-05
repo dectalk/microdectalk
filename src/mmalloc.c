@@ -38,7 +38,6 @@
 /**********************************************************************/
 /**********************************************************************/
 
-
 /**********************************************************************/
 /**********************************************************************/
 /*                                                                    */
@@ -73,7 +72,7 @@
  **********************************************************************/
 #include "dectalkf.h"
 
-#if !defined (__APPLE__)
+#if !defined(__APPLE__)
 #include <malloc.h>
 #endif
 #include "mmalloc.h"
@@ -85,7 +84,7 @@
 
 #ifdef USE_MME_SERVER
 
-#define  SHARED_MEMORY_ALLOCATION_SIZE  8192
+#define SHARED_MEMORY_ALLOCATION_SIZE 8192
 
 #ifdef MOVED_TO_SHARED_MEMORY
 
@@ -95,45 +94,42 @@
 
 typedef long qAlign;
 
-union MEM_HEADER_T
-{
-  struct
-  {
-    union MEM_HEADER_T * pLink;
-    unsigned int uiSize;
-  } Block;
+union MEM_HEADER_T {
+	struct
+	{
+		union MEM_HEADER_T* pLink;
+		unsigned int	    uiSize;
+	} Block;
 
-  qAlign qForceAlignment;  /* This forces proper memory alignment */
+	qAlign qForceAlignment; /* This forces proper memory alignment */
 };
 
 typedef union MEM_HEADER_T MEMORY_HEADER_T;
-typedef MEMORY_HEADER_T * LPMEMORY_HEADER_T;
+typedef MEMORY_HEADER_T*   LPMEMORY_HEADER_T;
 
 /**********************************************************************/
 /*  Structure for Shared Memory Linked List.                          */
 /**********************************************************************/
 
-struct SHARED_MEMORY_LIST_TAG
-{
-  struct SHARED_MEMORY_LIST_TAG * pLink;
-  void * pSharedMemory;
+struct SHARED_MEMORY_LIST_TAG {
+	struct SHARED_MEMORY_LIST_TAG* pLink;
+	void*			       pSharedMemory;
 };
 
 typedef struct SHARED_MEMORY_LIST_TAG SHARED_MEMORY_LIST_T;
-typedef SHARED_MEMORY_LIST_T * LPSHARED_MEMORY_LIST_T;
+typedef SHARED_MEMORY_LIST_T*	      LPSHARED_MEMORY_LIST_T;
 
 /**********************************************************************/
 /*  Structure for Allocated Memory Linked List.                       */
 /**********************************************************************/
 
-struct ALLOCATED_MEMORY_LIST_TAG
-{
-  struct ALLOCATED_MEMORY_LIST_TAG * pLink;
-  void * pAllocatedMemory;
+struct ALLOCATED_MEMORY_LIST_TAG {
+	struct ALLOCATED_MEMORY_LIST_TAG* pLink;
+	void*				  pAllocatedMemory;
 };
 
 typedef struct ALLOCATED_MEMORY_LIST_TAG ALLOCATED_MEMORY_LIST_T;
-typedef ALLOCATED_MEMORY_LIST_T * LPALLOCATED_MEMORY_LIST_T;
+typedef ALLOCATED_MEMORY_LIST_T*	 LPALLOCATED_MEMORY_LIST_T;
 #endif // MOVED_TO_SHARED_MEMORY
 
 #include "shmalloc.h"
@@ -143,21 +139,19 @@ extern pshared_mem_t pShm_t;
 /*  Function prototypes.                                              */
 /**********************************************************************/
 
-static LPMEMORY_HEADER_T GetSharedMemory( unsigned int uiSize );
-static void PlaceMemoryOnFreeList( void * pMemory );
+static LPMEMORY_HEADER_T GetSharedMemory(unsigned int uiSize);
+static void		 PlaceMemoryOnFreeList(void* pMemory);
 
 /**********************************************************************/
 /*  Memory allocation globals.                                        */
 /**********************************************************************/
 
-
 #ifdef MOVED_TO_SHARED_MMEORY
-MEMORY_HEADER_T MemoryBase;
-LPMEMORY_HEADER_T pFreePool = NULL;
-LPSHARED_MEMORY_LIST_T pSharedMemoryList = NULL;
+MEMORY_HEADER_T		  MemoryBase;
+LPMEMORY_HEADER_T	  pFreePool	       = NULL;
+LPSHARED_MEMORY_LIST_T	  pSharedMemoryList    = NULL;
 LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryList = NULL;
 #endif
-
 
 /**********************************************************************/
 /**********************************************************************/
@@ -187,105 +181,94 @@ LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryList = NULL;
 /**********************************************************************/
 /**********************************************************************/
 
-void * mallocLock( unsigned int uiSize )
-{
-  unsigned int uiUnits;
-  void * pAllocatedMem;
-  LPMEMORY_HEADER_T pMem;
-  LPMEMORY_HEADER_T pPrevious;
-  LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryListItem;
+void* mallocLock(unsigned int uiSize) {
+	unsigned int		  uiUnits;
+	void*			  pAllocatedMem;
+	LPMEMORY_HEADER_T	  pMem;
+	LPMEMORY_HEADER_T	  pPrevious;
+	LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryListItem;
 
-  /********************************************************************/
-  /*  Allocate memory for the allocated memory list structure.        */
-  /********************************************************************/
-  pAllocatedMemoryListItem =
-    (LPALLOCATED_MEMORY_LIST_T)malloc( sizeof(ALLOCATED_MEMORY_LIST_T));
+	/********************************************************************/
+	/*  Allocate memory for the allocated memory list structure.        */
+	/********************************************************************/
+	pAllocatedMemoryListItem =
+	    (LPALLOCATED_MEMORY_LIST_T)malloc(sizeof(ALLOCATED_MEMORY_LIST_T));
 
-  if ( pAllocatedMemoryListItem == NULL )
-  {
-    return NULL;
-  }
+	if(pAllocatedMemoryListItem == NULL) {
+		return NULL;
+	}
 
-  /********************************************************************/
-  /*  Calculate the number of units.                                  */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Calculate the number of units.                                  */
+	/********************************************************************/
 
-  uiUnits = ( uiSize + sizeof(MEMORY_HEADER_T) - 1 )
-              / sizeof(MEMORY_HEADER_T) + 1;
+	uiUnits = (uiSize + sizeof(MEMORY_HEADER_T) - 1) / sizeof(MEMORY_HEADER_T) + 1;
 
-  /********************************************************************/
-  /*  Is there a free list yet ?                                      */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Is there a free list yet ?                                      */
+	/********************************************************************/
 
-  if (( pPrevious = pShm_t->pFreePool ) == NULL )
-  {
-    pShm_t->MemoryBase.Block.pLink = pShm_t->pFreePool = pPrevious = &pShm_t->MemoryBase;
-    pShm_t->MemoryBase.Block.uiSize = 0;
-  }
+	if((pPrevious = pShm_t->pFreePool) == NULL) {
+		pShm_t->MemoryBase.Block.pLink = pShm_t->pFreePool = pPrevious = &pShm_t->MemoryBase;
+		pShm_t->MemoryBase.Block.uiSize				       = 0;
+	}
 
-  /********************************************************************/
-  /*  Go around the free list and get a memory block. Start           */
-  /*  at the block immediately following the previous block.          */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Go around the free list and get a memory block. Start           */
+	/*  at the block immediately following the previous block.          */
+	/********************************************************************/
 
-  for ( pMem = pPrevious->Block.pLink;
-        TRUE;
-        pPrevious = pMem, pMem = pMem->Block.pLink )
-  {
-    /******************************************************************/
-    /*  Is this block big enough ?                                    */
-    /******************************************************************/
+	for(pMem = pPrevious->Block.pLink;
+	    TRUE;
+	    pPrevious = pMem, pMem = pMem->Block.pLink) {
+		/******************************************************************/
+		/*  Is this block big enough ?                                    */
+		/******************************************************************/
 
-    if ( pMem->Block.uiSize >= uiUnits )
-    {
-      if ( pMem->Block.uiSize == uiUnits )
-      {
-        /**************************************************************/
-        /*  Size matches exactly.                                     */
-        /**************************************************************/
+		if(pMem->Block.uiSize >= uiUnits) {
+			if(pMem->Block.uiSize == uiUnits) {
+				/**************************************************************/
+				/*  Size matches exactly.                                     */
+				/**************************************************************/
 
-        pPrevious->Block.pLink = pMem->Block.pLink;
-      }
-      else
-      {
-        /**************************************************************/
-        /*  Allocate the tail end.                                    */
-        /**************************************************************/
+				pPrevious->Block.pLink = pMem->Block.pLink;
+			} else {
+				/**************************************************************/
+				/*  Allocate the tail end.                                    */
+				/**************************************************************/
 
-        pMem->Block.uiSize -= uiUnits;
-        pMem += pMem->Block.uiSize;
-        pMem->Block.uiSize = uiUnits;
-      }
+				pMem->Block.uiSize -= uiUnits;
+				pMem += pMem->Block.uiSize;
+				pMem->Block.uiSize = uiUnits;
+			}
 
-      pShm_t->pFreePool = pPrevious;
+			pShm_t->pFreePool = pPrevious;
 
-      pAllocatedMem = (void *)( pMem + 1 );
+			pAllocatedMem = (void*)(pMem + 1);
 
-      /****************************************************************/
-      /*  Put the address of the allocated memory buffer at the       */
-      /*  beginning of the allocated memory linked list.              */
-      /****************************************************************/
+			/****************************************************************/
+			/*  Put the address of the allocated memory buffer at the       */
+			/*  beginning of the allocated memory linked list.              */
+			/****************************************************************/
 
-      pAllocatedMemoryListItem->pAllocatedMemory = pAllocatedMem;
-      pAllocatedMemoryListItem->pLink = pShm_t->pAllocatedMemoryList;
-      pShm_t->pAllocatedMemoryList = pAllocatedMemoryListItem;
+			pAllocatedMemoryListItem->pAllocatedMemory = pAllocatedMem;
+			pAllocatedMemoryListItem->pLink		   = pShm_t->pAllocatedMemoryList;
+			pShm_t->pAllocatedMemoryList		   = pAllocatedMemoryListItem;
 
-      return pAllocatedMem;
-    }
+			return pAllocatedMem;
+		}
 
-    /******************************************************************/
-    /*  Test for wrap around the free list.                           */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Test for wrap around the free list.                           */
+		/******************************************************************/
 
-    if ( pMem == pShm_t->pFreePool )
-    {
-      if (( pMem = GetSharedMemory( uiUnits )) == NULL )
-      {
-        free( pAllocatedMemoryListItem );
-        return NULL;
-      }
-    }
-  }
+		if(pMem == pShm_t->pFreePool) {
+			if((pMem = GetSharedMemory(uiUnits)) == NULL) {
+				free(pAllocatedMemoryListItem);
+				return NULL;
+			}
+		}
+	}
 }
 
 /**********************************************************************/
@@ -316,62 +299,58 @@ void * mallocLock( unsigned int uiSize )
 /**********************************************************************/
 /**********************************************************************/
 
-static LPMEMORY_HEADER_T GetSharedMemory( unsigned int uiSize )
-{
-  LPMEMORY_HEADER_T pSharedMem;
-  LPSHARED_MEMORY_LIST_T pSharedMemoryListItem;
-  LPSHARED_MEMORY_LIST_T pNextSharedMemoryListItem;
-  /********************************************************************/
-  /*  Only allocate big buffers.                                      */
-  /********************************************************************/
+static LPMEMORY_HEADER_T GetSharedMemory(unsigned int uiSize) {
+	LPMEMORY_HEADER_T      pSharedMem;
+	LPSHARED_MEMORY_LIST_T pSharedMemoryListItem;
+	LPSHARED_MEMORY_LIST_T pNextSharedMemoryListItem;
+	/********************************************************************/
+	/*  Only allocate big buffers.                                      */
+	/********************************************************************/
 
-  if ( uiSize < SHARED_MEMORY_ALLOCATION_SIZE )
-  {
-    uiSize = SHARED_MEMORY_ALLOCATION_SIZE;
-  }
+	if(uiSize < SHARED_MEMORY_ALLOCATION_SIZE) {
+		uiSize = SHARED_MEMORY_ALLOCATION_SIZE;
+	}
 
-  /********************************************************************/
-  /*  Allocate memory for the shared memory list structure.           */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Allocate memory for the shared memory list structure.           */
+	/********************************************************************/
 
-  pSharedMemoryListItem =
-    (LPSHARED_MEMORY_LIST_T)malloc( sizeof(SHARED_MEMORY_LIST_T));
+	pSharedMemoryListItem =
+	    (LPSHARED_MEMORY_LIST_T)malloc(sizeof(SHARED_MEMORY_LIST_T));
 
-  if ( pSharedMemoryListItem == NULL )
-  {
-    return NULL;
-  }
+	if(pSharedMemoryListItem == NULL) {
+		return NULL;
+	}
 
-  /********************************************************************/
-  /*  Allocate shared memory.                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Allocate shared memory.                                         */
+	/********************************************************************/
 
-  pSharedMem =
-    (LPMEMORY_HEADER_T)mmeAllocMem( uiSize * sizeof(MEMORY_HEADER_T));
+	pSharedMem =
+	    (LPMEMORY_HEADER_T)mmeAllocMem(uiSize * sizeof(MEMORY_HEADER_T));
 
-  if ( pSharedMem == NULL )
-  {
-    free( pSharedMemoryListItem );
-    return NULL;
-  }
+	if(pSharedMem == NULL) {
+		free(pSharedMemoryListItem);
+		return NULL;
+	}
 
-  /********************************************************************/
-  /*  Put the address of the shared memory buffer at the              */
-  /*  beginning of the shared memory linked list.                     */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Put the address of the shared memory buffer at the              */
+	/*  beginning of the shared memory linked list.                     */
+	/********************************************************************/
 
-  pSharedMemoryListItem->pSharedMemory = pSharedMem;
-  pSharedMemoryListItem->pLink = pShm_t->pSharedMemoryList;
-  pShm_t->pSharedMemoryList = pSharedMemoryListItem;
+	pSharedMemoryListItem->pSharedMemory = pSharedMem;
+	pSharedMemoryListItem->pLink	     = pShm_t->pSharedMemoryList;
+	pShm_t->pSharedMemoryList	     = pSharedMemoryListItem;
 
-  /********************************************************************/
-  /*  Clean up and return shared memory to function mallocLock.       */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Clean up and return shared memory to function mallocLock.       */
+	/********************************************************************/
 
-  pSharedMem->Block.uiSize = uiSize;
-  PlaceMemoryOnFreeList((void *)( pSharedMem + 1 ));
+	pSharedMem->Block.uiSize = uiSize;
+	PlaceMemoryOnFreeList((void*)(pSharedMem + 1));
 
-  return pShm_t->pFreePool;
+	return pShm_t->pFreePool;
 }
 
 /**********************************************************************/
@@ -402,120 +381,106 @@ static LPMEMORY_HEADER_T GetSharedMemory( unsigned int uiSize )
 /**********************************************************************/
 /**********************************************************************/
 
-unsigned int freeLock( void * pMemory )
-{
-  LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryListItem;
-  LPALLOCATED_MEMORY_LIST_T pNextAllocatedMemoryListItem;
-  LPSHARED_MEMORY_LIST_T pSharedMemoryListItem;
-  LPSHARED_MEMORY_LIST_T pNextSharedMemoryListItem;
+unsigned int freeLock(void* pMemory) {
+	LPALLOCATED_MEMORY_LIST_T pAllocatedMemoryListItem;
+	LPALLOCATED_MEMORY_LIST_T pNextAllocatedMemoryListItem;
+	LPSHARED_MEMORY_LIST_T	  pSharedMemoryListItem;
+	LPSHARED_MEMORY_LIST_T	  pNextSharedMemoryListItem;
 
-  /********************************************************************/
-  /*  Test to see if the passed pointer is on the allocated memory    */
-  /*  list. If it is not on the list then return an error.            */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Test to see if the passed pointer is on the allocated memory    */
+	/*  list. If it is not on the list then return an error.            */
+	/********************************************************************/
 
-  pAllocatedMemoryListItem = pShm_t->pAllocatedMemoryList;
+	pAllocatedMemoryListItem = pShm_t->pAllocatedMemoryList;
 
-  if ( pAllocatedMemoryListItem )
-  {
-    /******************************************************************/
-    /*  Is the first element on the list a match ?                    */
-    /******************************************************************/
+	if(pAllocatedMemoryListItem) {
+		/******************************************************************/
+		/*  Is the first element on the list a match ?                    */
+		/******************************************************************/
 
-    if ( pMemory == pAllocatedMemoryListItem->pAllocatedMemory )
-    {
-      /****************************************************************/
-      /*  The first element on the list matches.                      */
-      /****************************************************************/
+		if(pMemory == pAllocatedMemoryListItem->pAllocatedMemory) {
+			/****************************************************************/
+			/*  The first element on the list matches.                      */
+			/****************************************************************/
 
-      pShm_t->pAllocatedMemoryList = pAllocatedMemoryListItem->pLink;
-      free( pAllocatedMemoryListItem );
-    }
-    else
-    {
-      /****************************************************************/
-      /*  Scan the rest of the list looking for a match.              */
-      /****************************************************************/
+			pShm_t->pAllocatedMemoryList = pAllocatedMemoryListItem->pLink;
+			free(pAllocatedMemoryListItem);
+		} else {
+			/****************************************************************/
+			/*  Scan the rest of the list looking for a match.              */
+			/****************************************************************/
 
-      while ( pAllocatedMemoryListItem != NULL )
-      {
-        pNextAllocatedMemoryListItem = pAllocatedMemoryListItem->pLink;
+			while(pAllocatedMemoryListItem != NULL) {
+				pNextAllocatedMemoryListItem = pAllocatedMemoryListItem->pLink;
 
-        /**************************************************************/
-        /*  Is the next element on the list a match ?                 */
-        /**************************************************************/
+				/**************************************************************/
+				/*  Is the next element on the list a match ?                 */
+				/**************************************************************/
 
-        if ( pMemory == pNextAllocatedMemoryListItem->pAllocatedMemory )
-        {
-          /************************************************************/
-          /*  The next element on the list is a match.                */
-          /*  Remove the element from the list.                       */
-          /************************************************************/
+				if(pMemory == pNextAllocatedMemoryListItem->pAllocatedMemory) {
+					/************************************************************/
+					/*  The next element on the list is a match.                */
+					/*  Remove the element from the list.                       */
+					/************************************************************/
 
-          pAllocatedMemoryListItem->pLink
-            = pNextAllocatedMemoryListItem->pLink;
+					pAllocatedMemoryListItem->pLink = pNextAllocatedMemoryListItem->pLink;
 
-          free( pNextAllocatedMemoryListItem );
+					free(pNextAllocatedMemoryListItem);
 
-          break;
-        }
-        else
-        {
-          pAllocatedMemoryListItem = pNextAllocatedMemoryListItem;
-        }
-      }
+					break;
+				} else {
+					pAllocatedMemoryListItem = pNextAllocatedMemoryListItem;
+				}
+			}
 
-      /****************************************************************/
-      /*  The entire list was searched and the memory item was not    */
-      /*  found. Return an error.                                     */
-      /****************************************************************/
+			/****************************************************************/
+			/*  The entire list was searched and the memory item was not    */
+			/*  found. Return an error.                                     */
+			/****************************************************************/
 
-      return TRUE;
-    }
-  }
-  else
-  {
-    /******************************************************************/
-    /*  There are no allocated memory items. Return an error.         */
-    /******************************************************************/
+			return TRUE;
+		}
+	} else {
+		/******************************************************************/
+		/*  There are no allocated memory items. Return an error.         */
+		/******************************************************************/
 
-    return TRUE;
-  }
+		return TRUE;
+	}
 
-  /********************************************************************/
-  /*  The input pointer "pMemory" is valid. Prepare to free the       */
-  /*  memory.                                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  The input pointer "pMemory" is valid. Prepare to free the       */
+	/*  memory.                                                         */
+	/********************************************************************/
 
-  PlaceMemoryOnFreeList( pMemory );
+	PlaceMemoryOnFreeList(pMemory);
 
-  /********************************************************************/
-  /*  If the shared memory allocation count goes to zero then free    */
-  /*  all shared memory on the shared memory linked list.             */
-  /********************************************************************/
+	/********************************************************************/
+	/*  If the shared memory allocation count goes to zero then free    */
+	/*  all shared memory on the shared memory linked list.             */
+	/********************************************************************/
 
-  if ( pShm_t->pAllocatedMemoryList == NULL )
-  {
-    pSharedMemoryListItem = pShm_t->pSharedMemoryList;
-    pShm_t->pSharedMemoryList = NULL;
+	if(pShm_t->pAllocatedMemoryList == NULL) {
+		pSharedMemoryListItem	  = pShm_t->pSharedMemoryList;
+		pShm_t->pSharedMemoryList = NULL;
 
-    while ( pSharedMemoryListItem != NULL )
-    {
-      pNextSharedMemoryListItem = pSharedMemoryListItem->pLink;
+		while(pSharedMemoryListItem != NULL) {
+			pNextSharedMemoryListItem = pSharedMemoryListItem->pLink;
 
-      mmeFreeMem( pSharedMemoryListItem );
+			mmeFreeMem(pSharedMemoryListItem);
 
-      pSharedMemoryListItem = pNextSharedMemoryListItem;
-    }
+			pSharedMemoryListItem = pNextSharedMemoryListItem;
+		}
 
-    /******************************************************************/
-    /*  Set the free pool to the empty state.                         */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Set the free pool to the empty state.                         */
+		/******************************************************************/
 
-    pShm_t->pFreePool = NULL;
-  }
+		pShm_t->pFreePool = NULL;
+	}
 
-  return FALSE;
+	return FALSE;
 }
 
 /**********************************************************************/
@@ -543,63 +508,53 @@ unsigned int freeLock( void * pMemory )
 /**********************************************************************/
 /**********************************************************************/
 
-static void PlaceMemoryOnFreeList( void * pMemory )
-{
-  LPMEMORY_HEADER_T pMem;
-  LPMEMORY_HEADER_T pMemBlock;
+static void PlaceMemoryOnFreeList(void* pMemory) {
+	LPMEMORY_HEADER_T pMem;
+	LPMEMORY_HEADER_T pMemBlock;
 
-  /********************************************************************/
-  /*  First point to the block header.                                */
-  /********************************************************************/
+	/********************************************************************/
+	/*  First point to the block header.                                */
+	/********************************************************************/
 
-  pMemBlock = (LPMEMORY_HEADER_T)pMemory - 1;
+	pMemBlock = (LPMEMORY_HEADER_T)pMemory - 1;
 
-  for ( pMem = pShm_t->pFreePool;
-        ! (( pMemBlock > pMem ) && ( pMemBlock < pMem->Block.pLink ));
-        pMem = pMem->Block.pLink )
-  {
-    /******************************************************************/
-    /*  If the block at the start or the end is freed then break.     */
-    /******************************************************************/
+	for(pMem = pShm_t->pFreePool;
+	    !((pMemBlock > pMem) && (pMemBlock < pMem->Block.pLink));
+	    pMem = pMem->Block.pLink) {
+		/******************************************************************/
+		/*  If the block at the start or the end is freed then break.     */
+		/******************************************************************/
 
-    if (( pMem >= pMem->Block.pLink )
-      && (( pMemBlock > pMem ) || ( pMemBlock < pMem->Block.pLink )))
-    {
-      break;
-    }
-  }
+		if((pMem >= pMem->Block.pLink) && ((pMemBlock > pMem) || (pMemBlock < pMem->Block.pLink))) {
+			break;
+		}
+	}
 
-  /********************************************************************/
-  /*  Test for an upper join.                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Test for an upper join.                                         */
+	/********************************************************************/
 
-  if ( pMemBlock + pMemBlock->Block.uiSize == pMem->Block.pLink )
-  {
-    pMemBlock->Block.uiSize += pMem->Block.pLink->Block.uiSize;
-    pMemBlock->Block.pLink = pMem->Block.pLink->Block.pLink;
-  }
-  else
-  {
-    pMemBlock->Block.pLink = pMem->Block.pLink;
-  }
+	if(pMemBlock + pMemBlock->Block.uiSize == pMem->Block.pLink) {
+		pMemBlock->Block.uiSize += pMem->Block.pLink->Block.uiSize;
+		pMemBlock->Block.pLink = pMem->Block.pLink->Block.pLink;
+	} else {
+		pMemBlock->Block.pLink = pMem->Block.pLink;
+	}
 
-  /********************************************************************/
-  /*  Test for an lower join.                                         */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Test for an lower join.                                         */
+	/********************************************************************/
 
-  if ( pMem + pMem->Block.uiSize == pMemBlock )
-  {
-    pMem->Block.uiSize += pMemBlock->Block.uiSize;
-    pMem->Block.pLink = pMemBlock->Block.pLink;
-  }
-  else
-  {
-    pMem->Block.pLink = pMemBlock;
-  }
+	if(pMem + pMem->Block.uiSize == pMemBlock) {
+		pMem->Block.uiSize += pMemBlock->Block.uiSize;
+		pMem->Block.pLink = pMemBlock->Block.pLink;
+	} else {
+		pMem->Block.pLink = pMemBlock;
+	}
 
-  pShm_t->pFreePool = pMem;
+	pShm_t->pFreePool = pMem;
 
-  return;
+	return;
 }
 
 #else

@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -27,15 +27,15 @@
  ***********************************************************************
  *    Revision History:
  *	Rev	Who		Date			Description
- *	---	-----	-----------		------------------------------------------- 
+ *	---	-----	-----------		-------------------------------------------
  *	001 SIK		07/18/1996  	Cleaning up and maintenance
- *  002	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ *  002	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  *  003 DR		09/30/1997		UK BUILD: added UK STUFF
  *  004	MFG		06/18/1998		SPANISH_SP & SPANISH_LA support added
  *	005	CHJ		07/20/2000		FRENCH support
  *  006 CAB		10/18/2000		Changed copyright info
- */                            
- 
+ */
+
 #if defined(OLD_INTONATION_AND_TIMING)
 #include "p_us_tim0.c"
 #else
@@ -46,6 +46,3 @@
 #include "p_la_tim.c"
 #include "p_gr_tim.c"
 #include "p_fr_tim.c"
-
-
-

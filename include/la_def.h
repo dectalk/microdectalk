@@ -1,7 +1,7 @@
 /*
  ***********************************************************************
  *
-*                           Copyright ©
+ *                           Copyright ©
  *	  Copyright © 2000-2001 Force Computers Inc., a Solectron company. All rights reserved.
  *    © Digital Equipment Corporation 1995. All rights reserved.
  *
@@ -30,7 +30,7 @@
  *              ---------	----------------------------------------------------
  *	001	MFG		06/19/1998	Copied from file spa_def.h for latin american support
  *  002	GL		09/01/1998	BATS#758 change PFSPAIN to PFSP.
- *	003	MGS		04/13/2000	Changes for integrated phoneme set 
+ *	003	MGS		04/13/2000	Changes for integrated phoneme set
  *	004	CAB		01/19/2001	Fixed copyright info
  */
 
@@ -39,12 +39,11 @@
 
 #include "defs.h"
 #include "kernel.h"
-#include        "iso_char.h"
-#include        "l_all_ph.h"
-#include        "cmd.h"
+#include "iso_char.h"
+#include "l_all_ph.h"
+#include "cmd.h"
 
-//#define NULL    0
-#define NULL_ASCKY              0xffff
-#define PLA(x)					((PFLA<<PSFONT) | (x))
+// #define NULL    0
+#define NULL_ASCKY 0xffff
+#define PLA(x) ((PFLA << PSFONT) | (x))
 #endif
-

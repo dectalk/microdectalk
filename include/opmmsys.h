@@ -28,7 +28,7 @@
  *
  * Rev	Who		Date		Description
  * ---  ------	-----------	--------------------------------------------
- *	
+ *
  * 001	?		04/22/1996	?
  * 002	TQL		05/21/1997	BATS#357  Add the code for __osf__ build
  * 003  ETT		10/05/1998  Added Linux code.
@@ -49,8 +49,8 @@ extern "C" {
 /*  Multimedia include files and type definitions for Digital UNIX.   */
 /**********************************************************************/
 
-#if ( __WORDSIZE == 64 )
-#define  OS_SIXTY_FOUR_BIT
+#if (__WORDSIZE == 64)
+#define OS_SIXTY_FOUR_BIT
 #endif
 
 #ifdef _LP64
@@ -71,10 +71,10 @@ extern "C" {
 /**********************************************************************/
 
 typedef unsigned char AUDIO_T;
-typedef AUDIO_T * LPAUDIO_T;
+typedef AUDIO_T*      LPAUDIO_T;
 
 #ifdef __cplusplus
-}  /* End extern "C" */
+} /* End extern "C" */
 #endif
 
 #endif

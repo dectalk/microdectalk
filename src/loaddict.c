@@ -25,11 +25,11 @@
  *    Load a dictionary database.
  *
  ***********************************************************************
- *    Revision History:                                        
+ *    Revision History:
  *
  * Rev  Who 	Date        Description
  * ---  -----   ----------- --------------------------------------------
- * 001	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
+ * 001	GL		04/21/1997	BATS#357  Add the code for __osf__ build
  * 002  JAW     02/27/1998  Merged CE code.
  * 003  CJL     03/18/1998  Removed specific path for dectalkf.h.
  * 004	tek		14may98		bats672 log failures in loading required dictionaries.
@@ -42,12 +42,12 @@
  * 009  CAB		06/20/2000	Fixed CE linker errors because it doesn't support freeLock().
  * 010	MFG		07/31/2000	Implemented dictionary memory mapping for Windows CE/NT/95
  * 011	MGS		10/05/2000	Redhat 6.2 and linux warning removal
- * 012	CAB		10/16/2000	1. Previous Correction on 009(06/20/2000) was in error and 
- *							   lines were removed because which was not necessary. 
+ * 012	CAB		10/16/2000	1. Previous Correction on 009(06/20/2000) was in error and
+ *							   lines were removed because which was not necessary.
  *  						2. Added copyright info
  * 013	MFG		02/19/2001	used #pragma to shut off optimizing for CE loading of dictionary
- * 014	CAB		02/23/2001	updated copyright info			
- * 015	MFG		03/01/2001	added fallback code for dictionary mapping if the dic doesn't map out	
+ * 014	CAB		02/23/2001	updated copyright info
+ * 015	MFG		03/01/2001	added fallback code for dictionary mapping if the dic doesn't map out
  * 016	MGS		03/13/2001	Removed global variable from fallback
  * 017 	CAB		03/16/2001	Updated copyright info.
  * 018	MGS		05/09/2001	Some VxWorks porting BATS#972
@@ -72,7 +72,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "dtmmedefs.h"
-//#include "opthread.h"
+// #include "opthread.h"
 
 #ifdef __unix__
 #include <unistd.h>
@@ -90,12 +90,11 @@
 #include "ls_def.h"
 
 // global varable in memory mapping fails
-//int	dicfallback = MEMMAP_ON;
-
+// int	dicfallback = MEMMAP_ON;
 
 /* ******************************************************************
  *      Function Name: unload_dictionary()
- *		
+ *
  *		Author:	Krishna Mangipudi 8/25/93
  *
  *      Description:
@@ -109,40 +108,34 @@
  *
  * *****************************************************************/
 #ifndef NO_FILESYSTEM
-void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
-						unsigned int * dict_bytes, LPVOID *dicMapStartAddr, DT_HANDLE *dicMapObject,
-						DT_HANDLE *dicFileHandle, MEMMAP_T dict_map 
-					  )
-{
-	if(dict_map && dicMapStartAddr && *dicMapStartAddr)
-	{	
-		munmap(*dicMapStartAddr,(PTRINT)*dicMapObject);
+void unload_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
+		       unsigned int* dict_bytes, LPVOID* dicMapStartAddr, DT_HANDLE* dicMapObject,
+		       DT_HANDLE* dicFileHandle, MEMMAP_T dict_map) {
+	if(dict_map && dicMapStartAddr && *dicMapStartAddr) {
+		munmap(*dicMapStartAddr, (PTRINT)*dicMapObject);
 		close((PTRINT)*dicFileHandle);
-		*dicMapStartAddr=NULL;
-		*dicMapObject=0;
-		*dicFileHandle=0;
-	}
-	else
-	{	if (( *dict_siz > 0 ) && ( dict_index != NULL ))
-		{
-			/* Make dict_ref point to real head of dictionary 
+		*dicMapStartAddr = NULL;
+		*dicMapObject	 = 0;
+		*dicFileHandle	 = 0;
+	} else {
+		if((*dict_siz > 0) && (dict_index != NULL)) {
+			/* Make dict_ref point to real head of dictionary
 			(including the 4 bytes storing the size), JAW 7/7/98 */
-			free( *dict_index );
-			*dict_index = (void *)NULL;
-			free( *dict_data );
-			*dict_data = (void *)NULL;
-		} 
-		*dict_siz = 0;
-		*dict_bytes=0;
-		return;	
-	}	
+			free(*dict_index);
+			*dict_index = (void*)NULL;
+			free(*dict_data);
+			*dict_data = (void*)NULL;
+		}
+		*dict_siz   = 0;
+		*dict_bytes = 0;
+		return;
+	}
 }
 #else
-void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
-                                                unsigned int * dict_bytes, LPVOID *dicMapStartAddr, DT_HANDLE *dicMapObject,
-                                                DT_HANDLE *dicFileHandle, MEMMAP_T dict_map 
-                                          ) {
-    // dummy stub
+void unload_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
+		       unsigned int* dict_bytes, LPVOID* dicMapStartAddr, DT_HANDLE* dicMapObject,
+		       DT_HANDLE* dicFileHandle, MEMMAP_T dict_map) {
+	// dummy stub
 }
 #endif
 /* ******************************************************************
@@ -176,217 +169,198 @@ void unload_dictionary( void **dict_index, void **dict_data, unsigned int *dict_
  * *****************************************************************/
 #ifndef NO_FILESYSTEM // if has a filesystem
 
-void TextToSpeechErrorHandler( LPTTS_HANDLE_T, UINT, MMRESULT );
+void TextToSpeechErrorHandler(LPTTS_HANDLE_T, UINT, MMRESULT);
 
-int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
-					 unsigned int *dict_bytes, char *dict_nam, int bRequired,
-					 DT_HANDLE *dicMapObject,	// Handle for mapped object
-					 DT_HANDLE *dicFileHandle,	// File Handle	
-					 LPVOID *dicMapStartAddr,	// Starting address of mapped view
-					 MEMMAP_T dict_map)
-{	
-// This is defined the same for both UNDER_CE and !UNDER_CE
+int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
+		    unsigned int* dict_bytes, char* dict_nam, int bRequired,
+		    DT_HANDLE* dicMapObject,	// Handle for mapped object
+		    DT_HANDLE* dicFileHandle,	// File Handle
+		    LPVOID*    dicMapStartAddr, // Starting address of mapped view
+		    MEMMAP_T   dict_map) {
+	// This is defined the same for both UNDER_CE and !UNDER_CE
 
-	S32 *dict_index_buffer;
-	unsigned char *dict_data_buffer;
+	S32*	       dict_index_buffer;
+	unsigned char* dict_data_buffer;
 #ifdef CHEESY_DICT_COMPRESSION
-	S32 *fc_entry;
-	int fc_entries;
+	S32* fc_entry;
+	int  fc_entries;
 #endif
 	int entries, bytes, size, pointer_list_size;
 	int status;
 
-  	FILE *dict_file;
+	FILE* dict_file;
 
 #ifdef DBGDIC
-	struct dic_entry far *ent;
+	struct dic_entry far* ent;
 #endif
 
 	/*
-	* set error return values
-	*/
-restart:if ( *dict_siz > 0 )
-		return( MMSYSERR_ERROR );
-  
-	*dict_siz = 0;
-	*dict_bytes = 0;
+	 * set error return values
+	 */
+restart:
+	if(*dict_siz > 0)
+		return (MMSYSERR_ERROR);
+
+	*dict_siz	  = 0;
+	*dict_bytes	  = 0;
 	dict_index_buffer = NULL;
-	dict_data_buffer = NULL;
+	dict_data_buffer  = NULL;
 
 #ifdef DBGDIC
 	printf("In load dict:%s \n", dict_nam);
 #endif
-	if ( (dict_file = fopen( dict_nam, "rb" )) == 0 )
-		{
-		if ( bRequired )
-		{
-			fprintf(stderr,"Failed to open dictionary file %s\n",dict_nam);
-			return ( MMSYSERR_INVALPARAM );
-
+	if((dict_file = fopen(dict_nam, "rb")) == 0) {
+		if(bRequired) {
+			fprintf(stderr, "Failed to open dictionary file %s\n", dict_nam);
+			return (MMSYSERR_INVALPARAM);
 		}
-		/*MVP : To make the loading user dictionary  an optional ,i.e if the user 
+		/*MVP : To make the loading user dictionary  an optional ,i.e if the user
 		dictionary file doesn't exist don't generate an error, return success.
 		the flag brequired for loading of user dictionary is FALSE.
 		*/
-		return( MMSYSERR_NOERROR ); 
+		return (MMSYSERR_NOERROR);
 	}
 
 	/* Read in file header */
-	if ( fread( &entries, 4, 1, dict_file ) != 1 )
-    {
-		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
-		perror("load_dictionary"); 
+	if(fread(&entries, 4, 1, dict_file) != 1) {
+		fprintf(stderr, "Error reading dictionary database: %s\n", dict_nam);
+		perror("load_dictionary");
 
 		fclose(dict_file);
-		return ( MMSYSERR_ERROR );
-    }
+		return (MMSYSERR_ERROR);
+	}
 
 #ifdef DBGDIC
-	printf("ent:%d %x\n", entries,entries);
+	printf("ent:%d %x\n", entries, entries);
 #endif
 	/* tek 30jan97 bail with no error if the dictionary has no entries */
-	if (entries == 0)
-    {	
+	if(entries == 0) {
 		fclose(dict_file);
 		return (MMSYSERR_NOERROR);
-    }
-  
-	pointer_list_size = ( entries * sizeof(S32) );
-	if ( fread( &bytes, 4, 1, dict_file ) != 1 )
-    {  
-		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
+	}
+
+	pointer_list_size = (entries * sizeof(S32));
+	if(fread(&bytes, 4, 1, dict_file) != 1) {
+		fprintf(stderr, "Error reading dictionary database: %s\n", dict_nam);
 		perror("load_dictionary");
 
 		fclose(dict_file);
-		return( MMSYSERR_ERROR );
-    }
-  
+		return (MMSYSERR_ERROR);
+	}
+
 #ifdef DBGDIC
-	printf("bytes:%d %x\n",bytes,bytes);
+	printf("bytes:%d %x\n", bytes, bytes);
 #endif
-  
+
 #ifdef CHEESY_DICT_COMPRESSION
-	if (dict_fc_entry!=NULL)
-{
-	if ( fread( &fc_entries, 4, 1, dict_file ) != 1 )
-    {  
-		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
-		perror("load_dictionary");
+	if(dict_fc_entry != NULL) {
+		if(fread(&fc_entries, 4, 1, dict_file) != 1) {
+			fprintf(stderr, "Error reading dictionary database: %s\n", dict_nam);
+			perror("load_dictionary");
 
-		fclose(dict_file);
-		return( MMSYSERR_ERROR );
-    }
-}
+			fclose(dict_file);
+			return (MMSYSERR_ERROR);
+		}
+	}
 #ifdef DBGDIC
-	printf("fc_entries:%d %x\n",fc_entries,fc_entries);
+	printf("fc_entries:%d %x\n", fc_entries, fc_entries);
 #endif
 #endif
-
 
 	/* Compute & allocate required memory for both parts of dictionary */
 	/* Allocated 4 (8 on alpha) extra bytes to store the size of the dictionary in bytes.  JAW 7/7/98 */
 	size = pointer_list_size + bytes;
 
-	if(dict_map)
-	{   
+	if(dict_map) {
 		fclose(dict_file);
 		// open the file */
-		*dicFileHandle=(DT_HANDLE)(PTRINT)open(dict_nam,O_RDONLY);
-		if (((PTRINT)*dicFileHandle)==-1)
-		{	*dicFileHandle=0;
-			return(MMSYSERR_ERROR);
+		*dicFileHandle = (DT_HANDLE)(PTRINT)open(dict_nam, O_RDONLY);
+		if(((PTRINT)*dicFileHandle) == -1) {
+			*dicFileHandle = 0;
+			return (MMSYSERR_ERROR);
 		}
-		*dicMapObject=(DT_HANDLE)(PTRINT)(size+8);
-		*dicMapStartAddr=mmap(0,size+8,PROT_READ,MAP_SHARED,(PTRINT)*dicFileHandle,0);
-		if (((PTRINT)*dicMapStartAddr)==-1)
-		{	close((PTRINT)*dicFileHandle);
-			*dicFileHandle=0;
-			*dicMapObject=0;
-			*dicMapStartAddr=0;
-			return(MMSYSERR_ERROR);
+		*dicMapObject	 = (DT_HANDLE)(PTRINT)(size + 8);
+		*dicMapStartAddr = mmap(0, size + 8, PROT_READ, MAP_SHARED, (PTRINT)*dicFileHandle, 0);
+		if(((PTRINT)*dicMapStartAddr) == -1) {
+			close((PTRINT)*dicFileHandle);
+			*dicFileHandle	 = 0;
+			*dicMapObject	 = 0;
+			*dicMapStartAddr = 0;
+			return (MMSYSERR_ERROR);
 		}
 #ifdef CHEESY_DICT_COMPRESSION
-		if (dict_fc_entry!=NULL)
-		{
-			fc_entry = (int *)(((int)*dicMapStartAddr) + 12); //start the index buffer at start address + 8 bytes
+		if(dict_fc_entry != NULL) {
+			fc_entry = (int*)(((int)*dicMapStartAddr) + 12); // start the index buffer at start address + 8 bytes
 
-			dict_index_buffer = (int *)(((long)*dicMapStartAddr) + 12 + fc_entries*4); //start the index buffer at start address + 8 bytes
-		}
-	else
+			dict_index_buffer = (int*)(((long)*dicMapStartAddr) + 12 + fc_entries * 4); // start the index buffer at start address + 8 bytes
+		} else
 #endif
 		{
-			dict_index_buffer = (int *)(PTRINT)((((QWORD)(PTRINT)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+			dict_index_buffer = (int*)(PTRINT)((((QWORD)(PTRINT)*dicMapStartAddr) + 8)); // start the index buffer at start address + 8 bytes
 		}
-	  
-		dict_data_buffer = (unsigned char *)(PTRINT)(pointer_list_size + ((QWORD)(PTRINT)dict_index_buffer)); //start 	  	  
-	}
-	else
-	{ 
-		if ( !( dict_index_buffer = (S32 *)malloc(pointer_list_size )))
-		{
-		fprintf(stderr,"Failed to allocated required %zd bytes of memory to load dictionary\n",size + sizeof(long));
 
-		fclose(dict_file);
-		return( MMSYSERR_NOMEM );
-	}
+		dict_data_buffer = (unsigned char*)(PTRINT)(pointer_list_size + ((QWORD)(PTRINT)dict_index_buffer)); // start
+	} else {
+		if(!(dict_index_buffer = (S32*)malloc(pointer_list_size))) {
+			fprintf(stderr, "Failed to allocated required %zd bytes of memory to load dictionary\n", size + sizeof(long));
 
-    if ( !( dict_data_buffer = (unsigned char *)malloc(bytes +1)))
-	{
-		free(dict_index_buffer);
-		fprintf(stderr,"Failed to allocated required %zd bytes of memory to load dictionary\n",size + sizeof(long));
+			fclose(dict_file);
+			return (MMSYSERR_NOMEM);
+		}
 
-		fclose(dict_file);
-		return( MMSYSERR_NOMEM );
-	}
+		if(!(dict_data_buffer = (unsigned char*)malloc(bytes + 1))) {
+			free(dict_index_buffer);
+			fprintf(stderr, "Failed to allocated required %zd bytes of memory to load dictionary\n", size + sizeof(long));
 
-	// store the total size of the dictionary in the first index position */
-	
-	/* read in the index table */
-	if (fread(dict_index_buffer,4,entries,dict_file)!=(unsigned)entries)
-	{
-		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
-		perror("load_dictionary");
-		
-		status = feof( dict_file );
-		free(dict_index_buffer);
-		free(dict_data_buffer);
+			fclose(dict_file);
+			return (MMSYSERR_NOMEM);
+		}
 
-		fclose(dict_file);
-		return( MMSYSERR_ERROR );
-	}
+		// store the total size of the dictionary in the first index position */
 
-	/* Read in the rest of the dictionary */
-	if ( fread( dict_data_buffer, bytes, 1, dict_file ) != 1 )
-	{
-		fprintf(stderr,"Error reading dictionary database: %s\n",dict_nam);
-		perror("load_dictionary");
-		free(dict_index_buffer);
-		free(dict_data_buffer);
-		fclose(dict_file);
-		return( MMSYSERR_ERROR );
-	}
-	
+		/* read in the index table */
+		if(fread(dict_index_buffer, 4, entries, dict_file) != (unsigned)entries) {
+			fprintf(stderr, "Error reading dictionary database: %s\n", dict_nam);
+			perror("load_dictionary");
+
+			status = feof(dict_file);
+			free(dict_index_buffer);
+			free(dict_data_buffer);
+
+			fclose(dict_file);
+			return (MMSYSERR_ERROR);
+		}
+
+		/* Read in the rest of the dictionary */
+		if(fread(dict_data_buffer, bytes, 1, dict_file) != 1) {
+			fprintf(stderr, "Error reading dictionary database: %s\n", dict_nam);
+			perror("load_dictionary");
+			free(dict_index_buffer);
+			free(dict_data_buffer);
+			fclose(dict_file);
+			return (MMSYSERR_ERROR);
+		}
+
 #ifdef DBGDIC
-	printf("base:%d %x\n",base,base);
-	printf("sizeof(void*)=%d\n",sizeof(void *));
+		printf("base:%d %x\n", base, base);
+		printf("sizeof(void*)=%d\n", sizeof(void*));
 #endif
-	fclose(dict_file);
-	} //MEMMAP
-	
+		fclose(dict_file);
+	} // MEMMAP
+
 	/* write output parameters */
 	*dict_index = dict_index_buffer;
-	*dict_data = dict_data_buffer;
-	*dict_siz = entries;
-	*dict_bytes=bytes;
+	*dict_data  = dict_data_buffer;
+	*dict_siz   = entries;
+	*dict_bytes = bytes;
 #ifdef CHEESY_DICT_COMPRESSION
-	if (dict_fc_entry!=NULL)
-	{
-		*dict_fc_entry=fc_entry;
-		*dict_fc_entries=fc_entries;
+	if(dict_fc_entry != NULL) {
+		*dict_fc_entry	 = fc_entry;
+		*dict_fc_entries = fc_entries;
 	}
 #endif
 #ifdef DBGDIC
-#define DICT_HEAD       ((struct dic_entry far * far *)dict_buffer)
+#define DICT_HEAD ((struct dic_entry far * far*)dict_buffer)
 /*
    for (i=0; i< entries; i++)
    {
@@ -395,73 +369,73 @@ restart:if ( *dict_siz > 0 )
    }
 */
 #endif
-	return( MMSYSERR_NOERROR );
+	return (MMSYSERR_NOERROR);
 }
 
 #else // if has no filesystem
 
 extern const unsigned char main_dict[];
-#define get_long_int(ptr) ((U32) ((((U8 *)(ptr))[3] << 24)  |  (((U8 *)(ptr))[2] << 16)  |  (((U8 *)(ptr))[1] << 8)  | (((U8 *)(ptr))[0])))
+#define get_long_int(ptr) ((U32)((((U8*)(ptr))[3] << 24) | (((U8*)(ptr))[2] << 16) | (((U8*)(ptr))[1] << 8) | (((U8*)(ptr))[0])))
 
-int load_dictionary( void **dict_index, void **dict_data, unsigned int *dict_siz,
-                         unsigned int *dict_bytes, char *dict_nam, int bRequired,
-                         DT_HANDLE *dicMapObject,	// Handle for mapped object
-                         DT_HANDLE *dicFileHandle,	// File Handle
-                         LPVOID *dicMapStartAddr,	// Starting address of mapped view
-                         MEMMAP_T dict_map) {
-        S32 *dict_index_buffer;
-        unsigned char *dict_data_buffer;
-        int entries, bytes, size, pointer_list_size;
-        int status;
+int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
+		    unsigned int* dict_bytes, char* dict_nam, int bRequired,
+		    DT_HANDLE* dicMapObject,	// Handle for mapped object
+		    DT_HANDLE* dicFileHandle,	// File Handle
+		    LPVOID*    dicMapStartAddr, // Starting address of mapped view
+		    MEMMAP_T   dict_map) {
+	S32*	       dict_index_buffer;
+	unsigned char* dict_data_buffer;
+	int	       entries, bytes, size, pointer_list_size;
+	int	       status;
 
-        /*
-        * set error return values
-        */
-        if ( *dict_siz > 0 ) {
-            return( MMSYSERR_ERROR );
-        }
+	/*
+	 * set error return values
+	 */
+	if(*dict_siz > 0) {
+		return (MMSYSERR_ERROR);
+	}
 
-	*dict_siz = 0;
-        *dict_bytes = 0;
-        dict_index_buffer = NULL;
-        dict_data_buffer = NULL;
+	*dict_siz	  = 0;
+	*dict_bytes	  = 0;
+	dict_index_buffer = NULL;
+	dict_data_buffer  = NULL;
 
-        if ( !main_dict ) {
-            if ( bRequired ) {
-                fprintf(stderr,"Failed to open dictionary file %s\n",dict_nam);
-                return ( MMSYSERR_INVALPARAM );
-            }
-            return( MMSYSERR_NOERROR ); 
-        }
+	if(!main_dict) {
+		if(bRequired) {
+			fprintf(stderr, "Failed to open dictionary file %s\n", dict_nam);
+			return (MMSYSERR_INVALPARAM);
+		}
+		return (MMSYSERR_NOERROR);
+	}
 
-        /* Read in file header */
-        entries = get_long_int(main_dict);
+	/* Read in file header */
+	entries = get_long_int(main_dict);
 
 	/* tek 30jan97 bail with no error if the dictionary has no entries */
-        if (entries == 0) {
-            return (MMSYSERR_NOERROR);
-        }
+	if(entries == 0) {
+		return (MMSYSERR_NOERROR);
+	}
 
-	pointer_list_size = ( entries * sizeof(S32) );
-        bytes = get_long_int(&main_dict[4]);
+	pointer_list_size = (entries * sizeof(S32));
+	bytes		  = get_long_int(&main_dict[4]);
 
 	/* Compute & allocate required memory for both parts of dictionary */
-        /* Allocated 4 (8 on alpha) extra bytes to store the size of the dictionary in bytes.  JAW 7/7/98 */
-        size = pointer_list_size + bytes;
+	/* Allocated 4 (8 on alpha) extra bytes to store the size of the dictionary in bytes.  JAW 7/7/98 */
+	size = pointer_list_size + bytes;
 
-//#ifndef GBA_FIXES
-        //dict_index_buffer = (long *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
-//#else
-        dict_index_buffer = (S32 *) &main_dict[8];
-//#endif
-        dict_data_buffer = (unsigned char *)(pointer_list_size + ((QWORD)dict_index_buffer)); //start
+	// #ifndef GBA_FIXES
+	// dict_index_buffer = (long *) &main_dict[8]; // (int *)((((QWORD)*dicMapStartAddr) + 8)); //start the index buffer at start address + 8 bytes
+	// #else
+	dict_index_buffer = (S32*)&main_dict[8];
+	// #endif
+	dict_data_buffer = (unsigned char*)(pointer_list_size + ((QWORD)dict_index_buffer)); // start
 
-        /* write output parameters */
-        *dict_index = dict_index_buffer;
-        *dict_data = dict_data_buffer;
-        *dict_siz = entries;
-        *dict_bytes = bytes;
-        return( MMSYSERR_NOERROR );
+	/* write output parameters */
+	*dict_index = dict_index_buffer;
+	*dict_data  = dict_data_buffer;
+	*dict_siz   = entries;
+	*dict_bytes = bytes;
+	return (MMSYSERR_NOERROR);
 }
 
 #endif

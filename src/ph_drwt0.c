@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -31,11 +31,9 @@
  *	001  EAB	03-11-98	Initial creation, ph_drwt0.c was broken into two file
 							sets ph_drwt01.c and ph_drwt02.c. The old files contained
 							repetive but different variants of the code making editing
-							difficult. 
+							difficult.
  *  002 CAB		10/18/2000  Changed copyright info
  */
-
-
 
 #include "dectalkf.h"
 
@@ -44,7 +42,3 @@
 #else
 #include "ph_drwt02.c"
 #endif
-
-
-
-

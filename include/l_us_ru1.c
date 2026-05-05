@@ -1,45 +1,45 @@
 /*
  ***********************************************************************
- *                                                                      
+ *
  *                           Copyright ©
  *    Copyright © 2002 Fonix Corporation. All rights reserved.
  *    Copyright © 2000-2001 Force Computers, Inc., a Solectron company. All rights reserved.
- *    © Digital Equipment Corporation 1996, 1997. All rights reserved.        
- *                                                                  
- *    Restricted Rights: Use, duplication, or disclosure by the U.S.    
+ *    © Digital Equipment Corporation 1996, 1997. All rights reserved.
+ *
+ *    Restricted Rights: Use, duplication, or disclosure by the U.S.
  *    Government is subject to restrictions as set forth in subparagraph
  *    (c) (1) (ii) of DFARS 252.227-7013, or in FAR 52.227-19, or in FAR
- *    52.227-14 Alt. III, as applicable.                                
- *                                                                      
+ *    52.227-14 Alt. III, as applicable.
+ *
  *    This software is proprietary to and embodies the confidential
  *    technology of Fonix Corporation and other parties.
  *    Possession, use, or copying of this software and media is authorized
  *    only pursuant to a valid written license from Fonix or an
- *    authorized sublicensor.              
- *                                                                       
- *********************************************************************** 
+ *    authorized sublicensor.
+ *
+ ***********************************************************************
  *    File Name:	l_us_ru1.c
  *    Author:		Matthew Schnee
  *    Creation Date:02/06/96
- *                                         
- *    Functionality:                                                 
+ *
+ *    Functionality:
  *    Language dependent LTS Rule code
  *
- ***********************************************************************       
- *                                                                             
- * Rev	Who		Date			Description                    
+ ***********************************************************************
+ *
+ * Rev	Who		Date			Description
  * ---	-----	-----------		---------------------------------------
  * 001	GL      07/29/1996  	use ls_util_write_pipe() to replace write_pipe()
  * 002	GL		10/23/1996      remove unused index mark handling code.
  * 003	GL		11/01/1996		use ls_fold[] to handle multi-national characters
  *								need to remove this change once we have the rule to
- *                              handle these characters in rule file. 
- * 004	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ *                              handle these characters in rule file.
+ * 004	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  * 005	NS		05/02/1997		Removed form-feed characters.  Needed for stripper to work properly.
- * 006	GL      09/24/1997		BATS#470  Add LDS debug switch 
+ * 006	GL      09/24/1997		BATS#470  Add LDS debug switch
  *                              also remove the duplicated rule table definition
  * 007  ETT		10/05/1998      Added Linux code.
- * 008	MGS		04/13/2000		Changes for integrated phoneme set 
+ * 008	MGS		04/13/2000		Changes for integrated phoneme set
  * 009	NAL		06/12/2000		Warning removal
  * 010 	CAB		10/18/2000		Changed copyright info
  * 011	MFG		02/19/2001		Warning removal for windows CE
@@ -56,7 +56,7 @@
 
 extern int ls_rule_show_phone(PHONE*, PHONE*, char*);
 
- /* *****************************************************************
+/* *****************************************************************
  *	Function Name: ls_rule_lts()
  *
  *	Description:	This is the main driving routine
@@ -82,59 +82,51 @@ extern int ls_rule_show_phone(PHONE*, PHONE*, char*);
  *	Comments:
  *
  * *****************************************************************/
-void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int def_lang, int sel_lang)
-{
-	GRAPH  *gp1;
-	GRAPH  *gp2;
-	S16	lch;
-	int	g;
-	PHONE	*pp1;
-	PHONE	*pp2;
-	PHONE	*pp3;
-	int	ssflag;
-	int	rsflag;
-	int	pstype; 
+void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp, int def_lang, int sel_lang) {
+	GRAPH* gp1;
+	GRAPH* gp2;
+	S16    lch;
+	int    g;
+	PHONE* pp1;
+	PHONE* pp2;
+	PHONE* pp3;
+	int    ssflag;
+	int    rsflag;
+	int    pstype;
 	PLTS_T pLts_t;
-	pLts_t=phTTS->pLTSThreadData;
+	pLts_t = phTTS->pLTSThreadData;
 
 	gp1 = &(pLts_t->graph[0]);
 
-	while (llp < rlp) 
-	{
+	while(llp < rlp) {
 		/* GL 11/01/96, use ls_fold[] to handle multi-national character */
-		/* lch = llp->l_ch;*/		/* Convert to G-code	*/
-		lch = ls_fold[llp->l_ch];		/* Convert to G-code	*/
+		/* lch = llp->l_ch;*/	  /* Convert to G-code	*/
+		lch = ls_fold[llp->l_ch]; /* Convert to G-code	*/
 
 		gp2 = gp1;
-		if (lch>='a' && lch<='z')
-		 {
-			if (ls_rule_add_graph(pLts_t,gp1, lch-'a'+GA,0) != FALSE)
+		if(lch >= 'a' && lch <= 'z') {
+			if(ls_rule_add_graph(pLts_t, gp1, lch - 'a' + GA, 0) != FALSE)
 				++gp1;
-		} 
-		else 
-		{
-			if (lch == '\'') 
-			{
-				if (ls_rule_add_graph(pLts_t,gp1, GQUOTE,0) != FALSE)
+		} else {
+			if(lch == '\'') {
+				if(ls_rule_add_graph(pLts_t, gp1, GQUOTE, 0) != FALSE)
 					++gp1;
 			}
 		}
-/*		tgp1 = &graph[0]; */	/* unused */
+		/*		tgp1 = &graph[0]; */ /* unused */
 
 		++llp;
 	}
 
-	gp1->g_graph = GEOS;					/* End mark		*/
+	gp1->g_graph = GEOS; /* End mark		*/
 	gp1->g_feats = feats[GEOS];
-//	gp1->g_ip    = NULL;
-	pLts_t->phead.p_fp = &(pLts_t->phead);	/* Empty list		*/
+	//	gp1->g_ip    = NULL;
+	pLts_t->phead.p_fp = &(pLts_t->phead); /* Empty list		*/
 	pLts_t->phead.p_bp = &(pLts_t->phead);
-//	pLts_t->phead.p_ip = NULL;				/* No index chain	*/
+	//	pLts_t->phead.p_ip = NULL;				/* No index chain	*/
 	ssflag = FALSE;
-	while (gp1 != &(pLts_t->graph[0]))
-	{
-		gp2 = ls_rule_rule_match(phTTS,gp1, def_lang, sel_lang);
-
+	while(gp1 != &(pLts_t->graph[0])) {
+		gp2 = ls_rule_rule_match(phTTS, gp1, def_lang, sel_lang);
 
 		/*
 		 * Collect up all index marks in the
@@ -144,119 +136,97 @@ void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int def_lang, i
 		 */
 
 		pp1 = NULL;
-		while (gp1 != gp2) 
-		{
+		while(gp1 != gp2) {
 			--gp1;
 		}
-		if (pLts_t->rpart != 0) 
-		{
-			if (btabb(pLts_t->rpart) != GEOS) 
-			{
-				while ((g=btabb(pLts_t->rpart++)) != GEOS) 
-				{
-					if (gp1 < &(pLts_t->graph[NGWORD-1])
-					&& ls_rule_add_graph(pLts_t,gp1, g,1) != FALSE)
+		if(pLts_t->rpart != 0) {
+			if(btabb(pLts_t->rpart) != GEOS) {
+				while((g = btabb(pLts_t->rpart++)) != GEOS) {
+					if(gp1 < &(pLts_t->graph[NGWORD - 1]) && ls_rule_add_graph(pLts_t, gp1, g, 1) != FALSE)
 						++gp1;
 				}
 				gp1->g_graph = GEOS;
 				gp1->g_feats = feats[GEOS];
-//				gp1->g_ip    = NULL;
-			} 
-			else
-			{
+				//				gp1->g_ip    = NULL;
+			} else {
 				++pLts_t->rpart;
 			}
-			rsflag = FALSE;		/* Rep. sets stress.	*/
-			while ((g=btabb(pLts_t->rpart++)) != SIL) 
-			{
+			rsflag = FALSE; /* Rep. sets stress.	*/
+			while((g = btabb(pLts_t->rpart++)) != SIL) {
 				/*
 				 * [-], [*], [#] clear out
 				 * the "don't screw with the stress
 				 * flags". The [+] and [=] do not.
 				 */
-				switch (g)
-				{
-					case DASH:
-				 		if ((pp2=pLts_t->phead.p_fp) != &(pLts_t->phead))
-							pp2->p_flag |= PFDASH;
-						ssflag = FALSE;
-						rsflag = FALSE;										
-						break;
-					case STAR:
-						if ((pp2=pLts_t->phead.p_fp) != &(pLts_t->phead))
-							pp2->p_flag |= PFSTAR;
-						ssflag = FALSE;
-						rsflag = FALSE;
-						break;
-					case HASH:
-						if ((pp2=pLts_t->phead.p_fp) != &pLts_t->phead)
-							pp2->p_flag |= PFHASH;
-						ssflag = FALSE;
-						rsflag = FALSE;
-						break;
-					case PLUS:
-						if ((pp2=pLts_t->phead.p_fp) != &pLts_t->phead)
-							pp2->p_flag |= PFPLUS;
-						break;
-					case EQUAL:
-						if (ssflag == FALSE
-						&& (pp2=pLts_t->phead.p_fp) != &pLts_t->phead)
-						{
-							pp2->p_flag |= PFSYLAB;
-						}
-						break;
-					default:
-						if (g>=SNONE && g<=S2LEFT) 
-						{
-							if (g != SUN)
-								rsflag = TRUE;
-							if (ssflag == FALSE
-							&& (pp2=pLts_t->phead.p_fp) != &pLts_t->phead)
-								pp2->p_stress = g;
-		
-						} 
-						else
-						{ 
-							if ((g&TWOPH) != 0)
-							{
-								ls_rule_add_phone(pLts_t,g&MSKPH, btabb(pLts_t->rpart++));
-							}
-							else
-							{
-								ls_rule_add_phone(pLts_t,g, SIL);
-							}
-						}
-						break;
-				} /* switch (g) */
-					
-			}	/*	while ((g=btabb(pLts_t->rpart++)) != SIL)  */
+				switch(g) {
+				case DASH:
+					if((pp2 = pLts_t->phead.p_fp) != &(pLts_t->phead))
+						pp2->p_flag |= PFDASH;
+					ssflag = FALSE;
+					rsflag = FALSE;
+					break;
+				case STAR:
+					if((pp2 = pLts_t->phead.p_fp) != &(pLts_t->phead))
+						pp2->p_flag |= PFSTAR;
+					ssflag = FALSE;
+					rsflag = FALSE;
+					break;
+				case HASH:
+					if((pp2 = pLts_t->phead.p_fp) != &pLts_t->phead)
+						pp2->p_flag |= PFHASH;
+					ssflag = FALSE;
+					rsflag = FALSE;
+					break;
+				case PLUS:
+					if((pp2 = pLts_t->phead.p_fp) != &pLts_t->phead)
+						pp2->p_flag |= PFPLUS;
+					break;
+				case EQUAL:
+					if(ssflag == FALSE && (pp2 = pLts_t->phead.p_fp) != &pLts_t->phead) {
+						pp2->p_flag |= PFSYLAB;
+					}
+					break;
+				default:
+					if(g >= SNONE && g <= S2LEFT) {
+						if(g != SUN)
+							rsflag = TRUE;
+						if(ssflag == FALSE && (pp2 = pLts_t->phead.p_fp) != &pLts_t->phead)
+							pp2->p_stress = g;
 
-			if (rsflag != FALSE)
+					} else {
+						if((g & TWOPH) != 0) {
+							ls_rule_add_phone(pLts_t, g & MSKPH, btabb(pLts_t->rpart++));
+						} else {
+							ls_rule_add_phone(pLts_t, g, SIL);
+						}
+					}
+					break;
+				} /* switch (g) */
+
+			} /*	while ((g=btabb(pLts_t->rpart++)) != SIL)  */
+
+			if(rsflag != FALSE)
 				ssflag = TRUE;
-#if defined (LDS_BUILD)
-			if (tflag != FALSE) 
-			{
+#if defined(LDS_BUILD)
+			if(tflag != FALSE) {
 				gp2 = &pLts_t->graph[0];
-				printf("%5d ",rline);
-				while (gp2 != gp1) 
-				{
+				printf("%5d ", rline);
+				while(gp2 != gp1) {
 					putchar(gname[gp2->g_graph]);
 					++gp2;
 				}
 				putchar('_');
-				while (gp2->g_graph != GEOS) 
-				{
+				while(gp2->g_graph != GEOS) {
 					putchar(gname[gp2->g_graph]);
 					++gp2;
 				}
-				if (xflag == TRUE)
-					printf("%s",get_rule_data(rline));
+				if(xflag == TRUE)
+					printf("%s", get_rule_data(rline));
 				else
-				    putchar('\n');
+					putchar('\n');
 			}
 #endif
-		}	/*	if (pLts_t->rpart != 0)  */
-
+		} /*	if (pLts_t->rpart != 0)  */
 
 		/*
 		 * This code handles the unusual case
@@ -265,54 +235,51 @@ void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int def_lang, i
 		 * "e" on the end of a word).
 		 */
 
-	}	/*	while (gp1 != &pLts_t->graph[0]) */
+	} /*	while (gp1 != &pLts_t->graph[0]) */
 	ls_rule_show_phone(pLts_t->phead.p_fp, &pLts_t->phead, "lts");
 
-    /*
-    ** change 7/13/95 by GL. To make it same as acna code
-    ** changes:
-    ** 1). break ls_adju_stress() to a separate loop.
-    ** 2). add ls_rule_delete_geminate_pairs ()
-    **     between ls_adju_allo1()/sylable() and ls_adju_stress() loop.
-    **     The orignal ls_rule_delete_geminate_pairs code in
-    **     ls_adju_allo2() has been removed
-    */
-    pp1 = pLts_t->phead.p_fp;
-    while (pp1 != &pLts_t->phead) 
-    {
-        pp2 = pp1;
-        pp3 = pp2->p_fp;
-        while (pp3!=&pLts_t->phead && (pp3->p_flag&PFBOUND)==0)
-	        pp3 = pp3->p_fp;
-        ls_adju_allo1(pLts_t,pp2, pp3);
-        ls_rule_show_phone(pp2, pp3, "allo1");
-        ls_adju_sylables(pp2, pp3);
-        ls_rule_show_phone(pp2, pp3, "sylables");
+	/*
+	** change 7/13/95 by GL. To make it same as acna code
+	** changes:
+	** 1). break ls_adju_stress() to a separate loop.
+	** 2). add ls_rule_delete_geminate_pairs ()
+	**     between ls_adju_allo1()/sylable() and ls_adju_stress() loop.
+	**     The orignal ls_rule_delete_geminate_pairs code in
+	**     ls_adju_allo2() has been removed
+	*/
+	pp1 = pLts_t->phead.p_fp;
+	while(pp1 != &pLts_t->phead) {
+		pp2 = pp1;
+		pp3 = pp2->p_fp;
+		while(pp3 != &pLts_t->phead && (pp3->p_flag & PFBOUND) == 0)
+			pp3 = pp3->p_fp;
+		ls_adju_allo1(pLts_t, pp2, pp3);
+		ls_rule_show_phone(pp2, pp3, "allo1");
+		ls_adju_sylables(pp2, pp3);
+		ls_rule_show_phone(pp2, pp3, "sylables");
 
-        pp1 = pp3;
+		pp1 = pp3;
 	}
 
-    ls_rule_delete_geminate_pairs(pLts_t);
-    ls_rule_show_phone(pLts_t->phead.p_fp, &pLts_t->phead, "delete_gem_pairs");
+	ls_rule_delete_geminate_pairs(pLts_t);
+	ls_rule_show_phone(pLts_t->phead.p_fp, &pLts_t->phead, "delete_gem_pairs");
 
-    pstype = SPRI;                          /* Use primary stress.  */
-    pp1 = pLts_t->phead.p_fp;
-    while (pp1 != &pLts_t->phead) 
-    {
-    	pp2 = pp1;                      	/* Find end of chunk.   */
-        pp3 = pp2->p_fp;
-        while (pp3!=&pLts_t->phead && (pp3->p_flag&PFBOUND)==0)
-        	pp3 = pp3->p_fp;
+	pstype = SPRI; /* Use primary stress.  */
+	pp1    = pLts_t->phead.p_fp;
+	while(pp1 != &pLts_t->phead) {
+		pp2 = pp1; /* Find end of chunk.   */
+		pp3 = pp2->p_fp;
+		while(pp3 != &pLts_t->phead && (pp3->p_flag & PFBOUND) == 0)
+			pp3 = pp3->p_fp;
 
-        ls_adju_stress(phTTS,pp2, pp3, pstype,sel_lang);        /* Mark stress. */
-        ls_rule_show_phone(pp2, pp3, "stress");
+		ls_adju_stress(phTTS, pp2, pp3, pstype, sel_lang); /* Mark stress. */
+		ls_rule_show_phone(pp2, pp3, "stress");
 
-        pstype = SSEC;
-        pp1 = pp3;
-    }
-    ls_adju_allo2(pLts_t);                                /* Allophonics, part 2  */
-    ls_rule_show_phone(pLts_t->phead.p_fp, &pLts_t->phead, "allo2");
-
+		pstype = SSEC;
+		pp1    = pp3;
+	}
+	ls_adju_allo2(pLts_t); /* Allophonics, part 2  */
+	ls_rule_show_phone(pLts_t->phead.p_fp, &pLts_t->phead, "allo2");
 }
 
 /* ******************************************************************
@@ -337,51 +304,44 @@ void ls_rule_lts(LPTTS_HANDLE_T phTTS, LETTER *llp, LETTER *rlp, int def_lang, i
  *
  * *****************************************************************/
 
-void ls_rule_lts_out(LPTTS_HANDLE_T phTTS)
-{
-#ifndef	LDS_BUILD
-	PHONE	*pp1;
-	PHONE	*pp2;
-	int	s=0;
+void ls_rule_lts_out(LPTTS_HANDLE_T phTTS) {
+#ifndef LDS_BUILD
+	PHONE* pp1;
+	PHONE* pp2;
+	int    s = 0;
 	PLTS_T pLts_t;
 	PKSD_T pKsd_t;
-	
+
 	pKsd_t = phTTS->pKernelShareData;
 	pLts_t = phTTS->pLTSThreadData;
 
 	pp1 = pLts_t->phead.p_fp;
-	while (pp1 != &pLts_t->phead) 
-	{
-		if ((pp1->p_flag&PFDASH) != 0)	/* [+] is just a mark	*/
-			ls_util_send_phone(phTTS,SBOUND);	/* for internal use.	*/
-		if ((pp1->p_flag&PFSTAR) != 0)	/* Unlike other kinds	*/
-			ls_util_send_phone(phTTS,MBOUND);	/* of boundry symbols,	*/
-		if ((pp1->p_flag&PFHASH) != 0)	/* it does not get	*/
-			ls_util_send_phone(phTTS,HYPHEN);	/* written out.		*/
-		if ((pp1->p_flag&PFSYLAB) != 0)
-		{
+	while(pp1 != &pLts_t->phead) {
+		if((pp1->p_flag & PFDASH) != 0)		   /* [+] is just a mark	*/
+			ls_util_send_phone(phTTS, SBOUND); /* for internal use.	*/
+		if((pp1->p_flag & PFSTAR) != 0)		   /* Unlike other kinds	*/
+			ls_util_send_phone(phTTS, MBOUND); /* of boundry symbols,	*/
+		if((pp1->p_flag & PFHASH) != 0)		   /* it does not get	*/
+			ls_util_send_phone(phTTS, HYPHEN); /* written out.		*/
+		if((pp1->p_flag & PFSYLAB) != 0) {
 			s = pp1->p_stress;
 		}
-		if (s!=SUN && ls_adju_is_cons(pp1)==FALSE) 
-		{
-			if (s == SPRI)
-			{
-				ls_util_send_phone(phTTS,S1);
-			}
-			else if (s == SSEC)
-				ls_util_send_phone(phTTS,S2);
+		if(s != SUN && ls_adju_is_cons(pp1) == FALSE) {
+			if(s == SPRI) {
+				ls_util_send_phone(phTTS, S1);
+			} else if(s == SSEC)
+				ls_util_send_phone(phTTS, S2);
 			s = SUN;
 		}
-		ls_util_send_phone(phTTS,pp1->p_sphone);
+		ls_util_send_phone(phTTS, pp1->p_sphone);
 
 		pp1 = pp1->p_fp;
 	}
 
 	pp1 = pLts_t->phead.p_fp;
-	while (pp1 != &pLts_t->phead) 
-	{
+	while(pp1 != &pLts_t->phead) {
 		pp2 = pp1->p_fp;
-		ls_rule_phone_free(pLts_t,pp1);
+		ls_rule_phone_free(pLts_t, pp1);
 		pp1 = pp2;
 	}
 #endif /* ifndef LDS_BUILD */
@@ -407,49 +367,43 @@ void ls_rule_lts_out(LPTTS_HANDLE_T phTTS)
  *	Arguments:      PLTS_T 	pLts_t
  *
  *	Return Value: void
- *	
+ *
  *
  *	Comments:
  *
  * *****************************************************************/
-void ls_rule_delete_geminate_pairs(PLTS_T pLts_t)
-{
-	 PHONE	*pp1;
-	 int	ph1;
-	 int	ph2;
+void ls_rule_delete_geminate_pairs(PLTS_T pLts_t) {
+	PHONE* pp1;
+	int    ph1;
+	int    ph2;
 
 	pp1 = pLts_t->phead.p_fp;
-	while (pp1 != &pLts_t->phead) 
-	{
+	while(pp1 != &pLts_t->phead) {
 		ph1 = pp1->p_sphone;
 		ph2 = pp1->p_bp->p_sphone;
 		/* Delete [l][L] and [L][l], preserving the [L].	*/
-		if ((ph1==US_LL && ph2==US_EL) || (ph1==US_EL && ph1==US_LL)) 
-		{
-			ls_adju_delgemphone(pLts_t,pp1, US_EL);
+		if((ph1 == US_LL && ph2 == US_EL) || (ph1 == US_EL && ph1 == US_LL)) {
+			ls_adju_delgemphone(pLts_t, pp1, US_EL);
 			pp1 = pp1->p_fp;
 			continue;
 		}
 		/* Block these rules if cross morpheme mark.		*/
-		if ((pp1->p_flag&PFMORPH) == 0) {
+		if((pp1->p_flag & PFMORPH) == 0) {
 			/* Delete [t][T] and [T][t], preserve the [T]	*/
-			if ((ph1==US_T && ph2==US_TH) || (ph1==US_TH && ph2==US_T)) 
-			{
-				ls_adju_delgemphone(pLts_t,pp1, US_TH);
+			if((ph1 == US_T && ph2 == US_TH) || (ph1 == US_TH && ph2 == US_T)) {
+				ls_adju_delgemphone(pLts_t, pp1, US_TH);
 				pp1 = pp1->p_fp;
 				continue;
 			}
 			/* Delete [s][S] and [S][s], preserve the [S]	*/
-			if ((ph1==US_S && ph2==US_SH) || (ph1==US_SH && ph2==US_S)) 
-			{
-				ls_adju_delgemphone(pLts_t,pp1, US_SH);
+			if((ph1 == US_S && ph2 == US_SH) || (ph1 == US_SH && ph2 == US_S)) {
+				ls_adju_delgemphone(pLts_t, pp1, US_SH);
 				pp1 = pp1->p_fp;
 				continue;
 			}
 			/* Delete plain old pairs of [+Cons] things.	*/
-			if (ph1==ph2 && ls_adju_is_cons(pp1)!=FALSE) 
-			{
-				ls_adju_delgemphone(pLts_t,pp1, pp1->p_sphone);
+			if(ph1 == ph2 && ls_adju_is_cons(pp1) != FALSE) {
+				ls_adju_delgemphone(pLts_t, pp1, pp1->p_sphone);
 				pp1 = pp1->p_fp;
 				continue;
 			}
@@ -487,60 +441,53 @@ void ls_rule_delete_geminate_pairs(PLTS_T pLts_t)
  *	Comments:
  *
  * ******************************************************************/
-int ls_rule_add_graph(PLTS_T pLts_t,GRAPH *gp, int g, int insert)
-{
-	int	g1;
-	int	value;
-	struct GRAPH_struct *ep1;
-	struct GRAPH_struct *ep2;
-	struct GRAPH_struct *ep3;
+int ls_rule_add_graph(PLTS_T pLts_t, GRAPH* gp, int g, int insert) {
+	int		     g1;
+	int		     value;
+	struct GRAPH_struct* ep1;
+	struct GRAPH_struct* ep2;
+	struct GRAPH_struct* ep3;
 
-	if (ls_util_is_vowel(g) != FALSE	/* If a vowel			*/
-	&& gp > &pLts_t->graph[1]			/* and 2 graphs to left	*/
-	&&  (gp-1)->g_graph == GU			/* and first is "U"		*/
-	&& ((gp-2)->g_graph == GG			/* and it's "GU"		*/
-	||  (gp-2)->g_graph == GQ)) 		/* or "QU"				*/
-	{		
-		--gp;
-		if ((gp-1)->g_graph == GG)
-			(gp-1)->g_graph = GGU;
-		else
-			(gp-1)->g_graph = GQU;
-		value = FALSE;
-	}
-	else
+	if(ls_util_is_vowel(g) != FALSE	    /* If a vowel			*/
+	   && gp > &pLts_t->graph[1]	    /* and 2 graphs to left	*/
+	   && (gp - 1)->g_graph == GU	    /* and first is "U"		*/
+	   && ((gp - 2)->g_graph == GG	    /* and it's "GU"		*/
+	       || (gp - 2)->g_graph == GQ)) /* or "QU"				*/
 	{
+		--gp;
+		if((gp - 1)->g_graph == GG)
+			(gp - 1)->g_graph = GGU;
+		else
+			(gp - 1)->g_graph = GQU;
+		value = FALSE;
+	} else {
 		value = TRUE;
 	}
 
-	ep1=gp;
-	ep2=gp;
+	ep1 = gp;
+	ep2 = gp;
 
-	if (insert)
-	{
-		while (ep1->g_graph!=GEOS)
-		{
+	if(insert) {
+		while(ep1->g_graph != GEOS) {
 			ep1++;
 		}
-		while (ep1!=ep2)
-		{
-			ep3=ep1+1;
-			if (ep3<=&(pLts_t->graph[NGWORD-1]))
-			{
-			ep3->g_graph=ep1->g_graph;
-			ep3->g_feats=ep1->g_feats;
+		while(ep1 != ep2) {
+			ep3 = ep1 + 1;
+			if(ep3 <= &(pLts_t->graph[NGWORD - 1])) {
+				ep3->g_graph = ep1->g_graph;
+				ep3->g_feats = ep1->g_feats;
 			}
-//			ep3->g_ip=ep1->g_ip;
+			//			ep3->g_ip=ep1->g_ip;
 			ep1--;
 		}
-		ep3=ep1+1;
-		ep3->g_graph=ep1->g_graph;
-		ep3->g_feats=ep1->g_feats;
-//		ep3->g_ip=ep1->g_ip;
+		ep3	     = ep1 + 1;
+		ep3->g_graph = ep1->g_graph;
+		ep3->g_feats = ep1->g_feats;
+		//		ep3->g_ip=ep1->g_ip;
 	}
 
 	gp->g_graph = g;
-//	gp->g_ip = NULL;
+	//	gp->g_ip = NULL;
 	/*
 	 * Gather graphemic features.
 	 * Most come from the feature table.
@@ -553,43 +500,34 @@ int ls_rule_add_graph(PLTS_T pLts_t,GRAPH *gp, int g, int insert)
 	 * detected; a sylable exists when a vowel
 	 * exits. Special stuff for "Y".
 	 */
-	gp->g_feats = feats[g];			/* Base set		*/
-	if (g == GY) 
-	{
-		if (gp == &pLts_t->graph[0])		/* "Y" in word initial	*/
-			gp->g_feats |= FCONS;	/* position is [+CONS]	*/
-		else 
-		{
-			gp->g_feats |= FVOC;	/* Rest are vowels	*/
-			gp->g_feats |= FSYL;	/* and create sylables	*/
+	gp->g_feats = feats[g]; /* Base set		*/
+	if(g == GY) {
+		if(gp == &pLts_t->graph[0])   /* "Y" in word initial	*/
+			gp->g_feats |= FCONS; /* position is [+CONS]	*/
+		else {
+			gp->g_feats |= FVOC; /* Rest are vowels	*/
+			gp->g_feats |= FSYL; /* and create sylables	*/
 		}
 	}
-	if (gp != &pLts_t->graph[0]) 
-	{			/* If not word initial	*/
-		g1 = (gp-1)->g_graph;		
-		if ((g1==GS || g1==GC) && g==GH)
-		{
+	if(gp != &pLts_t->graph[0]) { /* If not word initial	*/
+		g1 = (gp - 1)->g_graph;
+		if((g1 == GS || g1 == GC) && g == GH) {
 			gp->g_feats |= FSIB;
-		}
-		else 
-		{
-			if (g1==GD && (g==GG || g==GJ))
-			{
+		} else {
+			if(g1 == GD && (g == GG || g == GJ)) {
 				gp->g_feats |= FSIB;
 			}
 		}
-		if ((gp->g_feats&FCONS)!=0 && g1==g)
-		{
+		if((gp->g_feats & FCONS) != 0 && g1 == g) {
 			gp->g_feats |= FGEM;
 		}
-		if (((gp-1)->g_feats&FSYL) != 0)
-		{
+		if(((gp - 1)->g_feats & FSYL) != 0) {
 			gp->g_feats |= FSYL;
 		}
 	}
 	return (value);
 }
-                               
+
 /* ******************************************************************
  *	Function Name:	ls_rule_rule_match()
  *
@@ -612,34 +550,31 @@ int ls_rule_add_graph(PLTS_T pLts_t,GRAPH *gp, int g, int insert)
  *	Comments:
  *
  * ******************************************************************/
-GRAPH *ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH *gp1, int def_lang, int sel_lang)
-{
-	unsigned int	rulep;
-	unsigned int	xrule;
-	GRAPH	*gp2;
-	unsigned int	nrule;
-	unsigned int	g;
-//#ifndef UNDER_CE
+GRAPH* ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH* gp1, int def_lang, int sel_lang) {
+	unsigned int rulep;
+	unsigned int xrule;
+	GRAPH*	     gp2;
+	unsigned int nrule;
+	unsigned int g;
+// #ifndef UNDER_CE
 #ifdef ACNA
-	 int	lang;
-	 int	specific;
+	int lang;
+	int specific;
 #endif
-//#endif // UNDER_CE
+	// #endif // UNDER_CE
 
 	PLTS_T pLts_t;
 	PKSD_T pKsd_t;
-	pLts_t=phTTS->pLTSThreadData;
-	pKsd_t=phTTS->pKernelShareData;
+	pLts_t = phTTS->pLTSThreadData;
+	pKsd_t = phTTS->pKernelShareData;
 
-
-	g = (--gp1)->g_graph;
-	rulep = wtab(2*g + 0);			/* Offset to rule	*/
-	nrule = wtab(2*g + 1);			/* Number of rules	*/
-	pLts_t->rpart = 0;				/* Assume we failed	*/
-	while (nrule--) 
-	{
+	g	      = (--gp1)->g_graph;
+	rulep	      = wtab(2 * g + 0); /* Offset to rule	*/
+	nrule	      = wtab(2 * g + 1); /* Number of rules	*/
+	pLts_t->rpart = 0;		 /* Assume we failed	*/
+	while(nrule--) {
 		gp2 = gp1;
-//#ifndef UNDER_CE
+// #ifndef UNDER_CE
 #ifdef ACNA
 		/*
 		 * PRG	18-NOV-1988
@@ -649,79 +584,67 @@ GRAPH *ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH *gp1, int def_lang, int se
 		 * matching.  Otherwise, go on to the next rule.
 		 */
 
-			lang = wtab (rulep+0);
-			specific = lang & M_R_SPECIFIC;
-	        	lang &= M_R_LANG;
-			if (specific && lang != sel_lang)
-			{
-		   	goto fail;
+		lang	 = wtab(rulep + 0);
+		specific = lang & M_R_SPECIFIC;
+		lang &= M_R_LANG;
+		if(specific && lang != sel_lang) {
+			goto fail;
+		} else {
+			if(!specific && lang != def_lang && lang != sel_lang) {
+				goto fail;
 			}
-			else
-			{
-				if (!specific && lang != def_lang && lang != sel_lang)
-				{
-			   		goto fail;
-		   		}
-			}
-	
+		}
+
 		/*
 		 * END OF MODIFICATION.
-		 */ 
-		if ((xrule=wtab(rulep+1)) != 0) 
-		{
-			while ((g=btabb(xrule++)) != GEOS) 
-			{
-				if (gp2==(&pLts_t->graph[0]) || (--gp2)->g_graph!=(signed)g) // NAL warning removal
+		 */
+		if((xrule = wtab(rulep + 1)) != 0) {
+			while((g = btabb(xrule++)) != GEOS) {
+				if(gp2 == (&pLts_t->graph[0]) || (--gp2)->g_graph != (signed)g) // NAL warning removal
 					goto fail;
 			}
 		}
-		if ((xrule=wtab(rulep+4)) != 0	/* Right environment	*/
-		&& ls_rule_env_match(pLts_t,xrule, gp1, FORW) == NULL)
-		{
+		if((xrule = wtab(rulep + 4)) != 0 /* Right environment	*/
+		   && ls_rule_env_match(pLts_t, xrule, gp1, FORW) == NULL) {
 			goto fail;
 		}
-		if ((xrule=wtab(rulep+3)) != 0	/* Left environment	*/
-		&& ls_rule_env_match(pLts_t,xrule, gp2, BACK) == NULL)
-		{
+		if((xrule = wtab(rulep + 3)) != 0 /* Left environment	*/
+		   && ls_rule_env_match(pLts_t, xrule, gp2, BACK) == NULL) {
 			goto fail;
 		}
-			
-#if defined (LDS_BUILD)
-		rline = lswtab[rulep+5];	/* Line number of rule.	*/
-		++lswtab[rulep+6];			/* Usage count of rule.	*/
-#endif
-		gp1 = gp2;							/* Move over the match	*/
-		pLts_t->rpart = wtab(rulep+2);		/* Replacement		*/
-		break;
-#else         /* #ifdef ACNA */
-		if ((xrule=wtab(rulep+0)) != 0) 
-		{
-			while ((g=btabb(xrule++)) != GEOS) 
-			{
 
-				if (gp2==&pLts_t->graph[0] || (--gp2)->g_graph!=(signed int)g)
+#if defined(LDS_BUILD)
+		rline = lswtab[rulep + 5]; /* Line number of rule.	*/
+		++lswtab[rulep + 6];	   /* Usage count of rule.	*/
+#endif
+		gp1	      = gp2;		 /* Move over the match	*/
+		pLts_t->rpart = wtab(rulep + 2); /* Replacement		*/
+		break;
+#else /* #ifdef ACNA */
+		if((xrule = wtab(rulep + 0)) != 0) {
+			while((g = btabb(xrule++)) != GEOS) {
+
+				if(gp2 == &pLts_t->graph[0] || (--gp2)->g_graph != (signed int)g)
 					goto fail;
 			}
 		}
-		if ((xrule=wtab(rulep+3)) != 0	/* Right environment	*/		
-		&& ls_rule_env_match(pLts_t,xrule, gp1, FORW) == NULL)
-		{
+		if((xrule = wtab(rulep + 3)) != 0 /* Right environment	*/
+		   && ls_rule_env_match(pLts_t, xrule, gp1, FORW) == NULL) {
 			goto fail;
 		}
-		if ((xrule=wtab(rulep+2)) != 0	/* Left environment	*/
-		&& ls_rule_env_match(pLts_t,xrule, gp2, BACK) == NULL)
-		{
+		if((xrule = wtab(rulep + 2)) != 0 /* Left environment	*/
+		   && ls_rule_env_match(pLts_t, xrule, gp2, BACK) == NULL) {
 			goto fail;
 		}
-#if defined (LDS_BUILD)
-		rline = lswtab[rulep+4];		/* Line number of rule.	*/
-		++lswtab[rulep+5];				/* Usage count of rule.	*/
+#if defined(LDS_BUILD)
+		rline = lswtab[rulep + 4]; /* Line number of rule.	*/
+		++lswtab[rulep + 5];	   /* Usage count of rule.	*/
 #endif
-		gp1 = gp2;						/* Move over the match	*/
-		pLts_t->rpart = wtab(rulep+1);	/* Replacement		*/
+		gp1	      = gp2;		 /* Move over the match	*/
+		pLts_t->rpart = wtab(rulep + 1); /* Replacement		*/
 		break;
-#endif /* #ifdef ACNA */
-//#endif
+#endif		/* #ifdef ACNA */
+		// #endif
 	fail:
 		rulep += LSBUMP;
 	}
@@ -750,142 +673,120 @@ GRAPH *ls_rule_rule_match(LPTTS_HANDLE_T phTTS, GRAPH *gp1, int def_lang, int se
  *	Comments:
  *
  * *****************************************************************/
-GRAPH* ls_rule_env_match(PLTS_T pLts_t, signed int ep1, GRAPH *gp, int d)
-{
-	unsigned int	ep2;
-	unsigned int	type;
-	unsigned int	npat;
-	unsigned int	mask;
-	unsigned int	test;
-	unsigned int	llim;
-	unsigned int	hlim;
-	GRAPH  *gp1;
-	unsigned int	ep3;
+GRAPH* ls_rule_env_match(PLTS_T pLts_t, signed int ep1, GRAPH* gp, int d) {
+	unsigned int ep2;
+	unsigned int type;
+	unsigned int npat;
+	unsigned int mask;
+	unsigned int test;
+	unsigned int llim;
+	unsigned int hlim;
+	GRAPH*	     gp1;
+	unsigned int ep3;
 
 	npat = btabb(ep1++);
 	ep2  = ep1 + npat;
-	while (ep1 != (signed int)ep2) 
-	{
+	while(ep1 != (signed int)ep2) {
 		type = btabb(ep1++);
-		switch (type)
-		{
-			case GRANGE:
-										/* Range of matches	*/
-				llim = btabb(ep1++);	/* Low limit		*/
-				hlim = btabb(ep1++);	/* High limit		*/
-				while (llim--) 
-				{					/* Must match part	*/
-					gp1 = ls_rule_env_match(pLts_t,ep1, gp, d);
-					if (gp1 == NULL)
-						return (NULL);
-					gp = gp1;
-				}
-				while (hlim--) 
-				{	/* Optional matches	*/
-					gp1 = ls_rule_env_match(pLts_t,ep1, gp, d);
-					if (gp1 == NULL)
-						break;
-					gp = gp1;
-				}
-				npat = btabb(ep1++);	/* Skip over pattern	*/
-				ep1 += npat;
-				break;
-			case GDISJ:		
-				npat = btabb(ep1++);	/* Disjunction			*/
-				ep3  = ep1 + npat;		/* End of disjunction	*/
-				for (;;) 
-				{
-					if (ep1 == (signed int)ep3)
-						return (NULL);
-					gp1 = ls_rule_env_match(pLts_t,ep1, gp, d);
-					if (gp1 != NULL)
-						break;
-					npat = btabb(ep1++);
-					ep1 += npat;
-				}
-				gp  = gp1;			/* Skip graphemes	*/
-				ep1 = ep3;			/* Skip to end of rule	*/
-				break;
-			case GFEAT:
-				mask = btabw(ep1);  /* Feature set test	*/
-				ep1 += 2;
-				test = btabw(ep1);
-				ep1 += 2;
-				if (d == FORW) 
-				{
-					if (gp->g_graph == GEOS)
-						return (NULL);
-					++gp;
-				} 
-				else 
-				{
-					if (gp == &pLts_t->graph[0])
-						return (NULL);
-					--gp;   	
-				}   	
-				if ((gp->g_feats&mask) != test)
-					return (NULL);	
-                break;
-			case GMBOUND:
-				if (d == FORW) /* Morpheme mark	*/
-				{
-					if (gp->g_graph == GEOS)
-					{
-						return (NULL);
-					}
-					if ((gp+1)->g_graph == GMBOUND)
-					{
-						++gp;
-					}
-					else 
-					{
-						if ((gp+1)->g_graph != 0)
-						{
-							return (NULL);
-						}
-					}
-				} 
-				else 
-				{
-					if (gp != &pLts_t->graph[0]) 
-					{
-						--gp;
-						if (gp->g_graph != GMBOUND)
-							return (NULL);
-					}
-				}        
-				break;
-			case GWBOUND:
-				if (d == FORW) /* Word mark		*/
-				{
-					if (gp->g_graph == GEOS
-					|| (gp+1)->g_graph != GEOS)
-						return (NULL);
-				} 
-				else 
-				{
-					if (gp != &pLts_t->graph[0])
-						return (NULL);
-				}
-				break;
-			default:
-				if (d == FORW) /* Random grapheme	*/
-				{
-					if (gp->g_graph == GEOS)
-						return (NULL);
-					++gp;
-				} 
-				else 
-				{
-					if (gp == &pLts_t->graph[0])
-						return (NULL);
-					--gp;
-				}       	
-				if (gp->g_graph != (signed int)type)
+		switch(type) {
+		case GRANGE:
+			/* Range of matches	*/
+			llim = btabb(ep1++); /* Low limit		*/
+			hlim = btabb(ep1++); /* High limit		*/
+			while(llim--) {	     /* Must match part	*/
+				gp1 = ls_rule_env_match(pLts_t, ep1, gp, d);
+				if(gp1 == NULL)
 					return (NULL);
-				break;
-		}	/* switch (type) */
-	}	/* while (ep1 != (signed int)ep2)  */
+				gp = gp1;
+			}
+			while(hlim--) { /* Optional matches	*/
+				gp1 = ls_rule_env_match(pLts_t, ep1, gp, d);
+				if(gp1 == NULL)
+					break;
+				gp = gp1;
+			}
+			npat = btabb(ep1++); /* Skip over pattern	*/
+			ep1 += npat;
+			break;
+		case GDISJ:
+			npat = btabb(ep1++); /* Disjunction			*/
+			ep3  = ep1 + npat;   /* End of disjunction	*/
+			for(;;) {
+				if(ep1 == (signed int)ep3)
+					return (NULL);
+				gp1 = ls_rule_env_match(pLts_t, ep1, gp, d);
+				if(gp1 != NULL)
+					break;
+				npat = btabb(ep1++);
+				ep1 += npat;
+			}
+			gp  = gp1; /* Skip graphemes	*/
+			ep1 = ep3; /* Skip to end of rule	*/
+			break;
+		case GFEAT:
+			mask = btabw(ep1); /* Feature set test	*/
+			ep1 += 2;
+			test = btabw(ep1);
+			ep1 += 2;
+			if(d == FORW) {
+				if(gp->g_graph == GEOS)
+					return (NULL);
+				++gp;
+			} else {
+				if(gp == &pLts_t->graph[0])
+					return (NULL);
+				--gp;
+			}
+			if((gp->g_feats & mask) != test)
+				return (NULL);
+			break;
+		case GMBOUND:
+			if(d == FORW) /* Morpheme mark	*/
+			{
+				if(gp->g_graph == GEOS) {
+					return (NULL);
+				}
+				if((gp + 1)->g_graph == GMBOUND) {
+					++gp;
+				} else {
+					if((gp + 1)->g_graph != 0) {
+						return (NULL);
+					}
+				}
+			} else {
+				if(gp != &pLts_t->graph[0]) {
+					--gp;
+					if(gp->g_graph != GMBOUND)
+						return (NULL);
+				}
+			}
+			break;
+		case GWBOUND:
+			if(d == FORW) /* Word mark		*/
+			{
+				if(gp->g_graph == GEOS || (gp + 1)->g_graph != GEOS)
+					return (NULL);
+			} else {
+				if(gp != &pLts_t->graph[0])
+					return (NULL);
+			}
+			break;
+		default:
+			if(d == FORW) /* Random grapheme	*/
+			{
+				if(gp->g_graph == GEOS)
+					return (NULL);
+				++gp;
+			} else {
+				if(gp == &pLts_t->graph[0])
+					return (NULL);
+				--gp;
+			}
+			if(gp->g_graph != (signed int)type)
+				return (NULL);
+			break;
+		} /* switch (type) */
+	} /* while (ep1 != (signed int)ep2)  */
 
 	return (gp);
 }

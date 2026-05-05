@@ -36,7 +36,7 @@
 /*                                                                    */
 /**********************************************************************/
 /**********************************************************************/
-/*    Revision History:                                        
+/*    Revision History:
  *
  * Rev  Who 	Date        Description
  * ---  -----   ----------- --------------------------------------------
@@ -44,11 +44,10 @@
  * 002  CJL     03/18/1998  Removed specific path for dectalkf.h.
  * 003  JAW     07/07/1998  Added function prototype for reallocLock.
  * 004  ETT     10/05/1998  Added Linux code.
- * 005	MGS     05/09/2001  Some VxWorks porting BATS#972 
+ * 005	MGS     05/09/2001  Some VxWorks porting BATS#972
  * 006	CAB		05/14/2001	Updated copyright
  * 007	MGS		06/19/2001	Solaris Port BATS#972
-*/
-
+ */
 
 /**********************************************************************/
 /**********************************************************************/
@@ -69,7 +68,7 @@
 extern "C" {
 #endif
 
-  //#define HANDLE int
+// #define HANDLE int
 #define HGLOBAL DT_HANDLE
 #define GMEM_MOVEABLE 0x0002
 
@@ -85,12 +84,12 @@ extern "C" {
 /*                                                                    */
 /*  The SERVER_BUFFER macros are for allocating buffers.              */
 /**********************************************************************/
- 
-#define  ALLOCATE_SERVER_BUFFER( SizeInBytes )  malloc( SizeInBytes )
-#define  FREE_SERVER_BUFFER( SizeInBytes )      free( SizeInBytes )
+
+#define ALLOCATE_SERVER_BUFFER(SizeInBytes) malloc(SizeInBytes)
+#define FREE_SERVER_BUFFER(SizeInBytes) free(SizeInBytes)
 
 #ifdef __cplusplus
-}  /* End extern "C" */
+} /* End extern "C" */
 #endif
 
 #endif

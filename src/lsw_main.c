@@ -4,7 +4,7 @@
  *                           Copyright ©
  *	  Copyright © 2002 Fonix Corporation. All rights reserved.
  *	  Copyright © 2000-2001 Force Computers, a Solectron Company. All rights reserved.
- *    © SMART Modular Technologies 1999. All rights reserved.     
+ *    © SMART Modular Technologies 1999. All rights reserved.
  *    © Digital Equipment Corporation 1996-1998. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -27,7 +27,7 @@
  *    lts entry point stub, for window only
  *
  ***********************************************************************
- *    Revision History:                    
+ *    Revision History:
  *
  *  Rev Who     Date        	Description
  *  --- -----   ----------- 	---------------------------------------
@@ -60,7 +60,7 @@
  *	xxx	tek		21aug98			un-static GetDictionaryNames so it can be
  *								used by other modules.
  *  019.5 ETT	10/05/1998      Added Linux code.
- *  020	GL		11/12/1998		BATS#800  need to initialize some Spanish variables 
+ *  020	GL		11/12/1998		BATS#800  need to initialize some Spanish variables
  *  021	GL		11/20/1998		BATS#828 use LTS_DEBUG_OLD to replace _DEBUG_OLD
  *  022	MFG		01/06/1999		Added MainDIc and UserDic support for Windows CE
  *  023	MGS		08/22/1999		Change #ifdef LTS_DEBUG_OLD to #if LTS_DEBUG_OLD because of VMS debugging code
@@ -93,7 +93,7 @@
  *								Changed GetDictionaryNames() and load_dictionary() to TCHAR
  *	049	MFG		10/10/2002		Fixed the User dictionary stuff for WinCE
  *	050	RDK		01/22/2003		Change to use FORCE_WINDICTDIRS for forced windows dictionaries
- *  051	MFG		02/30/2003		Fixed the wide- string convertion for the WinCe dictionary 
+ *  051	MFG		02/30/2003		Fixed the wide- string convertion for the WinCe dictionary
  ***************************************************************************/
 
 #if !defined __EMSCRIPTEN__
@@ -113,7 +113,7 @@
 #ifdef __linux
 #include <linux/limits.h>
 #endif
-#if defined (__APPLE__)
+#if defined(__APPLE__)
 #include <limits.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -121,7 +121,7 @@
 #endif
 #include <limits.h>
 #ifdef SEPARATE_PROCESSES
-struct share_data       *kernel_share;
+struct share_data* kernel_share;
 #endif
 
 #if defined(_WIN32)
@@ -137,239 +137,227 @@ struct share_data       *kernel_share;
 #endif
 
 static size_t
-dt_dirname_r(const char *path, char *buf, size_t buflen)
-{
-        const char *endp;
-        size_t len;
+dt_dirname_r(const char* path, char* buf, size_t buflen) {
+	const char* endp;
+	size_t	    len;
 
-        /*
-         * If `path' is a null pointer or points to an empty string,
-         * return a pointer to the string ".".
-         */
-        if (path == NULL || *path == '\0') {
-                path = ".";
-                len = 1;
-                goto out;
-        }
+	/*
+	 * If `path' is a null pointer or points to an empty string,
+	 * return a pointer to the string ".".
+	 */
+	if(path == NULL || *path == '\0') {
+		path = ".";
+		len  = 1;
+		goto out;
+	}
 
-        /* Strip trailing slashes, if any. */
-        endp = path + strlen(path) - 1;
-        while (endp != path && *endp == '/')
-                endp--;
+	/* Strip trailing slashes, if any. */
+	endp = path + strlen(path) - 1;
+	while(endp != path && *endp == '/')
+		endp--;
 
-        /* Find the start of the dir */
-        while (endp > path && *endp != '/')
-                endp--;
+	/* Find the start of the dir */
+	while(endp > path && *endp != '/')
+		endp--;
 
-        if (endp == path) {
-                path = *endp == '/' ? "/" : ".";
-                len = 1;
-                goto out;
-        }
+	if(endp == path) {
+		path = *endp == '/' ? "/" : ".";
+		len  = 1;
+		goto out;
+	}
 
-        do
-                endp--;
-        while (endp > path && *endp == '/');
+	do
+		endp--;
+	while(endp > path && *endp == '/');
 
-        len = endp - path + 1;
+	len = endp - path + 1;
 out:
-        if (buf != NULL && buflen != 0) {
-                buflen = buflen - 1;
+	if(buf != NULL && buflen != 0) {
+		buflen = buflen - 1;
 		if(buflen > len) buflen = len;
-                if (buf != path)
-                        memcpy(buf, path, buflen);
-                buf[buflen] = '\0';
-        }
-        return len;
+		if(buf != path)
+			memcpy(buf, path, buflen);
+		buf[buflen] = '\0';
+	}
+	return len;
 }
 
-char *
-dt_dirname(char *path)
-{
-        static char result[PATH_MAX];
-        (void)dt_dirname_r(path, result, sizeof(result));
-        return result;
+char* dt_dirname(char* path) {
+	static char result[PATH_MAX];
+	(void)dt_dirname_r(path, result, sizeof(result));
+	return result;
 }
 
-int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name);
+int  linux_get_dict_names(char* main_dict_name, char* user_dict_name, char* foreign_dict_name);
 void default_lang(PKSD_T, unsigned int, unsigned int); // NAL warning removal
 
-extern MMRESULT load_dictionary( void **, void **, unsigned int *, unsigned int *,
-				 				 char *, int, DT_HANDLE *, DT_HANDLE *,
-								 LPVOID *, MEMMAP_T);
-										
+extern MMRESULT load_dictionary(void**, void**, unsigned int*, unsigned int*,
+				char*, int, DT_HANDLE*, DT_HANDLE*,
+				LPVOID*, MEMMAP_T);
+
 /* PROTOTYPES */
 /* MGS 11/19/1997 commented out duplicate prototype */
-//extern lsa_util_init_lang();
-//extern void default_lang ();
-extern void default_lang( PKSD_T pKsd_t,unsigned int lang_code, unsigned int ready_code );
-//extern ls_task_main ();
-
+// extern lsa_util_init_lang();
+// extern void default_lang ();
+extern void default_lang(PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
+// extern ls_task_main ();
 
 /*int lts_main(LPTTS_HANDLE_T phTTS )*/
-int lts_main(LPTTS_HANDLE_T phTTS)
-{
-  /* 
-   * Added a variable to get current instance kernel share data and
-   * initialize from phTTS structure  :MI : MVP
-   */
-  PKSD_T pKsd_t = phTTS->pKernelShareData;
-  PLTS_T pLts_t = NULL;
-
+int lts_main(LPTTS_HANDLE_T phTTS) {
+	/*
+	 * Added a variable to get current instance kernel share data and
+	 * initialize from phTTS structure  :MI : MVP
+	 */
+	PKSD_T pKsd_t = phTTS->pKernelShareData;
+	PLTS_T pLts_t = NULL;
 
 #ifdef SEPARATE_PROCESSES
-  {
-	kernel_share = (struct share_data *)malloc(sizeof(struct share_data));
-  }
+	{
+		kernel_share = (struct share_data*)malloc(sizeof(struct share_data));
+	}
 #endif
 
-  int nDicLoad;
-  int fDicLoad;
+	int nDicLoad;
+	int fDicLoad;
 
-  char main_dict_name[1000];
-  char foreign_dict_name[1000];
-  char user_dict_name[1000];
+	char main_dict_name[1000];
+	char foreign_dict_name[1000];
+	char user_dict_name[1000];
 
-  linux_get_dict_names(main_dict_name,user_dict_name,foreign_dict_name);
-  if (phTTS->dictionary_file_name[0])
-  {
-	  strcpy(main_dict_name,phTTS->dictionary_file_name);
-  }
-  /* Initialize thread error field to no error */
-  //phTTS->uiThreadError = MMSYSERR_NOERROR;
+	linux_get_dict_names(main_dict_name, user_dict_name, foreign_dict_name);
+	if(phTTS->dictionary_file_name[0]) {
+		strcpy(main_dict_name, phTTS->dictionary_file_name);
+	}
+	/* Initialize thread error field to no error */
+	// phTTS->uiThreadError = MMSYSERR_NOERROR;
 
-  if((pLts_t = (PLTS_T)calloc(1,sizeof(LTS_T)))== NULL)
-  {
-  return(MMSYSERR_NOMEM);
-  }
-  else 
-  {
-    /* MVP :Associate LTS thread specific data handle to the 
-          current speech object */
-    phTTS->pLTSThreadData = pLts_t ;
+	if((pLts_t = (PLTS_T)calloc(1, sizeof(LTS_T))) == NULL) {
+		return (MMSYSERR_NOMEM);
+	} else {
+		/* MVP :Associate LTS thread specific data handle to the
+		      current speech object */
+		phTTS->pLTSThreadData = pLts_t;
 
-/* GL 09/25/1997 use the array for dictionary entry structure */
-/*               also add UK_english support */
-/*               comment out the abbr dictionary section for now */
+		/* GL 09/25/1997 use the array for dictionary entry structure */
+		/*               also add UK_english support */
+		/*               comment out the abbr dictionary section for now */
 
-    nDicLoad = load_dictionary( (void **)&(pKsd_t->fdic_index[DICT_LANG]),
-			(void **)&(pKsd_t->fdic_data[DICT_LANG]),
-		   (unsigned int *)&(pKsd_t->fdic_entries[DICT_LANG]),
-		   (unsigned int *)&(pKsd_t->fdic_bytes[DICT_LANG]),
-		   main_dict_name,
-      		   TRUE,
-				(DT_HANDLE*)&(pKsd_t->fdicMapObject[DICT_LANG]),
-				(DT_HANDLE*)&(pKsd_t->fdicFileHandle[DICT_LANG]),
-				(LPVOID*)&(pKsd_t->fdicMapStartAddr[DICT_LANG]),
-						MEMMAP_ON);
+		nDicLoad = load_dictionary((void**)&(pKsd_t->fdic_index[DICT_LANG]),
+					   (void**)&(pKsd_t->fdic_data[DICT_LANG]),
+					   (unsigned int*)&(pKsd_t->fdic_entries[DICT_LANG]),
+					   (unsigned int*)&(pKsd_t->fdic_bytes[DICT_LANG]),
+					   main_dict_name,
+					   TRUE,
+					   (DT_HANDLE*)&(pKsd_t->fdicMapObject[DICT_LANG]),
+					   (DT_HANDLE*)&(pKsd_t->fdicFileHandle[DICT_LANG]),
+					   (LPVOID*)&(pKsd_t->fdicMapStartAddr[DICT_LANG]),
+					   MEMMAP_ON);
 
-    fDicLoad = load_dictionary( (void **)&(pKsd_t->foreigndic_index[DICT_LANG]),
-			(void **)&(pKsd_t->foreigndic_data[DICT_LANG]),
-		   (unsigned int *)&(pKsd_t->foreigndic_entries[DICT_LANG]),
-		   (unsigned int *)&(pKsd_t->foreigndic_bytes[DICT_LANG]),
-		   foreign_dict_name,
-      		   FALSE,
-				(DT_HANDLE*)&(pKsd_t->foreigndicMapObject[DICT_LANG]),
-				(DT_HANDLE*)&(pKsd_t->foreigndicFileHandle[DICT_LANG]),
-				(LPVOID*)&(pKsd_t->foreigndicMapStartAddr[DICT_LANG]),
-						MEMMAP_ON);
+		fDicLoad = load_dictionary((void**)&(pKsd_t->foreigndic_index[DICT_LANG]),
+					   (void**)&(pKsd_t->foreigndic_data[DICT_LANG]),
+					   (unsigned int*)&(pKsd_t->foreigndic_entries[DICT_LANG]),
+					   (unsigned int*)&(pKsd_t->foreigndic_bytes[DICT_LANG]),
+					   foreign_dict_name,
+					   FALSE,
+					   (DT_HANDLE*)&(pKsd_t->foreigndicMapObject[DICT_LANG]),
+					   (DT_HANDLE*)&(pKsd_t->foreigndicFileHandle[DICT_LANG]),
+					   (LPVOID*)&(pKsd_t->foreigndicMapStartAddr[DICT_LANG]),
+					   MEMMAP_ON);
 
-//nAdicLoad = load_dictionary( &(pKsd_t->adic[LANG_english]),
-      //		   &(pKsd_t->adic_entries[LANG_english]),
-      //		   "abbr_us.dic",
-      //		   TRUE );
+		// nAdicLoad = load_dictionary( &(pKsd_t->adic[LANG_english]),
+		//		   &(pKsd_t->adic_entries[LANG_english]),
+		//		   "abbr_us.dic",
+		//		   TRUE );
 
-    if( nDicLoad == MMSYSERR_INVALPARAM || nDicLoad == MMSYSERR_NOMEM ||
-	nDicLoad == MMSYSERR_ERROR)
-    {
-      fprintf(stderr,"DECtalk cannot run without the dictionary file %s\n",
-				  main_dict_name);
-	  //return (nDicLoad);
-    }
+		if(nDicLoad == MMSYSERR_INVALPARAM || nDicLoad == MMSYSERR_NOMEM ||
+		   nDicLoad == MMSYSERR_ERROR) {
+			fprintf(stderr, "DECtalk cannot run without the dictionary file %s\n",
+				main_dict_name);
+			// return (nDicLoad);
+		}
 
-	/* GL 09/25/1997 support Abbr dictionary load error checking */
-	/*               comment out for now */
-//    if( nAdicLoad == MMSYSERR_INVALPARAM || nAdicLoad == MMSYSERR_NOMEM ||
-//	nAdicLoad == MMSYSERR_ERROR)
-//    {
-//      fprintf(stderr,"DECtalk cannot run without the abbr. dictionary file %s\n",
-//				  "abbr.dic");
-//      phTTS->uiThreadError = nAdicLoad;
-//    }
+		/* GL 09/25/1997 support Abbr dictionary load error checking */
+		/*               comment out for now */
+		//    if( nAdicLoad == MMSYSERR_INVALPARAM || nAdicLoad == MMSYSERR_NOMEM ||
+		//	nAdicLoad == MMSYSERR_ERROR)
+		//    {
+		//      fprintf(stderr,"DECtalk cannot run without the abbr. dictionary file %s\n",
+		//				  "abbr.dic");
+		//      phTTS->uiThreadError = nAdicLoad;
+		//    }
 
-    /*
-     * Look for an ini file in the users login directory
-     */
-    {
+		/*
+		 * Look for an ini file in the users login directory
+		 */
+		{
 
-      /*
-       * Make sure we have a valid HOME environment set.
-       */
-      if( user_dict_name[0] )
-      {
-/* GL 09/25/1997 use the array for dictionary entry structure */
-/*               also add UK_english support */
-        load_dictionary( (void **)&(pKsd_t->udic_index[DICT_LANG]),
-        				 (void **)&(pKsd_t->udic_data[DICT_LANG]),
-        				 (unsigned int *)&(pKsd_t->udic_entries[DICT_LANG]),
-						 (unsigned int *)&(pKsd_t->udic_bytes[DICT_LANG]),
-        				 user_dict_name,
-        				 FALSE,
-						 NULL,
-						 NULL,
-						 NULL,
-						 MEMMAP_OFF );
-      }
-    }
-  }
+			/*
+			 * Make sure we have a valid HOME environment set.
+			 */
+			if(user_dict_name[0]) {
+				/* GL 09/25/1997 use the array for dictionary entry structure */
+				/*               also add UK_english support */
+				load_dictionary((void**)&(pKsd_t->udic_index[DICT_LANG]),
+						(void**)&(pKsd_t->udic_data[DICT_LANG]),
+						(unsigned int*)&(pKsd_t->udic_entries[DICT_LANG]),
+						(unsigned int*)&(pKsd_t->udic_bytes[DICT_LANG]),
+						user_dict_name,
+						FALSE,
+						NULL,
+						NULL,
+						NULL,
+						MEMMAP_OFF);
+			}
+		}
+	}
 
-ls_util_lts_init (pLts_t, pKsd_t); 
+	ls_util_lts_init(pLts_t, pKsd_t);
 
 /* JDB: language dependent... */
 #ifdef ENGLISH_US
 #ifdef ACNA
-  	lsa_util_init_lang(pLts_t);
+	lsa_util_init_lang(pLts_t);
 #endif
-	default_lang(pKsd_t,LANG_english,LANG_lts_ready);  
+	default_lang(pKsd_t, LANG_english, LANG_lts_ready);
 #endif
 
 /* GL 09/25/1997 add UK_english support */
 #ifdef ENGLISH_UK
 #ifdef ACNA
-  	lsa_util_init_lang(pLts_t);
+	lsa_util_init_lang(pLts_t);
 #endif
-	default_lang(pKsd_t,LANG_british,LANG_lts_ready);  
+	default_lang(pKsd_t, LANG_british, LANG_lts_ready);
 #endif
 
 #ifdef SPANISH_SP
-    default_lang(pKsd_t,LANG_spanish,LANG_lts_ready);
+	default_lang(pKsd_t, LANG_spanish, LANG_lts_ready);
 #endif
 
 #ifdef SPANISH_LA
-    default_lang(pKsd_t,LANG_latin_american,LANG_lts_ready);
+	default_lang(pKsd_t, LANG_latin_american, LANG_lts_ready);
 #endif
 
 #ifdef SPANISH
-/* GL 11/12/1998, BATS#800 need to initialize these variables for Spanish */
-	pLts_t->ord = 0;
-   	pLts_t->dic_offset = 0;
-   	pLts_t->flag =0;
+	/* GL 11/12/1998, BATS#800 need to initialize these variables for Spanish */
+	pLts_t->ord	   = 0;
+	pLts_t->dic_offset = 0;
+	pLts_t->flag	   = 0;
 #endif
 
 #ifdef GERMAN
-   default_lang(pKsd_t,LANG_german,LANG_lts_ready);
+	default_lang(pKsd_t, LANG_german, LANG_lts_ready);
 #endif
 
 #ifdef FRENCH
-   default_lang(pKsd_t,LANG_french,LANG_lts_ready);
+	default_lang(pKsd_t, LANG_french, LANG_lts_ready);
 #endif
 
 	ls_task_main(phTTS);
 	/* Free here thread specific data structure MVP */
 	return MMSYSERR_NOERROR; // NAL warning removal
-}       
+}
 
-/*extern int fc_index; */    /*MVP MI */
+/*extern int fc_index; */ /*MVP MI */
 
 #ifdef ENGLISH_US
 #define LINUX_DICT_TAG "US_dict:"
@@ -426,300 +414,274 @@ ls_util_lts_init (pLts_t, pKsd_t);
 #define DEMO_FDICT_NAME "dtalk_fl_fr.dic"
 #endif
 
-	
-int linux_get_dict_names(char *main_dict_name,char *user_dict_name, char *foreign_dict_name) {
-	FILE *config_file = NULL;
-	char line[1000];
-	char *home_dir;
-	char temp_dict_name[1000];
-	int ret_value=0;
-	int parent=0;
-	int exe_path=0;
-	
-	main_dict_name[0]='\0';
-	foreign_dict_name[0]='\0';
-	user_dict_name[0]='\0';
+int linux_get_dict_names(char* main_dict_name, char* user_dict_name, char* foreign_dict_name) {
+	FILE* config_file = NULL;
+	char  line[1000];
+	char* home_dir;
+	char  temp_dict_name[1000];
+	int   ret_value = 0;
+	int   parent	= 0;
+	int   exe_path	= 0;
+
+	main_dict_name[0]    = '\0';
+	foreign_dict_name[0] = '\0';
+	user_dict_name[0]    = '\0';
 
 #ifndef NO_FILESYSTEM
 
-	if (config_file==NULL)
-	{
+	if(config_file == NULL) {
 		char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 		ssize_t count = 3;
-		p[0] = '.';
-		p[1] = '/';
-		p[2] = 'h';
-		p[3] = 0;
+		p[0]	      = '.';
+		p[1]	      = '/';
+		p[2]	      = 'h';
+		p[3]	      = 0;
 #elif defined(__APPLE__)
-		char ep[PATH_MAX] = {};
-		uint32_t size = sizeof(ep);
-		ssize_t count = -1;
-		if (_NSGetExecutablePath(ep, &size) == 0) {
-			if (realpath(ep, p) != NULL) {
+		char	 ep[PATH_MAX] = {};
+		uint32_t size	      = sizeof(ep);
+		ssize_t	 count	      = -1;
+		if(_NSGetExecutablePath(ep, &size) == 0) {
+			if(realpath(ep, p) != NULL) {
 				count = strlen(p);
 			}
 		}
 #elif defined(__unix__)
 		ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-		if (count != -1) {
-			char *cfg;
+		if(count != -1) {
+			char* cfg;
 			cfg = dt_dirname(p);
-			strcat(cfg,"/");
-			strcat(cfg,"DECtalk.conf");
-			config_file=fopen(cfg,"r");
+			strcat(cfg, "/");
+			strcat(cfg, "DECtalk.conf");
+			config_file = fopen(cfg, "r");
 		}
-		if (config_file != NULL) {
+		if(config_file != NULL) {
 			exe_path = 1;
 		}
 	}
 
-	if (config_file==NULL)
-	{
+	if(config_file == NULL) {
 		char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 		ssize_t count = 3;
-		p[0] = '.';
-		p[1] = '/';
-		p[2] = 'h';
-		p[3] = 0;
+		p[0]	      = '.';
+		p[1]	      = '/';
+		p[2]	      = 'h';
+		p[3]	      = 0;
 #elif defined(__APPLE__)
-		char ep[PATH_MAX] = {};
-		uint32_t size = sizeof(ep);
-		ssize_t count = -1;
-		if (_NSGetExecutablePath(ep, &size) == 0) {
-			if (realpath(ep, p) != NULL) {
+		char	 ep[PATH_MAX] = {};
+		uint32_t size	      = sizeof(ep);
+		ssize_t	 count	      = -1;
+		if(_NSGetExecutablePath(ep, &size) == 0) {
+			if(realpath(ep, p) != NULL) {
 				count = strlen(p);
 			}
 		}
 #elif defined(__unix__)
 		ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-		if (count != -1) {
-			char *cfg;
+		if(count != -1) {
+			char* cfg;
 			cfg = dt_dirname(p);
-			strcat(cfg,"/../");
-			strcat(cfg,"DECtalk.conf");
-			config_file=fopen(cfg,"r");
+			strcat(cfg, "/../");
+			strcat(cfg, "DECtalk.conf");
+			config_file = fopen(cfg, "r");
 		}
-		if (config_file != NULL) {
-			parent = 1;
+		if(config_file != NULL) {
+			parent	 = 1;
 			exe_path = 1;
 		}
 	}
 
-	if (config_file==NULL)
-	{
-		config_file=fopen("DECtalk.conf","r");
+	if(config_file == NULL) {
+		config_file = fopen("DECtalk.conf", "r");
 	}
 
-	if (config_file==NULL)
-	{
-		config_file=fopen(DECTALK_INSTALL_PREFIX "/DECtalk.conf","r");
+	if(config_file == NULL) {
+		config_file = fopen(DECTALK_INSTALL_PREFIX "/DECtalk.conf", "r");
 	}
-	
-//#ifdef DEMO
+
+// #ifdef DEMO
 #if 0
         strcpy(main_dict_name,DEMO_DICT_NAME);
         strcpy(foreign_dict_name,DEMO_FDICT_NAME);
         ret_value++;
 #else
-	if (config_file!=NULL)
-	{
-		while(fgets(line,999,config_file)!=NULL)
-		{
-			if (strncmp(line,LINUX_DICT_TAG,8)==0)
-			{
-				line[strlen(line)-1]='\0';
-				strcpy(main_dict_name,line+8);
-				if (exe_path && (main_dict_name[0] != '/')) {
+	if(config_file != NULL) {
+		while(fgets(line, 999, config_file) != NULL) {
+			if(strncmp(line, LINUX_DICT_TAG, 8) == 0) {
+				line[strlen(line) - 1] = '\0';
+				strcpy(main_dict_name, line + 8);
+				if(exe_path && (main_dict_name[0] != '/')) {
 					char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 					ssize_t count = 3;
-					p[0] = '.';
-					p[1] = '/';
-					p[2] = 'h';
-					p[3] = 0;
+					p[0]	      = '.';
+					p[1]	      = '/';
+					p[2]	      = 'h';
+					p[3]	      = 0;
 #elif defined(__APPLE__)
-					char ep[PATH_MAX] = {};
-					uint32_t size = sizeof(ep);
-					ssize_t count = -1;
-					if (_NSGetExecutablePath(ep, &size) == 0) {
-						if (realpath(ep, p) != NULL) {
+					char	 ep[PATH_MAX] = {};
+					uint32_t size	      = sizeof(ep);
+					ssize_t	 count	      = -1;
+					if(_NSGetExecutablePath(ep, &size) == 0) {
+						if(realpath(ep, p) != NULL) {
 							count = strlen(p);
 						}
 					}
 #elif defined(__unix__)
 					ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-					if (count != -1) {
-						char *dict;
+					if(count != -1) {
+						char* dict;
 						dict = dt_dirname(p);
-						strcat(dict,"/");
-						if (parent)
-							strcat(dict,"../");
-						strcat(dict,main_dict_name);
-						strcpy(main_dict_name,dict);
+						strcat(dict, "/");
+						if(parent)
+							strcat(dict, "../");
+						strcat(dict, main_dict_name);
+						strcpy(main_dict_name, dict);
 					}
 				}
 				break;
 			}
 		}
 	}
-	if (main_dict_name[0]=='\0')
-	{
-		fprintf(stderr,"libtts.so: Using default dictionary name\n");
-		strcpy(main_dict_name,DEF_LINUX_MAIN_DICT);
-		if (exe_path && (main_dict_name[0] != '/')) {
+	if(main_dict_name[0] == '\0') {
+		fprintf(stderr, "libtts.so: Using default dictionary name\n");
+		strcpy(main_dict_name, DEF_LINUX_MAIN_DICT);
+		if(exe_path && (main_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 			ssize_t count = 3;
-			p[0] = '.';
-			p[1] = '/';
-			p[2] = 'h';
-			p[3] = 0;
+			p[0]	      = '.';
+			p[1]	      = '/';
+			p[2]	      = 'h';
+			p[3]	      = 0;
 #elif defined(__APPLE__)
-			char ep[PATH_MAX] = {};
-			uint32_t size = sizeof(ep);
-			ssize_t count = -1;
-			if (_NSGetExecutablePath(ep, &size) == 0) {
-				if (realpath(ep, p) != NULL) {
+			char	 ep[PATH_MAX] = {};
+			uint32_t size	      = sizeof(ep);
+			ssize_t	 count	      = -1;
+			if(_NSGetExecutablePath(ep, &size) == 0) {
+				if(realpath(ep, p) != NULL) {
 					count = strlen(p);
 				}
 			}
 #elif defined(__unix__)
 			ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-			if (count != -1) {
-				char *dict;
+			if(count != -1) {
+				char* dict;
 				dict = dt_dirname(p);
-				strcat(dict,"/");
-				if (parent)
-					strcat(dict,"../");
-				strcat(dict,DEF_LINUX_MAIN_DICT);
-				strcpy(main_dict_name,dict);
+				strcat(dict, "/");
+				if(parent)
+					strcat(dict, "../");
+				strcat(dict, DEF_LINUX_MAIN_DICT);
+				strcpy(main_dict_name, dict);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		ret_value++;
 	}
-	if (config_file!=NULL)
-	{
-		fseek(config_file,0,SEEK_SET);
-		while(fgets(line,999,config_file)!=NULL)
-		{
-			if (strncmp(line,LINUX_FDICT_TAG,9)==0)
-			{
-				line[strlen(line)-1]='\0';
-				strcpy(foreign_dict_name,line+9);
-				if (exe_path && (foreign_dict_name[0] != '/')) {
+	if(config_file != NULL) {
+		fseek(config_file, 0, SEEK_SET);
+		while(fgets(line, 999, config_file) != NULL) {
+			if(strncmp(line, LINUX_FDICT_TAG, 9) == 0) {
+				line[strlen(line) - 1] = '\0';
+				strcpy(foreign_dict_name, line + 9);
+				if(exe_path && (foreign_dict_name[0] != '/')) {
 					char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 					ssize_t count = 2;
-					p[0] = '.';
-					p[1] = '/';
-					p[2] = 0;
+					p[0]	      = '.';
+					p[1]	      = '/';
+					p[2]	      = 0;
 #elif defined(__APPLE__)
-					char ep[PATH_MAX] = {};
-					uint32_t size = sizeof(ep);
-					ssize_t count = -1;
-					if (_NSGetExecutablePath(ep, &size) == 0) {
-						if (realpath(ep, p) != NULL) {
+					char	 ep[PATH_MAX] = {};
+					uint32_t size	      = sizeof(ep);
+					ssize_t	 count	      = -1;
+					if(_NSGetExecutablePath(ep, &size) == 0) {
+						if(realpath(ep, p) != NULL) {
 							count = strlen(p);
 						}
 					}
 #elif defined(__unix__)
 					ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-					if (count != -1) {
-						char *dict;
+					if(count != -1) {
+						char* dict;
 						dict = dt_dirname(p);
-						strcat(dict,"/");
-						if (parent)
-							strcat(dict,"../");
-						strcat(dict,foreign_dict_name);
-						strcpy(foreign_dict_name,dict);
+						strcat(dict, "/");
+						if(parent)
+							strcat(dict, "../");
+						strcat(dict, foreign_dict_name);
+						strcpy(foreign_dict_name, dict);
 					}
 				}
 				break;
 			}
 		}
 	}
-	if (foreign_dict_name[0]=='\0')
-	{
-		//fprintf(stderr,"libtts.so: Using default foreign dictionary name\n");
-		strcpy(foreign_dict_name,DEF_LINUX_FOREIGN_DICT);
-		if (exe_path && (foreign_dict_name[0] != '/')) {
+	if(foreign_dict_name[0] == '\0') {
+		// fprintf(stderr,"libtts.so: Using default foreign dictionary name\n");
+		strcpy(foreign_dict_name, DEF_LINUX_FOREIGN_DICT);
+		if(exe_path && (foreign_dict_name[0] != '/')) {
 			char p[PATH_MAX] = {0};
 #if defined(_WIN32)
 			ssize_t count = 3;
-			p[0] = '.';
-			p[1] = '/';
-			p[2] = 'h';
-			p[3] = 0;
+			p[0]	      = '.';
+			p[1]	      = '/';
+			p[2]	      = 'h';
+			p[3]	      = 0;
 #elif defined(__APPLE__)
-			char ep[PATH_MAX] = {};
-			uint32_t size = sizeof(ep);
-			ssize_t count = -1;
-			if (_NSGetExecutablePath(ep, &size) == 0) {
-				if (realpath(ep, p) != NULL) {
+			char	 ep[PATH_MAX] = {};
+			uint32_t size	      = sizeof(ep);
+			ssize_t	 count	      = -1;
+			if(_NSGetExecutablePath(ep, &size) == 0) {
+				if(realpath(ep, p) != NULL) {
 					count = strlen(p);
 				}
 			}
 #elif defined(__unix__)
 			ssize_t count = readlink("/proc/self/exe", p, PATH_MAX);
 #endif
-			if (count != -1) {
-				char *dict;
+			if(count != -1) {
+				char* dict;
 				dict = dt_dirname(p);
-				strcat(dict,"/");
-				if (parent)
-					strcat(dict,"../");
-				strcat(dict,DEF_LINUX_FOREIGN_DICT);
-				strcpy(foreign_dict_name,dict);
+				strcat(dict, "/");
+				if(parent)
+					strcat(dict, "../");
+				strcat(dict, DEF_LINUX_FOREIGN_DICT);
+				strcpy(foreign_dict_name, dict);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		ret_value++;
 	}
 #endif
-	home_dir=getenv("HOME");
-	if (home_dir!=NULL)
-	{
-		temp_dict_name[0]='\0';
-		if (config_file!=NULL)
-		{
-			fseek(config_file,0,SEEK_SET);
-			while(fgets(line,999,config_file)!=NULL)
-			{
-				if (strncmp(line,LINUX_UDICT_TAG,9)==0)
-				{
-					line[strlen(line)-1]='\0';
-					strcpy(temp_dict_name,line+9);
+	home_dir = getenv("HOME");
+	if(home_dir != NULL) {
+		temp_dict_name[0] = '\0';
+		if(config_file != NULL) {
+			fseek(config_file, 0, SEEK_SET);
+			while(fgets(line, 999, config_file) != NULL) {
+				if(strncmp(line, LINUX_UDICT_TAG, 9) == 0) {
+					line[strlen(line) - 1] = '\0';
+					strcpy(temp_dict_name, line + 9);
 					break;
 				}
 			}
 		}
-		if (temp_dict_name[0])
-		{
-        		sprintf(user_dict_name, "%s/%s", home_dir,temp_dict_name);
+		if(temp_dict_name[0]) {
+			sprintf(user_dict_name, "%s/%s", home_dir, temp_dict_name);
 			ret_value++;
-		}	
-		else
-		{
-        		sprintf(user_dict_name, "%s/udic.dic", home_dir);
+		} else {
+			sprintf(user_dict_name, "%s/udic.dic", home_dir);
 		}
-			
 	}
-	if (config_file!=NULL)
-	{
+	if(config_file != NULL) {
 		fclose(config_file);
 	}
 #endif
-	return(ret_value);
+	return (ret_value);
 }

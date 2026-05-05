@@ -27,10 +27,10 @@
  ***********************************************************************
  *    Revision History:
  *
- *	Rev	Who		Date			Description                    
+ *	Rev	Who		Date			Description
  *	---	-----	-----------		---------------------------------------
- *  001	DR		07/21/1997		Copied from usa_def.h and added PUK definition 
- *  002	MGS		04/13/2000		Changes for integrated phoneme set 
+ *  001	DR		07/21/1997		Copied from usa_def.h and added PUK definition
+ *  002	MGS		04/13/2000		Changes for integrated phoneme set
  *	003	CAB		01/19/2001		Fixed copyright info
  *
  *
@@ -39,14 +39,14 @@
 #ifndef UK_DEFH
 #define UK_DEFH 1
 
-#include	"defs.h"
-#include	"kernel.h"
-#include	"iso_char.h"
-#include    "l_all_ph.h"
-#include	"cmd.h"
+#include "defs.h"
+#include "kernel.h"
+#include "iso_char.h"
+#include "l_all_ph.h"
+#include "cmd.h"
 
-//#define NULL    0
-#define	NULL_ASCKY		0xffff
-#define	PUSA(x)			((PFUSA<<PSFONT) | (x)) 
-#define	PUK(x)			((PFUK<<PSFONT)  | (x)) 
+// #define NULL    0
+#define NULL_ASCKY 0xffff
+#define PUSA(x) ((PFUSA << PSFONT) | (x))
+#define PUK(x) ((PFUK << PSFONT) | (x))
 #endif

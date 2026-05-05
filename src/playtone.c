@@ -25,12 +25,12 @@
  *    Tone Generation code for DTMF and single tone.
  *
  ***********************************************************************
- *    Revision History:                                        
+ *    Revision History:
  *
  * Rev  Who 	Date        Description
  * ---  -----   ----------- --------------------------------------------
  * 001  BH 		11/15/195	Initial release
- * 002	GL		04/21/1997	BATS#357  Add the code for __osf__ build 
+ * 002	GL		04/21/1997	BATS#357  Add the code for __osf__ build
  * 003  ETT		10/05/1998  Added Linux code.
  * 004  mfg		10/15/1998	made MAX_TONE_BLOCK  4096 for UNDER_CE
  * 005  ETT		11/12/1998	fixed stuff for osf.
@@ -50,46 +50,46 @@
 
 #include <math.h>
 // #if !defined (__APPLE__)
-//#include <malloc.h> // should be in stdlib.h no longer needed
+// #include <malloc.h> // should be in stdlib.h no longer needed
 #include <stdlib.h>
 // #endif
 #include "dectalkf.h"
-#include "kernel.h"	   /* For PKSD_T definition */
-#include "tts.h"	   /* For TTS_HANDLE_T definition  */
+#include "kernel.h" /* For PKSD_T definition */
+#include "tts.h"    /* For TTS_HANDLE_T definition  */
 #ifdef LOWCOMPUTE
 #include "sinetab.h"
 #else
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-#define  TWO_PI_EQUIVALENT  2 * M_PI
+#define TWO_PI_EQUIVALENT 2 * M_PI
 #endif
 
 /**********************************************************************/
 /*  Symbol definitions.                                               */
 /**********************************************************************/
 
-#define  RISE_TIME       0.002
+#define RISE_TIME 0.002
 
-#define  MAX_TONE_BLOCK   1024
-#define  TONE_SYMBOL    0x7FFF
+#define MAX_TONE_BLOCK 1024
+#define TONE_SYMBOL 0x7FFF
 
 /**********************************************************************/
 /*  External function prototypes.                                     */
 /**********************************************************************/
 
-extern void OutputData( LPTTS_HANDLE_T,
-                        short *,
-                        unsigned int,
-                        DWORD,
-                        DWORD,
-						DWORD);
+extern void OutputData(LPTTS_HANDLE_T,
+		       short*,
+		       unsigned int,
+		       DWORD,
+		       DWORD,
+		       DWORD);
 
 /**********************************************************************/
 /*  Function prototypes.                                              */
 /**********************************************************************/
 
-static double Tone( double, double * );
+static double Tone(double, double*);
 
 /**********************************************************************/
 /**********************************************************************/
@@ -140,197 +140,186 @@ static double Tone( double, double * );
 /**********************************************************************/
 /**********************************************************************/
 
-BOOL PlayTones( LPTTS_HANDLE_T phTTS,
-                double DurationInMsec,
-                double Freq_0,
-                double Amp_0,
-                double Freq_1,
-                double Amp_1,
-                double SampleRate
-                )
-{
-  int i;
-  int iRiseSamples;
-  int iCenterSamples;
-  int iCenterCount;
-  int iSynthCount;
-  int iTotalSamples;
-  double * pRiseBuffer;
-  double * pRise;
-  short * pToneBuffer;
-  short * pBuffer;
-  double Sample;
-  double PhaseIncrement_0;
-  double Phase_0;
-  double PhaseIncrement_1;
-  double Phase_1;
-  DWORD dwDurationInFrames;
-  PKSD_T pKsd_t = phTTS->pKernelShareData;
+BOOL PlayTones(LPTTS_HANDLE_T phTTS,
+	       double	      DurationInMsec,
+	       double	      Freq_0,
+	       double	      Amp_0,
+	       double	      Freq_1,
+	       double	      Amp_1,
+	       double	      SampleRate) {
+	int	i;
+	int	iRiseSamples;
+	int	iCenterSamples;
+	int	iCenterCount;
+	int	iSynthCount;
+	int	iTotalSamples;
+	double* pRiseBuffer;
+	double* pRise;
+	short*	pToneBuffer;
+	short*	pBuffer;
+	double	Sample;
+	double	PhaseIncrement_0;
+	double	Phase_0;
+	double	PhaseIncrement_1;
+	double	Phase_1;
+	DWORD	dwDurationInFrames;
+	PKSD_T	pKsd_t = phTTS->pKernelShareData;
 
 #ifndef GBA_FIXES
 
 #ifdef SOFTWARE_VOLUME
-  if (pKsd_t->iSwVolume < 0) {
-    // Convert dB to power
-    Amp_0 *= pow(10, (pKsd_t->iSwVolume/10.0));
-    Amp_1 *= pow(10, (pKsd_t->iSwVolume/10.0));
-  }
+	if(pKsd_t->iSwVolume < 0) {
+		// Convert dB to power
+		Amp_0 *= pow(10, (pKsd_t->iSwVolume / 10.0));
+		Amp_1 *= pow(10, (pKsd_t->iSwVolume / 10.0));
+	}
 #endif
 
 #endif
 
-  /********************************************************************/
-  /*  Calculate the duration in frames.                               */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Calculate the duration in frames.                               */
+	/********************************************************************/
 
-  dwDurationInFrames = (int)( 0.15625 * DurationInMsec );
+	dwDurationInFrames = (int)(0.15625 * DurationInMsec);
 
-  /********************************************************************/
-  /*  Calculate the tone generation parameters.                       */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Calculate the tone generation parameters.                       */
+	/********************************************************************/
 
-  iTotalSamples = (int)( 0.001 * DurationInMsec * SampleRate );
-  iRiseSamples = (int)((double)RISE_TIME * SampleRate );
-  iCenterSamples = iTotalSamples - ( iRiseSamples << 1 );
+	iTotalSamples  = (int)(0.001 * DurationInMsec * SampleRate);
+	iRiseSamples   = (int)((double)RISE_TIME * SampleRate);
+	iCenterSamples = iTotalSamples - (iRiseSamples << 1);
 
-  if ( iCenterSamples < 0 )
-  {
-    iRiseSamples = iCenterSamples >> 1;
-    iCenterSamples = 0;
-  }
+	if(iCenterSamples < 0) {
+		iRiseSamples   = iCenterSamples >> 1;
+		iCenterSamples = 0;
+	}
 
-  /********************************************************************/
-  /*  Allocate the tone audio buffer.                                 */
-  /********************************************************************/
-  pToneBuffer = (short *)malloc( MAX_TONE_BLOCK * sizeof(short));
-  if ( pToneBuffer == NULL )
-  {
-    return( TRUE );
-  }
+	/********************************************************************/
+	/*  Allocate the tone audio buffer.                                 */
+	/********************************************************************/
+	pToneBuffer = (short*)malloc(MAX_TONE_BLOCK * sizeof(short));
+	if(pToneBuffer == NULL) {
+		return (TRUE);
+	}
 
-  /********************************************************************/
-  /*  Allocate the rise gain buffer.                                  */
-  /********************************************************************/
-  pRiseBuffer = (double *)malloc( iRiseSamples * sizeof(double));
+	/********************************************************************/
+	/*  Allocate the rise gain buffer.                                  */
+	/********************************************************************/
+	pRiseBuffer = (double*)malloc(iRiseSamples * sizeof(double));
 
-  if ( pRiseBuffer == NULL )
-  {
-    return( TRUE );
-  }
+	if(pRiseBuffer == NULL) {
+		return (TRUE);
+	}
 
-  /******************************************************************/
-  /*  Build the rise time table.                                    */
-  /******************************************************************/
+	/******************************************************************/
+	/*  Build the rise time table.                                    */
+	/******************************************************************/
 
-  PhaseIncrement_0 = 0.25 * TWO_PI_EQUIVALENT / (double)iRiseSamples;
-  Phase_0 = 0.0;
+	PhaseIncrement_0 = 0.25 * TWO_PI_EQUIVALENT / (double)iRiseSamples;
+	Phase_0		 = 0.0;
 
-  pRise = pRiseBuffer;
+	pRise = pRiseBuffer;
 
-  for ( i = 0; i < iRiseSamples; i++ )
-  {
+	for(i = 0; i < iRiseSamples; i++) {
 #ifdef LOWCOMPUTE
-    Sample = SineTable[(int)Phase_0];
+		Sample = SineTable[(int)Phase_0];
 #else
-    Sample = sin(Phase_0);
+		Sample = sin(Phase_0);
 #endif
-    *pRise++ = Sample * Sample;
-    Phase_0 += PhaseIncrement_0;
-  }
+		*pRise++ = Sample * Sample;
+		Phase_0 += PhaseIncrement_0;
+	}
 
-  /********************************************************************/
-  /*  Generate tones.                                                 */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Generate tones.                                                 */
+	/********************************************************************/
 
-  PhaseIncrement_0 = Freq_0 * pKsd_t->SamplePeriod * TWO_PI_EQUIVALENT;
-  Phase_0 = 0.0;
-  PhaseIncrement_1 = Freq_1 * pKsd_t->SamplePeriod * TWO_PI_EQUIVALENT;
-  Phase_1 = 0.0;
+	PhaseIncrement_0 = Freq_0 * pKsd_t->SamplePeriod * TWO_PI_EQUIVALENT;
+	Phase_0		 = 0.0;
+	PhaseIncrement_1 = Freq_1 * pKsd_t->SamplePeriod * TWO_PI_EQUIVALENT;
+	Phase_1		 = 0.0;
 
-  /********************************************************************/
-  /*  Generate Samples during the rise time portion of the tone.      */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Generate Samples during the rise time portion of the tone.      */
+	/********************************************************************/
 
-  pBuffer = pToneBuffer;
+	pBuffer = pToneBuffer;
 
-  for ( i = 0; i < iRiseSamples; i++ )
-  {
-    Sample  = Amp_0 * Tone( PhaseIncrement_0, &Phase_0 );
-    Sample += Amp_1 * Tone( PhaseIncrement_1, &Phase_1 );
-    *pBuffer++ = (short)( pRiseBuffer[i] * Sample );
-  }
+	for(i = 0; i < iRiseSamples; i++) {
+		Sample = Amp_0 * Tone(PhaseIncrement_0, &Phase_0);
+		Sample += Amp_1 * Tone(PhaseIncrement_1, &Phase_1);
+		*pBuffer++ = (short)(pRiseBuffer[i] * Sample);
+	}
 
-  /********************************************************************/
-  /*  Play the rise time portion of the tone waveform.                */
-  /*  Also send the duration which is in multiples of 6.4 msec.       */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Play the rise time portion of the tone waveform.                */
+	/*  Also send the duration which is in multiples of 6.4 msec.       */
+	/********************************************************************/
 
-  OutputData( phTTS,
-              pToneBuffer,
-              iRiseSamples,
-              TONE_SYMBOL,
-              (DWORD)( 0.15625 * DurationInMsec ),0);
+	OutputData(phTTS,
+		   pToneBuffer,
+		   iRiseSamples,
+		   TONE_SYMBOL,
+		   (DWORD)(0.15625 * DurationInMsec), 0);
 
-  /********************************************************************/
-  /*  Generate the center portion of the tone.                        */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Generate the center portion of the tone.                        */
+	/********************************************************************/
 
-  iCenterCount = 0;
+	iCenterCount = 0;
 
-  while (( iCenterCount < iCenterSamples ) && ( ! pKsd_t->halting))
-  {
-    iSynthCount = iCenterSamples - iCenterCount;
+	while((iCenterCount < iCenterSamples) && (!pKsd_t->halting)) {
+		iSynthCount = iCenterSamples - iCenterCount;
 
-    if ( iSynthCount > MAX_TONE_BLOCK )
-    {
-      iSynthCount = MAX_TONE_BLOCK;
-    }
+		if(iSynthCount > MAX_TONE_BLOCK) {
+			iSynthCount = MAX_TONE_BLOCK;
+		}
 
-    pBuffer = pToneBuffer;
+		pBuffer = pToneBuffer;
 
-    for ( i = 0; i < iSynthCount; i++ )
-    {
-      Sample  = Amp_0 * Tone( PhaseIncrement_0, &Phase_0 );
-      Sample += Amp_1 * Tone( PhaseIncrement_1, &Phase_1 );
-      *pBuffer++ = (short)Sample;
-    }
+		for(i = 0; i < iSynthCount; i++) {
+			Sample = Amp_0 * Tone(PhaseIncrement_0, &Phase_0);
+			Sample += Amp_1 * Tone(PhaseIncrement_1, &Phase_1);
+			*pBuffer++ = (short)Sample;
+		}
 
-    iCenterCount += iSynthCount;
+		iCenterCount += iSynthCount;
 
-    /******************************************************************/
-    /*  Queue the samples.                                            */
-    /******************************************************************/
+		/******************************************************************/
+		/*  Queue the samples.                                            */
+		/******************************************************************/
 
-    OutputData( phTTS, pToneBuffer, iSynthCount, TONE_SYMBOL, 0 ,0);
-  }
+		OutputData(phTTS, pToneBuffer, iSynthCount, TONE_SYMBOL, 0, 0);
+	}
 
-  /********************************************************************/
-  /*  Generate Samples during the fall time portion of the tone.      */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Generate Samples during the fall time portion of the tone.      */
+	/********************************************************************/
 
-  pBuffer = pToneBuffer;
+	pBuffer = pToneBuffer;
 
-  for ( i = iRiseSamples - 1; i >= 0; i-- )
-  {
-    Sample  = Amp_0 * Tone( PhaseIncrement_0, &Phase_0 );
-    Sample += Amp_1 * Tone( PhaseIncrement_1, &Phase_1 );
-    *pBuffer++ = (short)( pRiseBuffer[i] * Sample );
-  }
+	for(i = iRiseSamples - 1; i >= 0; i--) {
+		Sample = Amp_0 * Tone(PhaseIncrement_0, &Phase_0);
+		Sample += Amp_1 * Tone(PhaseIncrement_1, &Phase_1);
+		*pBuffer++ = (short)(pRiseBuffer[i] * Sample);
+	}
 
-  /********************************************************************/
-  /*  Play the fall time portion of the tone waveform.                */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Play the fall time portion of the tone waveform.                */
+	/********************************************************************/
 
-  OutputData( phTTS, pToneBuffer, iRiseSamples, TONE_SYMBOL, 0,0 );
+	OutputData(phTTS, pToneBuffer, iRiseSamples, TONE_SYMBOL, 0, 0);
 
-  /********************************************************************/
-  /*  Free the rise gain buffer and the tone audio buffer.            */
-  /********************************************************************/
-  
-  free( pRiseBuffer );
-  free( pToneBuffer );
+	/********************************************************************/
+	/*  Free the rise gain buffer and the tone audio buffer.            */
+	/********************************************************************/
 
-  return( FALSE );
+	free(pRiseBuffer);
+	free(pToneBuffer);
+
+	return (FALSE);
 }
 
 /**********************************************************************/
@@ -361,24 +350,23 @@ BOOL PlayTones( LPTTS_HANDLE_T phTTS,
 /**********************************************************************/
 /**********************************************************************/
 
-static double Tone( double PhaseIncrement, double * pPhase )
-{
-  double Sample;
+static double Tone(double PhaseIncrement, double* pPhase) {
+	double Sample;
 
-  /********************************************************************/
-  /*  Synthesize tone sample 1.                                       */
-  /********************************************************************/
+	/********************************************************************/
+	/*  Synthesize tone sample 1.                                       */
+	/********************************************************************/
 
 #ifdef LOWCOMPUTE
-  Sample = SineTable[(int)*pPhase];
+	Sample = SineTable[(int)*pPhase];
 #else
-  Sample = sin(*pPhase);
+	Sample = sin(*pPhase);
 #endif
 
-  *pPhase += PhaseIncrement;
+	*pPhase += PhaseIncrement;
 
-  if ( *pPhase >= TWO_PI_EQUIVALENT )
-    *pPhase -= TWO_PI_EQUIVALENT;
+	if(*pPhase >= TWO_PI_EQUIVALENT)
+		*pPhase -= TWO_PI_EQUIVALENT;
 
-  return( Sample );
+	return (Sample);
 }

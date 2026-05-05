@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -29,13 +29,12 @@
  *	Rev	Who		Date			Description
  *	---	-----	-----------		--------------------------------------------
  *	001	MGS		04/06/1996		file created
- *  002	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ *  002	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  *  003	DR		09/30/1997		UK BUILD: added UK STUFF
  *  004	MFG		06/18/1998		SPANISH_SP & SPANISH_LA support added
  *  005	EAB		06/28/2000		Unified Phoneme Set Changes
  *  006 CAB		10/18/2000		Changed copyright info and formatted comments
  */
-  
 
 #ifdef NEW_NASAL
 #include "p_us_st2.c"
@@ -45,7 +44,7 @@
 #else
 #include "p_us_st1.c"
 #endif
-#endif //NEW_NASAL
+#endif // NEW_NASAL
 
 #ifdef NEW_NASAL
 #include "p_uk_st2.c"
@@ -53,14 +52,11 @@
 #include "p_uk_st1.c"
 #endif
 
-
-
 #ifdef NEW_NASAL
 #include "p_sp_st2.c"
 #else
 #include "p_sp_st1.c"
 #endif
-
 
 #ifdef NEW_NASAL
 #include "p_la_st2.c"
@@ -68,14 +64,11 @@
 #include "p_la_st1.c"
 #endif
 
-
-
 #ifdef NEW_NASAL
 #include "p_gr_st2.c"
 #else
 #include "p_gr_st1.c"
 #endif
-
 
 #ifdef NEW_NASAL
 #include "p_fr_st2.c"

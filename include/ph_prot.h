@@ -28,10 +28,10 @@
  *
  * Rev  Who     Date            Description
  * ---  -----   -----------     --------------------------------------------
- * 001	SIK		07/18/1996  	Cleaning up and maintenance 
- * 002	GL		04/21/1997		BATS#357  Add the code for __osf__ build 
+ * 001	SIK		07/18/1996  	Cleaning up and maintenance
+ * 002	GL		04/21/1997		BATS#357  Add the code for __osf__ build
  *                              also fix some error declaration.
- * 003	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if" 
+ * 003	GL		04/21/1997		BATS#360  remove spaces before "#define" or "#if"
  * 004	GL		03/25/1998		Added DBGV command for PH debug variable passing
  *								For BATS#639 to change phinton() to use argument phTTS instead of pDph_t
  * 005  ETT		10/05/1998		Added Linux code.
@@ -51,7 +51,7 @@
 #include "tts.h"
 
 #define __inline
-extern __inline short phone_feature(PDPH_T pDph_t, int phone);	   /* Phonetic features            */
+extern __inline short phone_feature(PDPH_T pDph_t, int phone); /* Phonetic features            */
 extern __inline short begtyp(int phone);
 extern __inline short endtyp(int phone);
 extern __inline short ptram(int phone);
@@ -60,89 +60,87 @@ extern __inline short plocu(int index);
 extern __inline short place(int);
 #undef __inline
 
-extern void *spcget (unsigned short spc_type);
-extern int  spcwrite (PKSD_T pKsd_t, unsigned short __far * spc_data);
-extern void save_index (PKSD_T pKsd_t, unsigned int sym, unsigned int type, unsigned int value, unsigned int how);
-extern void check_index (LPTTS_HANDLE_T phTTS, unsigned int which_phone);
-extern void adjust_index (PKSD_T pKsd_t, unsigned int which, int direction, int del);
-extern void adjust_allo (PKSD_T pKsd_t, unsigned int which, int direction);
-extern void send_index(int how, int value );
+extern void* spcget(unsigned short spc_type);
+extern int   spcwrite(PKSD_T pKsd_t, unsigned short __far* spc_data);
+extern void  save_index(PKSD_T pKsd_t, unsigned int sym, unsigned int type, unsigned int value, unsigned int how);
+extern void  check_index(LPTTS_HANDLE_T phTTS, unsigned int which_phone);
+extern void  adjust_index(PKSD_T pKsd_t, unsigned int which, int direction, int del);
+extern void  adjust_allo(PKSD_T pKsd_t, unsigned int which, int direction);
+extern void  send_index(int how, int value);
 
-extern void start_flush (int serial_mode);
+extern void start_flush(int serial_mode);
 
-       extern void default_lang (PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
-extern void flush_done (PKSD_T pKsd_t);
+extern void default_lang(PKSD_T pKsd_t, unsigned int lang_code, unsigned int ready_code);
+extern void flush_done(PKSD_T pKsd_t);
 
-extern int  putseq (SEQ __far * sp);
-extern int  putn (unsigned int n);
-extern int  puthex (unsigned int n);
+extern int putseq(SEQ __far* sp);
+extern int putn(unsigned int n);
+extern int puthex(unsigned int n);
 
 /* MVP Added prototype of dologphoneme here as it is used only in PH sub-system */
 
-extern void dologphoneme (LPTTS_HANDLE_T phTTS, short phone, short dur, short f0);
-extern void logclaus (LPTTS_HANDLE_T phTTS, short *sym, short nsym, short *ud, short *uf0);
-extern void logitem (LPTTS_HANDLE_T phTTS, register short *buf);
-extern void phalloph (LPTTS_HANDLE_T phTTS);
-extern void fr_phalloph (LPTTS_HANDLE_T phTTS);
+extern void dologphoneme(LPTTS_HANDLE_T phTTS, short phone, short dur, short f0);
+extern void logclaus(LPTTS_HANDLE_T phTTS, short* sym, short nsym, short* ud, short* uf0);
+extern void logitem(LPTTS_HANDLE_T phTTS, register short* buf);
+extern void phalloph(LPTTS_HANDLE_T phTTS);
+extern void fr_phalloph(LPTTS_HANDLE_T phTTS);
 
-extern void             prphonol (void);
-extern void             phclause (LPTTS_HANDLE_T phTTS);
-extern void             init_phclause (PDPH_T pDph_t);
+extern void prphonol(void);
+extern void phclause(LPTTS_HANDLE_T phTTS);
+extern void init_phclause(PDPH_T pDph_t);
 
-extern void             phdraw (LPTTS_HANDLE_T phTTS);
-extern void             pht0draw (LPTTS_HANDLE_T phTTS);
+extern void phdraw(LPTTS_HANDLE_T phTTS);
+extern void pht0draw(LPTTS_HANDLE_T phTTS);
 
 /* GL 03/25/1998,  BATS#639 use phTTS argument instead of pDph_t */
-extern void             phinton (LPTTS_HANDLE_T phTTS);
-extern void             fr_phinton (LPTTS_HANDLE_T phTTS);
+extern void phinton(LPTTS_HANDLE_T phTTS);
+extern void fr_phinton(LPTTS_HANDLE_T phTTS);
 
-extern int              firstfeature (short FEA1, short FEA2, short nseg);
+extern int firstfeature(short FEA1, short FEA2, short nseg);
 
-extern void logscrewup (short phocur, short *inputscrewup);
+extern void logscrewup(short phocur, short* inputscrewup);
 
-void far kltask (LPTTS_HANDLE_T phTTS);
+void far kltask(LPTTS_HANDLE_T phTTS);
 
-extern int deadstop (int value, int low, int high);
-extern int mstofr (int nms);
-extern void phsettar (LPTTS_HANDLE_T phTTS);
-extern void debugforward (LPTTS_HANDLE_T phTTS, char *message, PARAMETER * nparameter);
-extern void debugbackward (char *message, PARAMETER * nparameter);
+extern int  deadstop(int value, int low, int high);
+extern int  mstofr(int nms);
+extern void phsettar(LPTTS_HANDLE_T phTTS);
+extern void debugforward(LPTTS_HANDLE_T phTTS, char* message, PARAMETER* nparameter);
+extern void debugbackward(char* message, PARAMETER* nparameter);
 
+extern void  debug1(void);
+extern int   phsort(LPTTS_HANDLE_T phTTS);
+extern int   all_phsort(LPTTS_HANDLE_T phTTS);
+extern int   fr_phsort(LPTTS_HANDLE_T phTTS);
+extern short uk_phcluster(short f, short s);
+extern short us_phcluster(short f, short s);
+extern short la_phcluster(short f, short s);
+extern short sp_phcluster(short f, short s);
+extern short gr_phcluster(short f, short s);
 
-extern void  debug1 (void);
-extern int   phsort (LPTTS_HANDLE_T phTTS);
-extern int   all_phsort (LPTTS_HANDLE_T phTTS);
-extern int   fr_phsort (LPTTS_HANDLE_T phTTS);
-extern short uk_phcluster (short f, short s);
-extern short us_phcluster (short f, short s);
-extern short la_phcluster (short f, short s);
-extern short sp_phcluster (short f, short s);
-extern short gr_phcluster (short f, short s);
+extern void fr_phtiming(LPTTS_HANDLE_T phTTS);
+extern void gr_phtiming(LPTTS_HANDLE_T phTTS);
+extern void la_phtiming(LPTTS_HANDLE_T phTTS);
+extern void sp_phtiming(LPTTS_HANDLE_T phTTS);
+extern void uk_phtiming(LPTTS_HANDLE_T phTTS);
+extern void us_phtiming(LPTTS_HANDLE_T phTTS);
 
-
-extern void  fr_phtiming (LPTTS_HANDLE_T phTTS);
-extern void  gr_phtiming (LPTTS_HANDLE_T phTTS);
-extern void  la_phtiming (LPTTS_HANDLE_T phTTS);
-extern void  sp_phtiming (LPTTS_HANDLE_T phTTS);
-extern void  uk_phtiming (LPTTS_HANDLE_T phTTS);
-extern void  us_phtiming (LPTTS_HANDLE_T phTTS);
-
-extern void  prdurs (PDPH_T pDph_t, short phocur, short durinh, short durmin, short deldur, short prcnt, int n);
-extern void  prphdurs (PDPH_T pDph_t);
-extern void  setparam (LPTTS_HANDLE_T phTTS, int which, int value);
-extern void  usevoice (LPTTS_HANDLE_T phTTS, int voice);
-extern void  saveval (PDPH_T pDph_t);
-extern void  setspdef (LPTTS_HANDLE_T phTTS);
-extern short syl_find_vowel (int *ph);
-extern short syl_find_cons (int *ph);
-extern void  logsyllable (LPTTS_HANDLE_T phTTS);
-extern void  saysyllable (LPTTS_HANDLE_T phTTS);
+extern void  prdurs(PDPH_T pDph_t, short phocur, short durinh, short durmin, short deldur, short prcnt, int n);
+extern void  prphdurs(PDPH_T pDph_t);
+extern void  setparam(LPTTS_HANDLE_T phTTS, int which, int value);
+extern void  usevoice(LPTTS_HANDLE_T phTTS, int voice);
+extern void  saveval(PDPH_T pDph_t);
+extern void  setspdef(LPTTS_HANDLE_T phTTS);
+extern short syl_find_vowel(int* ph);
+extern short syl_find_cons(int* ph);
+extern void  logsyllable(LPTTS_HANDLE_T phTTS);
+extern void  saysyllable(LPTTS_HANDLE_T phTTS);
 #ifdef GERMAN
-	extern void german_syntax (PDPH_T pDph_t);
+extern void german_syntax(PDPH_T pDph_t);
 
 #endif
 
-int vtm_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
-void ph_loop(LPTTS_HANDLE_T phTTS,unsigned short *input);
+int  vtm_loop(LPTTS_HANDLE_T phTTS, unsigned short* input);
+void ph_loop(LPTTS_HANDLE_T phTTS, unsigned short* input);
 
 #endif // PH_PROT_H

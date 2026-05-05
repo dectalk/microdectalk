@@ -28,7 +28,7 @@
  ***********************************************************************
  *    Revision History:
  *	001 CAB	10/17/2000	Changed copyright info
- * 
+ *
  */
 
 #ifndef FRE_DEFH
@@ -41,11 +41,11 @@
 #include "l_all_ph.h"
 #else
 #include "l_fr_ph.h"
-#endif	// NEW_PHONES
+#endif // NEW_PHONES
 #include "cmd.h"
 
-//#define	NULL	0
-#define	NULL_ASCKY		0xffff
-#define	PFRE(x)			((PFFR<<PSFONT) | (x)) 
+// #define	NULL	0
+#define NULL_ASCKY 0xffff
+#define PFRE(x) ((PFFR << PSFONT) | (x))
 
-#endif	// FRE_DEFH
+#endif // FRE_DEFH

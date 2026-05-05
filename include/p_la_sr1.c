@@ -1,4 +1,4 @@
-/* 
+/*
  ***********************************************************************
  *
  *                           Copyright ©
@@ -36,21 +36,19 @@
  * 005  EAB		09/11/1998		I can't make anysense of old BH code---modififed
  * 006  EAB		09/29/1998 		Removed moronic rule.....
  * 007  ETT     11/25/1998      fixed error comment that linux complains about...
- * 008  MGS		04/13/2000		Changes for integrated phoneme set 
+ * 008  MGS		04/13/2000		Changes for integrated phoneme set
  * 009  EAB		06/28/2000		Unified Phoneme Set Changes
  * 010  CAB		10/18/2000		Changed copyright info and formatted comment section
  */
 
-//extern short            *featb;	/* Phonemic feature vector        */
+// extern short            *featb;	/* Phonemic feature vector        */
 
-/* 
+/*
  * Bits for Spanish allophonics
  */
-#define KG      2					   /* [k] -> [gh] context                */
-#define VOWEL      8				   /* Vowel (stressed or unstressed)     */
-#define   STRESSED   16				   /* Stressed vowel                     */
-
-
+#define KG 2	    /* [k] -> [gh] context                */
+#define VOWEL 8	    /* Vowel (stressed or unstressed)     */
+#define STRESSED 16 /* Stressed vowel                     */
 
 #ifndef PHEDIT2
 #if LA_TOT_ALLOPHONES != (LAP_PH & PVALUE) + 1
@@ -58,111 +56,104 @@
 #endif
 #endif
 
-
-static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
-/* 
- * Allophonic manipulation for Spanish.  May insert or delete 
- * symbols.  This is done here so the feature bit calculation 
- * is correct. 
+static void la_spanish_allophonics(LPTTS_HANDLE_T phTTS)
+/*
+ * Allophonic manipulation for Spanish.  May insert or delete
+ * symbols.  This is done here so the feature bit calculation
+ * is correct.
  */
-	{
-		int                     next;  			/* Next real phoneme       */
-		int                     curr;  			/* Current phoneme         */
-		int                     n;
-		int                     m;
-		short                  *pp;	   			/* -> symbols[n]          */
-		short                  *mp;	   			/* -> symbols[m]          */
-		short                   feat;  			/* Next phoneme's features     */
-		unsigned short           last_featb;		/* Last phoneme's featb[] entry     */
-		short                   next_featb;		/* Next phoneme's featb[] entry     */
-		short                   wbnext;			/* TRUE if boundary next     */
-		short                   sbnext;			/* TRUE if syllable boundary */
-		short                   truelast;		/* For 'y' test                    */
-		short                   last = COMMA;	/* Clause start, see 'y' rule  */
-		short                   localoff = 0;
-		PDPH_T                  pDph_t=phTTS->pPHThreadData;
-	   
-		for (n = 0, pp = &pDph_t->symbols[0]; n < pDph_t->nsymbtot; n++, pp++)
+{
+	int	       next; /* Next real phoneme       */
+	int	       curr; /* Current phoneme         */
+	int	       n;
+	int	       m;
+	short*	       pp;		 /* -> symbols[n]          */
+	short*	       mp;		 /* -> symbols[m]          */
+	short	       feat;		 /* Next phoneme's features     */
+	unsigned short last_featb;	 /* Last phoneme's featb[] entry     */
+	short	       next_featb;	 /* Next phoneme's featb[] entry     */
+	short	       wbnext;		 /* TRUE if boundary next     */
+	short	       sbnext;		 /* TRUE if syllable boundary */
+	short	       truelast;	 /* For 'y' test                    */
+	short	       last	= COMMA; /* Clause start, see 'y' rule  */
+	short	       localoff = 0;
+	PDPH_T	       pDph_t	= phTTS->pPHThreadData;
+
+	for(n = 0, pp = &pDph_t->symbols[0]; n < pDph_t->nsymbtot; n++, pp++) {
+		curr = *pp;
+		m    = n + 1;
+		mp   = pp + 1;
+		if((m = n + 1) >= pDph_t->nsymbtot)
+			next = GEN_SIL;
+		else
+			next = *mp;
+		wbnext = FALSE;
+		if(next >= MBOUND) {
+			wbnext = TRUE;
+			if(m + 1 < pDph_t->nsymbtot) {
+				m++;
+				mp++;
+				next = *mp;
+			}
+		}
+		sbnext = FALSE;
+		if(next == SBOUND) {
+			sbnext = TRUE;
+			m++;
+			mp++;
+			next = *mp;
+		}
+		if(next == S1) {
+			feat = (VOWEL | STRESSED);
+			m++;
+			mp++;
+			next = *mp;
+		}
+		if(((next_featb = phone_feature(pDph_t, next)) & FVOWEL) IS_PLUS)
+			feat = VOWEL;
+		else if(next >= LAP_RR && next <= MAX_PHONES)
+			feat = allo_bits[next - LAP_RR];
+		else
+
+		    if((curr & 0xFF) < 100) // ref 2000
 		{
-			curr = *pp;
-			m = n + 1;
-			mp = pp + 1;
-			if ((m = n + 1) >= pDph_t->nsymbtot)
-				next = GEN_SIL;
-			else
-				next = *mp;
-			wbnext = FALSE;
-			if (next >= MBOUND)
-			{
-				wbnext = TRUE;
-				if (m + 1 < pDph_t->nsymbtot)
-				{
-					m++;
-					mp++;
-					next = *mp;
-				}
-			}
-			sbnext = FALSE;
-			if (next == SBOUND)
-			{
-				sbnext = TRUE;
-				m++;
-				mp++;
-				next = *mp;
-			}
-			if (next == S1)
-			{
-				feat = (VOWEL | STRESSED);
-				m++;
-				mp++;
-				next = *mp;
-			}
-			if (((next_featb = phone_feature( pDph_t,next)) & FVOWEL) IS_PLUS)
-				feat = VOWEL;
-			else if (next >= LAP_RR && next <= MAX_PHONES)
-				feat = allo_bits[next - LAP_RR];
-			else
-			
-			if ((curr & 0xFF) < 100 ) //ref 2000
-			{
-				last = (curr & 0xFF);
-			last_featb = phone_feature( pDph_t,last);
-			}
-			/* 
-			 * last    last true phoneme processed 
-			 * curr    current phoneme 
-			 * next    next phoneme (skipping over boundaries and stress) 
-			 * feat
-			 * features of next phoneme 
-			 * sbnext  TRUE if start of a syllable 
-			 */
-		if(last != 0)//eab silence has wierd propoerties that should cause allophonic variation
-			switch (curr)
-			{
-			case BLOCK_RULES:		   /* Applies to the word!         */
-				return; // (1); // NAL warning removal
+			last	   = (curr & 0xFF);
+			last_featb = phone_feature(pDph_t, last);
+		}
+		/*
+		 * last    last true phoneme processed
+		 * curr    current phoneme
+		 * next    next phoneme (skipping over boundaries and stress)
+		 * feat
+		 * features of next phoneme
+		 * sbnext  TRUE if start of a syllable
+		 */
+		if(last != 0) // eab silence has wierd propoerties that should cause allophonic variation
+			switch(curr) {
+			case BLOCK_RULES: /* Applies to the word!         */
+				return;	  // (1); // NAL warning removal
 
 #ifdef LAP_V
-			case LAP_V:				   /* V always == B                */
-				curr = LAP_B;			   /* Nelly Carbonell, 5-Feb-86    */
+			case LAP_V:	      /* V always == B                */
+				curr = LAP_B; /* Nelly Carbonell, 5-Feb-86    */
 #endif
 
-/* This is crazy period end of subject bh is intervolacic  
+/* This is crazy period end of subject bh is intervolacic
 				new code below */
 #ifdef SPANISH_OUT
 			case LAP_B:
-				/* 
-				 * OUT 23-Apr-86: 
-				 * B, V -> [ph] / ... (#) {p t c k q ch f s z j} 
-				 *      || [b]  / {lateral} (#) ...     added ?? 
-				 *      || [b]  / {unvoiced} (#) ...    added 2-Feb-86 
-				 *      || [b]  / ... {unvoiced}        added 2-Feb-86 
-				 *      || [b]  / {nasal or clstart} (#) ... 
-				 *      || [bh] 
-				 * NEW: 
-				 * B,V -> [b] / [# or nasal] (#) ...
-				 *      || [bh] 
-				 */
+			/*
+			 * OUT 23-Apr-86:
+			 * B, V -> [ph] / ... (#) {p t c k q ch f s z j}
+			 *      || [b]  / {lateral} (#) ...     added ??
+			 *      || [b]  / {unvoiced} (#) ...    added 2-Feb-86
+			 *      || [b]  / ... {unvoiced}        added 2-Feb-86
+			 *      || [b]  / {nasal or clstart} (#) ...
+			 *      || [bh]
+			 * NEW:
+			 * B,V -> [b] / [# or nasal] (#) ...
+			 *      || [bh]
+			 */
 #if 0
 				if ((feat & LATIN) != 0)
 					curr = LAP_PH;
@@ -177,50 +168,44 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 					curr = LAP_BH;
 				}
 #else
-				if (((last_featb & FNASAL) IS_PLUS)
-					|| (last == COMMA))
+				if(((last_featb & FNASAL) IS_PLUS) || (last == COMMA))
 					;
-				else
-				{
+				else {
 					curr = LAP_BH;
 				}
 #endif
 				break;
-#endif //SPANISH_OUT
-				/* eab 9/4/98 This code is better previous stuff was junk*/
-				case LAP_B:
-					if(last_featb & FSONOR && next_featb & FSONOR)
-				{
+#endif // SPANISH_OUT
+			/* eab 9/4/98 This code is better previous stuff was junk*/
+			case LAP_B:
+				if(last_featb & FSONOR && next_featb & FSONOR) {
 					curr = LAP_BH;
 				}
 
-
-
 				break;
-				/* FOund that Juan pronounces LL quite different at the begiining 
+				/* FOund that Juan pronounces LL quite different at the begiining
 				and intervocalic eab 8/5/98
 				n==1 becuause first wb not marked*/
 			case LAP_LL:
-				if (truelast == WBOUND || n == 1)
+				if(truelast == WBOUND || n == 1)
 					break;
-				else
-				{
+				else {
 					curr = LAP_Y;
 					break;
 				}
 
 			case LAP_D:
 
-				/* 
-				 *  OUT: 23-Apr-86 
-				 *   D -> [th] / ... (#) {p t c k q ch f s z j} 
-				 *   || [d]  / {unvoiced} ...           added 2-Feb-86 
-				 *   || [d]  / {nasal, l, ll, clstart} (#) ... 
-				 *   || [dh] 
-				 * NEW: 
-				 *   D -> [d]  /[#, l, or nasal] ... 
-				 *   || [dh] 
-				 */
+			/*
+			 *  OUT: 23-Apr-86
+			 *   D -> [th] / ... (#) {p t c k q ch f s z j}
+			 *   || [d]  / {unvoiced} ...           added 2-Feb-86
+			 *   || [d]  / {nasal, l, ll, clstart} (#) ...
+			 *   || [dh]
+			 * NEW:
+			 *   D -> [d]  /[#, l, or nasal] ...
+			 *   || [dh]
+			 */
 #if 0
 				if ((feat & LATIN) != 0)
 					curr = LAP_TH;
@@ -234,12 +219,9 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 				}
 #else
 
-				if (((last_featb & FNASAL) IS_PLUS)
-					|| (last == LAP_L)
-					|| (last == COMMA))
+				if(((last_featb & FNASAL) IS_PLUS) || (last == LAP_L) || (last == COMMA))
 					;
-				else
-				{
+				else {
 					curr = LAP_DH;
 				}
 #endif
@@ -249,16 +231,16 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 #endif
 
 			case LAP_G:
-				/* 
-				 * OUT: 23-Apr-86 
-				 * G -> [j] / ... (#) {p t c k q ch f s z j} 
-				 *   || [g] / {unvoiced cons}  (#) ... (Added 2-Feb-86) 
-				 *   || [g] / {nasal, clstart} (#) ... 
-				 *   || [gh] 
-				 * NEW: 
-				 * G -> [g]  / {# or nasal} ... 
-				 *   || [gh] 
-				 */
+			/*
+			 * OUT: 23-Apr-86
+			 * G -> [j] / ... (#) {p t c k q ch f s z j}
+			 *   || [g] / {unvoiced cons}  (#) ... (Added 2-Feb-86)
+			 *   || [g] / {nasal, clstart} (#) ...
+			 *   || [gh]
+			 * NEW:
+			 * G -> [g]  / {# or nasal} ...
+			 *   || [gh]
+			 */
 #if 0
 				if ((feat & LATIN) != 0)
 					curr = LAP_J;
@@ -272,12 +254,10 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 				}
 #else
 #ifdef DUMB
-	//			eab 9/23/98 What moron came up with these rules
-				if (((last_featb & FNASAL) IS_PLUS)
-					|| last == COMMA)
+				//			eab 9/23/98 What moron came up with these rules
+				if(((last_featb & FNASAL) IS_PLUS) || last == COMMA)
 					curr = LAP_G;
-				else
-				{
+				else {
 					curr = LAP_GH;
 				}
 #endif
@@ -347,38 +327,33 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 #endif
 
 			case LAP_N:
-				/* 
-				 * 12-May-86 
-				 * N -> [m]  / ... (#) [m]      "inmovil>immovil" 
+				/*
+				 * 12-May-86
+				 * N -> [m]  / ... (#) [m]      "inmovil>immovil"
 				 */
-				if (next == LAP_M)
+				if(next == LAP_M)
 					curr = LAP_M;
 				break;
 
 			case LAP_Y:
-				/* 
-				 * Y -> [yh]  / {#, nasal, lateral} (#) ...      5-May-86 
-				 *   || [y] 
+				/*
+				 * Y -> [yh]  / {#, nasal, lateral} (#) ...      5-May-86
+				 *   || [y]
 				 * The following rules are for the word 'y' * * 'y' -> [i]
-				 * / [-vowel] ... [-vowel] 
-				 *     || [yx] 
-				 * Note that [yx] will dipthongize by rules in phalloph.c 
+				 * / [-vowel] ... [-vowel]
+				 *     || [yx]
+				 * Note that [yx] will dipthongize by rules in phalloph.c
 				 */
-				if (truelast >= MBOUND && wbnext)
-				{					   /* the word 'y' */
-					if ((last_featb & FVOWEL) IS_MINUS
-						&& (next_featb & FVOWEL) IS_MINUS)
-						curr = LAP_I;	   /* Stressed?               */
-					else
-					{
-						curr = LAP_YX;   /* Dipthongizes                */
+				if(truelast >= MBOUND && wbnext) { /* the word 'y' */
+					if((last_featb & FVOWEL) IS_MINUS && (next_featb & FVOWEL) IS_MINUS)
+						curr = LAP_I; /* Stressed?               */
+					else {
+						curr = LAP_YX; /* Dipthongizes                */
 					}
 				}
-				//ref 2003
+			// ref 2003
 #ifdef NEEDFIX
-				else if (((last_featb & (FNASAL | FSONCON)) != 0)
-						 || (last == COMMA))
-				{
+				else if(((last_featb & (FNASAL | FSONCON)) != 0) || (last == COMMA)) {
 
 					curr = LAP_YH;
 				}
@@ -386,19 +361,17 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
 				break;
 
 			default:
-				break;				   /* Do nothing                   */
+				break; /* Do nothing                   */
 			}
-			*pp = curr;
-			if (curr < SBOUND)
-				last = curr;
-			truelast = curr;		   /* Might be a boundary              */
-		}
+		*pp = curr;
+		if(curr < SBOUND)
+			last = curr;
+		truelast = curr; /* Might be a boundary              */
 	}
- 
+}
 
- 
 /*
- *      Function Name: getsyllclass()      
+ *      Function Name: getsyllclass()
  *
  *  	Description: Return FOPEN_SYL if the syllable is open, else 0.
  *
@@ -411,41 +384,32 @@ static void la_spanish_allophonics (LPTTS_HANDLE_T phTTS)
  *
  */
 
-static int la_getsyllclass (PDPH_T pDph_t,short curr)
-	   /* Follows nucleus vowel */
+static int la_getsyllclass(PDPH_T pDph_t, short curr)
+/* Follows nucleus vowel */
 {
-	int                     phone;
+	int phone;
 
-	/* 
+	/*
 	 * Note that next will exceed TOT_ALLOPHONES if a syllable-boundary,
 	 * word-boundary, or stress mark follows.
 	 * This implies that dipthongs (V1 V2) build closed syllables.
 	 */
-	do
-	{
-		phone = get_symbol(pDph_t,curr++);   /* Get phoneme           */
-		if (phone >= MAX_PHONES)   /* Boundary or str. vow    */
-			return (FOPEN_SYL);		   /* is open sylable    */
-	}
-	while ((phone_feature( pDph_t,phone) & (FVOWEL | FSEMIV)) IS_PLUS);
-	switch (phone)
-	{								   /* V N (-) L is open */
+	do {
+		phone = get_symbol(pDph_t, curr++); /* Get phoneme           */
+		if(phone >= MAX_PHONES)		    /* Boundary or str. vow    */
+			return (FOPEN_SYL);	    /* is open sylable    */
+	} while((phone_feature(pDph_t, phone) & (FVOWEL | FSEMIV)) IS_PLUS);
+	switch(phone) { /* V N (-) L is open */
 	case LAP_N:
 	case LAP_S:
 	case LAP_RR:
 	case LAP_T:
-		if (get_symbol(pDph_t,curr) == SBOUND)
-		{
+		if(get_symbol(pDph_t, curr) == SBOUND) {
 			curr++;
 		}
-		if (get_symbol(pDph_t,curr) == LAP_L)
-		{
+		if(get_symbol(pDph_t, curr) == LAP_L) {
 			return (FOPEN_SYL);
 		}
 	}
-	return (0);						   /* Closed syllable    */
+	return (0); /* Closed syllable    */
 }
-
- 
-
-

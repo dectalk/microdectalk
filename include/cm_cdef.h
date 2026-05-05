@@ -30,8 +30,7 @@
  * 001	CAB		10/18/2000	Changed copyright info and formatted comments
  */
 
-
 /* Conditional switch for different langs. goes here */
 /* use same table for all language at this point, GL 08/05/96 */
 
-#include		"c_us_cde.h"
+#include "c_us_cde.h"

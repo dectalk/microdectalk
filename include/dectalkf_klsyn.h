@@ -1,8 +1,8 @@
 /*
  ***********************************************************************
  *
- *                           Copyright ©  
- *	  Copyright © 2000-2001 Force Computers, a Solectron Company. All rights reserved. 
+ *                           Copyright ©
+ *	  Copyright © 2000-2001 Force Computers, a Solectron Company. All rights reserved.
  *    © Digital Equipment Corporation 1995-98. All rights reserved.
  *
  *    Restricted Rights: Use, duplication, or disclosure by the U.S.
@@ -50,14 +50,14 @@
  * 018 	10/30/1998 	TK 		Add COMPRESSION option
  * 019 	11/13/1998 	GL 		turn off NEW_VTM and NEW_INTONATION for US ENGLISH
  * 020 	02/08/1999 	GL 		add NWS_LA and NWS_US support
- * 021 	02/09/1999 	EAB 	Changed OLD_TILT to NEW_TILT to follow convention of 
+ * 021 	02/09/1999 	EAB 	Changed OLD_TILT to NEW_TILT to follow convention of
  *		    				enabling new functions
  * 022 	02/10/1999 			Opps wanted new_tilt disabled for submital until it's checked out
  * 023 	02/12/1999	EAB 	Added comments and chnaged one ifdef
  * 024 	02/22/1999 			Modified to support new ad_buid and multiple vdef files
 							and turned off ad for defalt
    025 	02/23/1999 	EAB 	spanish should include latin as well for the vdef file
-   026 	03/19/1999 	EAB 	Fixed for NWSNOAA plus fixed bug in spanish an german 
+   026 	03/19/1999 	EAB 	Fixed for NWSNOAA plus fixed bug in spanish an german
 							vdef fetch also nwsnoaa needs to fetch yet another vdef file
    027 	03/19/1999 	EAB 	Added chages to support the 16 build for Noaa SPanish inluding
 							a new nwsnoaa tuning file set
@@ -66,7 +66,7 @@
 							if you dont define new_tilt and define closing_time
  * 021 	12/04/1999	mfg 	shutoff LOWCOMPUTE for Windows CE
  * 022 	03/13/2000	mfg 	turned of AD_BASE for MSDOS build
- * 023	04/13/2000	MGS		Changes for integrated phoneme set 
+ * 023	04/13/2000	MGS		Changes for integrated phoneme set
  * 024 	05/09/2000  EAB  	Adjusted new level tuning base.
  * 025 	10/16/2000	CAB		Added copyright info
  * 026  01/15/2001 	EAb 	Turned on new_noise for all languages may cause short term burp but needed
@@ -92,10 +92,10 @@
 #define SAPI_GROUP_F_INTERFACES
 #define SAPI_GROUP_H_TIMING
 
-//#ifndef NWSNOAA
+// #ifndef NWSNOAA
 /* MGS 08/18/1998 enabeled new parser for all languages */
 
-//#define GWMICRO 1
+// #define GWMICRO 1
 #define NEW_BINARY_PARSER
 #define GERMAN_COMPOUND_NOUNS
 
@@ -103,19 +103,18 @@
 #define PH_DEBUG_OLD
 #endif
 
-//#define FAKE_HLSYN
-//#define HLSYN
-//#ifndef SAPI5DECTALK
+// #define FAKE_HLSYN
+// #define HLSYN
+// #ifndef SAPI5DECTALK
 
 #ifdef ACCESS_SOLUTIONS
 #undef HLSYN
 #endif
 
-
-//#define NEW_PARSER_FILE_LOADING
+// #define NEW_PARSER_FILE_LOADING
 
 /* LTS stuff */
-//#define NEW_LTS
+// #define NEW_LTS
 
 #ifdef ENGLISH
 #define NEW_ACNA
@@ -125,19 +124,18 @@
 #define USE_PORTAUDIO
 #endif
 
-//#define UPGRADES1999
-
+// #define UPGRADES1999
 
 #define NEW_PHONES
 
-//#define TONGUE_BODY_AREA
+// #define TONGUE_BODY_AREA
 
 // Bypass license validation checks in licenseu only.
 // Used to generate registry values for a new release.
-//#define VALIDATION_BYPASS
+// #define VALIDATION_BYPASS
 
 // Symbol for DBGV activation
-//#define DBGV_ON
+// #define DBGV_ON
 
 /* The tuning files vary based on language and whether or not anything has changed
  as literally changing anything could cause a new tuning to be needed
@@ -154,43 +152,40 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
  LA			P_LA_VDF1.C		YES		P_LA_VD2.C	 no
  GR			P_GR_VDF1.C		YES		P_GR_VD2.C	 no
  UK			P_UK_VDF.C		YES		P_UK_VD1.C	 no
- 
+
    Below will call out the appropriate USE_VDEFXXX and global callout for USEVDEF
    so the default if nothing defined is the base level _vdef.c version
 */
 
-#define AD_BASE //Turns on advanced development build
+#define AD_BASE // Turns on advanced development build
 
 #ifdef AD_BASE
-//#define NEW_VOCAL_TRACT
+// #define NEW_VOCAL_TRACT
 #endif
 
 #ifndef SINGLE_THREADED
 #define SINGLE_THREADED
 #endif
 
-//#define NEW_VTM
+// #define NEW_VTM
 
+/* EAB 5/11/98 This enables the new VTM control parameters and enabling code in both VTM and Ph
+for a 4.5 or NWS build this should not be defined. It is needed for German, others need checking*/
+// #define NEW_TILT // EAB 2/9/99 Use new tilt filter-but not for Spanish and German
 
-			 /* EAB 5/11/98 This enables the new VTM control parameters and enabling code in both VTM and Ph
-			for a 4.5 or NWS build this should not be defined. It is needed for German, others need checking*/
-//#define NEW_TILT // EAB 2/9/99 Use new tilt filter-but not for Spanish and German
+#define NEW_INTONATION
 
-#define NEW_INTONATION 
+// #define NEW_NOISE //Turns on new noise generator note it's level is different and it does
+// affect the speaker def tunings.
+// #define LOWCOMPUTE //EAB 6/12/03 Until we get it solved this is on to to downsampling filter
+//  problems
+// #define TOMBUCHLER
+// #define TESTING
 
-//#define NEW_NOISE //Turns on new noise generator note it's level is different and it does
-		//affect the speaker def tunings.
-//#define LOWCOMPUTE //EAB 6/12/03 Until we get it solved this is on to to downsampling filter 
-	// problems 
-//#define TOMBUCHLER
-//#define TESTING
+/* TK 12/30/98, new switch for voice compression */
+// #define COMPRESSION
 
-
-/* TK 12/30/98, new switch for voice compression */ 
-//#define COMPRESSION
-
-
-#if defined (NWSNOAA) && defined (SPANISH_LA)
+#if defined(NWSNOAA) && defined(SPANISH_LA)
 #define NWS_LA
 #endif
 
@@ -199,10 +194,10 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
 #define PARSER_HACK_FOR_OLD_SONGS
 
 // try to find/revert various code changes after v4.3, breaks different functionality but fixes other :-/
-//#define CHANGES_AFTER_V43
+// #define CHANGES_AFTER_V43
 
 // changes which make it sound more like 4.4 (only works when CHANGES_AFTER_43 is not defined!)
-//#define CHANGES_FOR_V44
+// #define CHANGES_FOR_V44
 
 // Use old intonation and timing code, still work in progress
 #define OLD_INTONATION_AND_TIMING
@@ -211,15 +206,15 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
 // VTM1 -> original integer based voice tract model
 // FP_VTM -> floating point based voice tract model
 #define VTM1
-//#define FP_VTM
+// #define FP_VTM
 
 // Main output sample rate
 // 10000 - DECtalk hardware sample rate
 // 11025 - default DECtalk software sample rate
 // 22050 - work in progress
-//#define  PC_SAMPLE_RATE     10000
-#define  PC_SAMPLE_RATE     11025
-//#define  PC_SAMPLE_RATE     22050
+// #define  PC_SAMPLE_RATE     10000
+#define PC_SAMPLE_RATE 11025
+// #define  PC_SAMPLE_RATE     22050
 
 // Which voice to use (default when not defined is 4.3)
 // VDF_BETA5 -> VDF for non-hlsyn included in beta 5
@@ -230,13 +225,13 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
 // VDF_DECTALK_44 -> DECtalk speak window 4.4
 // VDF_DECTALK_43 -> DECtalk speak window 4.3 (exactly the same as DEC ALPHA 4.2)
 // VDF_DECTALK_41 -> DECtalk speak window 4.1 (from 4.1 dtdemo.exe)
-//#define VDF_BETA5
-//#define VDF_DTC_03_03JAN89
-//#define VDF_DECTALKEXPRESS_42
-//#define VDF_DECTALKEXPRESS_42CD
-//#define VDF_DECTALKEXPRESS_43
-//#define VDF_DECTALK_44
-//#define VDF_DECTALK_41
+// #define VDF_BETA5
+// #define VDF_DTC_03_03JAN89
+// #define VDF_DECTALKEXPRESS_42
+// #define VDF_DECTALKEXPRESS_42CD
+// #define VDF_DECTALKEXPRESS_43
+// #define VDF_DECTALK_44
+// #define VDF_DECTALK_41
 #define VDF_DECTALK_43
 
 // Which voice rom to use
@@ -247,12 +242,12 @@ LANGUAGE	VDEF_FILE	TUNING UP	VDEF_FILE	TUNING UP
 // VOICE_ROM_DECTALK_41 -> voice rom from dectalk 4.1
 // VOICE_ROM_DECTALK_43 -> voice rom from dectalk 4.3
 // VOICE_ROM_DECTALK_1996M_43F -> 1996 rom for male and 4.3 for female voices
-//#define VOICE_ROM_BETA5
-//#define VOICE_ROM_DTC_03_03JAN89
-//#define VOICE_ROM_1997
-//#define VOICE_ROM_1996
-//#define VOICE_ROM_DECTALK_41
-//#define VOICE_ROM_DECTALK_43
+// #define VOICE_ROM_BETA5
+// #define VOICE_ROM_DTC_03_03JAN89
+// #define VOICE_ROM_1997
+// #define VOICE_ROM_1996
+// #define VOICE_ROM_DECTALK_41
+// #define VOICE_ROM_DECTALK_43
 #define VOICE_ROM_DECTALK_1996M_43F
 
 #if defined(VOICE_ROM_1997) || defined(VOICE_ROM_1996) || defined(VOICE_ROM_DECTALK_41) || defined(VOICE_ROM_DECTALK_43) || defined(VOICE_ROM_DECTALK_1996M_43F) || defined(VOICE_ROM_DTC_03_03JAN89)

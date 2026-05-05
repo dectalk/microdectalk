@@ -1,30 +1,30 @@
 /*
-** COPYRIGHT NOTICE 
-** Copyright © 2000, 2001 Force Computers Inc. A Solectron company. All rights reserved.    
-** Copyright © SMART Modular Technologies 1999. All rights reserved.    
+** COPYRIGHT NOTICE
+** Copyright © 2000, 2001 Force Computers Inc. A Solectron company. All rights reserved.
+** Copyright © SMART Modular Technologies 1999. All rights reserved.
 ** Copyright (c) Digital Equipment Corporation, 1993
-** All Rights reserved. Unpublished rights reserved under the 
-** copyright laws of the United States. Copyright is claimed in 
-** the computer program and user interface thereof. 
-** 
-** The software contained on this media is proprietary to and 
+** All Rights reserved. Unpublished rights reserved under the
+** copyright laws of the United States. Copyright is claimed in
+** the computer program and user interface thereof.
+**
+** The software contained on this media is proprietary to and
 ** embodies the confidential technology of Force Computers Incorporated.
-** Possession, use, duplication or dissemination of 
+** Possession, use, duplication or dissemination of
 ** the software and media is authorized only pursuant to a valid
 ** written license from Force Computers Incorporated.
-** 
-** The name of Force Copmuters Incorporated may not be used to endorse or 
-** promote products derived from this software without specific prior 
+**
+** The name of Force Copmuters Incorporated may not be used to endorse or
+** promote products derived from this software without specific prior
 ** written permission. All other rights reserved.
-** 
-** THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED 
+**
+** THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
 ** WARRANTIES, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF
-** NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
-** Force assumes no responsibility AT ALL for the use or reliability of 
+** NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+** Force assumes no responsibility AT ALL for the use or reliability of
 ** this software.
-**  
+**
 ** +---------------------------------------------------------------------+
-** | USE, DUPLICATION OR DISCLOSURE BY THE U.S. GOVERNMENT IS SUBJECT TO | 
+** | USE, DUPLICATION OR DISCLOSURE BY THE U.S. GOVERNMENT IS SUBJECT TO |
 ** | RESTRICTIONS AS SET FORTH IN SUBPARAGRAPH (c)                       |
 ** | DFARS 252.227-7013, OR IN FAR 52.227-14 ALT. II, AS APPLICABLE.     |
 ** |                                                                     |
@@ -34,33 +34,33 @@
 
 /*
  * HISTORY
-  * Revision 1.2.2.4  1996/01/03  21:11:36  Bill_Hallahan
+ * Revision 1.2.2.4  1996/01/03  21:11:36  Bill_Hallahan
  * 	New audio subsystem
  * 	[1996/01/03  21:03:02  Bill_Hallahan]
  *
  * Revision 1.2.2.3  1994/11/09  15:52:09  Krishna_Mangipudi
  * 	Initial Check-in
  * 	[1994/11/08  21:49:43  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2.2.2  1994/11/07  22:49:31  Krishna_Mangipudi
  * 	Initial Check-in
  * 	[1994/11/07  20:28:43  Krishna_Mangipudi]
- * 
+ *
  * Revision 1.2  1994/11/04  18:33:29  root
  * 	Initial load of project
- * 
+ *
  */
 /*
 **++
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
-** FILE NAME:   
-** MODULE NAME: 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
 **
-** MODULE DESCRIPTION: 
-** 
-** DESIGN OVERVIEW: 
-** 
+** FILE NAME:
+** MODULE NAME:
+**
+** MODULE DESCRIPTION:
+**
+** DESIGN OVERVIEW:
+**
 **--
 */
 
@@ -100,46 +100,46 @@
  * 	Damn HMMIO is unsigned so it doesn't compare well with signed
  * 	ints. Cast it to signed when comparing against MaxOpenNum
  * 	[1993/06/21  20:53:29  Jim_Ludwig]
- * 
+ *
  * Revision 1.2.2.3  1993/06/17  15:46:06  Jim_Ludwig
  * 	Fixed the handle stuff, finally
  * 	[1993/06/17  15:45:48  Jim_Ludwig]
- * 
+ *
  * Revision 1.2.2.2  1993/05/19  21:01:34  Jim_Ludwig
  * 	fixup -- still not fully tested, though
  * 	[1993/05/19  20:59:43  Jim_Ludwig]
- * 
+ *
  * Revision 1.2  1993/03/29  17:16:31  root
  * 	Initial load of project
 
  * 001	MGS		05/09/2001	Some VxWorks porting BATS#972
  * 002	CAB		05/14/2001	Consolidated copyirght info
  * 003	MGS		06/19/2001	Solaris Port BATS#972
- * 
+ *
  */
 
 /*
 **++
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
+**
 ** FILE NAME:   DTKmmio.c
 ** MODULE NAME: DTKmmio.c
 **
-** MODULE DESCRIPTION: 
+** MODULE DESCRIPTION:
 **	DTKmmio file functions
-** 
-** DESIGN OVERVIEW: 
-** 
+**
+** DESIGN OVERVIEW:
+**
 **--
 */
 
 /*
-** FACILITY:  Workstation Multimedia  (WMM)  v1.0 
-** 
+** FACILITY:  Workstation Multimedia  (WMM)  v1.0
+**
 ** FILE NAME:   DTKmmio.c
 ** MODULE NAME: DTKmmio.c
 **
-** MODULE DESCRIPTION: 
+** MODULE DESCRIPTION:
 ** 	Microsoft file I/O functions
 **	DTKmmioAdvance		advance I/O buffer	not supported
 **	DTKmmioAscend		ascend out of chunk
@@ -165,16 +165,16 @@
 **	DTKmmiopAddHandle		allocate internal file handle
 **	DTKmmiopCopyIOInfo		copy MMIOINFO structure (for portability)
 **	DTKmmiopDeleteHandle	delete internal file handle
-** 
-** AUTHORS: 
+**
+** AUTHORS:
 ** 	Microsoft
 **	Jim Ludwig
-** 
+**
 ** CREATION DATE: 17 March 1993
-** 
-** DESIGN OVERVIEW: 
+**
+** DESIGN OVERVIEW:
 ** 	Follows microsoft specs for the most part.
-** 
+**
 */
 #include <stdlib.h>
 #include <string.h>
@@ -196,11 +196,11 @@
 #include <unistd.h>
 #endif
 
-#define LOWORD(word)	(word & 0xff)
+#define LOWORD(word) (word & 0xff)
 
 #ifndef min
-#define min(a,b)	(a <= b ? a : b )
-#define max(a,b)	(a >= b ? a : b )
+#define min(a, b) (a <= b ? a : b)
+#define max(a, b) (a >= b ? a : b)
 #endif
 
 /******************************************************************************
@@ -212,25 +212,24 @@
 
 #include <stdarg.h>
 
-	/* open files */
+/* open files */
 typedef struct {
-    int 	fd;		/* file descriptor */
-    HMMIO 	hmmio;		/* HMMIO handle */
-    MMIOINFO	mmioInfo;	/* current info structure */
-    BOOL	isNotOurs;	/* file was not opened by us */
-} _MMIOOpenHandleStruct, * _mmiopHandle;
+	int	 fd;	    /* file descriptor */
+	HMMIO	 hmmio;	    /* HMMIO handle */
+	MMIOINFO mmioInfo;  /* current info structure */
+	BOOL	 isNotOurs; /* file was not opened by us */
+} _MMIOOpenHandleStruct, *_mmiopHandle;
 
-static _MMIOOpenHandleStruct * _MMIOOpenHandles = (_MMIOOpenHandleStruct *)NULL;
+static _MMIOOpenHandleStruct* _MMIOOpenHandles = (_MMIOOpenHandleStruct*)NULL;
 
-static int _MMIOMaxOpenNum = -1;	/* highest number currently open */
-static int _MMIOAllocedHandles = 0;	/* number in alloced list */
-static int _MMIOAvailHandle = -1;	/* next available to use */
+static int _MMIOMaxOpenNum     = -1; /* highest number currently open */
+static int _MMIOAllocedHandles = 0;  /* number in alloced list */
+static int _MMIOAvailHandle    = -1; /* next available to use */
 
 #define _MMIOCheckHandle(hmmio) \
-!((int)hmmio >= 1 && (int)hmmio <= _MMIOMaxOpenNum \
-  && _MMIOOpenHandles[hmmio].fd != -1)
-     
-#define _MMIOFd(hmmio) 	_MMIOOpenHandles[hmmio].fd
+	!((int)hmmio >= 1 && (int)hmmio <= _MMIOMaxOpenNum && _MMIOOpenHandles[hmmio].fd != -1)
+
+#define _MMIOFd(hmmio) _MMIOOpenHandles[hmmio].fd
 #define _MMIOHandle(hmmio) _MMIOOpenHandles[hmmio].hmmio
 #define _MMIOGetHandle(hmmio) &_MMIOOpenHandles[hmmio]
 
@@ -238,7 +237,7 @@ static int _MMIOAvailHandle = -1;	/* next available to use */
 **++
 **  FUNCTIONAL_NAME: mmiopAddHandle
 **
-**  FUNCTIONAL_DESCRIPTION: 
+**  FUNCTIONAL_DESCRIPTION:
 **	add a private handle
 **
 **  FORMAL PARAMETERS:
@@ -253,67 +252,62 @@ static int _MMIOAvailHandle = -1;	/* next available to use */
 
 #define CHUNK_SIZE 100
 
-static
-_mmiopHandle DTKmmiopAddHandle(
-	int fd
-)
-{
-    HMMIO handle;
-    register int i;
+static _mmiopHandle DTKmmiopAddHandle(
+    int fd) {
+	HMMIO	     handle;
+	register int i;
 
-    if ( _MMIOAvailHandle >= 0 ) {
+	if(_MMIOAvailHandle >= 0) {
 
-	handle = _MMIOAvailHandle;
+		handle = _MMIOAvailHandle;
 
-	if ( _MMIOMaxOpenNum < _MMIOAvailHandle )
-	    _MMIOMaxOpenNum = _MMIOAvailHandle;
+		if(_MMIOMaxOpenNum < _MMIOAvailHandle)
+			_MMIOMaxOpenNum = _MMIOAvailHandle;
 
-	while ( (++_MMIOAvailHandle) < _MMIOAllocedHandles &&
-	    _MMIOOpenHandles[_MMIOAvailHandle].fd != -1 );
+		while((++_MMIOAvailHandle) < _MMIOAllocedHandles &&
+		      _MMIOOpenHandles[_MMIOAvailHandle].fd != -1);
 
-	if ( _MMIOAvailHandle == _MMIOAllocedHandles )
-	    _MMIOAvailHandle = -1;
-	
-    }
-    else { 
-        if ( _MMIOAllocedHandles == 0 ) {
-	    _MMIOOpenHandles = (_MMIOOpenHandleStruct *)
-	        malloc(sizeof(_MMIOOpenHandleStruct) * CHUNK_SIZE);
-	    if ( _MMIOOpenHandles == (_MMIOOpenHandleStruct *)NULL )
-		return 0;
-            handle = _MMIOAvailHandle = 1;
+		if(_MMIOAvailHandle == _MMIOAllocedHandles)
+			_MMIOAvailHandle = -1;
+
+	} else {
+		if(_MMIOAllocedHandles == 0) {
+			_MMIOOpenHandles = (_MMIOOpenHandleStruct*)
+			    malloc(sizeof(_MMIOOpenHandleStruct) * CHUNK_SIZE);
+			if(_MMIOOpenHandles == (_MMIOOpenHandleStruct*)NULL)
+				return 0;
+			handle = _MMIOAvailHandle = 1;
+		} else {
+			_MMIOOpenHandles = (_MMIOOpenHandleStruct*)
+			    realloc(_MMIOOpenHandles, sizeof(_MMIOOpenHandleStruct) *
+							  (_MMIOAllocedHandles + CHUNK_SIZE));
+			if(_MMIOOpenHandles == (_MMIOOpenHandleStruct*)NULL)
+				return 0;
+			handle = _MMIOAvailHandle = _MMIOAllocedHandles;
+		}
+		for(i = _MMIOAllocedHandles; i < _MMIOAllocedHandles + CHUNK_SIZE;
+		    i++)
+			_MMIOOpenHandles[i].fd = -1;
+
+		_MMIOAvailHandle++;
+
+		_MMIOAllocedHandles += CHUNK_SIZE;
 	}
-        else {
-	    _MMIOOpenHandles = (_MMIOOpenHandleStruct *)
-	        realloc(_MMIOOpenHandles, sizeof(_MMIOOpenHandleStruct) * 
-	        (_MMIOAllocedHandles + CHUNK_SIZE));
-	    if ( _MMIOOpenHandles == (_MMIOOpenHandleStruct *)NULL )
-		return 0;
-            handle = _MMIOAvailHandle = _MMIOAllocedHandles;
-	}
-	for ( i = _MMIOAllocedHandles; i < _MMIOAllocedHandles + CHUNK_SIZE; 
-		i++ )
-	    _MMIOOpenHandles[i].fd = -1;
 
-	_MMIOAvailHandle++;
+	memset(&_MMIOOpenHandles[handle], 0, sizeof(_MMIOOpenHandleStruct));
+	_MMIOOpenHandles[handle].fd    = fd;
+	_MMIOOpenHandles[handle].hmmio = handle;
 
-        _MMIOAllocedHandles += CHUNK_SIZE;
-    }
+	if(_MMIOMaxOpenNum < (int)handle) _MMIOMaxOpenNum = handle;
 
-    memset(&_MMIOOpenHandles[handle], 0, sizeof(_MMIOOpenHandleStruct));
-    _MMIOOpenHandles[handle].fd = fd;
-    _MMIOOpenHandles[handle].hmmio = handle;
-
-    if ( _MMIOMaxOpenNum < (int)handle ) _MMIOMaxOpenNum = handle;
-
-    return ( &_MMIOOpenHandles[handle] );
+	return (&_MMIOOpenHandles[handle]);
 }
 
 /*
 **++
 **  FUNCTIONAL_NAME: DTKmmiopDeleteHandle
 **
-**  FUNCTIONAL_DESCRIPTION: 
+**  FUNCTIONAL_DESCRIPTION:
 **	delete a private handle
 **
 **  FORMAL PARAMETERS:
@@ -325,15 +319,12 @@ _mmiopHandle DTKmmiopAddHandle(
 **  DESIGN:
 **
 **/
-static
-void DTKmmiopDeleteHandle(HMMIO handle)
-{
-    _MMIOOpenHandles[handle].fd = -1;
-    _MMIOOpenHandles[handle].hmmio = -1;
-    if ( (int)handle < _MMIOAvailHandle ) _MMIOAvailHandle = handle;
-    return;
+static void DTKmmiopDeleteHandle(HMMIO handle) {
+	_MMIOOpenHandles[handle].fd    = -1;
+	_MMIOOpenHandles[handle].hmmio = -1;
+	if((int)handle < _MMIOAvailHandle) _MMIOAvailHandle = handle;
+	return;
 }
-    
 
 /*
 **++
@@ -354,27 +345,23 @@ void DTKmmiopDeleteHandle(HMMIO handle)
 **
 **/
 /* VARARGS */
-void
-mmeWarning(char * format, ... )
-{
-    va_list ap;
-    va_start(ap, format);
-    format = va_arg(ap, char *);
-    fprintf(stderr,"MME Warning: ");
-    vfprintf(stderr,format,ap);
-    fflush(stderr);
-    va_end(ap);
+void mmeWarning(char* format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	format = va_arg(ap, char*);
+	fprintf(stderr, "MME Warning: ");
+	vfprintf(stderr, format, ap);
+	fflush(stderr);
+	va_end(ap);
 }
-void
-mmeError(char * format, ... )
-{
-    va_list ap;
-    va_start(ap, format);
-    fprintf(stderr,"MME fatal error: ");
-    vfprintf(stderr,format,ap);
-    fflush(stderr);
-    va_end(ap);
-    exit(1);
+void mmeError(char* format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	fprintf(stderr, "MME fatal error: ");
+	vfprintf(stderr, format, ap);
+	fflush(stderr);
+	va_end(ap);
+	exit(1);
 }
 
 /*
@@ -393,33 +380,30 @@ mmeError(char * format, ... )
 **
 **/
 
-void
-DTKmmiopCopyIOInfo(
-	LPMMIOINFO src, 
-	LPMMIOINFO dest
-)
-{
-    
-    dest->dwFlags 	= src->dwFlags;
-    dest->fccIOProc 	= src->fccIOProc;
-    dest->pIOProc 	= src->pIOProc;
-    dest->wErrorRet 	= src->wErrorRet;
-    dest->cchBuffer 	= src->cchBuffer;
-    dest->pchBuffer 	= src->pchBuffer;
-    dest->pchNext 	= src->pchNext;
-    dest->pchEndRead 	= src->pchEndRead;
-    dest->pchEndWrite 	= src->pchEndWrite;
-    dest->lBufOffset 	= src->lBufOffset;
-    dest->lDiskOffset 	= src->lDiskOffset;
-    dest->adwInfo[0] 	= src->adwInfo[0];
-    dest->adwInfo[1] 	= src->adwInfo[1];
-    dest->adwInfo[2] 	= src->adwInfo[2];
-    dest->adwInfo[3] 	= src->adwInfo[3];
-    dest->dwReserved1 	= src->dwReserved1;
-    dest->dwReserved2 	= src->dwReserved2;
-    dest->hmmio 	= src->hmmio;
+void DTKmmiopCopyIOInfo(
+    LPMMIOINFO src,
+    LPMMIOINFO dest) {
+
+	dest->dwFlags	  = src->dwFlags;
+	dest->fccIOProc	  = src->fccIOProc;
+	dest->pIOProc	  = src->pIOProc;
+	dest->wErrorRet	  = src->wErrorRet;
+	dest->cchBuffer	  = src->cchBuffer;
+	dest->pchBuffer	  = src->pchBuffer;
+	dest->pchNext	  = src->pchNext;
+	dest->pchEndRead  = src->pchEndRead;
+	dest->pchEndWrite = src->pchEndWrite;
+	dest->lBufOffset  = src->lBufOffset;
+	dest->lDiskOffset = src->lDiskOffset;
+	dest->adwInfo[0]  = src->adwInfo[0];
+	dest->adwInfo[1]  = src->adwInfo[1];
+	dest->adwInfo[2]  = src->adwInfo[2];
+	dest->adwInfo[3]  = src->adwInfo[3];
+	dest->dwReserved1 = src->dwReserved1;
+	dest->dwReserved2 = src->dwReserved2;
+	dest->hmmio	  = src->hmmio;
 }
-	
+
 /******************************************************************************
 *******************************************************************************
 ** PUBLIC CODE
@@ -456,17 +440,17 @@ DTKmmiopCopyIOInfo(
 **	The return value is zero if the operation is successful.
 **	Otherwise, the return value specifies an error code. The error code
 **	can be one of the following codes:
-**		MMIOERR_CANNOTWRITE 
+**		MMIOERR_CANNOTWRITE
 **		    The contents of the buffer could not be written to the disk
-**		MMIOERR_CANNOTREAD 
+**		MMIOERR_CANNOTREAD
 **		    An error occurred while re-filling the buffer
 **		MMIOERR_UNBUFFERED
 **		    The specified file is not opened for buffered I/O
-**		MMIOERR_CANNOTEXPAND 
-**		    The specified memory file cannot be expanded, probably 
+**		MMIOERR_CANNOTEXPAND
+**		    The specified memory file cannot be expanded, probably
 **		    because the adwInfo[0] field was set to zero in the initial
 **		    call to mmioOpen
-**		MMIOERR_OUTOFMEMORY 
+**		MMIOERR_OUTOFMEMORY
 **		    There was not enough memory to expand a memory
 **		    file for further writing
 **
@@ -476,37 +460,35 @@ DTKmmiopCopyIOInfo(
 **	next buffer is read. If the I/O buffer cannot be written to disk
 **	because the disk is full, then mmioAdvance will return
 **	MMIOERR_CANNOTWRITE.
-**	
+**
 **	If the specified file is only open for writing, the MMIO_WRITE flag
 **	must be specified.
-**	
+**
 **	If you have written to the I/O buffer, you must set the MMIO_DIRTY
 **	flag in the dwFlags field of the MMIOINFO structure before calling
 **	mmioAdvance. Otherwise, the buffer will not be written to disk.
-**	
+**
 **	If the end of file is reached, mmioAdvance will still return success,
 **	even though no more data can be read. Thus, to check for the end of
 **	the file, it is necessary to see if the pchNext and pchEndRead fields
 **	of the MMIOINFO structure are equal after calling mmioAdvance.
 **
 **/
-MMRESULT APIENTRY 
+MMRESULT APIENTRY
 DTKmmioAdvance(
-    HMMIO hmmio, 
-    MMIOINFO * lpmmioinfo, 
-    UINT uFlags
-)
-{
-    return(MMIOERR_UNBUFFERED);
+    HMMIO     hmmio,
+    MMIOINFO* lpmmioinfo,
+    UINT      uFlags) {
+	return (MMIOERR_UNBUFFERED);
 }
-    
+
 /*
 **++
 **  FUNCTIONAL_DESCRIPTION: DTKmmioOpen
 **	This function opens a file for unbuffered or buffered I/O. The
 **	file can be a DOS file, a memory file, or an element of a custom
 **	storage system.
-**	
+**
 **  DEVIATIONS FROM SPEC
 **	buffered I/O is not supported
 **	installable I/O procs are not handled
@@ -545,12 +527,12 @@ DTKmmioAdvance(
 **
 **		    + If the filename is NULL and no I/O procedure is given,
 **		      then adwInfo[0] is assumed to be the DOS file handle of a
-**		      currently open file. (adwInfo[0] represents the handle of 
-**		      a UNIX file descriptor of the type returned by open(2) 
-**		      or an equivalent function. The file must be seek'able 
-**		      with lseek (e.g., not a pipe). In addition, file 
-**		      descriptor 0 is not a valid descriptor to place here, 
-**		      otherwise we can't tell if someone screwed up or are 
+**		      currently open file. (adwInfo[0] represents the handle of
+**		      a UNIX file descriptor of the type returned by open(2)
+**		      or an equivalent function. The file must be seek'able
+**		      with lseek (e.g., not a pipe). In addition, file
+**		      descriptor 0 is not a valid descriptor to place here,
+**		      otherwise we can't tell if someone screwed up or are
 **		      initializing lpmmioinfo with all zeros.)
 **
 **		    The filename should not be longer than 128 bytes, including
@@ -584,11 +566,11 @@ DTKmmioAdvance(
 **		    are DOS file-sharing flags, and can only be used after
 **		    the DOS command SHARE has been executed (not
 **		    supported).
-**		    
+**
 **		    MMIO_READ 	Opens the file for reading only. This
 **			is the default, if MMIO_WRITE and MMIO_READWRITE are
 **			not specified.
-**		    
+**
 **		    MMIO_WRITE	Opens the file for writing. You should
 **			not read from a file opened in this mode.
 **
@@ -667,141 +649,135 @@ DTKmmioAdvance(
 ** 	of open files to reuse information if possible
 **
 **/
-#define DTKmmioOpenSetError(error) 			\
-    {							\
-    if ( lpmmioinfo != (MMIOINFO FAR *)NULL ) 		\
-	lpmmioinfo->wErrorRet = error; 			\
-    return ((HMMIO)NULL);				\
-    }							
-
-HMMIO APIENTRY 
-DTKmmioOpen(
-	LPSTR szFileName, 
-	MMIOINFO * lpmmioinfo,
-    	DWORD dwOpenFlags
-)
-{
-    int 		openFlags;
-    int 		fd;
-    _mmiopHandle 	handle;
-    BOOL		fileAlreadyOpen = FALSE;
-    char *		fileName = (char *)szFileName;
-    	
-    /* Delete says we ignore everything else, so try this first */
-    if ( dwOpenFlags & MMIO_DELETE && szFileName != (LPSTR)NULL) {
-	if ( unlink(szFileName) != 0 ) 
-	    DTKmmioOpenSetError(MMIOERR_CANNOTWRITE);
-	return((HMMIO)TRUE);
-    }
-
-    /* Do not support some flags */
-    if ( dwOpenFlags & 
-	 (MMIO_ALLOCBUF 	| 
-	  MMIO_COMPAT 		| 
-	  MMIO_EXCLUSIVE	|
-	  MMIO_DENYWRITE	|
-	  MMIO_DENYREAD		|
-	  MMIO_DENYNONE		) )
-	  DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
-
-    if ( lpmmioinfo != (MMIOINFO FAR *)NULL && (
-        lpmmioinfo->dwFlags     != 0                    ||
-    	lpmmioinfo->fccIOProc 	!= (FOURCC)0   		||
-    	lpmmioinfo->pIOProc	!= (LPMMIOPROC)NULL	||
-    	lpmmioinfo->wErrorRet	!= (WORD)0		||
-    	lpmmioinfo->cchBuffer	!= (LONG)0		||
-    	lpmmioinfo->pchBuffer	!= (HPSTR)NULL		||
-    	lpmmioinfo->pchNext	!= (HPSTR)NULL		||
-    	lpmmioinfo->pchEndRead	!= (HPSTR)NULL		||
-    	lpmmioinfo->pchEndWrite	!= (HPSTR)NULL		||
-    	lpmmioinfo->lBufOffset 	!= 0			||
-    	lpmmioinfo->lDiskOffset	!= 0			||
-    	lpmmioinfo->adwInfo[1] 	!= 0			||
-    	lpmmioinfo->adwInfo[2] 	!= 0			||
-    	lpmmioinfo->adwInfo[3] 	!= 0			||
-    	lpmmioinfo->dwReserved1	!= 0			||
-    	lpmmioinfo->dwReserved2	!= 0			||
-    	lpmmioinfo->hmmio	!= (HMMIO)NULL) )
-	DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
-
-    if ( fileName == (LPSTR)NULL ) {
-        if ( lpmmioinfo != (MMIOINFO FAR *)NULL && lpmmioinfo->adwInfo[0] > 0 )
-	    fileAlreadyOpen = TRUE;
-	else if ( dwOpenFlags & MMIO_GETTEMP ) {
-	     /* create a name */
-		 char template[] = "mmioXXXXXX";
-	     fileName = (char *)
-		 malloc(sizeof(char) * (strlen(template)+1) );
-	     strcpy(fileName, template);
-		 (void)mktemp(fileName);
-	     if ( fileName[0] == '\0' ) {
-		 free(fileName);
-		 DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
-	    }
+#define DTKmmioOpenSetError(error) \
+	{ \
+		if(lpmmioinfo != (MMIOINFO FAR*)NULL) \
+			lpmmioinfo->wErrorRet = error; \
+		return ((HMMIO)NULL); \
 	}
-	else
-	    DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
-    }
 
-    if ( fileAlreadyOpen == FALSE ) {
-        openFlags = 0;
-        if ( dwOpenFlags & MMIO_READ ) 
-	    openFlags = O_RDONLY;
-        if ( dwOpenFlags & MMIO_WRITE )
-	    openFlags = O_WRONLY;
-        if ( dwOpenFlags & MMIO_READWRITE) 
-	    openFlags = O_RDWR;
-        if ( dwOpenFlags & MMIO_CREATE )
-	    openFlags |= O_CREAT | O_TRUNC;
-        
-        fd = open(fileName, openFlags, 0600);
-    
-        if ( fd < 0 ) {
-	    switch(errno) {
-	        case ENOMEM:
+HMMIO APIENTRY
+DTKmmioOpen(
+    LPSTR     szFileName,
+    MMIOINFO* lpmmioinfo,
+    DWORD     dwOpenFlags) {
+	int	     openFlags;
+	int	     fd;
+	_mmiopHandle handle;
+	BOOL	     fileAlreadyOpen = FALSE;
+	char*	     fileName	     = (char*)szFileName;
+
+	/* Delete says we ignore everything else, so try this first */
+	if(dwOpenFlags & MMIO_DELETE && szFileName != (LPSTR)NULL) {
+		if(unlink(szFileName) != 0)
+			DTKmmioOpenSetError(MMIOERR_CANNOTWRITE);
+		return ((HMMIO)TRUE);
+	}
+
+	/* Do not support some flags */
+	if(dwOpenFlags &
+	   (MMIO_ALLOCBUF |
+	    MMIO_COMPAT |
+	    MMIO_EXCLUSIVE |
+	    MMIO_DENYWRITE |
+	    MMIO_DENYREAD |
+	    MMIO_DENYNONE))
+		DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
+
+	if(lpmmioinfo != (MMIOINFO FAR*)NULL && (lpmmioinfo->dwFlags != 0 ||
+						 lpmmioinfo->fccIOProc != (FOURCC)0 ||
+						 lpmmioinfo->pIOProc != (LPMMIOPROC)NULL ||
+						 lpmmioinfo->wErrorRet != (WORD)0 ||
+						 lpmmioinfo->cchBuffer != (LONG)0 ||
+						 lpmmioinfo->pchBuffer != (HPSTR)NULL ||
+						 lpmmioinfo->pchNext != (HPSTR)NULL ||
+						 lpmmioinfo->pchEndRead != (HPSTR)NULL ||
+						 lpmmioinfo->pchEndWrite != (HPSTR)NULL ||
+						 lpmmioinfo->lBufOffset != 0 ||
+						 lpmmioinfo->lDiskOffset != 0 ||
+						 lpmmioinfo->adwInfo[1] != 0 ||
+						 lpmmioinfo->adwInfo[2] != 0 ||
+						 lpmmioinfo->adwInfo[3] != 0 ||
+						 lpmmioinfo->dwReserved1 != 0 ||
+						 lpmmioinfo->dwReserved2 != 0 ||
+						 lpmmioinfo->hmmio != (HMMIO)NULL))
+		DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
+
+	if(fileName == (LPSTR)NULL) {
+		if(lpmmioinfo != (MMIOINFO FAR*)NULL && lpmmioinfo->adwInfo[0] > 0)
+			fileAlreadyOpen = TRUE;
+		else if(dwOpenFlags & MMIO_GETTEMP) {
+			/* create a name */
+			char template[] = "mmioXXXXXX";
+			fileName	= (char*)
+			    malloc(sizeof(char) * (strlen(template) + 1));
+			strcpy(fileName, template);
+			(void)mktemp(fileName);
+			if(fileName[0] == '\0') {
+				free(fileName);
+				DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
+			}
+		} else
+			DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
+	}
+
+	if(fileAlreadyOpen == FALSE) {
+		openFlags = 0;
+		if(dwOpenFlags & MMIO_READ)
+			openFlags = O_RDONLY;
+		if(dwOpenFlags & MMIO_WRITE)
+			openFlags = O_WRONLY;
+		if(dwOpenFlags & MMIO_READWRITE)
+			openFlags = O_RDWR;
+		if(dwOpenFlags & MMIO_CREATE)
+			openFlags |= O_CREAT | O_TRUNC;
+
+		fd = open(fileName, openFlags, 0600);
+
+		if(fd < 0) {
+			switch(errno) {
+			case ENOMEM:
 #ifdef ENOSR
-	        case ENOSR:
+			case ENOSR:
 #endif
-	    	    DTKmmioOpenSetError(MMIOERR_OUTOFMEMORY);
-	        default:
-		    DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
-	    }
-        }
-    }
-    else
-	fd = (int)lpmmioinfo->adwInfo[0];
+				DTKmmioOpenSetError(MMIOERR_OUTOFMEMORY);
+			default:
+				DTKmmioOpenSetError(MMIOERR_CANNOTOPEN);
+			}
+		}
+	} else
+		fd = (int)lpmmioinfo->adwInfo[0];
 
-    handle = DTKmmiopAddHandle(fd);
-    if ( handle == (_mmiopHandle)NULL ) {
-	  if ( fileAlreadyOpen == FALSE )
-	      close(fd);
-	  DTKmmioOpenSetError(MMIOERR_OUTOFMEMORY);
-    }
-    handle->mmioInfo.dwFlags 	= dwOpenFlags;
-    handle->mmioInfo.fccIOProc 	= (FOURCC)0;
-    handle->mmioInfo.pIOProc	= (LPMMIOPROC)NULL;
-    handle->mmioInfo.wErrorRet	= (WORD)0;
-    handle->mmioInfo.cchBuffer	= (LONG)0;
-    handle->mmioInfo.pchBuffer	= (HPSTR)NULL;
-    handle->mmioInfo.pchNext	= (HPSTR)NULL;
-    handle->mmioInfo.pchEndRead	= (HPSTR)NULL;
-    handle->mmioInfo.pchEndWrite= (HPSTR)NULL;
-    handle->mmioInfo.lBufOffset = 0;
-    handle->mmioInfo.lDiskOffset= 0;
-    if ( lpmmioinfo != (MMIOINFO FAR *)NULL )
-        handle->mmioInfo.adwInfo[0] = lpmmioinfo->adwInfo[0];
-    handle->mmioInfo.adwInfo[1] = 0;
-    handle->mmioInfo.adwInfo[2] = 0;
-    handle->mmioInfo.adwInfo[3] = 0;
-    handle->mmioInfo.dwReserved1= 0;
-    handle->mmioInfo.dwReserved2= 0;
-    handle->mmioInfo.hmmio	= handle->hmmio;
+	handle = DTKmmiopAddHandle(fd);
+	if(handle == (_mmiopHandle)NULL) {
+		if(fileAlreadyOpen == FALSE)
+			close(fd);
+		DTKmmioOpenSetError(MMIOERR_OUTOFMEMORY);
+	}
+	handle->mmioInfo.dwFlags     = dwOpenFlags;
+	handle->mmioInfo.fccIOProc   = (FOURCC)0;
+	handle->mmioInfo.pIOProc     = (LPMMIOPROC)NULL;
+	handle->mmioInfo.wErrorRet   = (WORD)0;
+	handle->mmioInfo.cchBuffer   = (LONG)0;
+	handle->mmioInfo.pchBuffer   = (HPSTR)NULL;
+	handle->mmioInfo.pchNext     = (HPSTR)NULL;
+	handle->mmioInfo.pchEndRead  = (HPSTR)NULL;
+	handle->mmioInfo.pchEndWrite = (HPSTR)NULL;
+	handle->mmioInfo.lBufOffset  = 0;
+	handle->mmioInfo.lDiskOffset = 0;
+	if(lpmmioinfo != (MMIOINFO FAR*)NULL)
+		handle->mmioInfo.adwInfo[0] = lpmmioinfo->adwInfo[0];
+	handle->mmioInfo.adwInfo[1]  = 0;
+	handle->mmioInfo.adwInfo[2]  = 0;
+	handle->mmioInfo.adwInfo[3]  = 0;
+	handle->mmioInfo.dwReserved1 = 0;
+	handle->mmioInfo.dwReserved2 = 0;
+	handle->mmioInfo.hmmio	     = handle->hmmio;
 
-    handle->isNotOurs		= fileAlreadyOpen;
+	handle->isNotOurs = fileAlreadyOpen;
 
-    return(handle->hmmio);
+	return (handle->hmmio);
 }
-		
 
 /*
 **++
@@ -818,8 +794,8 @@ DTKmmioOpen(
 **	hmmio 	specifies the file handle of the file to close
 **	uFlags	specifies options for the close operation
 **		MMIO_FHOPEN If the file was opened by passing a DOS
-**		(UNIX in our case) file handle of an already-opened file 
-**		to DTKmmioOpen, then using this flag tells DTKmmioClose to close 
+**		(UNIX in our case) file handle of an already-opened file
+**		to DTKmmioOpen, then using this flag tells DTKmmioClose to close
 **		the MMIO file handle, but not the DOS (UNIX) file handle.
 **
 **  RETURN VALUE:
@@ -838,31 +814,28 @@ DTKmmioOpen(
 **/
 MMRESULT APIENTRY
 DTKmmioClose(
-    HMMIO hmmio, 
-    UINT uFlags
-)
-{
-    _mmiopHandle handle;
-    int 	fd;
-    BOOL	fileIsNotOurs;
-    
-    if ( _MMIOCheckHandle(hmmio) )
-	return(MMIOERR_CANNOTWRITE);
-    handle = _MMIOGetHandle(hmmio);
+    HMMIO hmmio,
+    UINT  uFlags) {
+	_mmiopHandle handle;
+	int	     fd;
+	BOOL	     fileIsNotOurs;
 
-    fd = handle->fd;
-    fileIsNotOurs = handle->isNotOurs;
+	if(_MMIOCheckHandle(hmmio))
+		return (MMIOERR_CANNOTWRITE);
+	handle = _MMIOGetHandle(hmmio);
 
-    DTKmmiopDeleteHandle(hmmio);
-    
-    /* Close unless the file isn't ours AND MMIO_FHOPEN was specified */
-    if ( !(fileIsNotOurs == TRUE && uFlags & MMIO_FHOPEN) )
-        if ( close(fd) != 0 )
-	    return(MMIOERR_CANNOTWRITE);
+	fd	      = handle->fd;
+	fileIsNotOurs = handle->isNotOurs;
 
-    return(0);
+	DTKmmiopDeleteHandle(hmmio);
+
+	/* Close unless the file isn't ours AND MMIO_FHOPEN was specified */
+	if(!(fileIsNotOurs == TRUE && uFlags & MMIO_FHOPEN))
+		if(close(fd) != 0)
+			return (MMIOERR_CANNOTWRITE);
+
+	return (0);
 }
-	
 
 /*
 **++
@@ -895,34 +868,32 @@ DTKmmioClose(
 **	none
 **
 **/
-FOURCC APIENTRY 
+FOURCC APIENTRY
 DTKmmioStringToFOURCC(
-	LPCSTR sz, 
-	UINT uFlags
-)
-{
-    int size, i;
-    char tmp[5];
+    LPCSTR sz,
+    UINT   uFlags) {
+	int  size, i;
+	char tmp[5];
 
-    if ( sz == (LPCSTR)NULL )
-	return (FOURCC)0;
+	if(sz == (LPCSTR)NULL)
+		return (FOURCC)0;
 
-    /* to pad the right with blanks... */
-    strcpy(tmp, "    ");
+	/* to pad the right with blanks... */
+	strcpy(tmp, "    ");
 
-    /* copy in the string, up to 4 characters */
-    size = min(4,strlen(sz));
-    strncpy(tmp, sz, size);
+	/* copy in the string, up to 4 characters */
+	size = min(4, strlen(sz));
+	strncpy(tmp, sz, size);
 
-    /* convert to upper case if appropriate */
-    if ( uFlags & MMIO_TOUPPER ) 
-	for ( i = 0; i < size; i++ )
-	    if ( islower(tmp[i]) ) tmp[i] = toupper(tmp[i]);
+	/* convert to upper case if appropriate */
+	if(uFlags & MMIO_TOUPPER)
+		for(i = 0; i < size; i++)
+			if(islower(tmp[i])) tmp[i] = toupper(tmp[i]);
 
-    /* return the FOURCC */
-    return(DTKmmioFOURCC(tmp[0],tmp[1],tmp[2],tmp[3]));
+	/* return the FOURCC */
+	return (DTKmmioFOURCC(tmp[0], tmp[1], tmp[2], tmp[3]));
 }
-    
+
 /*
 **++
 **  FUNCTIONAL_DESCRIPTION: DTKmmioInstallIOProc
@@ -935,8 +906,8 @@ DTKmmioStringToFOURCC(
 **
 **  FORMAL PARAMETERS:
 **	fccIOProc	specifies a four-character code identifying
-**			the I/O procedure to install, remove, or locate. 
-**			All characters in this four-character code should 
+**			the I/O procedure to install, remove, or locate.
+**			All characters in this four-character code should
 **			be uppercase characters.
 **	pIOProc		specifies the address of the I/O procedure to
 **			install. To remove or locate an I/O procedure,
@@ -957,16 +928,13 @@ DTKmmioStringToFOURCC(
 **  DESIGN:
 **
 **/
-LPMMIOPROC APIENTRY 
+LPMMIOPROC APIENTRY
 DTKmmioInstallIOProc(
-	FOURCC fccIOProc, 
-	LPMMIOPROC pIOProc,
-    	DWORD dwFlags
-)
-{
-    return((LPMMIOPROC WINAPI)NULL);
+    FOURCC     fccIOProc,
+    LPMMIOPROC pIOProc,
+    DWORD      dwFlags) {
+	return ((LPMMIOPROC WINAPI)NULL);
 }
-
 
 /*
 **++
@@ -990,21 +958,19 @@ DTKmmioInstallIOProc(
 **	none
 **
 **/
-MMRESULT APIENTRY 
-DTKmmioRename( 
-	LPCSTR szFileName, 
-	LPCSTR szNewFileName,
-     	MMIOINFO * lpmmioinfo, 
-	DWORD dwRenameFlags
-)
-{
-    if ( szFileName == (LPCSTR)NULL || szFileName[0] == '\0' )
-	return MMIOERR_FILENOTFOUND;
-    if ( szNewFileName == (LPCSTR)NULL || szNewFileName[0] == '\0' )
-	return MMIOERR_FILENOTFOUND;
-    if ( rename(szFileName, szNewFileName) == 0 )
-	return 0;
-    switch(errno) {
+MMRESULT APIENTRY
+DTKmmioRename(
+    LPCSTR    szFileName,
+    LPCSTR    szNewFileName,
+    MMIOINFO* lpmmioinfo,
+    DWORD     dwRenameFlags) {
+	if(szFileName == (LPCSTR)NULL || szFileName[0] == '\0')
+		return MMIOERR_FILENOTFOUND;
+	if(szNewFileName == (LPCSTR)NULL || szNewFileName[0] == '\0')
+		return MMIOERR_FILENOTFOUND;
+	if(rename(szFileName, szNewFileName) == 0)
+		return 0;
+	switch(errno) {
 	case EACCES:
 	case EROFS:
 	case ENOSPC:
@@ -1012,10 +978,10 @@ DTKmmioRename(
 	case EDQUOT:
 #endif
 	case EPERM:
-	    return MMIOERR_CANNOTWRITE;
+		return MMIOERR_CANNOTWRITE;
 	default:
-	    return MMIOERR_FILENOTFOUND;
-    }
+		return MMIOERR_FILENOTFOUND;
+	}
 }
 
 /*
@@ -1032,11 +998,11 @@ DTKmmioRename(
 **  	2) it didn't fill the buffer and if  not
 **  	2a) it left the file pointer at the end of the file
 **  	2b) it left the file pointer at the location where it all started
-**  
+**
 **  	Anyone have a feel for how this might be handled? Can we get a
 **  	clarification from microsoft?
-**  
-**  	For now, I'm going to 
+**
+**  	For now, I'm going to
 **  	fill the buffer with what I can
 **  	return 0 to indicate end of file was reached
 **
@@ -1058,32 +1024,29 @@ DTKmmioRename(
 **	none
 **
 **/
-MMRESULT APIENTRY 
+MMRESULT APIENTRY
 DTKmmioRead(
-	HMMIO hmmio, 
-	HPSTR pch, 
-	LONG cch
-)
-{
-    size_t n;
-    _mmiopHandle handle;
+    HMMIO hmmio,
+    HPSTR pch,
+    LONG  cch) {
+	size_t	     n;
+	_mmiopHandle handle;
 
-    if ( _MMIOCheckHandle(hmmio) )
-	return -1;
-    handle = _MMIOGetHandle(hmmio);
+	if(_MMIOCheckHandle(hmmio))
+		return -1;
+	handle = _MMIOGetHandle(hmmio);
 
-    if ( pch == (HPSTR)NULL )
-	return -1;
-    if ( cch == 0 )
-	return 0; /* serves them right...this says end of file has been
-		   * reached or you got the 0 bytes you wanted...
-		   */
-    n = read(handle->fd, pch, (size_t)cch);
+	if(pch == (HPSTR)NULL)
+		return -1;
+	if(cch == 0)
+		return 0; /* serves them right...this says end of file has been
+			   * reached or you got the 0 bytes you wanted...
+			   */
+	n = read(handle->fd, pch, (size_t)cch);
 
-    return((MMRESULT APIENTRY)n);
+	return ((MMRESULT APIENTRY)n);
 }
-    
-    
+
 /*
 **++
 **  FUNCTIONAL_DESCRIPTION: DTKmmioWrite
@@ -1114,25 +1077,23 @@ DTKmmioRead(
 **/
 MMRESULT APIENTRY
 DTKmmioWrite(
-	HMMIO hmmio, 
-	LPSTR pch, 
-	LONG cch
-)
-{
-    size_t n;
-    _mmiopHandle handle;
+    HMMIO hmmio,
+    LPSTR pch,
+    LONG  cch) {
+	size_t	     n;
+	_mmiopHandle handle;
 
-    if ( _MMIOCheckHandle(hmmio) )
-	return -1;
-    handle = _MMIOGetHandle(hmmio);
+	if(_MMIOCheckHandle(hmmio))
+		return -1;
+	handle = _MMIOGetHandle(hmmio);
 
-    if ( pch == (HPSTR)NULL )
-	return -1;
-    if ( cch == 0 )
-	return 0; 
-    n = write(handle->fd, pch, (size_t)cch);
+	if(pch == (HPSTR)NULL)
+		return -1;
+	if(cch == 0)
+		return 0;
+	n = write(handle->fd, pch, (size_t)cch);
 
-    return((MMRESULT APIENTRY)n);
+	return ((MMRESULT APIENTRY)n);
 }
 
 /*
@@ -1178,21 +1139,19 @@ DTKmmioWrite(
 **/
 MMRESULT APIENTRY
 DTKmmioSeek(
-	HMMIO hmmio, 
-	LONG lOffset, 
-	int iOrigin
-)
-{
-    off_t n;
-    _mmiopHandle handle;
+    HMMIO hmmio,
+    LONG  lOffset,
+    int	  iOrigin) {
+	off_t	     n;
+	_mmiopHandle handle;
 
-    if ( _MMIOCheckHandle(hmmio) )
-	return -1;
-    handle = _MMIOGetHandle(hmmio);
+	if(_MMIOCheckHandle(hmmio))
+		return -1;
+	handle = _MMIOGetHandle(hmmio);
 
-    n = lseek(handle->fd, (off_t)lOffset, iOrigin);
+	n = lseek(handle->fd, (off_t)lOffset, iOrigin);
 
-    return((MMRESULT APIENTRY)n);
+	return ((MMRESULT APIENTRY)n);
 }
 
 /*
@@ -1208,9 +1167,9 @@ DTKmmioSeek(
 **  FORMAL PARAMETERS:
 **	hmmio	Specifies the file handle of the file
 **	lpmmioinfo Specifies a far pointer to a caller-allocated
-**		MMIOINFO structure that DTKmmioGetInfo fills with information 
-**		about the file. See the MMIOINFO structure and the 
-**		DTKmmioOpen function for information about the fields in 
+**		MMIOINFO structure that DTKmmioGetInfo fills with information
+**		about the file. See the MMIOINFO structure and the
+**		DTKmmioOpen function for information about the fields in
 **		this structure.
 **	wFlags  Is not used and should be set to zero
 **
@@ -1223,24 +1182,22 @@ DTKmmioSeek(
 **/
 MMRESULT APIENTRY
 DTKmmioGetInfo(
-	HMMIO hmmio, 
-	MMIOINFO FAR* lpmmioinfo, 
-	UINT uFlags
-)
-{
-    _mmiopHandle handle;
+    HMMIO	  hmmio,
+    MMIOINFO FAR* lpmmioinfo,
+    UINT	  uFlags) {
+	_mmiopHandle handle;
 
-    if ( _MMIOCheckHandle(hmmio) )
+	if(_MMIOCheckHandle(hmmio))
+		return (MMRESULT APIENTRY)0;
+	handle = _MMIOGetHandle(hmmio);
+
+	if(lpmmioinfo == (MMIOINFO FAR*)NULL)
+		return (MMRESULT APIENTRY)0;
+
+	DTKmmiopCopyIOInfo(&(handle->mmioInfo), lpmmioinfo);
+	lpmmioinfo->wErrorRet = MMIOERR_UNBUFFERED;
+
 	return (MMRESULT APIENTRY)0;
-    handle = _MMIOGetHandle(hmmio);
-
-    if ( lpmmioinfo == (MMIOINFO FAR*)NULL )
-	return (MMRESULT APIENTRY)0;
-
-    DTKmmiopCopyIOInfo(&(handle->mmioInfo),lpmmioinfo);
-    lpmmioinfo->wErrorRet = MMIOERR_UNBUFFERED;
-    
-    return (MMRESULT APIENTRY)0;
 }
 
 /*
@@ -1274,11 +1231,9 @@ DTKmmioGetInfo(
 **/
 MMRESULT APIENTRY
 DTKmmioSetInfo(
-	HMMIO hmmio, 
-	LPMMIOINFO lpmmioinfo, 
-	UINT uFlags
-)
-{
+    HMMIO      hmmio,
+    LPMMIOINFO lpmmioinfo,
+    UINT       uFlags) {
 	return (MMRESULT APIENTRY)MMIOERR_UNBUFFERED;
 }
 
@@ -1296,13 +1251,13 @@ DTKmmioSetInfo(
 **  FORMAL PARAMETERS:
 **	hmmio	specifies the file handle of the file.
 **
-**	pchBuffer	
+**	pchBuffer
 **		specifies a far pointer to a
 **		caller-supplied buffer to use for buffered I/O. If
 **		NULL, DTKmmioSetBuffer allocates an internal buffer for
 **		buffered I/O.
 **
-**	cchBuffer	
+**	cchBuffer
 **		specifies the size of the
 **		caller-supplied buffer, or the size of the buffer for
 **		DTKmmioSetBuffer to allocate.
@@ -1324,7 +1279,7 @@ DTKmmioSetInfo(
 **			allocated, probably due to a lack of available memory.
 **
 **	spec doesn't allow us to return "not implemented"
-**	So we are adding another error code, 
+**	So we are adding another error code,
 **	MMIOERR_UNBUFFERED	to be returned right now
 **
 **  DESIGN:
@@ -1333,12 +1288,10 @@ DTKmmioSetInfo(
 **/
 MMRESULT APIENTRY
 DTKmmioSetBuffer(
-	HMMIO hmmio, 
-	LPSTR pchBuffer, 
-	LONG cchBuffer,
-    	UINT uFlags
-)
-{
+    HMMIO hmmio,
+    LPSTR pchBuffer,
+    LONG  cchBuffer,
+    UINT  uFlags) {
 	return (MMRESULT APIENTRY)MMIOERR_UNBUFFERED;
 }
 /*
@@ -1359,22 +1312,20 @@ DTKmmioSetBuffer(
 **	The return value is zero if the function is successful.
 ** 	Otherwise, the return value specifies an error code. The error code can
 ** 	be one of the following codes:
-**	    MMIOERR_CANNOTWRITE 
+**	    MMIOERR_CANNOTWRITE
 **		The contents of the buffer could no be written to disk
 **  DESIGN:
 **	Closing a file with DTKmmioClose will automatically flush its
 **	buffer.
-**	
+**
 **	If there is insufficient disk space to write the buffer, DTKmmioFlush will
 **	fail, even if the preceding DTKmmioWrite calls were successful.
 **
 **/
 MMRESULT APIENTRY
 DTKmmioFlush(
-	HMMIO hmmio, 
-	UINT uFlags
-)
-{
+    HMMIO hmmio,
+    UINT  uFlags) {
 	return (MMRESULT APIENTRY)0;
 }
 /*
@@ -1409,21 +1360,19 @@ DTKmmioFlush(
 **/
 MMRESULT APIENTRY
 DTKmmioSendMessage(
-	HMMIO hmmio, 
-	UINT uMessage,
-    	LPARAM lParam1, 
-	LPARAM lParam2
-)
-{
-	return (MMRESULT APIENTRY) 0;
+    HMMIO  hmmio,
+    UINT   uMessage,
+    LPARAM lParam1,
+    LPARAM lParam2) {
+	return (MMRESULT APIENTRY)0;
 }
 
 /*
 **++
 **  FUNCTIONAL_DESCRIPTION: DTKmmioAscend
 **	This function ascends out of a chunk in a
-**	RIFF file descended into with DTKmmioDescend or created with 
-**	DTKmmioCreateChunk. 
+**	RIFF file descended into with DTKmmioDescend or created with
+**	DTKmmioCreateChunk.
 **
 **  DEVIATIONS FROM SPEC
 **	none
@@ -1431,7 +1380,7 @@ DTKmmioSendMessage(
 **  FORMAL PARAMETERS:
 **	hmmio 	Specifies the file handle of an open RIFF file.
 **	lpck 	Specifies a far pointer to a
-**		caller-supplied MMCKINFO structure previously filled by 
+**		caller-supplied MMCKINFO structure previously filled by
 **		DTKmmioDescend or DTKmmioCreateChunk.
 **	wFlags 	Is not used and should be set to zero.
 **
@@ -1441,7 +1390,7 @@ DTKmmioSendMessage(
 **	code can be one of the following codes:
 **	    MMIOERR_CANNOTWRITE  The contents of the buffer could
 **		not be written to disk.
-**	    
+**
 **	    MMIOERR_CANNOTSEEK   There was an error while seeking to
 **		the end of the chunk.
 **
@@ -1450,9 +1399,9 @@ DTKmmioSendMessage(
 **	If the chunk was descended into using DTKmmioDescend, then
 **	DTKmmioAscend seeks to the location following the end of the
 **	chunk (past the extra pad byte, if any).
-**	
+**
 **	If the chunk was created and descended into using
-**	DTKmmioCreateChunk, or if the MMIO_DIRTY flag is set in the 
+**	DTKmmioCreateChunk, or if the MMIO_DIRTY flag is set in the
 **	MMCKINFO.dwFlags field of the MMCKINFO structure
 **	referenced by lpck, then the current file position
 **	is assumed to be the end of the data portion of the chunk.
@@ -1468,56 +1417,51 @@ DTKmmioSendMessage(
 */
 MMRESULT APIENTRY
 DTKmmioAscend(
-    HMMIO hmmio, 
-    MMCKINFO FAR* lpck, 
-    UINT uFlags
-)
-{
-    static BYTE	bPad = 0;		/* pad null */
-	DWORD temp[10];
+    HMMIO	  hmmio,
+    MMCKINFO FAR* lpck,
+    UINT	  uFlags) {
+	static BYTE bPad = 0; /* pad null */
+	DWORD	    temp[10];
 
-    if (lpck->dwFlags & MMIO_DIRTY) {
-	/* <lpck> refers to a chunk created by DTKmmioCreateChunk();
-	 * check that the chunk size that was written when
-	 * DTKmmioCreateChunk() was called is the real chunk size;
-	 * if not, fix it
+	if(lpck->dwFlags & MMIO_DIRTY) {
+		/* <lpck> refers to a chunk created by DTKmmioCreateChunk();
+		 * check that the chunk size that was written when
+		 * DTKmmioCreateChunk() was called is the real chunk size;
+		 * if not, fix it
+		 */
+		long lOffset;	  /* current offset in file */
+		long lActualSize; /* actual size of chunk data */
+
+		if((lOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
+			return MMIOERR_CANNOTSEEK;
+		if((lActualSize = lOffset - lpck->dwDataOffset) < 0)
+			return MMIOERR_CANNOTWRITE;
+
+		if(LOWORD(lActualSize) & 1) {
+			/* chunk size is odd -- write a null pad byte */
+			if(DTKmmioWrite(hmmio, (LPSTR)&bPad, sizeof(bPad)) != sizeof(bPad))
+				return MMIOERR_CANNOTWRITE;
+		}
+
+		if(lpck->cksize != lActualSize) {
+			/* fix the chunk header */
+			lpck->cksize = lActualSize;
+			if(DTKmmioSeek(hmmio, lpck->dwDataOffset - sizeof(DWORD), SEEK_SET) == -1)
+				return MMIOERR_CANNOTSEEK;
+			temp[0] = SWAP_32_LITTLE(lpck->cksize);
+			if(DTKmmioWrite(hmmio, (LPSTR)&temp,
+					sizeof(DWORD)) != sizeof(DWORD))
+				return MMIOERR_CANNOTWRITE;
+		}
+	}
+
+	/* seek to the end of the chunk, past the null pad byte
+	 * (which is only there if chunk size is odd)
 	 */
-	long		lOffset;	/* current offset in file */
-	long		lActualSize;	/* actual size of chunk data */
-
-	if ((lOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
-	    return MMIOERR_CANNOTSEEK;
-	if ((lActualSize = lOffset - lpck->dwDataOffset) < 0)
-	    return MMIOERR_CANNOTWRITE;
-
-	if (LOWORD(lActualSize) & 1) {
-	    /* chunk size is odd -- write a null pad byte */
-	    if (DTKmmioWrite(hmmio, (LPSTR) &bPad, sizeof(bPad)) != sizeof(bPad))
-		return MMIOERR_CANNOTWRITE;
-			
-	}
-
-	if (lpck->cksize != lActualSize) {
-	    /* fix the chunk header */
-	    lpck->cksize = lActualSize;
-	    if (DTKmmioSeek(hmmio, lpck->dwDataOffset
-			- sizeof(DWORD), SEEK_SET) == -1)
+	if(DTKmmioSeek(hmmio, lpck->dwDataOffset + lpck->cksize + (lpck->cksize & 1L), SEEK_SET) == -1)
 		return MMIOERR_CANNOTSEEK;
-	    temp[0]=SWAP_32_LITTLE(lpck->cksize);
-	    if (DTKmmioWrite(hmmio, (LPSTR) &temp,
-			sizeof(DWORD)) != sizeof(DWORD))
-		return MMIOERR_CANNOTWRITE;
-	}
-    }
 
-    /* seek to the end of the chunk, past the null pad byte
-     * (which is only there if chunk size is odd)
-     */
-    if (DTKmmioSeek(hmmio, lpck->dwDataOffset + lpck->cksize
-	+ (lpck->cksize & 1L), SEEK_SET) == -1)
-	return MMIOERR_CANNOTSEEK;
-
-    return 0;
+	return 0;
 }
 
 /*
@@ -1548,8 +1492,8 @@ DTKmmioAscend(
 **	any), but does not include the 8-byte chunk header or the pad byte at
 **	the end of the data (if any).
 **
-**	-- The MMCKINFO.fccType field is the form type if 
-**	MMCKINFO.ckid is "RIFF", or the list type if 
+**	-- The MMCKINFO.fccType field is the form type if
+**	MMCKINFO.ckid is "RIFF", or the list type if
 **	MMCKINFO.ckid is "LIST". Otherwise, it is NULL.
 **
 **	-- The MMCKINFO.dwDataOffset field is the file offset of the
@@ -1571,7 +1515,7 @@ DTKmmioAscend(
 **	optional caller-supplied MMCKINFO structure identifying
 **	the parent of the chunk being searched for.
 **	A parent of a chunk is the enclosing chunk--only "RIFF" and "LIST"
-**	chunks can be parents.  If lpckParent is not NULL, then 
+**	chunks can be parents.  If lpckParent is not NULL, then
 **	DTKmmioDescend assumes the MMCKINFO structure it refers to
 **	was filled when DTKmmioDescend was called to descend into the parent
 **	chunk, and DTKmmioDescend will only search for a chunk within the
@@ -1579,9 +1523,9 @@ DTKmmioAscend(
 **	being specified.
 **
 **	wFlags 	Specifies search options. Contains up to one
-**	of the following flags. If no flags are specified, 
+**	of the following flags. If no flags are specified,
 **	DTKmmioDescend descends into the chunk beginning at the current file
-**	position. 
+**	position.
 **
 **		MMIO_FINDCHUNK | Searches for a chunk with the specified chunk ID.
 **
@@ -1596,7 +1540,7 @@ DTKmmioAscend(
 **	Otherwise, the return value specifies an error code. If the end of
 **	the file (or the end of the parent chunk, if given) is reached before
 **	the desired chunk is found, the return value is
-**	MMIOERR_CHUNKNOTFOUND. 
+**	MMIOERR_CHUNKNOTFOUND.
 **
 **  DESIGN:
 **	A RIFF chunk consists of a four-byte chunk ID (type FOURCC),
@@ -1606,7 +1550,7 @@ DTKmmioAscend(
 **	"LIST", the first four bytes of the data portion of the chunk are
 **	a form type or list type (type FOURCC).
 **
-**	If DTKmmioDescend is used to search for a chunk, the file 
+**	If DTKmmioDescend is used to search for a chunk, the file
 **	position should be at the beginning of a
 **	chunk before calling DTKmmioDescend. The search begins at the
 **	current file position and continues to the end of the file. If a
@@ -1617,101 +1561,97 @@ DTKmmioAscend(
 **
 **	If DTKmmioDescend is unsuccessful in searching for a chunk, the
 **	current file position is undefined. If DTKmmioDescend is
-**	successful, the current file position is changed. If the chunk 
+**	successful, the current file position is changed. If the chunk
 **	is a "RIFF" or "LIST" chunk, the new file position
 **	will be just after the form type or list type (12 bytes from the
 **	beginning of the chunk). For other chunks, the new file position will be
 **	the start of the data portion of the chunk (8 bytes from the
 **	beginning of the chunk).
-**		
+**
 **	For efficient RIFF file I/O, use buffered I/O.
 **
 **/
 
-MMRESULT APIENTRY 
+MMRESULT APIENTRY
 DTKmmioDescend(
-	HMMIO hmmio, 
-	LPMMCKINFO lpck,
-    	LPMMCKINFO lpckParent, 
-	UINT uFlags
-)
-{
-    FOURCC	ckidFind;	/* chunk ID to find (or NULL) */
-    FOURCC	fccTypeFind;	/* form/list type to find (or NULL) */
-    WORD	w;
-    MMCKINFO	lpckRet;
-    size_t	savepos;
+    HMMIO      hmmio,
+    LPMMCKINFO lpck,
+    LPMMCKINFO lpckParent,
+    UINT       uFlags) {
+	FOURCC	 ckidFind;    /* chunk ID to find (or NULL) */
+	FOURCC	 fccTypeFind; /* form/list type to find (or NULL) */
+	WORD	 w;
+	MMCKINFO lpckRet;
+	size_t	 savepos;
 
-    if ( lpck == (LPMMCKINFO)NULL ) return MMIOERR_CHUNKNOTFOUND;
+	if(lpck == (LPMMCKINFO)NULL) return MMIOERR_CHUNKNOTFOUND;
 
-    if ((savepos = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
-	return MMIOERR_CANNOTSEEK;
+	if((savepos = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
+		return MMIOERR_CANNOTSEEK;
 
-    /* figure out what chunk id and form/list type to search for */
-    if (uFlags & MMIO_FINDCHUNK)
-	ckidFind = (FOURCC)lpck->ckid, fccTypeFind = 0;
-    else if (uFlags & MMIO_FINDRIFF)
-	ckidFind = (FOURCC)FOURCC_RIFF, fccTypeFind = lpck->fccType;
-    else if (uFlags & MMIO_FINDLIST)
-	ckidFind = (FOURCC)FOURCC_LIST, fccTypeFind = lpck->fccType;
-    else
-	ckidFind = fccTypeFind = 0;
-	
-    lpckRet.dwFlags = 0L;
-
-    while (TRUE) {
-	/* read the chunk header */
-	if (DTKmmioRead(hmmio, (LPSTR) &lpckRet, 2 * sizeof(DWORD)) !=
-	    2 * sizeof(DWORD)) {
-	    (void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
-	    return MMIOERR_CHUNKNOTFOUND;
-	}
-	lpckRet.ckid=SWAP_32_LITTLE(lpckRet.ckid);
-	lpckRet.cksize=SWAP_32_LITTLE(lpckRet.cksize);
-
-	/* store the offset of the data part of the chunk */
-	if ((lpckRet.dwDataOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1) {
-	    (void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
-	    return MMIOERR_CANNOTSEEK;
-	}
-	
-	/* see if the chunk is within the parent chunk (if given) */
-	if ((lpckParent != NULL) &&
-	    (lpckRet.dwDataOffset - 8L >=
-	     lpckParent->dwDataOffset + lpckParent->cksize)) {
-	    (void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
-	    return MMIOERR_CHUNKNOTFOUND;
-	}
-
-	/* if the chunk if a 'RIFF' or 'LIST' chunk, read the
-	 * form type or list type
-	 */
-	if ((lpckRet.ckid == FOURCC_RIFF) || (lpckRet.ckid == FOURCC_LIST))
-	{
-	    if (DTKmmioRead(hmmio, (LPSTR) &(lpckRet.fccType),
-	    	     sizeof(DWORD)) != sizeof(DWORD)) {
-	     	(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
-	    	return MMIOERR_CHUNKNOTFOUND;
-	    }
-	    lpckRet.fccType=SWAP_32_LITTLE(lpckRet.fccType);
-	}
+	/* figure out what chunk id and form/list type to search for */
+	if(uFlags & MMIO_FINDCHUNK)
+		ckidFind = (FOURCC)lpck->ckid, fccTypeFind = 0;
+	else if(uFlags & MMIO_FINDRIFF)
+		ckidFind = (FOURCC)FOURCC_RIFF, fccTypeFind = lpck->fccType;
+	else if(uFlags & MMIO_FINDLIST)
+		ckidFind = (FOURCC)FOURCC_LIST, fccTypeFind = lpck->fccType;
 	else
-	    lpckRet.fccType = (long) 0;
+		ckidFind = fccTypeFind = 0;
 
-	/* if this is the chunk we're looking for, stop looking */
-	if ( ((ckidFind == (long) 0) || (ckidFind == lpckRet.ckid)) &&
-	     ((fccTypeFind == (long) 0) || (fccTypeFind == lpckRet.fccType)) )
-	    break;
-	
-	/* ascend out of the chunk and try again */
-	if ((w = DTKmmioAscend(hmmio, &lpckRet, 0)) != 0) {
-	    (void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
-	    return w;
+	lpckRet.dwFlags = 0L;
+
+	while(TRUE) {
+		/* read the chunk header */
+		if(DTKmmioRead(hmmio, (LPSTR)&lpckRet, 2 * sizeof(DWORD)) !=
+		   2 * sizeof(DWORD)) {
+			(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
+			return MMIOERR_CHUNKNOTFOUND;
+		}
+		lpckRet.ckid   = SWAP_32_LITTLE(lpckRet.ckid);
+		lpckRet.cksize = SWAP_32_LITTLE(lpckRet.cksize);
+
+		/* store the offset of the data part of the chunk */
+		if((lpckRet.dwDataOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1) {
+			(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
+			return MMIOERR_CANNOTSEEK;
+		}
+
+		/* see if the chunk is within the parent chunk (if given) */
+		if((lpckParent != NULL) &&
+		   (lpckRet.dwDataOffset - 8L >=
+		    lpckParent->dwDataOffset + lpckParent->cksize)) {
+			(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
+			return MMIOERR_CHUNKNOTFOUND;
+		}
+
+		/* if the chunk if a 'RIFF' or 'LIST' chunk, read the
+		 * form type or list type
+		 */
+		if((lpckRet.ckid == FOURCC_RIFF) || (lpckRet.ckid == FOURCC_LIST)) {
+			if(DTKmmioRead(hmmio, (LPSTR) & (lpckRet.fccType),
+				       sizeof(DWORD)) != sizeof(DWORD)) {
+				(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
+				return MMIOERR_CHUNKNOTFOUND;
+			}
+			lpckRet.fccType = SWAP_32_LITTLE(lpckRet.fccType);
+		} else
+			lpckRet.fccType = (long)0;
+
+		/* if this is the chunk we're looking for, stop looking */
+		if(((ckidFind == (long)0) || (ckidFind == lpckRet.ckid)) &&
+		   ((fccTypeFind == (long)0) || (fccTypeFind == lpckRet.fccType)))
+			break;
+
+		/* ascend out of the chunk and try again */
+		if((w = DTKmmioAscend(hmmio, &lpckRet, 0)) != 0) {
+			(void)DTKmmioSeek(hmmio, savepos, SEEK_SET);
+			return w;
+		}
 	}
-    }
 
-    memcpy(&lpckRet, lpck, sizeof(MMCKINFO));
-    return 0;
+	memcpy(&lpckRet, lpck, sizeof(MMCKINFO));
+	return 0;
 }
 /*
 **++
@@ -1750,13 +1690,13 @@ DTKmmioDescend(
 **	DTKmmioCreateChunk function will fill this field with the file
 **	offset of the data portion of the chunk.
 **
-**	-- The MMCKINFO.dwFlags field need not be filled in. The 
-**	DTKmmioCreateChunk function will set the MMIO_DIRTY flag in 
+**	-- The MMCKINFO.dwFlags field need not be filled in. The
+**	DTKmmioCreateChunk function will set the MMIO_DIRTY flag in
 **	MMCKINFO.dwFlags.
 **
 **	wFlags 	Specifies flags to optionally create either a
 **	"RIFF" chunk or a "LIST" chunk. Can contain one of the following
-**	flags: 
+**	flags:
 **
 **		MMIO_CREATERIFF Creates a "RIFF" chunk.
 **
@@ -1776,44 +1716,41 @@ DTKmmioDescend(
 **
 **  DESIGN:
 **	This function cannot insert a chunk into the middle of a
-**	file. If a chunk is created anywhere but the end of a file, 
+**	file. If a chunk is created anywhere but the end of a file,
 **	DTKmmioCreateChunk will overwrite existing information in the file.
 **
 **/
 MMRESULT APIENTRY
 DTKmmioCreateChunk(
-	HMMIO hmmio, 
-	MMCKINFO * lpck, 
-	UINT uFlags
-)
-{
-    int	iBytes;			/* bytes to write */
-    long	lOffset;	/* current offset in file */
-    DWORD	temp[10];
+    HMMIO     hmmio,
+    MMCKINFO* lpck,
+    UINT      uFlags) {
+	int   iBytes;  /* bytes to write */
+	long  lOffset; /* current offset in file */
+	DWORD temp[10];
 
-    /* store the offset of the data part of the chunk */
-    if ((lOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
-	return MMIOERR_CANNOTSEEK;
-    lpck->dwDataOffset = lOffset + 2 * sizeof(DWORD);
+	/* store the offset of the data part of the chunk */
+	if((lOffset = DTKmmioSeek(hmmio, 0L, SEEK_CUR)) == -1)
+		return MMIOERR_CANNOTSEEK;
+	lpck->dwDataOffset = lOffset + 2 * sizeof(DWORD);
 
-    /* figure out if a form/list type needs to be written */
-    if (uFlags & MMIO_CREATERIFF)
-	lpck->ckid = FOURCC_RIFF, iBytes = 3 * sizeof(DWORD);
-    else
-    if (uFlags & MMIO_CREATELIST)
-	lpck->ckid = FOURCC_LIST, iBytes = 3 * sizeof(DWORD);
-    else
-	iBytes = 2 * sizeof(DWORD);
+	/* figure out if a form/list type needs to be written */
+	if(uFlags & MMIO_CREATERIFF)
+		lpck->ckid = FOURCC_RIFF, iBytes = 3 * sizeof(DWORD);
+	else if(uFlags & MMIO_CREATELIST)
+		lpck->ckid = FOURCC_LIST, iBytes = 3 * sizeof(DWORD);
+	else
+		iBytes = 2 * sizeof(DWORD);
 
-    /* write the chunk header */
-    temp[0]=SWAP_32_LITTLE(lpck->ckid);
-    temp[1]=SWAP_32_LITTLE(lpck->cksize);
-    if (iBytes==3)
-    	temp[2]=SWAP_32_LITTLE(lpck->fccType);
-    if (DTKmmioWrite(hmmio, (LPSTR) temp, (long) iBytes) != (long) iBytes)
-	return MMIOERR_CANNOTWRITE;
+	/* write the chunk header */
+	temp[0] = SWAP_32_LITTLE(lpck->ckid);
+	temp[1] = SWAP_32_LITTLE(lpck->cksize);
+	if(iBytes == 3)
+		temp[2] = SWAP_32_LITTLE(lpck->fccType);
+	if(DTKmmioWrite(hmmio, (LPSTR)temp, (long)iBytes) != (long)iBytes)
+		return MMIOERR_CANNOTWRITE;
 
-    lpck->dwFlags = MMIO_DIRTY;
+	lpck->dwFlags = MMIO_DIRTY;
 
-    return 0;
+	return 0;
 }

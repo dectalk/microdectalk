@@ -26,25 +26,25 @@
  *
  ***********************************************************************
  *    Revision History:
- * 001	MGS		04/13/2000		Changes for integrated phoneme set 
+ * 001	MGS		04/13/2000		Changes for integrated phoneme set
  * 002	CAB		01/19/2001		Fixed copyright info
  */
 
 #ifndef USA_DEFH
 #define USA_DEFH 1
 
-#include	"defs.h"
-#include	"kernel.h"
-#include	"iso_char.h"
+#include "defs.h"
+#include "kernel.h"
+#include "iso_char.h"
 #ifdef NEW_PHONES
 #include "l_all_ph.h"
 #else
-#include        "l_us_ph.h"
+#include "l_us_ph.h"
 #endif
-#include	"cmd.h"
+#include "cmd.h"
 
-//#define NULL    0
-#define	NULL_ASCKY		0xffff
-#define	PUSA(x)			((PFUSA<<PSFONT) | (x)) 
+// #define NULL    0
+#define NULL_ASCKY 0xffff
+#define PUSA(x) ((PFUSA << PSFONT) | (x))
 
 #endif

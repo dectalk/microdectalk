@@ -12,7 +12,7 @@
  *
  *  Modification History:
  *    08 Aug 1996   reb:  made floating-point constants single-precision;
- *                        do arithmetic in call to pow in dB2amp in 
+ *                        do arithmetic in call to pow in dB2amp in
  *                        precision determined by Float (not auto-
  *                        matically in double-precision);
  *                        archived as version 2.2.
@@ -23,10 +23,10 @@
 #ifndef SYNTH_H
 #define SYNTH_H
 
-#define dB2amp(x) (Float) pow(10.0f, (Float) (x) / 20.0f)
-#define round(x) (int) ((x) + 0.5f)
+#define dB2amp(x) (Float) pow(10.0f, (Float)(x) / 20.0f)
+#define round(x) (int)((x) + 0.5f)
 #ifndef INT16
-#define	INT16 short
+#define INT16 short
 #endif
 #define TWO_PI 6.2831852f
 
@@ -140,55 +140,55 @@
 
 /* Synthesizer structure */
 typedef struct {
-  /* static data */
-  int parallel_only_flag;
-  int num_casc_formants;
-  int num_samples;
-  int output_select;
+	/* static data */
+	int parallel_only_flag;
+	int num_casc_formants;
+	int num_samples;
+	int output_select;
 
-  /* dynamic state data */
-  int pulse_freq;
-  int glottis_open;
-  int period_ctr;
-  int voicing_state;
-  int pulse;
-  int random;
-  int voicing_time;
-  long global_time;
-  Float voicing_amp;
-  Float glottal_state;
-  Float asp_state;
-  Float integrator;
+	/* dynamic state data */
+	int   pulse_freq;
+	int   glottis_open;
+	int   period_ctr;
+	int   voicing_state;
+	int   pulse;
+	int   random;
+	int   voicing_time;
+	long  global_time;
+	Float voicing_amp;
+	Float glottal_state;
+	Float asp_state;
+	Float integrator;
 
-  /* voicing state */
-  int F0;
-  int FL;
-  int OQ;
-  int SQ;
-  int DI;
-  int AV;
-  int TL;
-  int close_shortened;
-  int close_time;
+	/* voicing state */
+	int F0;
+	int FL;
+	int OQ;
+	int SQ;
+	int DI;
+	int AV;
+	int TL;
+	int close_shortened;
+	int close_time;
 } Synthesizer;
 
 /* Coefficients structure */
 typedef struct {
-  Float asp_amp;
-  Float fric_amp;
-  Float f1p_amp;
-  Float f2p_amp;
-  Float f3p_amp;
-  Float f4p_amp;
-  Float f5p_amp;
-  Float f6p_amp;
-  Float npv_amp;
-  Float f1v_amp;
-  Float f2v_amp;
-  Float f3v_amp;
-  Float f4v_amp;
-  Float tpv_amp;
-  Float bypass_amp;
+	Float asp_amp;
+	Float fric_amp;
+	Float f1p_amp;
+	Float f2p_amp;
+	Float f3p_amp;
+	Float f4p_amp;
+	Float f5p_amp;
+	Float f6p_amp;
+	Float npv_amp;
+	Float f1v_amp;
+	Float f2v_amp;
+	Float f3v_amp;
+	Float f4v_amp;
+	Float tpv_amp;
+	Float bypass_amp;
 } Coefficients;
 
 #endif
