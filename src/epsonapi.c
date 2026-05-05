@@ -84,6 +84,21 @@ extern void init_charset();
 extern void FreePHInstanceData(PDPH_T pDph_t);
 extern void FreeCMDThreadMemory(PCMD_T pCmd_t);
 
+void* TextToSpeechAllocate(void) {
+	LPTTS_HANDLE_T phTTS = malloc(sizeof(*phTTS));
+
+	phTTS->pKernelShareData = malloc(sizeof(*phTTS->pKernelShareData));
+
+	return phTTS;
+}
+
+void TextToSpeechFree(void* tts) {
+	LPTTS_HANDLE_T phTTS = tts;
+
+	free(phTTS->pKernelShareData);
+	free(tts);
+}
+
 int TextToSpeechInitEx(void* tts, short* (*callback)(short*, long, int), short* (*callback_ex)(void*, short*, long, int), void* user_dict) {
 	int	       return_code;
 	int	       i;

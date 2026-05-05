@@ -29,6 +29,8 @@
 #endif
 #endif
 
+DT_EXTERN void* TextToSpeechAllocate(void);
+DT_EXTERN void	TextToSpeechFree(void* tts);
 DT_EXTERN int	TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int output_format);
 DT_EXTERN int	TextToSpeechInitEx(void* tts, short* (*callback)(short*, long, int), short* (*callback_ex)(void*, short*, long, int), void* user_dict);
 DT_EXTERN int	TextToSpeechResetEx(void* tts);
