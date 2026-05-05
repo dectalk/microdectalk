@@ -33,6 +33,8 @@
 extern "C" {
 #endif
 
+DT_EXTERN void TextToSpeechSafeInit(void); /* call this if you want to initialize safely (e.g. when using in multithread program) */
+
 DT_EXTERN void* TextToSpeechAllocate(void);
 DT_EXTERN void	TextToSpeechFree(void* tts);
 DT_EXTERN int	TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int output_format);

@@ -171,6 +171,9 @@ void unload_dictionary(void** dict_index, void** dict_data, unsigned int* dict_s
 
 void TextToSpeechErrorHandler(LPTTS_HANDLE_T, UINT, MMRESULT);
 
+void init_dictionary(void) {
+}
+
 int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
 		    unsigned int* dict_bytes, char* dict_nam, int bRequired,
 		    DT_HANDLE* dicMapObject,	// Handle for mapped object
@@ -377,8 +380,28 @@ restart:
 extern unsigned char main_dict[];
 #define get_long_int(ptr) ((U32)((((U8*)(ptr))[3] << 24) | (((U8*)(ptr))[2] << 16) | (((U8*)(ptr))[1] << 8) | (((U8*)(ptr))[0])))
 
-static int init_dic = 0;
+static int init_dic  = 0;
 static int init_done = 0;
+
+void init_dictionary(void) {
+	if(!init_dic) {
+		S32* b;
+		int  i;
+
+		init_dic = 1;
+
+		b	= (S32*)&main_dict[8];
+		entries = get_long_int(main_dict);
+
+		for(i = 0; i < entries; i++) {
+			b[i] = SWAP_32_LITTLE(b[i]);
+		}
+
+		init_done = 1;
+	}
+
+	while(!init_done);
+}
 
 int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
 		    unsigned int* dict_bytes, char* dict_nam, int bRequired,
@@ -391,23 +414,7 @@ int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
 	int	       entries, bytes, size, pointer_list_size;
 	int	       status;
 
-	if(!init_dic){
-		S32* b;
-		int i;
-
-		init_dic = 1;
-
-		b = (S32*)&main_dict[8];
-		entries = get_long_int(main_dict);
-
-		for(i = 0; i < entries; i++){
-			b[i] = SWAP_32_LITTLE(b[i]);
-		}
-		
-		init_done = 1;
-	}
-
-	while(!init_done);
+	init_dictionary();
 
 	/*
 	 * set error return values

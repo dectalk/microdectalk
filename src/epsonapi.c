@@ -83,6 +83,11 @@ extern void init_charset();
 
 extern void FreePHInstanceData(PDPH_T pDph_t);
 extern void FreeCMDThreadMemory(PCMD_T pCmd_t);
+extern void init_dictionary(void);
+
+void TextToSpeechSafeInit(void) {
+	init_dictionary();
+}
 
 void* TextToSpeechAllocate(void) {
 	LPTTS_HANDLE_T phTTS = malloc(sizeof(*phTTS));
