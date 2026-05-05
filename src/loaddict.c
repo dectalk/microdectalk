@@ -428,7 +428,7 @@ int load_dictionary(void** dict_index, void** dict_data, unsigned int* dict_siz,
 	// #else
 	dict_index_buffer = (S32*)&main_dict[8];
 	// #endif
-	dict_data_buffer = (unsigned char*)(pointer_list_size + ((QWORD)(PTRINT)dict_index_buffer)); // start
+	dict_data_buffer = (unsigned char*)((PTRINT)pointer_list_size + ((PTRINT)dict_index_buffer)); // start
 
 	/* write output parameters */
 	*dict_index = dict_index_buffer;
