@@ -29,6 +29,10 @@
 #endif
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 DT_EXTERN void* TextToSpeechAllocate(void);
 DT_EXTERN void	TextToSpeechFree(void* tts);
 DT_EXTERN int	TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int output_format);
@@ -48,5 +52,9 @@ DT_EXTERN int	TextToSpeechChangeVoice(const char* cvoice);
 DT_EXTERN void	TextToSpeechSetRate(int rate);
 DT_EXTERN int	TextToSpeechSetVoiceParam(const char* cmd, int value);
 DT_EXTERN short TextToSpeechGetSpdefValue(int index);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //_EPSONAPI_H
