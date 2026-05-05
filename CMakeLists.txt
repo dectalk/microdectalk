@@ -32,6 +32,10 @@ endif()
 
 if(DECTALKMINI_NO_FILESYSTEM)
 	target_compile_definitions(dtc PRIVATE "NO_FILESYSTEM")
+else()
+	if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+		target_sources(dtc PRIVATE src/mman-win32/mman.c)
+	endif()
 endif()
 
 if(DECTALKMINI_NO_CHARSET)
