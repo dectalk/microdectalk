@@ -5,6 +5,9 @@ file(GLOB SOURCES src/*.c)
 
 add_library(dtc STATIC ${SOURCES})
 
+option(DECTALKMINI_NO_FILESYSTEM "No filesystem" OFF)
+option(DECTALKMINI_EXAMPLES "Build examples" OFF)
+
 target_include_directories(dtc PUBLIC include)
 target_compile_definitions(
 	dtc PRIVATE
@@ -22,3 +25,16 @@ target_compile_definitions(
 	"DISABLE_AUDIO"
 	"SINGLE_THREADED"
 )
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	target_link_libraries(dtc PRIVATE m)
+endif()
+
+if(DECTALKMINI_NO_FILESYSTEM)
+	target_compile_definitions(dtc PRIVATE "NO_FILESYSTEM")
+endif()
+
+if(DECTALKMINI_EXAMPLES)
+	add_executable(say main.c)
+	target_include_directories(say PRIVATE include)
+	target_link_libraries(say PRIVATE dtc)
+endif()
