@@ -242,6 +242,7 @@ struct TTS_HANDLE_TAG
 
   // epsonapi callback
   short *(*EmbCallbackRoutine)(short *, long, int); // audio, length, phoneme
+  short *(*EmbCallbackRoutineEx)(void *, short *, long, int); // phTTS, audio, length, phoneme
 
   void (*DtCallbackRoutine)(LONG,LONG,DWORD,UINT);     //New Audio Integration :After testing remove these comments
 

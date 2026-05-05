@@ -1814,6 +1814,9 @@ void OutputData( LPTTS_HANDLE_T phTTS,
   if (phTTS->EmbCallbackRoutine != NULL) {
     phTTS->EmbCallbackRoutine(pBuffer, uiSamplesToOutput, last_phoneme & PVALUE ); // audio, length, phoneme
   }
+  if (phTTS->EmbCallbackRoutineEx != NULL) {
+    phTTS->EmbCallbackRoutineEx(phTTS, pBuffer, uiSamplesToOutput, last_phoneme & PVALUE ); // audio, length, phoneme
+  }
 
   return;
 

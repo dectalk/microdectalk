@@ -429,6 +429,8 @@ struct share_data {
  *  user dictionary control ...
  */
 
+	volatile unsigned char *user_dict;
+
 /*
  * GL 06/19/1997 use array structure for all dictionary entry data
  */

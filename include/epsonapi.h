@@ -29,6 +29,15 @@
 #endif
 #endif
 
+DT_EXTERN int TextToSpeechStartEx(void *tts, char *input,short *buffer_deprecated,int output_format);
+DT_EXTERN int TextToSpeechInitEx(void *tts, short *(*callback)(short *,long, int), short *(*callback_ex)(void *, short *,long, int),void *user_dict);
+DT_EXTERN int TextToSpeechResetEx(void *tts);
+DT_EXTERN int TextToSpeechSyncEx(void *tts);
+DT_EXTERN int TextToSpeechChangeVoiceEx(void *tts, const char *cvoice);
+DT_EXTERN void TextToSpeechSetRateEx(void *tts, int rate);
+DT_EXTERN int TextToSpeechSetVoiceParamEx(void *tts, const char *cmd, int value);
+DT_EXTERN short TextToSpeechGetSpdefValueEx(void *tts, int index);
+
 DT_EXTERN int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format);
 DT_EXTERN int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict);
 DT_EXTERN int TextToSpeechReset(void);

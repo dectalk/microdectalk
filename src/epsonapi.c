@@ -46,15 +46,12 @@ extern short max_packet_number;
 //#endif
 
 //#ifndef EPSON_ARM7
-TTS_HANDLE_T hTTS;
-LPTTS_HANDLE_T phTTS;
-KSD_T Ksd_t;
+//TTS_HANDLE_T hTTS;
+//LPTTS_HANDLE_T phTTS;
+//KSD_T Ksd_t;
 //#endif
 
 typedef unsigned char U8;
-
-char *g_user_dict;
-short *(*g_callback)(short *,long, int); // audio, length, phoneme
 
 #define get_long_int(ptr) ((U32)\
                        ((((U8 *)(ptr))[3] << 24)  | \
@@ -88,9 +85,11 @@ extern void init_charset();
 extern void FreePHInstanceData(PDPH_T pDph_t);
 extern void FreeCMDThreadMemory(PCMD_T pCmd_t);
 
-int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
+int TextToSpeechInitEx(void *tts, short *(*callback)(short *, long, int), short *(*callback_ex)(void *, short *, long, int), void *user_dict) {
 	int return_code;
 	int i;
+	LPTTS_HANDLE_T phTTS = tts;
+	PKSD_T pKsd_t = phTTS->pKernelShareData;
 
 	/* Free previously allocated thread state to prevent leaks on re-init.
 	 * Each sub-system allocates its own struct (and sub-structs) on init;
@@ -114,21 +113,19 @@ int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
 		}
 	}
 
-	PKSD_T pKsd_t;
-	memset(&hTTS,0,sizeof(TTS_HANDLE_T));
-	memset(&Ksd_t,0,sizeof(KSD_T));
+	memset(phTTS,0,sizeof(TTS_HANDLE_T));
+	memset(pKsd_t,0,sizeof(KSD_T));
+
+	pKsd_t->user_dict = user_dict;
 
 #ifndef NO_FILESYSTEM
         init_charset();
 #endif
-	
-	phTTS=&hTTS;
-	phTTS->EmbCallbackRoutine=callback;
-	phTTS->pKernelShareData=&Ksd_t;
-	pKsd_t=&Ksd_t;
 
-	g_callback=callback;
-	g_user_dict=(char *)user_dict;
+	phTTS->EmbCallbackRoutine=callback;
+	phTTS->EmbCallbackRoutineEx=callback_ex;
+
+	phTTS->pKernelShareData = pKsd_t;
 	
 	for (i=0; i < MAX_languages; ++i)
 	{
@@ -235,8 +232,10 @@ int TextToSpeechInit(short *(*callback)(short *, long, int), void *user_dict) {
  *      Comments:
  *
  * *****************************************************************/
-int TextToSpeechReset(void)
+int TextToSpeechResetEx(void* tts)
 {
+	LPTTS_HANDLE_T phTTS = tts;
+
 	phTTS->pKernelShareData->halting=1;
 	return(ERR_NOERROR);
 }
@@ -259,11 +258,12 @@ int TextToSpeechReset(void)
 extern char *convert_string_for_dapi(char *in, size_t inlen);
 #endif
 
-int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
+int TextToSpeechStartEx(void *tts, char *input, short *buffer_deprecated, int output_format)
 {
 	int i;
 	int oldrate=0;
 	int oldspeaker=0;
+	LPTTS_HANDLE_T phTTS = tts;
 
         // convert string with iconv (or other implementation i guess)
 #ifndef NO_FILESYSTEM
@@ -274,7 +274,7 @@ int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
 	{
 		oldrate=phTTS->pKernelShareData->uiSampleRate;
 		oldspeaker=phTTS->pKernelShareData->last_voice;
-		TextToSpeechInit(g_callback,g_user_dict);
+		TextToSpeechInitEx(tts,phTTS->EmbCallbackRoutine,phTTS->EmbCallbackRoutineEx,phTTS->pKernelShareData->user_dict);
 		if (oldrate!=phTTS->pKernelShareData->uiSampleRate &&
 		    output_format==0)
 		{
@@ -318,7 +318,7 @@ int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
 		cmd_loop(phTTS,input[i]);
 		if (phTTS->pKernelShareData->halting)
 		{
-			TextToSpeechInit(g_callback,g_user_dict);
+			TextToSpeechInitEx(tts,phTTS->EmbCallbackRoutine,phTTS->EmbCallbackRoutineEx,phTTS->pKernelShareData->user_dict);
 			return ERR_RESET;
 		}
 		i++;
@@ -327,20 +327,23 @@ int TextToSpeechStart(char *input, short *buffer_deprecated, int output_format)
 	if (phTTS->pKernelShareData->halting)
 	{
 		cmd_loop(phTTS,0x0B); // force it when halting
-		TextToSpeechInit(g_callback,g_user_dict);
+		TextToSpeechInitEx(tts,phTTS->EmbCallbackRoutine,phTTS->EmbCallbackRoutineEx,phTTS->pKernelShareData->user_dict);
 		return ERR_RESET;
 	}
 	return ERR_NOERROR;
 }
 
 
-int TextToSpeechSync() {
+int TextToSpeechSyncEx(void *tts) {
+    LPTTS_HANDLE_T phTTS = tts;
+
     cmd_loop(phTTS,0x0B); // sync command
     return ERR_NOERROR;
 }
 
-int TextToSpeechChangeVoice(const char *cvoice)
+int TextToSpeechChangeVoiceEx(void *tts, const char *cvoice)
 {
+        LPTTS_HANDLE_T phTTS = tts;
 	short new_voice;
 
 	if (cvoice == NULL || *cvoice == 0)
@@ -373,8 +376,9 @@ int TextToSpeechChangeVoice(const char *cvoice)
 	return ERR_NOERROR;
 }
 
-void TextToSpeechSetRate(int rate)
+void TextToSpeechSetRateEx(void *tts, int rate)
 {
+        LPTTS_HANDLE_T phTTS = tts;
 	unsigned short pipe_value[2];
 
 	pipe_value[0] = (1 << PSNEXTRA) + RATE;
@@ -382,8 +386,9 @@ void TextToSpeechSetRate(int rate)
 	lts_loop(phTTS, pipe_value);
 }
 
-int TextToSpeechSetVoiceParam(const char *cmd, int value)
+int TextToSpeechSetVoiceParamEx(void *tts, const char *cmd, int value)
 {
+        LPTTS_HANDLE_T phTTS = tts;
 	unsigned short pipe_value[3];
 	int option;
 
@@ -400,12 +405,49 @@ int TextToSpeechSetVoiceParam(const char *cmd, int value)
 	return ERR_NOERROR;
 }
 
-short TextToSpeechGetSpdefValue(int index)
+short TextToSpeechGetSpdefValueEx(void *tts, int index)
 {
+        LPTTS_HANDLE_T phTTS = tts;
 	PDPH_T pDph_t;
 
 	pDph_t = phTTS->pPHThreadData;
 	return pDph_t->curspdef[index];
+}
+
+TTS_HANDLE_T s_tts;
+KSD_T s_ksd;
+
+int TextToSpeechStart(char *input,short *buffer_deprecated,int output_format){
+	return TextToSpeechStartEx(&s_tts, input, buffer_deprecated, output_format);
+}
+
+int TextToSpeechInit(short *(*callback)(short *,long, int),void *user_dict){
+	s_tts.pKernelShareData = &s_ksd;
+	return TextToSpeechInitEx(&s_tts, callback, NULL, user_dict);
+}
+
+int TextToSpeechReset(void){
+	return TextToSpeechResetEx(&s_tts);
+}
+
+int TextToSpeechSync(void){
+	return TextToSpeechSyncEx(&s_tts);
+}
+
+int TextToSpeechChangeVoice(const char *cvoice){
+	return TextToSpeechChangeVoiceEx(&s_tts, cvoice);
+}
+
+void TextToSpeechSetRate(int rate){
+	TextToSpeechSetRateEx(&s_tts, rate);
+}
+
+int TextToSpeechSetVoiceParam(const char *cmd, int value){
+	return TextToSpeechSetVoiceParamEx(&s_tts, cmd, value);
+}
+
+short TextToSpeechGetSpdefValue(int index){
+	return TextToSpeechGetSpdefValueEx(&s_tts, index);
 }
 
 // put here for portability
