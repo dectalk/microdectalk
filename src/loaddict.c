@@ -74,7 +74,7 @@
 #include "dtmmedefs.h"
 // #include "opthread.h"
 
-#ifdef __unix__
+#if defined(__unix__) && !defined(_WIN32)
 #include <unistd.h>
 #endif
 
