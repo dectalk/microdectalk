@@ -129,7 +129,7 @@
 #define BIN_DICT_HIT 0x0080
 #define BIN_DICT_MISS 0x0040
 
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 #define get_short(ptr) ((U16)((((U8*)(ptr))[0] << 8) | \
 			      (((U8*)(ptr))[1])))
 

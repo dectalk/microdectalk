@@ -42,7 +42,7 @@
 #include "port.h"
 
 #ifdef ENGLISH_US
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 #include "l_us_suf_big.c"
 #else
 #include "l_us_suf.c"
@@ -50,7 +50,7 @@
 #endif
 
 #ifdef ENGLISH_UK
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 #include "l_uk_suf_b.c"
 #else
 #include "l_uk_suf.c"
@@ -64,7 +64,7 @@
 */
 
 #ifdef GERMAN
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 #include "l_gr_suf_b.c"
 #else
 #include "l_gr_suf.c"

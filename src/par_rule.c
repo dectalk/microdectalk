@@ -57,7 +57,7 @@
 #include "comp_dum.h"
 #endif // GERMAN_COMPOUND_NOUNS
 
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 #include "par_rule2b.h"
 #else //_big
 #include "par_rule2.h"

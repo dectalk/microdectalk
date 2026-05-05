@@ -92,7 +92,7 @@ typedef uint32_t PTRINT;
 /* ex on intel SWAP_32_LITTLE(x) does nothing
    but on sparc SWAP_32_LITTLE(x) swaps the bytes */
 
-#ifndef _BIGENDIAN_
+#ifndef __BIG_ENDIAN__
 #define SWAP_16_BIG(x) (((((U16)(x)) & 0xff00) >> 8) | \
 			((((U16)(x)) & 0x00ff) << 8))
 #define SWAP_16_LITTLE(x) (x)

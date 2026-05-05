@@ -97,12 +97,9 @@
 #ifndef H_MMBASIC
 #define H_MMBASIC 1
 
-#if defined __sun && defined __sparc
-#ifndef _SPARC_SOLARIS_
-#define _SPARC_SOLARIS_
-#endif
-#ifndef _BIGENDIAN_
-#define _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
+#ifndef __BIG_ENDIAN__
+#define __BIG_ENDIAN__
 #endif
 #endif
 

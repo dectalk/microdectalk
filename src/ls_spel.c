@@ -80,7 +80,7 @@ void ls_spel_spell(LPTTS_HANDLE_T phTTS, LETTER* lp1, LETTER* lp2) {
 	LETTER		    lbuf[2];
 	unsigned char _far* tp;
 	unsigned int	    phone;
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 	U16 short_phone;
 #endif
 	PKSD_T pKsd_t;
@@ -150,7 +150,7 @@ void ls_spel_spell(LPTTS_HANDLE_T phTTS, LETTER* lp1, LETTER* lp2) {
 
 						for(tp = (unsigned char _far*)pKsd_t->typing_table[lbuf[0].l_ch]; *tp; tp++) {
 							phone = pKsd_t->reverse_ascky[*tp];
-#ifdef _BIGENDIAN_
+#ifdef __BIG_ENDIAN__
 							short_phone = phone;
 							ls_util_write_pipe(pKsd_t, &short_phone, 1);
 #else
