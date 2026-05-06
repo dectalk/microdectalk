@@ -402,7 +402,7 @@ static void make_f0_command_fr(LPTTS_HANDLE_T phTTS, short type, short rulenumbe
 	/* Cumdur+delay should never be less than zero                  */
 
 	/* static short prpholas, temp; */ /* MVP : Never Used,comment it out */
-	/* If requested time is earlier than last f0 command, zero offset */
+					   /* If requested time is earlier than last f0 command, zero offset */
 
 #ifdef PH_DEBUG_OLD
 #ifndef UNDER_CE // CAB 03/15/00 WINprintf not supported under Windows CE
