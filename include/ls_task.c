@@ -685,15 +685,15 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS) {
 			}
 #else
 		switch(done) { /* no break : we have to do 1 then 2, etc */
-			       /*
-				       1 : Gets things spelled
-				       2 : Means the word was handled by 1:, lookup, dodate, dotime,
-					       dofrac, donumber, dopartnumber, or lts with -
-					       Process any right hand punctuation
-					       in 1: and 2:, no linking with this word, and the following
-				       3 : read next word
-				       4 : Next read, loop around for another word
-			       */
+			/*
+				1 : Gets things spelled
+				2 : Means the word was handled by 1:, lookup, dodate, dotime,
+					dofrac, donumber, dopartnumber, or lts with -
+					Process any right hand punctuation
+					in 1: and 2:, no linking with this word, and the following
+				3 : read next word
+				4 : Next read, loop around for another word
+			*/
 		case 1:
 			// speed=spellspeed (llp, rlp);
 			ls_spel_spell(phTTS, llp, rlp);
@@ -3405,8 +3405,8 @@ int ls_task_plain_number_processing(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* r
 
 				return (LS_TASK_LOOP);
 			}
-#endif // defined (ENGLISH) || defined (GERMAN)
-       // 08/15/2002 CAB Removed warning by typecast
+#endif							   // defined (ENGLISH) || defined (GERMAN)
+							   // 08/15/2002 CAB Removed warning by typecast
 			if(ls_util_is_dot(pLts_t) == FALSE /* Check if special.    */
 			   || (cp = ls_task_wlookup(pLts_t, &(pLts_t->nword[0]), (unsigned char*)&nabtab[0])) == NULL) {
 #ifdef FRENCH
@@ -3933,7 +3933,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp) {
 #endif
 				ls_spel_spell(phTTS, lp2, lp1);
 				/* return(SPELL_WORD); */ /* are legal.*/
-				/*  } */
+							  /*  } */
 			}
 		}
 		if(lp1 < rlp) {			  /* Hit "-", allow long  */
@@ -4117,7 +4117,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp) {
 				/* blocks of "----" */
 				while(lp2 != rlp && lp1->l_ch == '-') lp1++;
 				ls_util_send_phone(phTTS, WBOUND); /* comma ? if several - */
-								   // sendindex (lp2, lp1);
+				// sendindex (lp2, lp1);
 			} /* if */
 
 		} /* while not reached the end of cword */
@@ -4195,7 +4195,7 @@ int ls_task_lookup_first_verbs(LPTTS_HANDLE_T phTTS) {
 			pKsd_t->arpabet[(verbs[i].phone[3])<<1],pKsd_t->arpabet[((verbs[i].phone[3])<<1)+1],
 			pKsd_t->arpabet[(verbs[i].phone[4])<<1],pKsd_t->arpabet[((verbs[i].phone[4])<<1)+1]);
 	}
-#endif	// 0
+#endif // 0
 	/* *****************************************************************/
 
 	for(i = 0; i < 6; i++) {

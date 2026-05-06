@@ -452,13 +452,13 @@ int ls_dict_find_word(LPTTS_HANDLE_T phTTS, int nosend) {
 
 	/* Use the correct KS dic entry based on language being compiled */
 	limit = (DICT_ENTRY); /* this is last_index+1 */
-			      /*
-			       * pretend that the last time through we
-			       * were offsetting by 1/2 the dic size, so
-			       * that when we enter the loop and cut the
-			       * offset in half we end up with 1/4 dic as
-			       * the first move.
-			       */
+	/*
+	 * pretend that the last time through we
+	 * were offsetting by 1/2 the dic size, so
+	 * that when we enter the loop and cut the
+	 * offset in half we end up with 1/4 dic as
+	 * the first move.
+	 */
 	offset = limit >> 1;
 	base   = offset; /* start in the middle of the dictionary.	*/
 

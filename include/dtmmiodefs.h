@@ -224,14 +224,14 @@ typedef MMCKINFO* LPMMCKINFO;
 #define MMIO_FINDPROC 0x00040000    /* mmioInstallIOProc(): find an MMIOProc */
 #define MMIO_FINDCHUNK 0x0010	    /* mmioDescend(): find a chunk by ID */
 #define MMIO_FINDRIFF 0x0020	    /* mmioDescend(): find a LIST chunk */
-				    /* ??? */
-#define MMIO_FINDLIST 0x0040	    /* mmioDescend(): find a RIFF chunk */
-				    /* ??? */
-#define MMIO_CREATERIFF 0x0020	    /* mmioCreateChunk(): make a LIST chunk \
-				     */
-				    /* ??? */
-#define MMIO_CREATELIST 0x0040	    /* mmioCreateChunk(): make a RIFF chunk */
-				    /* ??? */
+/* ??? */
+#define MMIO_FINDLIST 0x0040 /* mmioDescend(): find a RIFF chunk */
+/* ??? */
+#define MMIO_CREATERIFF 0x0020 /* mmioCreateChunk(): make a LIST chunk \
+				*/
+/* ??? */
+#define MMIO_CREATELIST 0x0040 /* mmioCreateChunk(): make a RIFF chunk */
+/* ??? */
 
 #define MMIO_VALIDPROC 0x11070000 /* valid for mmioInstallIOProc  ;Internal  */
 

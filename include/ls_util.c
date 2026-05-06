@@ -787,7 +787,7 @@ int ls_util_is_might(LPTTS_HANDLE_T phTTS) {
  */
 int ls_util_is_index(ITEM* ip) {
 	if(ip->i_word[0] == INDEX || ip->i_word[0] == INDEX_REPLY // tek 01aug97 bats 404 added index types
-	   // #ifdef _WIN32
+								  // #ifdef _WIN32
 	   || ip->i_word[0] == INDEX_BOOKMARK || ip->i_word[0] == INDEX_WORDPOS || ip->i_word[0] == INDEX_START || ip->i_word[0] == INDEX_STOP || ip->i_word[0] == INDEX_SENTENCE || ip->i_word[0] == INDEX_VOLUME || ip->i_word[0] == INDEX_NOISE
 	   // #endif //_WIN32
 	) {

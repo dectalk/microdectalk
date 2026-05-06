@@ -783,7 +783,7 @@ static void fr_special_rules(LPTTS_HANDLE_T phTTS, short fealas,
 				// ex: VI[K]TOR
 				bdur--; // Shorten burst before obst by 6 ms
 					// printf ("phsettar.c special_rules phcur %s, phonex %s\n",
-				//     phprint (pDphsettar->phcur), phprint (pDphsettar->phonex));
+					//     phprint (pDphsettar->phcur), phprint (pDphsettar->phonex));
 			} else if(pDph_t->durfon < NF50MS) {
 				bdur--; // Shorten burst if closure short
 			}

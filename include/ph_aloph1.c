@@ -699,8 +699,8 @@ void phalloph(LPTTS_HANDLE_T phTTS) {
 			break;
 		} /* switch */
 
-#endif /* #ifndef SPANISH */
-#endif /* #ifdef GERMAN */
+#endif		/* #ifndef SPANISH */
+#endif		/* #ifdef GERMAN */
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 		/* Morpho-phonemic Rules: (Most have already been applied)   */
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

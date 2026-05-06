@@ -796,9 +796,9 @@ void sp_phtiming(LPTTS_HANDLE_T phTTS) {
 					/* 0015 EAB     05/11/98		Added in Fasttalk time alignement feature */
 					/* BATS 660 ADD FASTTALK*/ /* Test with Juan*/
 								   // if (pDphsettar->sprat0 <= 250) /* note above 250 sprat0=250+(sprat-250)>>1 */
-					//	{
-					//	adjust=0; /* NEED TO ADD AS AN ADJUSTABLE PARAMETER FOR MORE TIMING.*/
-					//	}
+								   //	{
+								   //	adjust=0; /* NEED TO ADD AS AN ADJUSTABLE PARAMETER FOR MORE TIMING.*/
+								   //	}
 					/*	else*/ if(pDphsettar->sprat0 >= 325)
 						adjust = adjust >> 1;
 					else if(pDphsettar->sprat0 >= 250)

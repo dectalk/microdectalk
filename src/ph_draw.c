@@ -188,7 +188,7 @@ int	    ii; /* for regression testing eab */
 #endif
 
 #include "ph_draw1.c" /* pick up the language dependent code */
-		      // EAB		7/13/98			BATS 711
+// EAB		7/13/98			BATS 711
 void r_modulation(LPTTS_HANDLE_T phTTS, short* formpointer, short percent, short temp);
 void rs_modulation(LPTTS_HANDLE_T phTTS, short* formpointer, short percent, short temp);
 void gr_modulation(LPTTS_HANDLE_T phTTS, short* formpointer, short percent, short temp);
@@ -2726,7 +2726,7 @@ void phdraw(LPTTS_HANDLE_T phTTS) {
 #endif
 				pDph_t->in_brelease = 1;
 				pDph_t->area_b	    = 100; // 300;
-				// don't set area directly
+							   // don't set area directly
 			}
 		} else {
 
@@ -3436,7 +3436,7 @@ tmp -= pDph_t->pressure_gest;
 	//		/* Initialiatize the modulation counter eab 2/6/98*/
 	//		pDph_t->modulcount =0;
 
-#endif // tombuchler
+#endif	// tombuchler
 	/* eab 12/12/96 Special code to allow for a burst + frication which occurs in the
 	german sound TS the present code does not allow for this. This is a quick hack for 44
 	until we're able to rewrite the burst/frication code in general This is not

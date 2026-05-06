@@ -836,7 +836,7 @@ void pht0draw(LPTTS_HANDLE_T phTTS) {
 											    /* Add in glide value to F0 eab 1/21/98*/
 			pDph_t->f0prime = pDph_t->f0 + pDph_t->f0s + pDphsettar->glide_tot; /* This will be spdef-scaled output value */
 											    //	WINprintf("male%d %d  pDph_t->f0 %d \n", pDphsettar->glide_tot, pDph_t->allophons[pDphsettar->np_drawt0],
-			//			pDph_t->f0);
+											    //			pDph_t->f0);
 
 			/* 11/23/97 Eab creek for male voice only for now*/
 #ifdef CREEKMALE
@@ -1584,8 +1584,8 @@ void pht0draw(LPTTS_HANDLE_T phTTS) {
 			pDph_t->f0prime += frac4mul((pDphsettar->tarbas - 1000), 4100 /* strength of deviation*/);
 			/* note 4100 ==1 i.e. no change*/
 			pDph_t->f0prime += pDph_t->f0minimum - 200; /// eab 200 is a fudge factor*/
-			/* eab where 200 is temp fudge factor while testing*/
-			/* temporarily f0minimum is really tarbas scale factor*/
+								    /* eab where 200 is temp fudge factor while testing*/
+								    /* temporarily f0minimum is really tarbas scale factor*/
 		}
 		/* eab As a first step seperate baseline f0 scaling from segmental effects
 		can't hurt should provide improvement path 11/2/97*/

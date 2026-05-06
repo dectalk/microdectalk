@@ -50,15 +50,13 @@
 #include "dectalkf.h"
 #include "tts.h"
 
-#define __inline
-extern __inline short phone_feature(PDPH_T pDph_t, int phone); /* Phonetic features            */
-extern __inline short begtyp(int phone);
-extern __inline short endtyp(int phone);
-extern __inline short ptram(int phone);
-extern __inline short burdr(int phone);
-extern __inline short plocu(int index);
-extern __inline short place(int);
-#undef __inline
+extern short phone_feature(PDPH_T pDph_t, int phone); /* Phonetic features            */
+extern short begtyp(int phone);
+extern short endtyp(int phone);
+extern short ptram(int phone);
+extern short burdr(int phone);
+extern short plocu(int index);
+extern short place(int);
 
 extern void* spcget(unsigned short spc_type);
 extern int   spcwrite(PKSD_T pKsd_t, unsigned short __far* spc_data);

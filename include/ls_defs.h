@@ -266,7 +266,7 @@ typedef struct PHONE {
 
 typedef struct LETTER_struct {
 	short l_ch; /* The character code		*/
-	//	PHONE	*l_ip;			/* Index list				*/
+		    //	PHONE	*l_ip;			/* Index list				*/
 } LETTER;
 
 /*

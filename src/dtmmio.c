@@ -192,7 +192,7 @@
 #ifndef mktemp
 #define mktemp _mktemp
 #endif
-#elif !defined(__EMSCRIPTEN__)
+#else
 #include <unistd.h>
 #endif
 

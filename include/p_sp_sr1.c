@@ -82,11 +82,11 @@ static short syllstruc[] =
 };
 
 static void sp_spanish_allophonics(LPTTS_HANDLE_T phTTS) // NAL warning removal
-							 /*
-							  * Allophonic manipulation for Spanish.  May insert or delete
-							  * symbols.  This is done here so the feature bit calculation
-							  * is correct.
-							  */
+/*
+ * Allophonic manipulation for Spanish.  May insert or delete
+ * symbols.  This is done here so the feature bit calculation
+ * is correct.
+ */
 {
 	int    next; /* Next real phoneme       */
 	int    curr; /* Current phoneme         */

@@ -1750,7 +1750,7 @@ void OutputData(LPTTS_HANDLE_T phTTS,
 #else  // OLEDECTALK
 		phTTS->dwQueuedSampleCount += (DWORD)uiSamplesToOutput << 1;
 #endif // OLEDECTALK
-		// OP_UnlockMutex( phTTS->pcsQueuedSampleCount );
+       // OP_UnlockMutex( phTTS->pcsQueuedSampleCount );
 		break;
 
 		/********************************************************************/

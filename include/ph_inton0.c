@@ -1128,8 +1128,8 @@ static void make_f0_command(PDPH_T pDph_t, short rulenumber, short tar, short de
 			    short length, short* psCumdur);
 
 /* static short n; */ /* MVP : Made local to phinton() */
-		      /* static short cumdur,phocur; */
-		      /* static FLAG inputscrewup;   */
+/* static short cumdur,phocur; */
+/* static FLAG inputscrewup;   */
 
 /*
  *      Function Name: phinton()

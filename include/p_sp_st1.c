@@ -912,7 +912,7 @@ static void sp_back_smooth_rules(LPTTS_HANDLE_T phTTS, short shrib, short feacur
 		  NOTE:[y] and[yh] are now     obstruents
 			if                      (pDphsettar->phcur == SPP_YH)		/* Faster for y */
 				pDphsettar->durtran = NF25MS;	/* 23-Apr-86    */
-#endif			// 0
+#endif // 0
 			/* *****************************************************************/
 
 			if((feacur & FSONCON) IS_MINUS) {
@@ -1142,7 +1142,7 @@ static void sp_back_smooth_rules(LPTTS_HANDLE_T phTTS, short shrib, short feacur
 #if 0
 			/* Out (fix kiki problem) */
 			pDphsettar->durtran = NF20MS;  /* Guess */
-#endif			// 0
+#endif // 0
 			/* *****************************************************************/
 			if(pDphsettar->np == &PAV) {
 				pDphsettar->bouval = temp + 4;

@@ -96,10 +96,8 @@
  *  051	MFG		02/30/2003		Fixed the wide- string convertion for the WinCe dictionary
  ***************************************************************************/
 
-#if !defined __EMSCRIPTEN__
 // Only for the DECTALK_INSTALL_PREFIX, which is usually "/opt/dectalk"
 #include "config.h"
-#endif
 
 #include "dectalkf.h"
 #include "ls_def.h"

@@ -99,9 +99,7 @@
  */
 
 // extern __inline short phone_feature(PDPH_T pDph_t, int phone);
-#define __inline
-extern __inline short place(int phone);
-#undef __inline
+extern short place(int phone);
 
 extern int inh_timing(LPTTS_HANDLE_T phTTS, int phone);
 extern int min_timing(LPTTS_HANDLE_T phTTS, int phone);

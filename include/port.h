@@ -112,15 +112,4 @@ typedef uint32_t PTRINT;
 #define SWAP_32_BIG(x) (x)
 #endif
 
-/**
- * Emscripten Support!
- */
-#ifdef __EMSCRIPTEN__
-
-// Remove all __inline commands.
-#define _inline
-#define __inline
-
-#endif
-
 #endif /* _PORT_H */

@@ -278,7 +278,7 @@ void speech_waveform_generator(LPTTS_HANDLE_T phTTS) {
 #ifdef NEW_VTM
 	S16 FNPinHZ;   /*Frequency of moveable nasal formant*/
 	S16 Glot_step; /*step for voicing source to make almost sinusoidal for nasal variants*/
-		       // 23  BATS 731 EAB 7/31/98 Init glotnoise
+	// 23  BATS 731 EAB 7/31/98 Init glotnoise
 	S16 noiseac;
 #endif
 

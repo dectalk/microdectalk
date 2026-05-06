@@ -5,8 +5,16 @@ file(GLOB SOURCES src/*.c)
 
 add_library(dtc STATIC ${SOURCES})
 
-option(DECTALKMINI_NO_FILESYSTEM "Disable filesystem" OFF)
-option(DECTALKMINI_NO_CHARSET "Disable charset conversion" OFF)
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+set(NO_FILESYSTEM ON)
+set(NO_CHARSET ON)
+else()
+set(NO_FILESYSTEM OFF)
+set(NO_CHARSET OFF)
+endif()
+
+option(DECTALKMINI_NO_FILESYSTEM "Disable filesystem" ${NO_FILESYSTEM})
+option(DECTALKMINI_NO_CHARSET "Disable charset conversion" ${NO_CHARSET})
 option(DECTALKMINI_EXAMPLES "Build examples" ON)
 
 target_include_directories(dtc PUBLIC include)

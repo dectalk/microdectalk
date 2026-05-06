@@ -473,9 +473,9 @@ struct share_data {
 	volatile DT_SEMAPHORE isa_sem;	  /* isa interface interrupt */
 	volatile DT_SEMAPHORE flush_sem;  /* flush synchronization */
 	volatile unsigned int isa_status; /* status of module on isa bus */
-	/*
-	 *  current language interprocess pipes ...
-	 */
+					  /*
+					   *  current language interprocess pipes ...
+					   */
 
 	// P_PIPE          cmd_pipe;               /* cmd input  */
 	// P_PIPE          sync_pipe;              /* sync input */

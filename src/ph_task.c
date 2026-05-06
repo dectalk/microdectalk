@@ -394,7 +394,7 @@ void ph_loop(LPTTS_HANDLE_T phTTS, unsigned short* input) {
 			// #if defined (WIN32_OLD) || defined (__osf__) || defined (__unix__) || defined VXWORKS || defined _SPARC_SOLARIS_
 			buf[0] = SPC_type_sync;
 			vtm_loop(phTTS, (unsigned short*)buf);
-#endif			// SEPARATE_PROCESSES
+#endif // SEPARATE_PROCESSES
 			/*
 			 * #ifdef WIN32_OLD buf[0] = SPC_type_sync;
 			 * write_pipe( pKsd_t->vtm_pipe, buf, 1 );

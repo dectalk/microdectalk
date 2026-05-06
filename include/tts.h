@@ -263,9 +263,9 @@ struct TTS_HANDLE_TAG {
 #endif /* ACI_LICENSE */
 
 	/* bats 385 */
-	volatile BOOL  bInReset;	    /* volatile cuz we use it for interprocess comm */
-	volatile char* szPhonemeBuffer;	    // where ConvertToPhonemes puts the phonemes
-					    // uses NULL status to tell not to do it
+	volatile BOOL  bInReset;	/* volatile cuz we use it for interprocess comm */
+	volatile char* szPhonemeBuffer; // where ConvertToPhonemes puts the phonemes
+					// uses NULL status to tell not to do it
 	volatile DWORD dwPhonemeBufferSize; // how big it is
 	volatile DWORD dwPhonemeBufferPtr;  // where we are
 	volatile DWORD dwPhonemeCvtFlags;   // how to do it.

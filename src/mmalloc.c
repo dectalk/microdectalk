@@ -77,10 +77,7 @@
 #endif
 #include "mmalloc.h"
 #include <stdio.h> // NAL warning removal
-
-#if defined __EMSCRIPTEN__
 #include "dtmmedefs.h"
-#endif
 
 #ifdef USE_MME_SERVER
 

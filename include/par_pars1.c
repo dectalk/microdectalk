@@ -1378,7 +1378,7 @@ preturn_value_t par_process_input(LPTTS_HANDLE_T phTTS,
 					{
 						do_not_copy_next_word=1;
 					}
-#endif					// 0
+#endif // 0
 					/* *****************************************************************/
 
 					if(cur_rule_copy_hit != -1) {
@@ -1966,7 +1966,7 @@ void par_match_rule(unsigned char* current_rule, int state,
 #if 0
 		while ((current_rule[new_ret.rule]!=0) && (new_ret.rule <= end_of_match) && (new_ret.optional!=-1) &&
 			(new_ret.value!=FATAL_FAIL) && (new_ret.value!=FAIL) && (new_ret.value!=END_OF_STRING)) /* && */
-#endif		// 0
+#endif // 0
 		/*******************************************************************/
 
 		while((new_ret.rule <= end_of_match) && ((temp = current_rule[new_ret.rule]) != 0) && (new_ret.value == SUCCESS))
@@ -3982,7 +3982,7 @@ void par_copy_string_data(unsigned char* input_array, pindex_data_t input_indexe
 		output_array[ret_value->output_pos+ret_value->output_offset+i]=input_array[ret_value->input_pos+ret_value->input_offset+i];
 		par_copy_index(output_indexes,ret_value->output_pos+ret_value->output_offset+i,input_indexes,ret_value->input_pos+ret_value->input_offset+i);
 	}
-#endif // 0
+#endif	// 0
 	/* *****************************************************************/
 
 #ifdef PARSER_DEBUG_OLD
@@ -4102,7 +4102,7 @@ int par_get_int_length(register int i) {
 	printf("leaving par_get_int_length length=%d\n",j);
 #endif
 	return(j);
-#endif // 0
+#endif	// 0
 	/* *****************************************************************/
 }
 

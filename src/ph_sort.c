@@ -1888,7 +1888,7 @@ extern short fr_featb[];
 #endif
 	return(us_featb[phone]);
 	}
-#endif // 0
+#endif	// 0
 	/* *****************************************************************/
 }
 

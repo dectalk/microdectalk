@@ -44,10 +44,6 @@
 #ifndef PHDEFH
 #define PHDEFH
 
-#ifdef __EMSCRIPTEN__
-#include "string.h"
-#endif
-
 #include "port.h"
 #include "ph_defs.h"
 #include "dt_abort.h"

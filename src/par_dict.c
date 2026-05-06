@@ -68,10 +68,7 @@
 #include "tts.h"
 #include <stdio.h> // NAL warning removal
 #include <string.h>
-
-#if defined __EMSCRIPTEN__ || defined(__APPLE__)
 #include <stdlib.h>
-#endif
 
 extern void ls_util_send_asky_phone_list(LPTTS_HANDLE_T phTTS, const char* pp);
 

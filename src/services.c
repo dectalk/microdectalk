@@ -191,7 +191,7 @@ void save_index(PKSD_T pKsd_t, unsigned int sym,
 	spc_pkt->data[4] = sym;
 	spc_pkt->data[5] = sym;
 	spc_pkt->data[6] = 0; /* KSB 11/14/1996,  Sync bug for uninitialized number */
-			      // #ifdef WIN32_OLD
+	// #ifdef WIN32_OLD
 	/* tek 6mar97 bats 278 this is protected by a critial section */
 	// #endif
 
