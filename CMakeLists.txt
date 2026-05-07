@@ -35,7 +35,7 @@ target_compile_definitions(
 	"SINGLE_THREADED"
 )
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	target_link_libraries(dtc PRIVATE m)
+	target_link_libraries(dtc PUBLIC m)
 endif()
 
 if(DECTALKMINI_NO_FILESYSTEM)
