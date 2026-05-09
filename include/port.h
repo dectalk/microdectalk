@@ -78,7 +78,7 @@ typedef uint32_t UINT;
 extern int portstricmp(const char* a, const char* b);
 
 #define PRINTFDEBUG_OLD
-#ifdef __LP64__
+#if defined(__LP64__) || defined(_WIN64)
 typedef uint64_t PTRINT;
 #else
 typedef uint32_t PTRINT;
