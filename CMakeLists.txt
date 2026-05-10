@@ -33,6 +33,9 @@ target_compile_definitions(
 	"ACNA"
 	"DISABLE_AUDIO"
 	"SINGLE_THREADED"
+)
+target_compile_definitions(
+	dtc PUBLIC
 	"DT_EXTERN="
 )
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
