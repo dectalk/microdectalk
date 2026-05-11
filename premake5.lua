@@ -24,6 +24,18 @@ newoption({
         default = "no"
 })
 
+newoption({
+        trigger = "use-filesystem",
+        value = "type",
+        description = "Use filesystem or not",
+        allowed = {
+		{"yes", "Use filesystem"},
+		{"no", "Do not use filesystem"}
+        },
+        category = "DECTalk",
+        default = "yes"
+})
+
 filter("platforms:Win32")
         system("windows")
         architecture("x86")
@@ -65,6 +77,8 @@ project("libdtc")
 		"DISABLE_AUDIO",
 		"SINGLE_THREADED"
 	})
+	filter("options:filesystem=no")
+		defines("NO_FILESYSTEM")
 	filter("system:windows")
 		files("src/mman-win32/*.c")
 	filter({})

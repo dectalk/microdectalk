@@ -31,6 +31,7 @@ jobs:
       run: ./premake5 gmake --build-speak=yes && make config=release_win32 -j3
     - name: Organize artifacts
       run: |
+        rm -rf speak-win32
         mkdir -p speak-win32
         cp bin/*/*/speak.exe speak-win32/
         cp bin/*/*/dtc.dll speak-win32/
@@ -41,6 +42,24 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-win32
+        path: speak-win32/
+    - name: Clean
+      run: git clean -dfx
+    - name: Build without filesystem
+      run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win32 -j3
+    - name: Organize artifacts
+      run: |
+        rm -rf speak-win32
+        mkdir -p speak-win32
+        cp bin/*/*/speak.exe speak-win32/
+        cp bin/*/*/dtc.dll speak-win32/
+        cp bin/*/*/dtc.lib speak-win32/
+        cp -r dic speak-win32/
+        cp -r DECtalk.conf speak-win32/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-win32-nofs
         path: speak-win32/
 
   build-win64:
@@ -65,6 +84,7 @@ jobs:
       run: ./premake5 gmake --build-speak=yes && make config=release_win64 -j3
     - name: Organize artifacts
       run: |
+        rm -rf speak-win64
         mkdir -p speak-win64
         cp bin/*/*/speak.exe speak-win64/
         cp bin/*/*/dtc.dll speak-win64/
@@ -75,6 +95,24 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-win64
+        path: speak-win64/
+    - name: Clean
+      run: git clean -dfx
+    - name: Build without filesystem
+      run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win64 -j3
+    - name: Organize artifacts
+      run: |
+        rm -rf speak-win64
+        mkdir -p speak-win64
+        cp bin/*/*/speak.exe speak-win64/
+        cp bin/*/*/dtc.dll speak-win64/
+        cp bin/*/*/dtc.lib speak-win64/
+        cp -r dic speak-win64/
+        cp -r DECtalk.conf speak-win64/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-win64-nofs
         path: speak-win64/
 
   build-appimage:
@@ -151,6 +189,16 @@ jobs:
       with:
         name: build-win64
         path: speak-win64
+    - name: Download from build-win32-nofs
+      uses: actions/download-artifact@v4
+      with:
+        name: build-win32-nofs
+        path: speak-win32-nofs
+    - name: Download from build-win64-nofs
+      uses: actions/download-artifact@v4
+      with:
+        name: build-win64-nofs
+        path: speak-win64-nofs
     - name: Download from build-appimage
       uses: actions/download-artifact@v4
       with:
