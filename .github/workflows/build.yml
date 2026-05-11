@@ -48,7 +48,7 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build without filesystem
-      run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win32 -j3
+      run: ./premake5 gmake --use-filesystem=no --build-speak=yes && make config=release_win32 -j3
     - name: Organize artifacts
       run: |
         rm -rf speak-win32
@@ -103,7 +103,7 @@ jobs:
     - name: Get premake5
       run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build without filesystem
-      run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win64 -j3
+      run: ./premake5 gmake --use-filesystem=no --build-speak=yes && make config=release_win64 -j3
     - name: Organize artifacts
       run: |
         rm -rf speak-win64
