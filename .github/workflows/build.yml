@@ -56,8 +56,6 @@ jobs:
         cp bin/*/*/speak.exe speak-win32/
         cp bin/*/*/dtc.dll speak-win32/
         cp bin/*/*/dtc.lib speak-win32/
-        cp -r dic speak-win32/
-        cp -r DECtalk.conf speak-win32/
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -111,8 +109,6 @@ jobs:
         cp bin/*/*/speak.exe speak-win64/
         cp bin/*/*/dtc.dll speak-win64/
         cp bin/*/*/dtc.lib speak-win64/
-        cp -r dic speak-win64/
-        cp -r DECtalk.conf speak-win64/
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -217,7 +213,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: compress artifacts
-      run: zip -rv speak-windows.zip speak-win32 speak-win64
+      run: zip -rv speak-windows.zip speak-win32 speak-win64 speak-win32-nofs speak-win64-nofs
     - name: Collect release assets
       run: |
         mkdir -p release-assets
