@@ -45,6 +45,8 @@ jobs:
         path: speak-win32/
     - name: Clean
       run: git clean -dfx
+    - name: Get premake5
+      run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build without filesystem
       run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win32 -j3
     - name: Organize artifacts
@@ -98,6 +100,8 @@ jobs:
         path: speak-win64/
     - name: Clean
       run: git clean -dfx
+    - name: Get premake5
+      run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-linux.tar.gz && tar xvf premake-*.tar.gz
     - name: Build without filesystem
       run: ./premake5 gmake --filesystem=no --build-speak=yes && make config=release_win64 -j3
     - name: Organize artifacts
