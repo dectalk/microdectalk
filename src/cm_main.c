@@ -111,4 +111,5 @@ int cmd_main(LPTTS_HANDLE_T phTTS) {
 
 	cm_pars_loop(phTTS);
 	// cmd_loop(phTTS, '\0');
+	return MMSYSERR_NOERROR;
 }
