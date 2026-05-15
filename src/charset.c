@@ -96,7 +96,7 @@ char* convert_string_for_dapi(char* in, size_t inlen) {
 
 	wbytes = MultiByteToWideChar(CP_ACP, 0, in, inlen, NULL, 0) * sizeof(wchar_t);
 
-	wout = malloc(wbytes);
+	wout = malloc(wbytes + sizeof(wchar_t));
 	len  = wbytes / sizeof(wchar_t);
 
 	memset(wout, 0, wbytes);
