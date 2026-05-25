@@ -302,7 +302,7 @@ int TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int ou
 			input[n++] = old[i];
 		}
 #ifndef NO_FILESYSTEM
-		free(input);
+		free(old);
 #endif
 	}
 
