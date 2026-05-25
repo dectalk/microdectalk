@@ -288,7 +288,7 @@ int TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int ou
 	input = convert_string_for_dapi(input, strlen(input));
 #endif
 
- /* wow this is a terrible fix! (nishi) */
+	/* wow this is a terrible fix! (nishi) */
 	{
 		char* old = input;
 		int n = 0;
@@ -297,7 +297,8 @@ int TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int ou
 		memset(input, 0, strlen(old) + 1);
 				
 		for(i = 0; old[i] != 0; i++){
-			if(0x80 <= old[i] && old[i] <= 0x82) continue;
+			unsigned char c = old[i];
+			if(0x80 <= c && c <= 0x82) continue;
 			input[n++] = old[i];
 		}
 #ifndef NO_FILESYSTEM
