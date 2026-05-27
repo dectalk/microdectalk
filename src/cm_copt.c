@@ -2201,7 +2201,7 @@ int cm_cmd_dial(LPTTS_HANDLE_T phTTS) {
 
 	pChar = pCmd_t->pString[0];
 
-	while(*pChar != '\0') {
+	while(pChar != NULL && *pChar != '\0') {
 		/******************************************************************/
 		/*  Convert the character to an index.                            */
 		/******************************************************************/
