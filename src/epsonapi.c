@@ -291,12 +291,12 @@ int TextToSpeechStartEx(void* tts, char* input, short* buffer_deprecated, int ou
 	/* wow this is a terrible fix! (nishi) */
 	{
 		char* old = input;
-		int n = 0;
-				
+		int   n	  = 0;
+
 		input = malloc(strlen(old) + 1);
 		memset(input, 0, strlen(old) + 1);
-				
-		for(i = 0; old[i] != 0; i++){
+
+		for(i = 0; old[i] != 0; i++) {
 			unsigned char c = old[i];
 			if(0x80 <= c && c <= 0x82) continue;
 			input[n++] = old[i];

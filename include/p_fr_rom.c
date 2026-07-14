@@ -222,10 +222,10 @@ const short Cibles_MALE[42][N_PARAM] = {
     /*Un*/ {0, 0, 0, 0, 0, 0, 55, 64, 6, 650, 1440, 2970, 350, 160, 100, 200}, // Un
 
 #endif
-    /*Ap*/ {0, 0, 0, 0, 0, 0, 0, 55, 20, 430, 1500, 2500, 290, 120, 60, 120}, // Ap
-									      //       A2 A3 A4 A5 A6 AB AH AV TLT  F1   F2   F3 FNZ  B1  B2  B3
-									      // michel I chnage f2 of lo from 1800 where there can e a pole but based on very limited
-									      // data Iam not confident of this
+    /*Ap*/ {0, 0, 0, 0, 0, 0, 0, 55, 20, 430, 1500, 2500, 290, 120, 60, 120},	 // Ap
+										 //       A2 A3 A4 A5 A6 AB AH AV TLT  F1   F2   F3 FNZ  B1  B2  B3
+										 // michel I chnage f2 of lo from 1800 where there can e a pole but based on very limited
+										 // data Iam not confident of this
     /*L */ {0, 0, 0, 0, 0, 0, 0, 60, 0, 350, 1330, 2600, 290, 55, 80, 220},	 // L
     /*R */ {40, 30, 35, 30, 0, 0, 0, 0, 0, 450, 1100, 2400, 290, 140, 200, 250}, // R
     /*W */ {0, 0, 0, 0, 0, 0, 0, 60, 0, 350, 600, 2800, 290, 60, 60, 350},	 // W

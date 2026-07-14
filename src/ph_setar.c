@@ -751,11 +751,13 @@ void phsettar(LPTTS_HANDLE_T phTTS) {
 					else { /* standard dt3 treatment */
 #endif					       /* #ifdef GERMAN */
 						if((struccur & FSTRESS) IS_MINUS) {
+#ifdef LIKE_43_OR_44
 							/* Increased coarticulation, especially F2, if unstressed */
 							pDphsettar->gencoartic = N15PRCNT;
 							if(pDphsettar->np == &PF2) {
 								pDphsettar->gencoartic = N25PRCNT;
 							}
+#endif
 						}
 #ifdef GERMAN
 					}
@@ -1308,18 +1310,25 @@ static void make_dip(PDPH_T pDph_t,
 		// oldvalue += special_coartic (pDph_t, pDph_t->nphone, dip_pos);
 		tmp = get_phone(pDph_t, pDph_t->nphone);
 		tmp = tmp & PFONT;
+
+#ifdef LIKE_43_OR_44
+#define INCR ++dip_pos
+#else
+#define INCR 0
+#endif
 		if(tmp == PFUSA << PSFONT) {
-			oldvalue += us_special_coartic(pDph_t, pDph_t->nphone, 0);
+			oldvalue += us_special_coartic(pDph_t, pDph_t->nphone, INCR);
 		} else if(tmp == PFGR << PSFONT) {
-			oldvalue += gr_special_coartic(pDph_t, pDph_t->nphone, 0);
+			oldvalue += gr_special_coartic(pDph_t, pDph_t->nphone, INCR);
 		} else if(tmp == PFLA << PSFONT) {
-			oldvalue += la_special_coartic(pDph_t, pDph_t->nphone, 0);
+			oldvalue += la_special_coartic(pDph_t, pDph_t->nphone, INCR);
 		} else if(tmp == PFSP << PSFONT) {
-			oldvalue += sp_special_coartic(pDph_t, pDph_t->nphone, 0);
+			oldvalue += sp_special_coartic(pDph_t, pDph_t->nphone, INCR);
 		} else if(tmp == PFFR << PSFONT) {
 			// oldvalue += fr_special_coartic (pDph_t, pDph_t->nphone, 0);
 			// when we have frecnh change to fr_
 		}
+#undef INCR
 
 #ifdef DEBUG_OLD_targetS
 		printf(

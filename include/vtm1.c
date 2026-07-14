@@ -402,8 +402,11 @@ void speech_waveform_generator(LPTTS_HANDLE_T phTTS) {
 
 	switch(pVtm_t->uiSampleRateChange) {
 	case SAMPLE_RATE_INCREASE:
-
+#ifdef LIKE_43_OR_44
+		T0inS4 = (S16)(((S32)pVtm_t->rate_scale * (S32)T0inS4 + 8192) >> 14);
+#else
 		T0inS4 = frac1mul(pVtm_t->rate_scale, T0inS4) << 1;
+#endif
 		break;
 
 	case SAMPLE_RATE_DECREASE:

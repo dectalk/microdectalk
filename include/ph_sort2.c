@@ -126,7 +126,11 @@ static void find_syll_to_stress(LPTTS_HANDLE_T phTTS, short* locend, short nstar
 	}
 	/* Else try to find a vowel to stress in last word */
 	for(m = *locend - 1; m >= nstartphrase; m--) {
+#ifdef LIKE_43_OR_44
+		if(((pDph_t->symbols[m] & PVALUE) >= WBOUND) && ((pDph_t->symbols[m] & PVALUE) <= EXCLAIM)) {
+#else
 		if(pDph_t->symbols[m] >= WBOUND) {
+#endif
 
 			locbeg = m;
 			break;

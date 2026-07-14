@@ -707,7 +707,11 @@ handled differently later */
 #define F0_FINAL_FALL 180
 #define F0_NON_FINAL_FALL 80
 #define F0_QSYLL_FALL 80
+#ifdef LIKE_43_OR_44
+#define F0_GLOTTALIZE -131
+#else
 #define F0_GLOTTALIZE -100
+#endif
 #define Reduce_last 50
 
 #endif
@@ -715,7 +719,11 @@ handled differently later */
 #ifdef SPANISH_LA
 
 #define F0_CBOUND_PULSE 700
+#ifdef LIKE_43_OR_44
+#define F0_GLOTTALIZE -100
+#else
 #define F0_GLOTTALIZE -60 // New method that drops per cycle rather than impulse BATS 796 EAB 11/4/98
+#endif
 #define SCHWA1 LAP_IX
 #define SCHWA2 LAP_IX
 #define F0_QGesture1 -150
@@ -751,7 +759,11 @@ handled differently later */
 #ifdef SPANISH_SP
 
 #define F0_CBOUND_PULSE 700
+#ifdef LIKE_43_OR_44
+#define F0_GLOTTALIZE -100
+#else
 #define F0_GLOTTALIZE -60 // New method that drops per cycle rather than impulse BATS 796 EAB 11/4/98
+#endif
 #define SCHWA1 SPP_IX
 #define SCHWA2 SPP_IX
 #define F0_QGesture1 -150
@@ -786,7 +798,11 @@ handled differently later */
 #define F0_NON_FINAL_FALL 150
 #define F0_COMMA_FALL 120
 #define F0_QSYLL_FALL 80
+#ifdef LIKE_43_OR_44
+#define F0_GLOTTALIZE -131
+#else
 #define F0_GLOTTALIZE -60 // New method that drops per cycle rather than impulse BATS 796 EAB 11/4/98
+#endif
 #define Reduce_last 50
 
 #endif

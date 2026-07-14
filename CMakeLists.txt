@@ -33,6 +33,7 @@ target_compile_definitions(
 	"ACNA"
 	"DISABLE_AUDIO"
 	"SINGLE_THREADED"
+	"LIKE_43_OR_44"
 )
 target_compile_definitions(
 	dtc PUBLIC
