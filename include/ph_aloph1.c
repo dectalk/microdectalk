@@ -745,7 +745,14 @@ void phalloph(LPTTS_HANDLE_T phTTS) {
 		/* BATS 459 vowel for unreduce and wrong.... note-comment above was correct who changed it and why
 		(it wasn't me) EAB 3/17/98*/
 
-		if((curr_inph == GEN_SIL) && (pDph_t->phonemes[n + 1] == USP_AE) && (pDph_t->phonemes[n + 2] == USP_N) && (pDph_t->phonemes[n + 3] == USP_D) && ((((pDph_t->sentstruc[n + 1] & FSTRESS) IS_MINUS) && ((pDph_t->sentstruc[n + 3] & FSTRESS) IS_MINUS)) || Cite_It)) {
+		if((curr_inph == GEN_SIL) && (pDph_t->phonemes[n + 1] ==
+#ifdef LIKE_43_OR_44
+					      USP_EH
+#else
+					      USP_AE
+#endif
+					      ) &&
+		   (pDph_t->phonemes[n + 2] == USP_N) && (pDph_t->phonemes[n + 3] == USP_D) && ((((pDph_t->sentstruc[n + 1] & FSTRESS) IS_MINUS) && ((pDph_t->sentstruc[n + 3] & FSTRESS) IS_MINUS)) || Cite_It)) {
 #ifdef DEBUG_OLDALLO
 			printf("and eh->ae rule firing");
 #endif

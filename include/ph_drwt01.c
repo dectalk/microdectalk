@@ -2189,9 +2189,11 @@ void pht0draw(LPTTS_HANDLE_T phTTS) {
 
 	/* Reinit pointer and time of first f0 command if new clause */
 	if(pDph_t->nf0ev == -1) { /* Soft initialization */
+#ifndef LIKE_43_OR_44
 		/* Set filter memory to init baseline fall (f0 in hz*10), GL 6/11/96 */
 		pDphsettar->f0las1 = pDphsettar->f0beginfall << F0SHFT;
 		pDphsettar->f0las2 = pDphsettar->f0beginfall << F0SHFT;
+#endif
 
 		/* Set Beginning and final frequency of baseline fall */
 #ifdef SPANISH
@@ -2452,7 +2454,11 @@ void pht0draw(LPTTS_HANDLE_T phTTS) {
 #else
 			// #endif
 			// #if defined (ENGLISH) || defined (SPANISH)
+#ifdef LIKE_43_OR_44
+			pDphsettar->extrad = 4;
+#else
 			pDphsettar->extrad = 2; /* Was 4 when f0_lp_filter was 1536 */
+#endif
 #endif
 			}
 			/* Delay f0 fall from voiceless plosive until vot */

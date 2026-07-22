@@ -575,7 +575,11 @@ void phsettar(LPTTS_HANDLE_T phTTS) {
 
 	// Turn off breathyness switch at end of a phrase
 	// 12/10/1996 EDB
-	if((pDphsettar->phcur == GEN_SIL) /* || ((struccur & FHAT_BEGINS) IS_PLUS)*/) {
+	if((pDphsettar->phcur == GEN_SIL)
+#ifdef LIKE_43_OR_44
+	   || ((struccur & FHAT_BEGINS) IS_PLUS)
+#endif
+	) {
 		pDph_t->breathysw = 0;
 	}
 	/* Turn on breathyness switch during last syllable of clause */
@@ -610,7 +614,9 @@ void phsettar(LPTTS_HANDLE_T phTTS) {
 		// Set target value associated with onset of next phone
 		// and compute any shift due to coartic with adjacent phones
 		pDphsettar->np->tarnex = getbegtar(phTTS, (pDph_t->nphone + 1)); // Calls gettar()
-		if(pDphsettar->np->tarnex == 4) pDphsettar->np->tarnex++;	 // ???? Michel
+#ifndef LIKE_43_OR_44
+		if(pDphsettar->np->tarnex == 4) pDphsettar->np->tarnex++; // ???? Michel
+#endif
 
 		// 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
 		// Set target value(s) associated with current phone
@@ -643,7 +649,11 @@ void phsettar(LPTTS_HANDLE_T phTTS) {
 			// (only effective for -diph -obst because of p_ locus[] tables)
 			// Special case for /r/ and /rr/ in Spanish
 			if(pDphsettar->par_type IS_FORM_FREQ) {
+#ifdef LIKE_43_OR_44
+				pDphsettar->gencoartic = N10PRCNT;
+#else
 				pDphsettar->gencoartic = 0; // N10PRCNT;
+#endif
 
 // =================================== GERMAN ===========================================
 #ifdef GERMAN // Michel : this big ifdef should be a function

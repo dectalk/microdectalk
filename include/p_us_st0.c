@@ -163,6 +163,7 @@ short us_gettar(LPTTS_HANDLE_T phTTS, int nphone_temp) {
 				tartemp = 54;
 			}
 
+#ifndef LIKE_43_OR_44
 			/* Reduce amplitudes if unstressed 4/4/98 Found another problem the original code was in the wrong
 			place so it effected both aspiration and av and in the right circumstances could cause problems
 			this needs to be shecked in all the langauges*/
@@ -174,6 +175,7 @@ short us_gettar(LPTTS_HANDLE_T phTTS, int nphone_temp) {
 				if(tartemp < 0)
 					tartemp = 0;
 			}
+#endif
 		}
 		/* Rules for aspiration amplitude */
 		else {
@@ -186,6 +188,13 @@ short us_gettar(LPTTS_HANDLE_T phTTS, int nphone_temp) {
 				tartemp = 0;
 			}
 		}
+#ifdef LIKE_43_OR_44
+		if((pDph_t->allofeats[nphone_temp] & FSTRESS) IS_MINUS) {
+			tartemp -= 4;
+			if(tartemp < 0)
+				tartemp = 0;
+		}
+#endif
 
 	}
 	/* GETTAR:  A2, A3, A4, A5, A6, AB */

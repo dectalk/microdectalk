@@ -794,8 +794,13 @@ handled differently later */
 #else
 #error No voice ROM defined! Please select a VOICE_ROM.
 #endif
+#ifdef LIKE_43_OR_44
+#define F0_FINAL_FALL 212
+#define F0_NON_FINAL_FALL 120
+#else
 #define F0_FINAL_FALL 180
 #define F0_NON_FINAL_FALL 150
+#endif
 #define F0_COMMA_FALL 120
 #define F0_QSYLL_FALL 80
 #ifdef LIKE_43_OR_44

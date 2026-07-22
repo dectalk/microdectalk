@@ -1338,10 +1338,13 @@ int all_phsort(LPTTS_HANDLE_T phTTS) {
 
 				pDph_t->number_words++; /* EAB Let's count  up the number of words*/
 				doneit = 0;
+#ifdef LIKE_43_OR_44
+				if(pDph_t->symbols[n + 1] != HYPHEN)
+#else
 				/* eab AT slow speaking rate insert a glottal stop that later
 				   gets it's timing adjusted and voicing reduced*/
-
-				word_init_sw = TRUE;
+#endif
+					word_init_sw = TRUE;
 				/* eab AT slow speaking rate insert a glottal stop that later
 				   gets it's timing adjusted and voicing reduced*/
 
@@ -1360,7 +1363,10 @@ int all_phsort(LPTTS_HANDLE_T phTTS) {
 				//	add_feature (pDph_t, FPPNEXT, (short)(CURRPHONE) );
 				break;
 			case VPSTART:
-				word_init_sw = TRUE;
+#ifdef LIKE_43_OR_44
+				if(pDph_t->symbols[n + 1] != HYPHEN)
+#endif
+					word_init_sw = TRUE;
 				//	add_feature (pDph_t, FVPNEXT, (short)(CURRPHONE) );
 				break;
 			case RELSTART:
@@ -1395,7 +1401,9 @@ int all_phsort(LPTTS_HANDLE_T phTTS) {
 				break;
 			case PERIOD:
 				pDph_t->clausetype = DECLARATIVE;
+#ifndef LIKE_43_OR_44
 				add_feature(pDph_t, FSENTENDS, NEXTPHONE);
+#endif
 				pDph_t->clausenumber = 0;
 				if(pKsd_t->lang_curr == LANG_latin_american || pKsd_t->lang_curr == LANG_spanish) {
 					if(n > 1) {
@@ -1403,7 +1411,9 @@ int all_phsort(LPTTS_HANDLE_T phTTS) {
 					}
 					nsyll = 0;
 				}
+#ifndef LIKE_43_OR_44
 				add_feature(pDph_t, FSENTENDS, NEXTPHONE);
+#endif
 				make_phone(pDph_t, GEN_SIL, n, curr_dur, curr_f0);
 				word_init_sw	  = TRUE;
 				compound_destress = FALSE;

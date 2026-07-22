@@ -1163,6 +1163,9 @@ void phinton(LPTTS_HANDLE_T phTTS)
 	short nphonx = 0;	      /* short temp is never used MVP */
 	short cumdur = 0, phocur = 0; /* MVP : made local */
 	short inputscrewup = 0;	      /* MVP : was of type FLAG */
+#ifdef LIKE_43_OR_44
+	short first = 1;
+#endif
 #ifdef SPANISH
 	short issubclause = 0; /* TRUE signals subordinate clause */
 	short numvowels	  = 0;
@@ -1170,9 +1173,11 @@ void phinton(LPTTS_HANDLE_T phTTS)
 
 	pDph_t->delta_special = 0;
 #endif
+#ifndef LIKE_43_OR_44
 	pDphsettar->nrises_sofar	= 0;
 	pDphsettar->hatsize		= 0;
 	pDphsettar->hat_loc_re_baseline = 0;
+#endif
 
 	/* Beginning of initialization */
 	inputscrewup = FALSE;
@@ -1233,6 +1238,7 @@ void phinton(LPTTS_HANDLE_T phTTS)
 		}
 
 		/* Rule 1: If at bottom of hat, goto top on +HAT_RISE +syllabic */
+#ifndef LIKE_43_OR_44
 		/* EAB 4/9/97 BATS#346 Found a basic flaw whose error cause was generated a long time ago
 		manual placed f0hat get ignores if the next thing isn't plus syllabic.Looking at
 		the code it's hard to believe it ever worked all correctly. Looking at the tuning example I can
@@ -1243,15 +1249,20 @@ void phinton(LPTTS_HANDLE_T phTTS)
 			pDph_t->had_hatbegin = 1;
 		if((struccur & FHAT_ENDS) IS_PLUS)
 			pDph_t->had_hatend = 1;
+#endif
 
 		if((pDph_t->f0mode == NORMAL) || (pDph_t->f0mode == HAT_F0_SIZES_SPECIFIED)) {
 
 			if((feacur & FSYLL) IS_PLUS) {
 
+#ifdef LIKE_43_OR_44
+				if(((struccur & FHAT_BEGINS) IS_PLUS) && (first == 1)) {
+#else
 				/* eab 4/9/97 BATS#346  use had_hatbegin instead of FHAT_BEGINS*/
 				if(pDph_t->had_hatbegin) {
 					pDph_t->had_hatbegin = 0;
 					delayf0 += 1;
+#endif
 #if defined(SPANISH)
 					if(pDph_t->f0mode == NORMAL && !pDph_t->special_phrase)
 // #if defined (ENGLISH_US) || defined (GERMAN)
@@ -1301,6 +1312,9 @@ void phinton(LPTTS_HANDLE_T phTTS)
 					}
 
 					pDphsettar->hat_loc_re_baseline += pDphsettar->hatsize;
+#ifdef LIKE_43_OR_44
+					first = 2;
+#endif
 				}
 
 #ifdef SPANISH
@@ -1408,9 +1422,13 @@ void phinton(LPTTS_HANDLE_T phTTS)
 
 				/* If presently at top of hat, return to base shortly after */
 				/* vowel onset if this is last stressed syllable in phrase */
+#ifdef LIKE_43_OR_44
+				if(((struccur & FHAT_ENDS) IS_PLUS) && (first == 2)) {
+#else
 				/*eab 4/9/97 BATS#346 fix hat rise fall see earlier note*/
 				if(pDph_t->had_hatend) {
 					pDph_t->had_hatend = 0;
+#endif
 
 // #if defined ENGLISH_US || defined GERMAN
 #if !defined(SPANISH)
@@ -1439,12 +1457,21 @@ void phinton(LPTTS_HANDLE_T phTTS)
 
 							/* LEFT SHIFT 4 x 4 SPACES SO FITS ON LINE */
 							for(nphonx = nphon + 1; nphonx < pDph_t->nallotot; nphonx++) {
+#ifndef LIKE_43_OR_44
 								if((pDph_t->allofeats[nphonx] & FHAT_BEGINS) IS_PLUS) {
 									/* Don't go below baseline if another hatrise in phrase */
 									f0fall = 0;
 									goto bfound;
 								}
+#endif
 								if((phone_feature(pDph_t, pDph_t->allophons[nphonx]) & FSYLL) IS_PLUS) {
+#ifdef LIKE_43_OR_44
+									if((pDph_t->allofeats[nphonx] & FHAT_BEGINS) IS_PLUS) {
+										/* Don't go below baseline if another hatrise in phrase */
+										f0fall = 0;
+										goto bfound;
+									}
+#endif
 
 									if((pDph_t->allofeats[nphonx] & FSTRESS) IS_MINUS) {
 										/* Delay fall if next syll unstressed */
@@ -1554,6 +1581,9 @@ void phinton(LPTTS_HANDLE_T phTTS)
 
 					make_f0_command(pDph_t, 3, -f0fall, delayf0, 0, &cumdur);
 					pDphsettar->hat_loc_re_baseline -= f0fall;
+#ifdef LIKE_43_OR_44
+					first = 1;
+#endif
 				}
 
 				/*

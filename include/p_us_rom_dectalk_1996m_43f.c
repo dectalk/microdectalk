@@ -60,8 +60,12 @@
 
 short us_inhdr[] = {
 
-    /* SI    IY    IH    EY    EH    AE    AA    AY    AW    AH   */
+/* SI    IY    IH    EY    EH    AE    AA    AY    AW    AH   */
+#ifdef LIKE_43_OR_44
+    305, 170, 160, 200, 160, 230, 240, 250, 260, 160,
+#else
     205, 170, 160, 200, 160, 230, 240, 250, 250, 160,
+#endif
 
     /* AO    OW    OY    UH    UW    RR    YU    AX    IX    IR   */
     240, 220, 220, 170, 210, 180, 230, 120, 120, 230,
@@ -262,11 +266,19 @@ short us_maltar[] = {
     /* SI    IY    IH    EY    EH    AE    AA    AY    AW    AH   */
     -1, 180 + 80, 190, 200, 220, 250 + 40, 200 + 50, 230, 150, 180,
 
-    /* AO    OW    OY    UH    UW    RR    YU    AX    IX    IR   */
+/* AO    OW    OY    UH    UW    RR    YU    AX    IX    IR   */
+#ifdef LIKE_43_OR_44
+    120, 180, 170, 160, 140, 90, -444, 180, 200, 200,
+#else
     120, 180, 170, 160, 140, 200, -444, 180, 200, 200,
+#endif
 
-    /* ER    AR    OR    UR     W     Y     R     L    HX    RX   */
+/* ER    AR    OR    UR     W     Y     R     L    HX    RX   */
+#ifdef LIKE_43_OR_44
+    200, 150, 140, 180, 80, 300, 90, 120, 220, 130,
+#else
     200, 150, 140, 180, 80, 300, 200, 120, 220, 130,
+#endif
 
     /* LX     M     N    NG    EL    D$    EN     F     V    TH   */
     160, 360, 460 + 300, 400, 200, 200, 460, 150, 120, 150,

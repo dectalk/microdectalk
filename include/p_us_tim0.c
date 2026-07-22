@@ -457,18 +457,20 @@ void us_phtiming(LPTTS_HANDLE_T phTTS) {
 
 							arg1 = N70PRCNT;
 						}
-#ifdef CHANGES_FOR_V44
+#if defined(CHANGES_FOR_V44) || defined(LIKE_43_OR_44)
 						/* This sounds more like 4.4 In terms of the lengths of vowels
 						 * according to Jake
 						 */
 						if((strucstresscur == FSTRESS_1) &&
 						   ((phocur != USP_AE) || ((struccur & FTYPESYL) == FMONOSYL))) {
+#ifndef LIKE_43_OR_44
 							pDph_t->allofeats[nphon] == pDph_t->allofeats[nphon] & (!FSTRESS_1);
 
 							arg2 = prcnt;
 							arg1 = N50PRCNT;
 							/* this was commented out why?*/
 							prcnt = mlsh1(arg1, arg2);
+#endif
 						}
 #endif
 					}
@@ -476,10 +478,14 @@ void us_phtiming(LPTTS_HANDLE_T phTTS) {
 					else {
 
 						/* Assume voiced plosive, multiply by 1.2 */
+#ifdef LIKE_43_OR_44
+						if((phone_feature(pDph_t, posvoc) & FOBST) IS_PLUS && phocur != USP_EN) {
+#else
 						/*EAB found that this rule lenghthened syallbic n by
 						too much in final position 11/13/97 This I left in
 						because it is very specific and safe */
-						if((phone_feature(pDph_t, posvoc) & FOBST) IS_PLUS && phocur != USP_EN) {
+						if((phone_feature(pDph_t, posvoc) & FOBST) IS_PLUS) {
+#endif
 
 							arg1 = N120PRCNT;
 							/* Voiced fricative, add 25 ms to +syl */
@@ -625,7 +631,11 @@ void us_phtiming(LPTTS_HANDLE_T phTTS) {
 			/* WIH 11/27/95 Change prcnt = + 120 to prcnt += 80 */
 			/* put it back t0 =+ 120  EAB someone changed it back to absolute duration this is clearly
 			wrong as it blocks all previous rules 4/6/98*/
+#ifdef LIKE_43_OR_44
+			prcnt += 120;
+#else
 			prcnt += 30;
+#endif
 		}
 
 #ifdef NEVER
@@ -685,8 +695,12 @@ void us_phtiming(LPTTS_HANDLE_T phTTS) {
 
 		/* rule 23  shorten vowel if phonex == df writing versus riding */
 		if(pDphsettar->phonex_timing == USP_DF) {
-			arg1  = prcnt;
-			arg2  = N35PRCNT;
+			arg1 = prcnt;
+#ifdef LIKE_43_OR_44
+			arg2 = 6500;
+#else
+			arg2 = N35PRCNT;
+#endif
 			prcnt = mlsh1(arg1, arg2);
 		}
 		/* eab 3-94 new rule needs more verification and perhaps refinement */

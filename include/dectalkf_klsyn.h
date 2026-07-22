@@ -251,8 +251,12 @@ for a 4.5 or NWS build this should not be defined. It is needed for German, othe
 #define VOICE_ROM_DECTALK_1996M_43F
 
 #if defined(VOICE_ROM_1997) || defined(VOICE_ROM_1996) || defined(VOICE_ROM_DECTALK_41) || defined(VOICE_ROM_DECTALK_43) || defined(VOICE_ROM_DECTALK_1996M_43F) || defined(VOICE_ROM_DTC_03_03JAN89)
+#ifdef LIKE_43_OR_44
+#define DEC_SZ 0
+#else
 // Decrease /s, z/ amplification in VOICE_ROM_1996/7
 #define DEC_SZ 3
+#endif
 
 // Use old implementation of setting target value for us-english, use with 1996/7 voice roms, wip
 #define OLD_SETTAR
