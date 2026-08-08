@@ -84,6 +84,12 @@ typedef uint64_t PTRINT;
 typedef uint32_t PTRINT;
 #endif
 
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#ifndef __BIG_ENDIAN__
+#define __BIG_ENDIAN__
+#endif
+#endif
+
 /* SWAP_dd_eeeeeee */
 /* dd is 16 or 32 bits */
 /* eeeeee is

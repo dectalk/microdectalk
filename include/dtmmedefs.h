@@ -97,12 +97,6 @@
 #ifndef H_MMBASIC
 #define H_MMBASIC 1
 
-#ifdef __BIG_ENDIAN__
-#ifndef __BIG_ENDIAN__
-#define __BIG_ENDIAN__
-#endif
-#endif
-
 /*
 ** [Include Files]
 */

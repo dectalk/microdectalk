@@ -685,15 +685,15 @@ void lts_main_loop(LPTTS_HANDLE_T phTTS) {
 			}
 #else
 		switch(done) { /* no break : we have to do 1 then 2, etc */
-			/*
-				1 : Gets things spelled
-				2 : Means the word was handled by 1:, lookup, dodate, dotime,
-					dofrac, donumber, dopartnumber, or lts with -
-					Process any right hand punctuation
-					in 1: and 2:, no linking with this word, and the following
-				3 : read next word
-				4 : Next read, loop around for another word
-			*/
+			       /*
+				       1 : Gets things spelled
+				       2 : Means the word was handled by 1:, lookup, dodate, dotime,
+					       dofrac, donumber, dopartnumber, or lts with -
+					       Process any right hand punctuation
+					       in 1: and 2:, no linking with this word, and the following
+				       3 : read next word
+				       4 : Next read, loop around for another word
+			       */
 		case 1:
 			// speed=spellspeed (llp, rlp);
 			ls_spel_spell(phTTS, llp, rlp);
@@ -4117,7 +4117,7 @@ int ls_task_process_word(LPTTS_HANDLE_T phTTS, LETTER* llp, LETTER* rlp) {
 				/* blocks of "----" */
 				while(lp2 != rlp && lp1->l_ch == '-') lp1++;
 				ls_util_send_phone(phTTS, WBOUND); /* comma ? if several - */
-				// sendindex (lp2, lp1);
+								   // sendindex (lp2, lp1);
 			} /* if */
 
 		} /* while not reached the end of cword */
