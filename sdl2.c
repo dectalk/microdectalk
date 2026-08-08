@@ -26,7 +26,7 @@ int main(int argc, char** argv){
 	SDL_PauseAudioDevice(dev, 0);
 
 	TextToSpeechInit(dtc_callback, NULL);
-	TextToSpeechStart("Hello, I'm DECtalk.", NULL, WAVE_FORMAT_1M16);
+	TextToSpeechStart(argc == 2 ? argv[1] : "Hello, I'm DECtalk.", NULL, WAVE_FORMAT_1M16);
 	TextToSpeechSync();
 
 	while(SDL_GetQueuedAudioSize(dev) > 0){
