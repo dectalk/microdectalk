@@ -16,6 +16,7 @@ endif()
 option(DECTALKMINI_NO_FILESYSTEM "Disable filesystem" ${NO_FILESYSTEM})
 option(DECTALKMINI_NO_CHARSET "Disable charset conversion" ${NO_CHARSET})
 option(DECTALKMINI_EXAMPLES "Build examples" ON)
+option(DECTALKMINI_SDL2_EXAMPLE "Build SDL2 example" OFF)
 
 target_include_directories(dtc PUBLIC include)
 target_compile_definitions(
@@ -59,4 +60,12 @@ if(DECTALKMINI_EXAMPLES)
 	add_executable(say main.c)
 	target_include_directories(say PRIVATE include)
 	target_link_libraries(say PRIVATE dtc)
+endif()
+
+if(DECTALKMINI_SDL2_EXAMPLE)
+	find_package(SDL2)
+
+	add_executable(sdl2 sdl2.c)
+	target_include_directories(say PRIVATE include)
+	target_link_libraries(sdl2 PRIVATE dtc SDL2::SDL2 SDL2::SDL2main)
 endif()
