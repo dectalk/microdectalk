@@ -20,7 +20,7 @@ int main(int argc, char** argv){
 	spec.channels = 1;
 	spec.samples = 4096;
 
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+	SDL_Init(SDL_INIT_AUDIO);
 
 	if((dev = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0)) == 0) return 1;
 	SDL_PauseAudioDevice(dev, 0);
