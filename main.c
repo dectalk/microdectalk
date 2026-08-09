@@ -6,6 +6,21 @@
 #include <stdio.h>
 #include <string.h>
 
+#define SAMPLE_RATE 11025
+
+// Phoneme names indexed by the phoneme code the epsonapi callback delivers.
+static const char *phoneme_names[] = {
+    "SIL", "IY", "IH", "EY", "EH", "AE", "AA", "AY", "AW", "AH",
+    "AO", "OW", "OY", "UH", "UW", "RR", "YU", "AX", "IX", "IR",
+    "ER", "AR", "OR", "UR", "W", "Y", "R", "LL", "HX", "RX",
+    "LX", "M", "N", "NX", "EL", "D_DENTALIZED", "EN", "F", "V",
+    "TH", "DH", "S", "Z", "SH", "ZH", "P", "B", "T", "D",
+    "K", "G", "DX", "TX", "Q", "CH", "JH", "DF"
+};
+
+static int  last_phoneme = -1;
+static FILE *phoneme_log  = NULL;
+
 #ifdef _WIN32
   #include <io.h>
   #include <fcntl.h>
@@ -70,6 +85,15 @@ void init_wav(const char *name) {
 }
 
 short *write_wav(short *iwave, long length, int phoneme) {
+    if (phoneme_log && phoneme != last_phoneme) {
+        int ms = (total_samples * 1000) / SAMPLE_RATE;
+        const char *name = (phoneme >= 0 && phoneme < (int)(sizeof(phoneme_names) / sizeof(phoneme_names[0])))
+                               ? phoneme_names[phoneme]
+                               : "?";
+        fprintf(phoneme_log, "%d\t%s\n", ms, name);
+        last_phoneme = phoneme;
+    }
+
     fwrite(iwave, sizeof(short), length, outfile);
     total_samples += length;
 
@@ -89,16 +113,19 @@ void close_wav() {
 }
 
 void usage(const char *prog) {
-    fprintf(stderr, "Usage: %s [-p] [output.wav] <text>\n", prog);
-    fprintf(stderr, "  -p          force pipe output to stdout\n");
-    fprintf(stderr, "  output.wav  required unless piping stdout\n");
-    fprintf(stderr, "  text        required unless piping stdin\n");
+    fprintf(stderr, "Usage: %s [-p] [-o output.wav] [-i input.txt] <text>\n", prog);
+    fprintf(stderr, "  -p, --output-pipe       force pipe output to stdout\n");
+    fprintf(stderr, "  -o, --output <file>     output WAV file, required unless piping stdout\n");
+    fprintf(stderr, "  -i, --input <file>      input text file, required unless piping stdin or text given\n");
+    fprintf(stderr, "  text                    required unless piping stdin or -i given\n");
     exit(1);
 }
 
 int main(int argc, char *argv[]) {
     const char *output_file = NULL;
+    const char *input_file = NULL;
     const char *text = NULL;
+    FILE *input_fp = NULL;
     int i;
 
 #ifdef _WIN32
@@ -120,8 +147,22 @@ int main(int argc, char *argv[]) {
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-p") == 0) {
             pipeOut = true;
-        } else if (!output_file && !pipeOut) {
-            output_file = argv[i];
+        } else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "%s requires an argument\n", argv[i]);
+                usage(argv[0]);
+            }
+            output_file = argv[++i];
+            if (strcmp(output_file, "-") == 0) {
+                pipeOut = true;
+                output_file = NULL;
+            }
+        } else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "%s requires an argument\n", argv[i]);
+                usage(argv[0]);
+            }
+            input_file = argv[++i];
         } else if (!text) {
             text = argv[i];
         } else {
@@ -134,8 +175,20 @@ int main(int argc, char *argv[]) {
     if (!pipeOut && !output_file) {
         usage(argv[0]);
     }
-    if (!text && !pipeIn) {
+    if (!text && !pipeIn && !input_file) {
         usage(argv[0]);
+    }
+
+    // if an input file was given, open it now and treat it like piped stdin
+    if (input_file) {
+        input_fp = fopen(input_file, "r");
+        if (!input_fp) {
+            fprintf(stderr, "Could not open input file: %s\n", input_file);
+            return 1;
+        }
+        pipeIn = true; // reuse the char-by-char streaming path below
+    } else if (pipeIn) {
+        input_fp = stdin;
     }
 
     // redirect stdout to stderr for pipe output so diagnostic prints don't corrupt WAV stream
@@ -146,28 +199,43 @@ int main(int argc, char *argv[]) {
         dup2(STDERR_FILENO, STDOUT_FILENO);
         outfile = _fdopen(stdout_fd, "wb");
 #else
-        int stdout_fd = dup(STDOUT_FILENO);
+     	int stdout_fd = dup(STDOUT_FILENO);
         dup2(STDERR_FILENO, STDOUT_FILENO);
         outfile = fdopen(stdout_fd, "wb");
 #endif
     }
 
     init_wav(output_file);
+
+    const char *home = getenv("HOME");
+    char log_path[512];
+    snprintf(log_path, sizeof(log_path), "%s/DECphonetiming.txt", home ? home : ".");
+    phoneme_log = fopen(log_path, "w");
+    if (!phoneme_log) {
+        fprintf(stderr, "warning: could not open %s\n", log_path);
+    }
+
     TextToSpeechInit(write_wav, NULL);
 
     if (pipeIn) {
         int c;
-        while ((c = getchar()) != EOF) {
+        while ((c = getc(input_fp)) != EOF) {
             char arr[2];
-	    arr[0] = c;
-	    arr[1] = 0;
+            arr[0] = c;
+            arr[1] = 0;
             TextToSpeechStart((char *)arr, NULL, WAVE_FORMAT_1M16);
         }
+        if (input_fp != stdin) {
+            fclose(input_fp);
+        }
     } else {
-        TextToSpeechStart((char*)text, NULL, WAVE_FORMAT_1M16);
+	TextToSpeechStart((char*)text, NULL, WAVE_FORMAT_1M16);
     }
 
     TextToSpeechSync();
     close_wav();
+    if (phoneme_log) {
+        fclose(phoneme_log);
+    }
     return 0;
 }
