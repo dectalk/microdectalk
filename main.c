@@ -139,9 +139,6 @@ int main(int argc, char *argv[]) {
     if (!isatty(fileno(stdin))) {
         pipeIn = true;
     }
-    if (!isatty(fileno(stdout))) {
-        pipeOut = true;
-    }
 
     // parse args, gross
     for (i = 1; i < argc; i++) {
